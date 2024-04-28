@@ -1,3 +1,2 @@
-*.key filter=git-crypt diff=git-crypt
+.gitattributes !filter !diff
 *.csv filter=git-crypt diff=git-crypt
-data/** filter=git-crypt diff=git-crypt
