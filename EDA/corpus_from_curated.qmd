@@ -1,0 +1,59 @@
+---
+title: "EDA: Different corpus for matching"
+author: "Sehyun Oh, Jason Hwee, Xiang Li"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{Different corpus for matching}
+  %\VignetteEncoding{UTF-8}
+output:
+  BiocStyle::html_document:
+    number_sections: yes
+    toc: yes
+    toc_depth: 4
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(comment = "#>", 
+                      collapse = TRUE, 
+                      message = FALSE, 
+                      warning = FALSE)
+```
+
+```{r echo=FALSE}
+suppressPackageStartupMessages({
+    library(dplyr)
+    library(readr)
+})
+```
+
+```{r}
+dataDir <- "~/OmicsMLRepo/OmicsMLRepoHarmonizer/outputs"
+trtDir <- file.path(dataDir, "cbio_treatment_name")
+```
+
+
+# From curated terms only
+```{r message=FALSE}
+trt_match <- read_csv(file.path(trtDir, "trt_name_match_from_curated.csv"))
+
+table(trt_match$match_level)
+summary(trt_match$match_level)
+```
+
+# From comprehensive corpus
+This dynamic enum node (NCIT:C1909) contains 313 out of 546 curated terms.
+```{r message=FALSE}
+trt_match <- read_csv(file.path(trtDir, "trt_name_match_from_corpus.csv"))
+
+table(trt_match$match_level)
+summary(trt_match$match_level)
+```
+
+
+
+```{r message=FALSE}
+disease_match <- readr::read_csv(file.path(harmonizationDir, "disease_top5.csv"))
+
+table(disease_match$match_level)
+```
