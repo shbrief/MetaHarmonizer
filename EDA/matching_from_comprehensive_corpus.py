@@ -18,8 +18,8 @@ for x in df["original_value"].unique():
     orig.extend(x.split('<;>')) # separate rows containing multiple values
 
 ## Import the comprehensive corpus
-dataDir = "~/OmicsMLRepo/OmicsMLRepoHarmonizer/outputs"
-fpath = os.path.join(dataDir, "cbio_treatment_name/corpus_from_NCIT:C1909.csv")
+outputDir = "~/OmicsMLRepo/OmicsMLRepoHarmonizer/outputs"
+fpath = os.path.join(outputDir, "cbio_treatment_name/corpus_from_NCIT:C1909.csv")
 corpus = pd.read_csv(fpath, header = None, error_bad_lines = False)
 corpus = list(corpus[0])
 

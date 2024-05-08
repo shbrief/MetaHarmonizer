@@ -28,8 +28,8 @@ suppressPackageStartupMessages({
 ```
 
 ```{r}
-dataDir <- "~/OmicsMLRepo/OmicsMLRepoHarmonizer/outputs"
-trtDir <- file.path(dataDir, "cbio_treatment_name")
+outputDir <- "~/OmicsMLRepo/OmicsMLRepoHarmonizer/outputs"
+trtDir <- file.path(outputDir, "cbio_treatment_name")
 ```
 
 
