@@ -1,5 +1,15 @@
+*nih*
+*DS_Store*
+
+*__pycache__*
+*thumbnails*
+*scratch*
+*log
+*txt
+
 .Rproj.user
 .Rhistory
 .RData
 .Ruserdata
 notes
+
