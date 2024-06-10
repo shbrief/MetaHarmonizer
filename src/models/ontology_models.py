@@ -1,12 +1,7 @@
 
 from sentence_transformers import util
 import pandas as pd
-import numpy as np
-from sentence_transformers import SentenceTransformer
-from transformers import AutoTokenizer, AutoModel, AutoModelForMaskedLM
-from tqdm.auto import tqdm
 import torch
-from abc import ABC, abstractmethod
 import yaml
 
 class OntoModelsBase:
@@ -61,7 +56,6 @@ class OntoModelsBase:
             method_model_dict = yaml.safe_load(file)
         return method_model_dict
 
-    @abstractmethod
     #Mean Pooling - Take attention mask into account for correct averaging
     def mean_pooling(self, model_output, attention_mask):
         """
@@ -79,7 +73,6 @@ class OntoModelsBase:
         input_mask_expanded = attention_mask.unsqueeze(-1).expand(token_embeddings.size()).float()
         return torch.sum(token_embeddings * input_mask_expanded, 1) / torch.clamp(input_mask_expanded.sum(1), min=1e-9)
 
-    @abstractmethod
     def calc_similarity(self, query_emb, corpus_emb):
         """
         Function to create embeddings for sentence transformer model 

@@ -1,22 +1,10 @@
-
-
-
-
-from sentence_transformers import util
-import pandas as pd
-import numpy as np
-from sentence_transformers import SentenceTransformer
-from transformers import AutoTokenizer, AutoModel, AutoModelForMaskedLM
-import torch
+import pandas as pd  # type: ignore
+from sentence_transformers import SentenceTransformer  # type: ignore
+from transformers import AutoTokenizer, AutoModel # type: ignore
+import torch  # type: ignore 
 import src.models.ontology_models as otm
 import src.CustomLogger.custom_logger
 import pandas as pd
-import numpy as np
-import seaborn as sns
-from io import BytesIO
-import os
-from importlib import reload
-
 logger = src.CustomLogger.custom_logger.CustomLogger()
 
 ## type annotations for all the arguments and return values
@@ -25,7 +13,7 @@ logger = src.CustomLogger.custom_logger.CustomLogger()
 ## Avoid building 3 different mappers for treatment, bodysite and disease and build one curaMap 
 
 class OntoMapLM(otm.OntoModelsBase):
-    def __init__(self, method:str, query:list, corpus:list, topk:int=5, from_tokenizer:bool=True, yaml_path:str='method_model.yaml') -> None:
+    def __init__(self, method:str, query:list[str], corpus:list[str], topk:int=5, from_tokenizer:bool=True, yaml_path:str='method_model.yaml') -> None:
         super().__init__(method, query, corpus, yaml_path)
 
         self.from_tokenizer = from_tokenizer
@@ -66,7 +54,7 @@ class OntoMapLM(otm.OntoModelsBase):
             embd = self.create_embeddings(self.corpus)
         return embd 
 
-    def create_embeddings(self, query_list:list, convert_to_tensor=False):
+    def create_embeddings(self, query_list:list[str], convert_to_tensor=False):
         """
         Function to create embeddings using SAP-BERT like LM models using first token embeddings (CLS token)
 
@@ -82,7 +70,7 @@ class OntoMapLM(otm.OntoModelsBase):
         model = self.model
 
         # Tokenize the texts and prepare input tensors
-        encoded_input = tokenizer(query_list, padding="max_length", max_length=25, truncation=True, return_tensors='pt')
+        encoded_input = tokenizer(query_list[str], padding="max_length", max_length=25, truncation=True, return_tensors='pt')
         
         # Compute token embeddings
         with torch.no_grad():
@@ -96,7 +84,7 @@ class OntoMapLM(otm.OntoModelsBase):
         else:
             return embeddings.numpy()
 
-    def create_cura_map(self, query_list:list, corpus_list:list):
+    def create_cura_map(self, query_list:list[str], corpus_list:list[str]):
         """
         Function to create embeddings for sentence transformer model 
 
@@ -111,7 +99,7 @@ class OntoMapLM(otm.OntoModelsBase):
         corpus_embeddings = self.create_embeddings(corpus_list)
         return query_embeddings, corpus_embeddings
     
-    def get_match_results(self, cura_map:dict, topk:int=5):
+    def get_match_results(self, cura_map:dict[str, str], topk:int=5):
         """
         Generates match results for the given queries and corpus.
 
