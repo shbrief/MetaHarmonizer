@@ -8,7 +8,7 @@ import numpy as np
 from sentence_transformers import SentenceTransformer
 from transformers import AutoTokenizer, AutoModel, AutoModelForMaskedLM
 import torch
-import src.Models.ontology_models as otm
+import src.models.ontology_models as otm
 import src.CustomLogger.custom_logger
 import pandas as pd
 import numpy as np
