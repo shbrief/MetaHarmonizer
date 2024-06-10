@@ -18,7 +18,6 @@ class PlotModelPerformance:
         plt.show()
         return 
 
-    @abstractmethod
     def create_confusion_matrix_plot(self, confusion_matrix, title):
         plt.figure(figsize=(10, 8))
         sns.heatmap(confusion_matrix, annot=True, cmap='Blues', fmt='g')

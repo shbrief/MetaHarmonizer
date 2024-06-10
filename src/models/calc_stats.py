@@ -5,9 +5,10 @@ import numpy as np
 
 class CalcStats:
     def __init__(self) -> None:
-        self.required_columns = ['curated_ontology', 'top1_match', 'top2_match', 'top3_match', 'top4_match', 'top5_match'] 
+        pass 
+        # self.required_columns = ['curated_ontology', 'top1_match', 'top2_match', 'top3_match', 'top4_match', 'top5_match'] 
 
-    def check_required_columns(self, data):
+    def check_required_columns(self, data, required_columns=None):
         """
         Check if the required columns exist in the DataFrame.
 
@@ -18,8 +19,10 @@ class CalcStats:
         - missing_columns (list): A list of columns that are missing from the DataFrame.
 
         """
-        missing_columns = list(set(self.required_columns) - set(data.columns))
-        return missing_columns
+        if not set(required_columns).issubset(data.columns):
+            missing_columns = list(set(required_columns) - set(data.columns))
+            raise ValueError(f"Missing required columns: {missing_columns}")
+        return True
     
     def calc_accuracy(self, data):
         """
@@ -35,9 +38,9 @@ class CalcStats:
         required_columns = ['curated_ontology', 'top1_match', 'top2_match', 'top3_match', 'top4_match', 'top5_match']
 
         # Check if all required columns exist in the DataFrame
-        if not set(required_columns).issubset(data.columns):
-            missing_columns = list(set(required_columns) - set(data.columns))
-            raise ValueError(f"Missing required columns: {missing_columns}")
+
+        self.check_required_columns(data, required_columns)
+            
         
         # Calculate accuracy for Top 1, Top 3, and Top 5 matches
         data['top1_accuracy'] = data.apply(lambda row: row['curated_ontology'] == row['top1_match'], axis=1)
@@ -73,11 +76,7 @@ class CalcStats:
         """
         required_columns = ['curated_ontology', match_type]
 
-        # Check if all required columns exist in the DataFrame
-        if not set(required_columns).issubset(data.columns):
-            missing_columns = list(set(required_columns) - set(data.columns))
-            raise ValueError(f"Missing required columns: {missing_columns}")
-
+        self.check_required_columns(data, required_columns)
         # Create a confusion matrix
         confusion_matrix = pd.crosstab(data['curated_ontology'], data[match_type])
         confusion_matrix_df = pd.DataFrame(confusion_matrix)
@@ -98,10 +97,7 @@ class CalcStats:
         """
         required_columns = ['curated_ontology', match_type]
 
-        # Check if all required columns exist in the DataFrame
-        if not set(required_columns).issubset(data.columns):
-            missing_columns = list(set(required_columns) - set(data.columns))
-            raise ValueError(f"Missing required columns: {missing_columns}")
+        self.check_required_columns(data, required_columns)
 
         # Create a confusion matrix
         confusion_matrix = pd.crosstab(data['curated_ontology'], data[match_type])
@@ -128,10 +124,7 @@ class CalcStats:
         """
         required_columns = ['curated_ontology', match_type, score_type]
 
-        # Check if all required columns exist in the DataFrame
-        if not set(required_columns).issubset(data.columns):
-            missing_columns = list(set(required_columns) - set(data.columns))
-            raise ValueError(f"Missing required columns: {missing_columns}")
+        self.check_required_columns(data, required_columns)
 
         # Create a new column for the score range
         data['score_range'] = pd.cut(data['top1_score'], ranges)
