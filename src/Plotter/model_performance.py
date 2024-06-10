@@ -98,7 +98,4 @@ class PlotModelPerformance:
         ax.set_ylabel("Accuracy (%)", fontsize=14)
         ax.set_title("Accuracy Comparison", fontsize=16)
         ax.grid(True)
-
-# # Save the figure in high resolution
-# plt.savefig('/content/drive/My Drive/Colab Notebooks/GSOC-cBioPortal/plots/Accuracy_Comparison_SapBert_PubmedBert_Plot.png', dpi=300)
     
