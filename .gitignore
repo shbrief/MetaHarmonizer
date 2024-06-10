@@ -1,10 +1,19 @@
 *nih*
-*images*
 *DS_Store*
 
 *__pycache__*
 *thumbnails*
 *scratch*
 *log
-*csv
 *txt
+
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+notes
+
+*png
+*.ipynb*
+.Pyuserdata
+*DbConn*
