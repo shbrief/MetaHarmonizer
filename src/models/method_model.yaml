@@ -1,0 +1,7 @@
+bert-base: bert-base-nli-mean-tokens
+pubmed-bert: pritamdeka/S-PubMedBert-MS-MARCO
+bio-bert: dmis-lab/biobert-v1.1
+longformer: yikuan8/Clinical-Longformer
+big-bird: yikuan8/Clinical-BigBird
+clinical-bert: emilyalsentzer/Bio_ClinicalBERT
+sap-bert: cambridgeltl/SapBERT-from-PubmedBERT-fulltext

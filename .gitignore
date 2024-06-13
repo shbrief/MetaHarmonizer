@@ -13,3 +13,7 @@
 .Ruserdata
 notes
 
+*png
+*.ipynb*
+.Pyuserdata
+*DbConn*
