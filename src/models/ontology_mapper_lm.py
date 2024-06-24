@@ -69,7 +69,7 @@ class OntoMapLM(otm.OntoModelsBase):
         model = self.model
 
         # Tokenize the texts and prepare input tensors
-        encoded_input = tokenizer(query_list[str], padding="max_length", max_length=25, truncation=True, return_tensors='pt')
+        encoded_input = tokenizer(query_list, padding="max_length", max_length=25, truncation=True, return_tensors='pt')
         
         # Compute token embeddings
         with torch.no_grad():
@@ -129,7 +129,10 @@ class OntoMapLM(otm.OntoModelsBase):
             x = row[1].nlargest(topk)
             self.matches_tmp['original_value'].append(query)
 
-            curated_value = cura_map[query]
+            if query in cura_map.keys():
+                curated_value = cura_map[query]
+            else:
+                curated_value = "Not Found"
             self.matches_tmp['curated_ontology'].append(curated_value)
 
             result_labels = list(row[1].nlargest(topk).index.values)
