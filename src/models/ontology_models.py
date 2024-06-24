@@ -5,7 +5,7 @@ import torch
 import yaml
 
 class OntoModelsBase:
-    def __init__(self, method:str, query:list, corpus:list, yaml_path:str='method_model.yaml') -> None:    
+    def __init__(self, method:str, topk:int, query:list, corpus:list, yaml_path:str='method_model.yaml') -> None:    
         self.method = method
         self.query = query
         self.corpus = corpus
@@ -39,7 +39,7 @@ class OntoModelsBase:
         }
         
 
-        self.topk = 5 
+        self.topk = topk 
     
     def load_method_model_dict(self, file_path):
         """

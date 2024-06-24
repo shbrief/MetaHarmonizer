@@ -16,10 +16,11 @@ logger = src.CustomLogger.custom_logger.CustomLogger()
 ## 3 base classes for 3 different types of models  
 ## Avoid building 3 different mappers for treatment, bodysite and disease and build one curaMap 
 class OntoMapST(otm.OntoModelsBase):
-    def __init__(self, method:str, query:list, corpus:list, from_tokenizer:bool=False, yaml_path:str='method_model.yaml') -> None:
-        super().__init__(method, query, corpus, yaml_path)
+    def __init__(self, method:str, topk, query:list, corpus:list, cura_map:dict, from_tokenizer:bool=False, yaml_path:str='method_model.yaml') -> None:
+        super().__init__(method, topk, query, corpus, yaml_path)
 
         self.from_tokenizer = from_tokenizer
+    
         self._query_embeddings = None 
         self._corpus_embeddings = None 
         self._model = None
@@ -100,8 +101,11 @@ class OntoMapST(otm.OntoModelsBase):
             query = row[0]
             x = row[1].nlargest(topk)
             self.matches_tmp['original_value'].append(query)
-
-            curated_value = cura_map[query]
+            
+            if query in cura_map.keys():
+                curated_value = cura_map[query]
+            else:
+                curated_value = "Not Found"
             self.matches_tmp['curated_ontology'].append(curated_value)
 
             result_labels = list(row[1].nlargest(topk).index.values)
