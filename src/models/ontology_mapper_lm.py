@@ -5,6 +5,7 @@ import torch  # type: ignore
 import src.models.ontology_models as otm
 import src.CustomLogger.custom_logger
 import pandas as pd
+from pathos.multiprocessing import ProcessingPool as Pool
 logger = src.CustomLogger.custom_logger.CustomLogger()
 
 ## type annotations for all the arguments and return values
@@ -13,7 +14,7 @@ logger = src.CustomLogger.custom_logger.CustomLogger()
 ## Avoid building 3 different mappers for treatment, bodysite and disease and build one curaMap 
 
 class OntoMapLM(otm.OntoModelsBase):
-    def __init__(self, method:str, query:list[str], corpus:list[str], cura_map: dict, topk:int=5, from_tokenizer:bool=True, yaml_path:str='method_model.yaml') -> None:
+    def __init__(self, method:str, query:list[str], corpus:list[str], topk:int=5, from_tokenizer:bool=True, yaml_path:str='method_model.yaml') -> None:
         super().__init__(method, topk, query, corpus, yaml_path)
 
         self.from_tokenizer = from_tokenizer
@@ -98,7 +99,20 @@ class OntoMapLM(otm.OntoModelsBase):
         corpus_embeddings = self.create_embeddings(corpus_list)
         return query_embeddings, corpus_embeddings
     
-    def get_match_results(self, cura_map:dict[str, str], topk:int=5):
+    def get_match_result_single_query(self, query:str, cosine_sim_df:pd.DataFrame):
+        """
+        Generates match results for a single query using cosine_sim_df
+        """
+        raise NotImplementedError("get_match_result_single_query will be implemented later")
+    
+    def get_match_results_mp(self):
+        """
+        Generates match results for the given queries and corpus using multiprocessing
+        """
+        raise NotImplementedError("get_match_results_mp will be implemented later")
+        
+                 
+    def get_match_results(self, cura_map:dict[str, str]=None, topk:int=5, test_or_prod:str='test'):
         """
         Generates match results for the given queries and corpus.
 
@@ -109,6 +123,10 @@ class OntoMapLM(otm.OntoModelsBase):
             pandas.DataFrame: A DataFrame containing the match results, including the original value, curated ontology,
                               top matches, match scores, and match levels.
         """
+        if test_or_prod == 'test':
+            if cura_map is None:
+                raise ValueError("cura_map should be provided for test mode")
+            
         queries = self.query
         corpus = self.corpus
         logger_child = self.logger.getChild("get_match_results")
@@ -126,17 +144,20 @@ class OntoMapLM(otm.OntoModelsBase):
         logger_child.info("Generating results table")
         for row in cosine_sim_df.iterrows():
             query = row[0]
-            x = row[1].nlargest(topk)
+            topk_vals = row[1].nlargest(topk)
             self.matches_tmp['original_value'].append(query)
 
-            if query in cura_map.keys():
-                curated_value = cura_map[query]
+            if test_or_prod == 'test':
+                if query in cura_map.keys():
+                    curated_value = cura_map[query]
+                else:
+                    curated_value = "Not Found"
             else:
-                curated_value = "Not Found"
+                curated_value = "Not Available for Prod Environment"
             self.matches_tmp['curated_ontology'].append(curated_value)
 
-            result_labels = list(row[1].nlargest(topk).index.values)
-            results_vals = list(row[1].nlargest(topk).values)
+            result_labels = list(topk_vals.nlargest(topk).index.values)
+            results_vals = list(topk_vals.nlargest(topk).values)
 
             for i in range(topk):
                 self.matches_tmp[f'top{i+1}_match'].append(result_labels[i])

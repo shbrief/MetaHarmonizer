@@ -14,7 +14,7 @@
 notes
 
 *png
-*.ipynb*
+*scratch*
 .Pyuserdata
 *DbConn*
 *authorized*
