@@ -20,6 +20,11 @@ class OntoMapEngine():
                  **other_params:dict[str,]) -> None:
         """
         This class is responsible for initializing the OntoMapEngine object.
+        
+        om_strategy options:
+        st: sentence transformer models with .encode() method from pre-trained models 
+        lm: language models with no .encode() method, you will have to create embeddings from the first token (CLS token) embeddings
+        rag: LLM based embeddings and RAG framework for scoring the top matches 
 
         Args:
             method (str): The name of the method.
@@ -29,7 +34,7 @@ class OntoMapEngine():
             from_tokenizer (bool): A flag to indicate if the model is loaded from a tokenizer.
             yaml_path (str): The path to the YAML file.
             om_strategy (str): The strategy to use for OntoMap.
-            other_params (dict): Other parameters to pass to the engine - particularly for RAG model.
+            other_params (dict): Other parameters to pass to the engine - particularly for RAG model or for specifying test/prod environment.
         """
         self.method = method
         self.query = query
@@ -79,10 +84,10 @@ class OntoMapEngine():
         elif self.om_strategy == 'st':
             return oms.OntoMapST(method=self.method, query=non_exact_query_list, corpus=self.corpus,topk=self.topk, from_tokenizer=False, 
                                  yaml_path=self.yaml_path)
-        elif self.om_strategy == 'llm':
+        elif self.om_strategy == 'rag':
             raise NotImplementedError("OntoMap LLM is not implemented yet")
         else:
-            raise ValueError("om_strategy should be either 'st', 'lm' or 'llm'")
+            raise ValueError("om_strategy should be either 'st', 'lm' or 'rag'")
             
     def _separate_matches(self, matching_type:str='exact'):
         """
