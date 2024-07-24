@@ -1,5 +1,5 @@
 
-### Codebase
+### Codebase Directory Subtree
 
 ```md
 
@@ -12,7 +12,7 @@
 │   │   ├── ontology_mapper_st.py
 │   │   ├── schema_mapper.py
 │   ├── CustomLogger   
-│   ├── DbConn
+│   ├── KnowledgeDb
 │   ├── Plotter
 │   ├── QA
 │   ├── Tests 
