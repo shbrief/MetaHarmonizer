@@ -16,8 +16,8 @@ logger = src.CustomLogger.custom_logger.CustomLogger()
 ## 3 base classes for 3 different types of models  
 ## Avoid building 3 different mappers for treatment, bodysite and disease and build one curaMap 
 class OntoMapST(otm.OntoModelsBase):
-    def __init__(self, method:str, query:list, corpus:list, from_tokenizer:bool=False, yaml_path:str='method_model.yaml') -> None:
-        super().__init__(method, query, corpus, yaml_path)
+    def __init__(self, method: str, topk: int, query: list, corpus: list, from_tokenizer:bool=False, yaml_path: str = 'method_model.yaml') -> None:
+        super().__init__(method, topk, query, corpus, yaml_path)
 
         self.from_tokenizer = from_tokenizer
         self._query_embeddings = None 
@@ -69,19 +69,33 @@ class OntoMapST(otm.OntoModelsBase):
          """
         return self.model.encode(query_list, convert_to_tensor = convert_to_tensor)
 
-    
-    def get_match_results(self, cura_map:dict, topk:int=5):
+    def get_match_result_single_query(self, query:str, cosine_sim_df:pd.DataFrame):
         """
-        Retrieves the match results for the given cura_map and top_k value.
+        Generates match results for a single query using cosine_sim_df
+        """
+        raise NotImplementedError("get_match_result_single_query will be implemented later")
+    
+    def get_match_results_mp(self):
+        """
+        Generates match results for the given queries and corpus using multiprocessing
+        """
+        raise NotImplementedError("get_match_results_mp will be implemented later")
+       
+    def get_match_results(self, cura_map:dict[str, str]=None, topk:int=5, test_or_prod:str='test'):
+        """
+        Generates match results for the given queries and corpus.
 
         Parameters:
-        cura_map (dict): A dictionary containing the mapping of queries to curated values.
-        top_k (int, optional): The number of top matches to retrieve. Defaults to 5.
+            top_k (int): The number of top most similar vectors to retrieve from the corpus. Default is 5.
 
         Returns:
-        pandas.DataFrame: A DataFrame containing the match results.
-
+            pandas.DataFrame: A DataFrame containing the match results, including the original value, curated ontology,
+                              top matches, match scores, and match levels.
         """
+        if test_or_prod == 'test':
+            if cura_map is None:
+                raise ValueError("cura_map should be provided for test mode")
+            
         queries = self.query
         corpus = self.corpus
         logger_child = self.logger.getChild("get_match_results")
@@ -89,6 +103,7 @@ class OntoMapST(otm.OntoModelsBase):
 
         query_emb = self.create_embeddings(queries, convert_to_tensor=False)
         corpus_emb = self.create_embeddings(corpus, convert_to_tensor=False)
+
 
         logger_child.info("Calculating cosine similarity matrix")
         cosine_sim_df = self.calc_similarity(query_emb, corpus_emb)
@@ -98,19 +113,25 @@ class OntoMapST(otm.OntoModelsBase):
         logger_child.info("Generating results table")
         for row in cosine_sim_df.iterrows():
             query = row[0]
-            x = row[1].nlargest(topk)
+            topk_vals = row[1].nlargest(topk)
             self.matches_tmp['original_value'].append(query)
 
-            curated_value = cura_map[query]
+            if test_or_prod == 'test':
+                if query in cura_map.keys():
+                    curated_value = cura_map[query]
+                else:
+                    curated_value = "Not Found"
+            else:
+                curated_value = "Not Available for Prod Environment"
             self.matches_tmp['curated_ontology'].append(curated_value)
 
-            result_labels = list(row[1].nlargest(topk).index.values)
-            results_vals = list(row[1].nlargest(topk).values)
+            result_labels = list(topk_vals.nlargest(topk).index.values)
+            results_vals = list(topk_vals.nlargest(topk).values)
 
             for i in range(topk):
                 self.matches_tmp[f'top{i+1}_match'].append(result_labels[i])
                 self.matches_tmp[f'top{i+1}_score'].append("{:.4f}".format(results_vals[i]))
-
+            
             match_level = 99
             if curated_value in result_labels:
                 match_level = result_labels.index(curated_value) + 1

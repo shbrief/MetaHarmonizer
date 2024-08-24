@@ -4,8 +4,9 @@ import pandas as pd
 import torch
 import yaml
 
+
 class OntoModelsBase:
-    def __init__(self, method:str, query:list, corpus:list, yaml_path:str='method_model.yaml') -> None:    
+    def __init__(self, method:str, topk:int, query:list, corpus:list, yaml_path:str='method_model.yaml') -> None:    
         self.method = method
         self.query = query
         self.corpus = corpus
@@ -39,8 +40,10 @@ class OntoModelsBase:
         }
         
 
-        self.topk = 5 
+        self.topk = topk 
     
+
+#### Helper Functions Common to all OntoMap Methods####    
     def load_method_model_dict(self, file_path):
         """
         This method is responsible for loading the method_model_dict from a YAML file.
@@ -87,7 +90,15 @@ class OntoModelsBase:
         cosine_scores = util.cos_sim(query_emb, corpus_emb) 
         cosine_sim_df = pd.DataFrame(cosine_scores)
         return cosine_sim_df 
-        
+
+##### To be implemented in the child class #####
+    def create_params(self):
+        """
+        This method is responsible for creating parameters for the OntoMap Method Used.
+        It will be implemented in the child class.
+        """
+        raise NotImplementedError("create_params will be implemented in the child class")
+    
     def create_embeddings(self):
         """
         This method is responsible for creating embeddings using sentence transformers, LM's or LLM's for the cBioPortal's queries or corpus.

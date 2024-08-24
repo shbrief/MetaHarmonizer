@@ -14,6 +14,9 @@
 notes
 
 *png
-*.ipynb*
+*scratch*
 .Pyuserdata
 *DbConn*
+*authorized*
+*all_orig_metadata*
+.processed_corpus_context
