@@ -5,7 +5,6 @@
 *thumbnails*
 *scratch*
 *log
-*txt
 
 .Rproj.user
 .Rhistory
@@ -19,4 +18,10 @@ notes
 *DbConn*
 *authorized*
 *all_orig_metadata*
-.processed_corpus_context
+*.processed_corpus_context
+*personal*
+*create_corpus_context*
+*schema_mapping.ipynb
+*.json*
+*app_*
+*app.py

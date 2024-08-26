@@ -16,7 +16,24 @@ logger = src.CustomLogger.custom_logger.CustomLogger()
 ## 3 base classes for 3 different types of models  
 ## Avoid building 3 different mappers for treatment, bodysite and disease and build one curaMap 
 class OntoMapST(otm.OntoModelsBase):
+    
     def __init__(self, method: str, topk: int, query: list, corpus: list, from_tokenizer:bool=False, yaml_path: str = 'method_model.yaml') -> None:
+        """
+        Description of __init__
+
+        Args:
+            self (undefined):
+            method (str):
+            topk (int):
+            query (list):
+            corpus (list):
+            from_tokenizer (bool=False):
+            yaml_path (str='method_model.yaml'):
+
+        Returns:
+            None
+
+        """
         super().__init__(method, topk, query, corpus, yaml_path)
 
         self.from_tokenizer = from_tokenizer
