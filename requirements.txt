@@ -1,0 +1,14 @@
+langchain
+langchain_openai
+matplotlib
+numpy
+pandas
+pathos
+pymongo
+PyYAML
+Requests
+seaborn
+sentence_transformers
+thefuzz
+torch
+transformers
