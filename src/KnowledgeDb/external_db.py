@@ -235,9 +235,13 @@ class NCIDb:
     
     
 <<<<<<< HEAD
+<<<<<<< HEAD
 ## INO for transferring the RAG vector database 
 =======
 >>>>>>> a1c1b02 (v0.2.0 updates:)
+=======
+## INO for transferring the RAG vector database 
+>>>>>>> 11a0b3b (Final updates to schema mapper with schema_map  demo)
 class MongoDBUtils:
     def __init__(self, connection_str, db, collection) -> None:    
         self.conn_str = connection_str

@@ -18,6 +18,9 @@ logger = src.CustomLogger.custom_logger.CustomLogger()
 class OntoMapST(otm.OntoModelsBase):
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 11a0b3b (Final updates to schema mapper with schema_map  demo)
     
     def __init__(self, method: str, topk: int, query: list, corpus: list, from_tokenizer:bool=False, yaml_path: str = 'method_model.yaml') -> None:
         """
@@ -36,12 +39,15 @@ class OntoMapST(otm.OntoModelsBase):
             None
 
         """
+<<<<<<< HEAD
 =======
     def __init__(self, method:str, topk, query:list, corpus:list, cura_map:dict, from_tokenizer:bool=False, yaml_path:str='method_model.yaml') -> None:
 >>>>>>> 5c7ccb3 (v0.1.6 updates: 5 patches made to ontology mapping)
 =======
     def __init__(self, method: str, topk: int, query: list, corpus: list, from_tokenizer:bool=False, yaml_path: str = 'method_model.yaml') -> None:
 >>>>>>> b224039 (v0.2.4 updates:)
+=======
+>>>>>>> 11a0b3b (Final updates to schema mapper with schema_map  demo)
         super().__init__(method, topk, query, corpus, yaml_path)
 
         self.from_tokenizer = from_tokenizer
