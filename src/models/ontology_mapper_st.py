@@ -16,6 +16,7 @@ logger = src.CustomLogger.custom_logger.CustomLogger()
 ## 3 base classes for 3 different types of models  
 ## Avoid building 3 different mappers for treatment, bodysite and disease and build one curaMap 
 class OntoMapST(otm.OntoModelsBase):
+<<<<<<< HEAD
     
     def __init__(self, method: str, topk: int, query: list, corpus: list, from_tokenizer:bool=False, yaml_path: str = 'method_model.yaml') -> None:
         """
@@ -34,9 +35,13 @@ class OntoMapST(otm.OntoModelsBase):
             None
 
         """
+=======
+    def __init__(self, method:str, topk, query:list, corpus:list, cura_map:dict, from_tokenizer:bool=False, yaml_path:str='method_model.yaml') -> None:
+>>>>>>> 5c7ccb3 (v0.1.6 updates: 5 patches made to ontology mapping)
         super().__init__(method, topk, query, corpus, yaml_path)
 
         self.from_tokenizer = from_tokenizer
+    
         self._query_embeddings = None 
         self._corpus_embeddings = None 
         self._model = None
@@ -132,6 +137,7 @@ class OntoMapST(otm.OntoModelsBase):
             query = row[0]
             topk_vals = row[1].nlargest(topk)
             self.matches_tmp['original_value'].append(query)
+<<<<<<< HEAD
 
             if test_or_prod == 'test':
                 if query in cura_map.keys():
@@ -140,6 +146,13 @@ class OntoMapST(otm.OntoModelsBase):
                     curated_value = "Not Found"
             else:
                 curated_value = "Not Available for Prod Environment"
+=======
+            
+            if query in cura_map.keys():
+                curated_value = cura_map[query]
+            else:
+                curated_value = "Not Found"
+>>>>>>> 5c7ccb3 (v0.1.6 updates: 5 patches made to ontology mapping)
             self.matches_tmp['curated_ontology'].append(curated_value)
 
             result_labels = list(topk_vals.nlargest(topk).index.values)

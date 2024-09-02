@@ -16,6 +16,7 @@ notes
 *scratch*
 .Pyuserdata
 *DbConn*
+<<<<<<< HEAD
 *authorized*
 *all_orig_metadata*
 *.processed_corpus_context
@@ -25,3 +26,6 @@ notes
 *.json*
 *app_*
 *app.py
+=======
+*authorized*
+>>>>>>> 5c7ccb3 (v0.1.6 updates: 5 patches made to ontology mapping)

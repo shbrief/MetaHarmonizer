@@ -14,7 +14,11 @@ logger = src.CustomLogger.custom_logger.CustomLogger()
 ## Avoid building 3 different mappers for treatment, bodysite and disease and build one curaMap 
 
 class OntoMapLM(otm.OntoModelsBase):
+<<<<<<< HEAD
     def __init__(self, method:str, query:list[str], corpus:list[str], topk:int=5, from_tokenizer:bool=True, yaml_path:str='method_model.yaml') -> None:
+=======
+    def __init__(self, method:str, query:list[str], corpus:list[str], cura_map: dict, topk:int=5, from_tokenizer:bool=True, yaml_path:str='method_model.yaml') -> None:
+>>>>>>> 5c7ccb3 (v0.1.6 updates: 5 patches made to ontology mapping)
         super().__init__(method, topk, query, corpus, yaml_path)
 
         self.from_tokenizer = from_tokenizer
