@@ -15,10 +15,14 @@ logger = src.CustomLogger.custom_logger.CustomLogger()
 
 class OntoMapLM(otm.OntoModelsBase):
 <<<<<<< HEAD
+<<<<<<< HEAD
     def __init__(self, method:str, query:list[str], corpus:list[str], topk:int=5, from_tokenizer:bool=True, yaml_path:str='method_model.yaml') -> None:
 =======
     def __init__(self, method:str, query:list[str], corpus:list[str], cura_map: dict, topk:int=5, from_tokenizer:bool=True, yaml_path:str='method_model.yaml') -> None:
 >>>>>>> 5c7ccb3 (v0.1.6 updates: 5 patches made to ontology mapping)
+=======
+    def __init__(self, method:str, query:list[str], corpus:list[str], topk:int=5, from_tokenizer:bool=True, yaml_path:str='method_model.yaml') -> None:
+>>>>>>> b224039 (v0.2.4 updates:)
         super().__init__(method, topk, query, corpus, yaml_path)
 
         self.from_tokenizer = from_tokenizer
@@ -152,11 +156,15 @@ class OntoMapLM(otm.OntoModelsBase):
             self.matches_tmp['original_value'].append(query)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> b224039 (v0.2.4 updates:)
             if test_or_prod == 'test':
                 if query in cura_map.keys():
                     curated_value = cura_map[query]
                 else:
                     curated_value = "Not Found"
+<<<<<<< HEAD
             else:
                 curated_value = "Not Available for Prod Environment"
 =======
@@ -165,6 +173,10 @@ class OntoMapLM(otm.OntoModelsBase):
             else:
                 curated_value = "Not Found"
 >>>>>>> e6f996b (v0.1.7 updates)
+=======
+            else:
+                curated_value = "Not Available for Prod Environment"
+>>>>>>> b224039 (v0.2.4 updates:)
             self.matches_tmp['curated_ontology'].append(curated_value)
 
             result_labels = list(topk_vals.nlargest(topk).index.values)

@@ -17,6 +17,7 @@ logger = src.CustomLogger.custom_logger.CustomLogger()
 ## Avoid building 3 different mappers for treatment, bodysite and disease and build one curaMap 
 class OntoMapST(otm.OntoModelsBase):
 <<<<<<< HEAD
+<<<<<<< HEAD
     
     def __init__(self, method: str, topk: int, query: list, corpus: list, from_tokenizer:bool=False, yaml_path: str = 'method_model.yaml') -> None:
         """
@@ -38,10 +39,12 @@ class OntoMapST(otm.OntoModelsBase):
 =======
     def __init__(self, method:str, topk, query:list, corpus:list, cura_map:dict, from_tokenizer:bool=False, yaml_path:str='method_model.yaml') -> None:
 >>>>>>> 5c7ccb3 (v0.1.6 updates: 5 patches made to ontology mapping)
+=======
+    def __init__(self, method: str, topk: int, query: list, corpus: list, from_tokenizer:bool=False, yaml_path: str = 'method_model.yaml') -> None:
+>>>>>>> b224039 (v0.2.4 updates:)
         super().__init__(method, topk, query, corpus, yaml_path)
 
         self.from_tokenizer = from_tokenizer
-        self.cura_map = cura_map
         self._query_embeddings = None 
         self._corpus_embeddings = None 
         self._model = None
@@ -138,12 +141,16 @@ class OntoMapST(otm.OntoModelsBase):
             topk_vals = row[1].nlargest(topk)
             self.matches_tmp['original_value'].append(query)
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> b224039 (v0.2.4 updates:)
 
             if test_or_prod == 'test':
                 if query in cura_map.keys():
                     curated_value = cura_map[query]
                 else:
                     curated_value = "Not Found"
+<<<<<<< HEAD
             else:
                 curated_value = "Not Available for Prod Environment"
 =======
@@ -153,6 +160,10 @@ class OntoMapST(otm.OntoModelsBase):
             else:
                 curated_value = "Not Found"
 >>>>>>> 5c7ccb3 (v0.1.6 updates: 5 patches made to ontology mapping)
+=======
+            else:
+                curated_value = "Not Available for Prod Environment"
+>>>>>>> b224039 (v0.2.4 updates:)
             self.matches_tmp['curated_ontology'].append(curated_value)
 
             result_labels = list(topk_vals.nlargest(topk).index.values)

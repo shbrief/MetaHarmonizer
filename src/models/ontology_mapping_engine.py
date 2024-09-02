@@ -1,13 +1,11 @@
 from src.models import ontology_mapper_st as oms
 from src.models import ontology_mapper_lm as oml
-from OmicsMLRepoHarmonizer.src.models import ontology_mapper_rag as ollm
+from src.models import ontology_mapper_rag as ollm
 import src.CustomLogger.custom_logger
 import pandas as pd
 import numpy as np
 from thefuzz import fuzz
-
 logger = src.CustomLogger.custom_logger.CustomLogger()
-
 
 
 class OntoMapEngine():
@@ -18,7 +16,8 @@ class OntoMapEngine():
                  cura_map:dict, 
                  topk:int=5, 
                  yaml_path:str='method_model.yaml', 
-                 om_strategy='st') -> None:
+                 om_strategy:str='lm',
+                 **other_params:dict[str,]) -> None:
         """
         This class is responsible for initializing the OntoMapEngine object.
 
@@ -29,6 +28,8 @@ class OntoMapEngine():
             topk (int): The number of top matches to return.
             from_tokenizer (bool): A flag to indicate if the model is loaded from a tokenizer.
             yaml_path (str): The path to the YAML file.
+            om_strategy (str): The strategy to use for OntoMap.
+            other_params (dict): Other parameters to pass to the engine - particularly for RAG model.
         """
         self.method = method
         self.query = query
@@ -38,7 +39,11 @@ class OntoMapEngine():
         # self.from_tokenizer = from_tokenizer
         self.yaml_path = yaml_path
         self.cura_map = cura_map
-
+        self.other_params = other_params
+        if 'test_or_prod' not in self.other_params.keys():
+            raise ValueError("test_or_prod value must be defined in other_params dictionary")
+        
+        self._test_or_prod = self.other_params['test_or_prod'] 
         self._logger = logger.custlogger(loglevel='INFO')
         self._logger.info("Initialized OntoMap Engine module")
 
@@ -68,16 +73,16 @@ class OntoMapEngine():
         This function is responsible for returning the OntoMap model based on the strategy
         """
         if self.om_strategy == 'lm':
-            return oml.OntoMapLM(method=self.method, query=non_exact_query_list, corpus=self.corpus, cura_map=self.cura_map, topk=self.topk, from_tokenizer=True, 
+            return oml.OntoMapLM(method=self.method, query=non_exact_query_list, corpus=self.corpus, topk=self.topk, from_tokenizer=True, 
                                  yaml_path=self.yaml_path)
             
         elif self.om_strategy == 'st':
-            return oms.OntoMapST(method=self.method, query=non_exact_query_list, corpus=self.corpus, cura_map=self.cura_map, topk=self.topk, from_tokenizer=False, 
+            return oms.OntoMapST(method=self.method, query=non_exact_query_list, corpus=self.corpus,topk=self.topk, from_tokenizer=False, 
                                  yaml_path=self.yaml_path)
         elif self.om_strategy == 'llm':
             raise NotImplementedError("OntoMap LLM is not implemented yet")
         else:
-            raise ValueError("om_strategy should be either 'st' or 'llm'")
+            raise ValueError("om_strategy should be either 'st', 'lm' or 'llm'")
             
     def _separate_matches(self, matching_type:str='exact'):
         """
@@ -100,7 +105,7 @@ class OntoMapEngine():
         non_exact_matches = list(np.setdiff1d(self.query, to_separate_matches))
         return non_exact_matches
 
-    def get_results_for_non_exact(self, non_exact_query_list: list[str], cura_map:dict, topk:int=5):
+    def get_results_for_non_exact(self, non_exact_query_list: list[str], topk:int=5):
         """
         This function is responsible for retrieving the match results for the given cura_map and top_k value.
 
@@ -110,8 +115,7 @@ class OntoMapEngine():
         """
         
         onto_map = self._om_model_from_strategy(non_exact_query_list=non_exact_query_list)
-        return onto_map.get_match_results(cura_map, topk)
-    
+        return onto_map.get_match_results(cura_map=self.cura_map, topk=topk, test_or_prod=self._test_or_prod)    
 
     def run(self):
         """
@@ -124,5 +128,5 @@ class OntoMapEngine():
         non_exact_matches_ls = self._separate_matches(matching_type='exact')
         
         self._logger.info("Running OntoMap model for non-exact matches")
-        onto_map_res = self.get_results_for_non_exact(non_exact_query_list=non_exact_matches_ls,cura_map=self.cura_map, topk=self.topk)
+        onto_map_res = self.get_results_for_non_exact(non_exact_query_list=non_exact_matches_ls, topk=self.topk)
         return exact_matches, onto_map_res
