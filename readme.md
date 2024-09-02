@@ -1,5 +1,9 @@
 
+<<<<<<< HEAD
 ### 1. Codebase folder structure
+=======
+### Codebase Directory Subtree
+>>>>>>> 3167b0c (Updated the Codebase Directory Subtree in Readme.md)
 
 ```md
 
