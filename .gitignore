@@ -21,14 +21,19 @@ notes
 *authorized*
 *all_orig_metadata*
 <<<<<<< HEAD
+<<<<<<< HEAD
 *.processed_corpus_context
 =======
 .processed_corpus_context
 >>>>>>> 11a0b3b (Final updates to schema mapper with schema_map  demo)
+=======
+*.processed_corpus_context
+>>>>>>> 6968d4b (Pushing ReadMe updates as well as the schema_mapping components)
 *personal*
 *create_corpus_context*
 *schema_mapping.ipynb
 *.json*
+<<<<<<< HEAD
 <<<<<<< HEAD
 *app_*
 *app.py
@@ -43,3 +48,7 @@ notes
 =======
 *app*
 >>>>>>> 11a0b3b (Final updates to schema mapper with schema_map  demo)
+=======
+*app_*
+*app.py
+>>>>>>> 6968d4b (Pushing ReadMe updates as well as the schema_mapping components)

@@ -2,6 +2,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 __version__ = "0.3.0"
 =======
 __version__ = "0.1.6"
@@ -15,3 +16,6 @@ __version__ = "0.2.0"
 =======
 __version__ = "0.2.4"
 >>>>>>> b224039 (v0.2.4 updates:)
+=======
+__version__ = "0.3.0"
+>>>>>>> 6968d4b (Pushing ReadMe updates as well as the schema_mapping components)
