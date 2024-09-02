@@ -36,6 +36,7 @@ notes
 <<<<<<< HEAD
 <<<<<<< HEAD
 *app_*
+<<<<<<< HEAD
 *app.py
 =======
 *authorized*
@@ -52,3 +53,11 @@ notes
 *app_*
 *app.py
 >>>>>>> 6968d4b (Pushing ReadMe updates as well as the schema_mapping components)
+=======
+<<<<<<< HEAD
+*app.py
+=======
+*app.py
+*docs*
+>>>>>>> fd1285a (comitting unstaged changes for merging)
+>>>>>>> 1c20785 (comitting unstaged changes for merging)

@@ -3,6 +3,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 __version__ = "0.3.0"
 =======
 __version__ = "0.1.6"
@@ -19,3 +20,14 @@ __version__ = "0.2.4"
 =======
 __version__ = "0.3.0"
 >>>>>>> 6968d4b (Pushing ReadMe updates as well as the schema_mapping components)
+=======
+__version__ = "0.3.0"
+=======
+# __version__ = "0.3.0"
+from . import Engine
+from . import KnowledgeDb
+from . import models
+from . import CustomLogger
+
+>>>>>>> fd1285a (comitting unstaged changes for merging)
+>>>>>>> 1c20785 (comitting unstaged changes for merging)

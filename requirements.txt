@@ -1,14 +1,40 @@
+<<<<<<< HEAD
 langchain
 langchain_openai
 matplotlib
+=======
+bravado
+fuzzywuzzy
+gensim
+langchain
+langchain_openai
+matplotlib
+nltk
+>>>>>>> fd1285a (comitting unstaged changes for merging)
 numpy
 pandas
 pathos
 pymongo
 PyYAML
+<<<<<<< HEAD
 Requests
 seaborn
 sentence_transformers
 thefuzz
 torch
 transformers
+=======
+PyYAML
+Requests
+seaborn
+sentence_transformers
+setuptools
+streamlit
+thefuzz
+torch
+tqdm
+transformers
+sphinx
+sphinx-automodapi
+sphinx-rtd-theme
+>>>>>>> fd1285a (comitting unstaged changes for merging)
