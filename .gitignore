@@ -37,8 +37,10 @@ notes
 <<<<<<< HEAD
 *app_*
 <<<<<<< HEAD
+<<<<<<< HEAD
 *app.py
 =======
+<<<<<<< HEAD
 *authorized*
 >>>>>>> 5c7ccb3 (v0.1.6 updates: 5 patches made to ontology mapping)
 =======
@@ -61,3 +63,11 @@ notes
 *docs*
 >>>>>>> fd1285a (comitting unstaged changes for merging)
 >>>>>>> 1c20785 (comitting unstaged changes for merging)
+=======
+*app.py
+*docs*
+>>>>>>> fd1285a (comitting unstaged changes for merging)
+>>>>>>> 742544ac2f6635755f8ac6401976785606a7eb27
+=======
+*app.py
+>>>>>>> parent of 742544a (Merge commit 'e73751844beddc38c705c558f40cc490b0f9f107' into abhi_devv)

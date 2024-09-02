@@ -1,14 +1,24 @@
-import pandas as pd  # type: ignore
-from sentence_transformers import SentenceTransformer  # type: ignore
-from transformers import AutoTokenizer, AutoModel # type: ignore
-import torch  # type: ignore 
+
+from sentence_transformers import util
+import pandas as pd
+from sentence_transformers import SentenceTransformer
+from transformers import AutoTokenizer, AutoModel
+import torch
 import src.models.ontology_models as otm
 import src.CustomLogger.custom_logger
-from pathos.multiprocessing import ProcessingPool as Pool
+
+
 
 logger = src.CustomLogger.custom_logger.CustomLogger()
 
+## type annotations for all the arguments and return values
+## build a different class for each type of models - sentence transformer class, LM class and LLM class
+## 3 base classes for 3 different types of models  
+## Avoid building 3 different mappers for treatment, bodysite and disease and build one curaMap 
 class OntoMapST(otm.OntoModelsBase):
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -19,21 +29,6 @@ class OntoMapST(otm.OntoModelsBase):
 >>>>>>> 1c20785 (comitting unstaged changes for merging)
     
     def __init__(self, method: str, topk: int, query: list, corpus: list, from_tokenizer:bool=False, yaml_path: str = 'method_model.yaml') -> None:
-        """
-        Description of __init__
-
-        Args:
-            self (undefined):
-            method (str):
-            topk (int):
-            query (list):
-            corpus (list):
-            from_tokenizer (bool=False):
-            yaml_path (str='method_model.yaml'):
-
-        Returns:
-            None
-
 =======
     """
     A class to map ontologies using sentence transformers.
@@ -53,17 +48,84 @@ class OntoMapST(otm.OntoModelsBase):
     """
 
     def __init__(self, method: str, topk: int, query: list, corpus: list, from_tokenizer: bool = False, yaml_path: str = 'method_model.yaml') -> None:
+>>>>>>> 742544ac2f6635755f8ac6401976785606a7eb27
         """
         Initializes the OntoMapST class.
 
         Args:
+<<<<<<< HEAD
+            self (undefined):
+            method (str):
+            topk (int):
+            query (list):
+            corpus (list):
+            from_tokenizer (bool=False):
+            yaml_path (str='method_model.yaml'):
+
+        Returns:
+            None
+
+=======
+=======
+>>>>>>> 0570565 (Local changes to adding documentation updated)
+    """
+    A class to map ontologies using sentence transformers.
+
+    Attributes:
+        method (str): The method to use for the model.
+        query (list[str]): The list of query strings.
+        corpus (list[str]): The list of corpus strings.
+        topk (int): The number of top results to consider.
+        from_tokenizer (bool): Whether to use a tokenizer.
+        yaml_path (str): Path to the YAML configuration file.
+        _query_embeddings (torch.Tensor or None): Embeddings for the queries.
+        _corpus_embeddings (torch.Tensor or None): Embeddings for the corpus.
+        _model (AutoModel or SentenceTransformer or None): The model instance.
+        _tokenizer (AutoTokenizer or None): The tokenizer instance.
+        logger (CustomLogger): Logger instance.
+    """
+
+    def __init__(self, method: str, topk: int, query: list, corpus: list, from_tokenizer: bool = False, yaml_path: str = 'method_model.yaml') -> None:
+=======
             method (str): The method to use for the model.
             topk (int): The number of top results to consider.
             query (list): The list of query strings.
             corpus (list): The list of corpus strings.
             from_tokenizer (bool, optional): Whether to use a tokenizer. Defaults to False.
             yaml_path (str, optional): Path to the YAML configuration file. Defaults to 'method_model.yaml'.
+>>>>>>> 742544ac2f6635755f8ac6401976785606a7eb27
+=======
+    
+    def __init__(self, method: str, topk: int, query: list, corpus: list, from_tokenizer:bool=False, yaml_path: str = 'method_model.yaml') -> None:
+>>>>>>> parent of 742544a (Merge commit 'e73751844beddc38c705c558f40cc490b0f9f107' into abhi_devv)
+        """
+        Description of __init__
+
+        Args:
+<<<<<<< HEAD
+            method (str): The method to use for the model.
+            topk (int): The number of top results to consider.
+            query (list): The list of query strings.
+            corpus (list): The list of corpus strings.
+            from_tokenizer (bool, optional): Whether to use a tokenizer. Defaults to False.
+            yaml_path (str, optional): Path to the YAML configuration file. Defaults to 'method_model.yaml'.
+<<<<<<< HEAD
 >>>>>>> fd1285a (comitting unstaged changes for merging)
+=======
+            self (undefined):
+            method (str):
+            topk (int):
+            query (list):
+            corpus (list):
+            from_tokenizer (bool=False):
+            yaml_path (str='method_model.yaml'):
+
+        Returns:
+            None
+
+>>>>>>> parent of 742544a (Merge commit 'e73751844beddc38c705c558f40cc490b0f9f107' into abhi_devv)
+=======
+>>>>>>> 0570565 (Local changes to adding documentation updated)
         """
 <<<<<<< HEAD
 =======
@@ -80,18 +142,12 @@ class OntoMapST(otm.OntoModelsBase):
         self._query_embeddings = None 
         self._corpus_embeddings = None 
         self._model = None
-        self._tokenizer = None
+        self._tokenizer = None 
         self.logger = logger.custlogger(loglevel='INFO')
         self.logger.info("Initialized OntoMap Sentence Transformer module")
 
     @property
     def tokenizer(self):
-        """
-        Gets the tokenizer instance.
-
-        Returns:
-            AutoTokenizer or None: The tokenizer instance if from_tokenizer is True, otherwise None.
-        """
         if self.from_tokenizer is True:
             self._tokenizer = AutoTokenizer.from_pretrained(self.method_model_dict[self.method])
             return self._tokenizer
@@ -100,50 +156,46 @@ class OntoMapST(otm.OntoModelsBase):
 
     @property
     def model(self):
-        """
-        Gets the model instance.
-
-        Returns:
-            AutoModel or SentenceTransformer: The model instance.
-        """
         if self.from_tokenizer is True:
             self._model = AutoModel.from_pretrained(self.method_model_dict[self.method])             
         else:
             self._model = SentenceTransformer(self.method_model_dict[self.method])
         return self._model 
 
+    
     @property    
     def query_embeddings(self):
-        """
-        Gets the query embeddings.
-
-        Returns:
-            torch.Tensor: The query embeddings.
-        """
         if self._query_embeddings is None:
             embd = self.create_embeddings(self.query)
         return embd
         
     @property
     def corpus_embeddings(self):
-        """
-        Gets the corpus embeddings.
-
-        Returns:
-            torch.Tensor: The corpus embeddings.
-        """
         if self._corpus_embeddings is None:
             embd = self.create_embeddings(self.corpus)
         return embd 
 
-    def create_embeddings(self, query_list: list[str], convert_to_tensor: bool = False):
+    def create_embeddings(self, query_list:list, convert_to_tensor:bool=True):
         """
-        Creates embeddings using SAP-BERT like LM models using first token embeddings (CLS token).
+        Function to create embeddings for sentence transformer model 
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< HEAD
         ARGS:
             query_list: list of str items 
             convert_to_tensor: boolean value for numpy or tensor datatype for output embeddings 
+=======
+        Args:
+            query_list (list[str]): List of query strings.
+            convert_to_tensor (bool, optional): Whether to convert the output embeddings to tensor. Defaults to False.
+>>>>>>> 742544ac2f6635755f8ac6401976785606a7eb27
+=======
+        ARGS:
+            query_list: list of str items 
+            convert_to_tensor: boolean value for numpy or tensor datatype for output embeddings 
+>>>>>>> parent of 742544a (Merge commit 'e73751844beddc38c705c558f40cc490b0f9f107' into abhi_devv)
 
         RETURNS:
             numpy or tensor datatype for output embeddings
@@ -174,6 +226,8 @@ class OntoMapST(otm.OntoModelsBase):
                               top matches, match scores, and match levels.
         """
 =======
+=======
+>>>>>>> 0570565 (Local changes to adding documentation updated)
         Args:
             query_list (list[str]): List of query strings.
             convert_to_tensor (bool, optional): Whether to convert the output embeddings to tensor. Defaults to False.
@@ -253,7 +307,6 @@ class OntoMapST(otm.OntoModelsBase):
         Raises:
             ValueError: If cura_map is not provided in 'test' mode.
         """
->>>>>>> fd1285a (comitting unstaged changes for merging)
         if test_or_prod == 'test':
             if cura_map is None:
                 raise ValueError("cura_map should be provided for test mode")
@@ -290,6 +343,8 @@ class OntoMapST(otm.OntoModelsBase):
 <<<<<<< HEAD
             else:
                 curated_value = "Not Available for Prod Environment"
+<<<<<<< HEAD
+<<<<<<< HEAD
 =======
             
             if query in cura_map.keys():
@@ -301,6 +356,17 @@ class OntoMapST(otm.OntoModelsBase):
             else:
                 curated_value = "Not Available for Prod Environment"
 >>>>>>> b224039 (v0.2.4 updates:)
+=======
+            if test_or_prod == 'test':
+                if query in cura_map.keys():
+                    curated_value = cura_map[query]
+                else:
+                    curated_value = "Not Found"
+            else:
+                curated_value = "Not Available for Prod Environment"
+>>>>>>> 742544ac2f6635755f8ac6401976785606a7eb27
+=======
+>>>>>>> parent of 742544a (Merge commit 'e73751844beddc38c705c558f40cc490b0f9f107' into abhi_devv)
             self.matches_tmp['curated_ontology'].append(curated_value)
 
             result_labels = list(topk_vals.nlargest(topk).index.values)

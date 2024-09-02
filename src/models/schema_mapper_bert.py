@@ -15,10 +15,14 @@ import nltk
 nltk.download('punkt')
 nltk.download('wordnet')
 <<<<<<< HEAD
-class ClinicalDataMatcherBert:
-    def __init__(self, clinical_data_path, schema_map_path):
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 0570565 (Local changes to adding documentation updated)
 
+>>>>>>> 742544ac2f6635755f8ac6401976785606a7eb27
 class ClinicalDataMatcherBert:
     """
     A class to match clinical data columns to schema map topics using BERT embeddings.
@@ -32,6 +36,16 @@ class ClinicalDataMatcherBert:
     """
 
     def __init__(self, clinical_data_path, schema_map_path):
+<<<<<<< HEAD
+=======
+
+=======
+>>>>>>> parent of 742544a (Merge commit 'e73751844beddc38c705c558f40cc490b0f9f107' into abhi_devv)
+class ClinicalDataMatcherBert:
+    def __init__(self, clinical_data_path, schema_map_path):
+<<<<<<< HEAD
+=======
+>>>>>>> 742544ac2f6635755f8ac6401976785606a7eb27
         """
         Initializes the ClinicalDataMatcherBert class.
 
@@ -39,7 +53,15 @@ class ClinicalDataMatcherBert:
             clinical_data_path (str): Path to the clinical data file.
             schema_map_path (str): Path to the schema map file.
         """
+<<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> fd1285a (comitting unstaged changes for merging)
+=======
+>>>>>>> 742544ac2f6635755f8ac6401976785606a7eb27
+=======
+>>>>>>> parent of 742544a (Merge commit 'e73751844beddc38c705c558f40cc490b0f9f107' into abhi_devv)
+=======
+>>>>>>> 0570565 (Local changes to adding documentation updated)
         # Load data
         self.clinical_data = pd.read_csv(clinical_data_path, sep='\t')
         with open(schema_map_path, 'rb') as f:
@@ -53,7 +75,14 @@ class ClinicalDataMatcherBert:
 
     def preprocess_text(self, text):
 <<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 742544ac2f6635755f8ac6401976785606a7eb27
+=======
+>>>>>>> 0570565 (Local changes to adding documentation updated)
         """
         Preprocesses the input text by tokenizing, lowercasing, and lemmatizing.
 
@@ -63,7 +92,15 @@ class ClinicalDataMatcherBert:
         Returns:
             str: The preprocessed text.
         """
+<<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> fd1285a (comitting unstaged changes for merging)
+=======
+>>>>>>> 742544ac2f6635755f8ac6401976785606a7eb27
+=======
+>>>>>>> parent of 742544a (Merge commit 'e73751844beddc38c705c558f40cc490b0f9f107' into abhi_devv)
+=======
+>>>>>>> 0570565 (Local changes to adding documentation updated)
         if isinstance(text, str):
             tokens = word_tokenize(text.lower())
             tokens = [self.lemmatizer.lemmatize(token) for token in tokens if token.isalpha()]
@@ -73,7 +110,14 @@ class ClinicalDataMatcherBert:
 
     def create_embeddings(self, text_list, convert_to_tensor=False):
 <<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 742544ac2f6635755f8ac6401976785606a7eb27
+=======
+>>>>>>> 0570565 (Local changes to adding documentation updated)
         """
         Creates embeddings for a list of texts using the BERT model.
 
@@ -84,7 +128,15 @@ class ClinicalDataMatcherBert:
         Returns:
             numpy.ndarray or torch.Tensor: The embeddings.
         """
+<<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> fd1285a (comitting unstaged changes for merging)
+=======
+>>>>>>> 742544ac2f6635755f8ac6401976785606a7eb27
+=======
+>>>>>>> parent of 742544a (Merge commit 'e73751844beddc38c705c558f40cc490b0f9f107' into abhi_devv)
+=======
+>>>>>>> 0570565 (Local changes to adding documentation updated)
         encoded_input = self.tokenizer(text_list, padding=True, truncation=True, max_length=512, return_tensors='pt')
         # Tokenize the texts and prepare input tensors
 
@@ -95,14 +147,29 @@ class ClinicalDataMatcherBert:
 
     def create_topic_embeddings(self):
 <<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 742544ac2f6635755f8ac6401976785606a7eb27
+=======
+>>>>>>> 0570565 (Local changes to adding documentation updated)
         """
         Creates embeddings for the topics in the schema map.
 
         Returns:
             dict: A dictionary mapping topics to their embeddings.
         """
+<<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> fd1285a (comitting unstaged changes for merging)
+=======
+>>>>>>> 742544ac2f6635755f8ac6401976785606a7eb27
+=======
+>>>>>>> parent of 742544a (Merge commit 'e73751844beddc38c705c558f40cc490b0f9f107' into abhi_devv)
+=======
+>>>>>>> 0570565 (Local changes to adding documentation updated)
         topic_embeddings = {}
         for topic, content in self.schema_map.items():
             combined_terms = " ".join(self.preprocess_text(term) for term in content['column_names'])
@@ -111,7 +178,14 @@ class ClinicalDataMatcherBert:
 
     def create_column_embedding(self, column):
 <<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 742544ac2f6635755f8ac6401976785606a7eb27
+=======
+>>>>>>> 0570565 (Local changes to adding documentation updated)
         """
         Creates an embedding for a column in the clinical data.
 
@@ -121,13 +195,39 @@ class ClinicalDataMatcherBert:
         Returns:
             numpy.ndarray or torch.Tensor: The column embedding.
         """
+<<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> fd1285a (comitting unstaged changes for merging)
+=======
+>>>>>>> 742544ac2f6635755f8ac6401976785606a7eb27
+=======
+>>>>>>> parent of 742544a (Merge commit 'e73751844beddc38c705c558f40cc490b0f9f107' into abhi_devv)
+=======
+>>>>>>> 0570565 (Local changes to adding documentation updated)
         column_values = self.clinical_data[column].dropna().astype(str).tolist()
         processed_values = " ".join(self.preprocess_text(value) for value in column_values)
         return self.create_embeddings([processed_values])
 
     def is_quantitative_or_boolean(self, series):
 <<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+        return pd.api.types.is_numeric_dtype(series) or pd.api.types.is_bool_dtype(series)
+
+    def compare_to_subtopics(self, column_name):
+=======
+=======
+>>>>>>> 0570565 (Local changes to adding documentation updated)
+        """
+        Checks if a pandas Series is of numeric or boolean type.
+
+        Args:
+            series (pd.Series): The pandas Series.
+
+        Returns:
+            bool: True if the series is numeric or boolean, False otherwise.
+        """
         return pd.api.types.is_numeric_dtype(series) or pd.api.types.is_bool_dtype(series)
 
     def compare_to_subtopics(self, column_name):
@@ -144,6 +244,7 @@ class ClinicalDataMatcherBert:
         return pd.api.types.is_numeric_dtype(series) or pd.api.types.is_bool_dtype(series)
 
     def compare_to_subtopics(self, column_name):
+>>>>>>> 742544ac2f6635755f8ac6401976785606a7eb27
         """
         Compares a clinical data column name to subtopics in the schema map.
 
@@ -153,7 +254,18 @@ class ClinicalDataMatcherBert:
         Returns:
             list: A list of tuples containing subtopics and their similarity scores, sorted in descending order.
         """
+<<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> fd1285a (comitting unstaged changes for merging)
+=======
+>>>>>>> 742544ac2f6635755f8ac6401976785606a7eb27
+=======
+        return pd.api.types.is_numeric_dtype(series) or pd.api.types.is_bool_dtype(series)
+
+    def compare_to_subtopics(self, column_name):
+>>>>>>> parent of 742544a (Merge commit 'e73751844beddc38c705c558f40cc490b0f9f107' into abhi_devv)
+=======
+>>>>>>> 0570565 (Local changes to adding documentation updated)
         # Create embedding for the clinical data column name
         column_name_embedding = self.create_embeddings([self.preprocess_text(column_name)])
 
@@ -175,7 +287,14 @@ class ClinicalDataMatcherBert:
 
     def map_columns_to_topics(self, k=5):
 <<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 742544ac2f6635755f8ac6401976785606a7eb27
+=======
+>>>>>>> 0570565 (Local changes to adding documentation updated)
         """
         Maps clinical data columns to schema map topics.
 
@@ -185,7 +304,15 @@ class ClinicalDataMatcherBert:
         Returns:
             dict: A dictionary mapping clinical data columns to their top k topics.
         """
+<<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> fd1285a (comitting unstaged changes for merging)
+=======
+>>>>>>> 742544ac2f6635755f8ac6401976785606a7eb27
+=======
+>>>>>>> parent of 742544a (Merge commit 'e73751844beddc38c705c558f40cc490b0f9f107' into abhi_devv)
+=======
+>>>>>>> 0570565 (Local changes to adding documentation updated)
         topic_embeddings = self.create_topic_embeddings()
         column_topic_mapping = {}
         for col in self.clinical_data.columns:
@@ -205,9 +332,27 @@ class ClinicalDataMatcherBert:
 
     def save_topic_mapping_to_json(self, output_path, k=5):
 <<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
         topic_mappings = self.map_columns_to_topics(k)
         with open(output_path, 'w') as json_file:
             json.dump(topic_mappings, json_file, indent=4)   
+=======
+=======
+>>>>>>> 0570565 (Local changes to adding documentation updated)
+        """
+        Saves the topic mappings to a JSON file.
+
+        Args:
+            output_path (str): The path to the output JSON file.
+            k (int, optional): The number of top topics to consider. Defaults to 5.
+        """
+        topic_mappings = self.map_columns_to_topics(k)
+        with open(output_path, 'w') as json_file:
+            json.dump(topic_mappings, json_file, indent=4)
+<<<<<<< HEAD
+>>>>>>> fd1285a (comitting unstaged changes for merging)
 =======
         """
         Saves the topic mappings to a JSON file.
@@ -219,4 +364,11 @@ class ClinicalDataMatcherBert:
         topic_mappings = self.map_columns_to_topics(k)
         with open(output_path, 'w') as json_file:
             json.dump(topic_mappings, json_file, indent=4)
->>>>>>> fd1285a (comitting unstaged changes for merging)
+>>>>>>> 742544ac2f6635755f8ac6401976785606a7eb27
+=======
+        topic_mappings = self.map_columns_to_topics(k)
+        with open(output_path, 'w') as json_file:
+            json.dump(topic_mappings, json_file, indent=4)   
+>>>>>>> parent of 742544a (Merge commit 'e73751844beddc38c705c558f40cc490b0f9f107' into abhi_devv)
+=======
+>>>>>>> 0570565 (Local changes to adding documentation updated)
