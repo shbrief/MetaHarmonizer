@@ -25,6 +25,7 @@
 │   ├── CustomLogger   
 │   ├── KnowledgeDb
 │   ├── Plotter
+<<<<<<< HEAD
 ├── setup.py   
 └── readme.md
 └── LICENSE
@@ -103,6 +104,17 @@ big-bird, clinical-bert, sap-bert`. These are string keys that fetch the differe
 
 The demo notebooks are located across `/demo_nb` folder
 ### 3. Resources for Ontology Mapping
+=======
+│   ├── QA
+│   ├── Tests 
+└── README.md
+└── <jupyter_nb1.ipynb> 
+└── <jupyter_nb2.ipynb>
+```
+
+
+### Resources for Ontology Mapping
+>>>>>>> a1c1b02 (v0.2.0 updates:)
 | Topic | Links | Resource Type |
 |----------|----------|----------|
 | Review paper on all pretrained biomedical BERT models | [Link](https://www.sciencedirect.com/science/article/pii/S1532046421003117) | paper |
@@ -123,3 +135,7 @@ The demo notebooks are located across `/demo_nb` folder
 | How to train sentence transformers | [Link](https://huggingface.co/blog/how-to-train-sentence-transformers) | blog |
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> a1c1b02 (v0.2.0 updates:)

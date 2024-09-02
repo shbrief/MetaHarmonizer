@@ -234,7 +234,10 @@ class NCIDb:
         return '.'.join(context_list)
     
     
+<<<<<<< HEAD
 ## INO for transferring the RAG vector database 
+=======
+>>>>>>> a1c1b02 (v0.2.0 updates:)
 class MongoDBUtils:
     def __init__(self, connection_str, db, collection) -> None:    
         self.conn_str = connection_str

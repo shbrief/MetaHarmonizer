@@ -41,7 +41,7 @@ class OntoMapST(otm.OntoModelsBase):
         super().__init__(method, topk, query, corpus, yaml_path)
 
         self.from_tokenizer = from_tokenizer
-    
+        self.cura_map = cura_map
         self._query_embeddings = None 
         self._corpus_embeddings = None 
         self._model = None
