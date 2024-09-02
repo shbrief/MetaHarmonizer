@@ -17,6 +17,7 @@
 │   │   └── calc_stats.py
 │   │   ├── ontology_models.py
 │   │   ├── ontology_mapper_rag.py
+<<<<<<< HEAD
 │   │   ├── ontology_mapper_lm.py
 │   │   ├── ontology_mapper_st.py
 │   │   ├── schema_mapper_models.py
@@ -26,6 +27,13 @@
 │   ├── Engine
 │   │   ├── ontology_mapping_engine.py
 │   │   ├── schema_mapping_engine.py
+=======
+│   │   ├── ontology_mapping_engine.py
+│   │   ├── ontology_mapper_lm.py
+│   │   ├── ontology_mapper_st.py
+│   │   ├── schema_mapper.py
+│   │   ├── method_model.yaml
+>>>>>>> d7e166d (Added engine and yaml file for model specs to the src codebase)
 │   ├── CustomLogger   
 │   ├── KnowledgeDb
 │   ├── Plotter
