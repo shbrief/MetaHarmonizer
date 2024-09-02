@@ -151,6 +151,7 @@ class OntoMapLM(otm.OntoModelsBase):
             topk_vals = row[1].nlargest(topk)
             self.matches_tmp['original_value'].append(query)
 
+<<<<<<< HEAD
             if test_or_prod == 'test':
                 if query in cura_map.keys():
                     curated_value = cura_map[query]
@@ -158,6 +159,12 @@ class OntoMapLM(otm.OntoModelsBase):
                     curated_value = "Not Found"
             else:
                 curated_value = "Not Available for Prod Environment"
+=======
+            if query in cura_map.keys():
+                curated_value = cura_map[query]
+            else:
+                curated_value = "Not Found"
+>>>>>>> e6f996b (v0.1.7 updates)
             self.matches_tmp['curated_ontology'].append(curated_value)
 
             result_labels = list(topk_vals.nlargest(topk).index.values)
