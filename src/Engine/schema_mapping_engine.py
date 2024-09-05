@@ -5,15 +5,36 @@ import src.CustomLogger.custom_logger
 import pandas as pd
 import numpy as np
 from thefuzz import fuzz
+
 logger = src.CustomLogger.custom_logger.CustomLogger()
 
-# This class `SchemaMapEngine` extends `ClinicalDataMatcher` and initializes with specified
-# parameters.
 class SchemaMapEngine(sm_models.ClinicalDataMatcher):
-    def __init__(self, clinical_data_path:str, schema_map_path:str, matcher_type:str, output_file_name:str, k:int) -> None:
-        super().__init__(clinical_data_path, schema_map_path)
-        """This class integrates the different models available for schema mapping 
+    """
+    This class integrates the different models available for schema mapping.
+    It extends the ClinicalDataMatcher class and initializes with specified parameters.
+
+    Attributes:
+        clinical_data_path (str): Path to the clinical data.
+        schema_map_path (str): Path to the schema map.
+        matcher_type (str): Type of matcher to use ('Bert', 'LDA', or None).
+        output_file_name (str): Name of the output file.
+        top_k (int): Number of top results to consider.
+        _matcher (object): Instance of the matcher.
+        _logger (object): Logger instance.
+    """
+
+    def __init__(self, clinical_data_path: str, schema_map_path: str, matcher_type: str, output_file_name: str, k: int) -> None:
         """
+        Initialize the SchemaMapEngine class with specified parameters.
+
+        Args:
+            clinical_data_path (str): Path to the clinical data.
+            schema_map_path (str): Path to the schema map.
+            matcher_type (str): Type of matcher to use ('Bert', 'LDA', or None).
+            output_file_name (str): Name of the output file.
+            k (int): Number of top results to consider.
+        """
+        super().__init__(clinical_data_path, schema_map_path)
         self.top_k = k
         self.matcher_type = matcher_type
         self.output_file_name = output_file_name
@@ -26,37 +47,39 @@ class SchemaMapEngine(sm_models.ClinicalDataMatcher):
     @property
     def matcher(self):
         """
-        Description of matcher
+        Get the matcher instance based on the matcher type.
 
-        Args:
-            self (undefined):
-
+        Returns:
+            object: Matcher instance.
         """
         if self._matcher is None:
             if self.matcher_type is None:
                 self._matcher = sm_models.ClinicalDataMatcher(
                     clinical_data_path=self.clinical_data_path,
                     schema_map_path=self.schema_map_path
-                    )
+                )
             elif self.matcher_type == 'Bert':
                 self._matcher = sm_bert.ClinicalDataMatcherBert(
                     clinical_data_path=self.clinical_data_path,
                     schema_map_path=self.schema_map_path
-                    )
+                )
             elif self.matcher_type == 'LDA':
                 self._matcher = sm_lda.ClinicalDataMatcherWithTopicModeling(
                     clinical_data_path=self.clinical_data_path,
                     schema_map_path=self.schema_map_path,
                     k=self.top_k
                 )
-            return self._matcher    
+        return self._matcher    
     
     def run_schema_mapping(self):
+        """
+        Run the schema mapping process and save the output to a JSON file.
+        """
         self._logger.info("Running Schema Mapper")
         if self.matcher_type == 'LDA':
             self.matcher.save_topic_mapping_to_json(self.output_file_name, num_topics=self.top_k, num_words=5)
         elif self.matcher_type == 'Bert':
-            self.matcher.save_topic_mapping_to_json(self.output_file_name, k = 5)
+            self.matcher.save_topic_mapping_to_json(self.output_file_name, k=5)
         elif self.matcher_type is None:
             self.matcher.save_output_to_json(self.output_file_name)      
         self._logger.info("Json file saved")

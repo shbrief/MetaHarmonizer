@@ -89,8 +89,8 @@ results_engine_testing = onto_engine_large.run()
   - **query(list):** list of query terms (can be 1 or Many)
   - **corpus(list):** list of corpus terms
   - **om_strategy(str):** 2 types of strategy are available 
-    - strategy **lm**: This is the default strategy that uses [CLS] tokens for capturing the embedding representation. CLS is calculated in a much more intricate way, taking into account both its own embeddings (token/pos) as well as the context.
-    - strategy **st**: sentence transformer based strategy calculates non- [CLS] based embeddings. 
+  - strategy **lm**: This is the default strategy that uses [CLS] tokens for capturing the embedding representation. CLS is calculated in a much more intricate way, taking into account both its own embeddings (token/pos) as well as the context.
+  - strategy **st**: sentence transformer based strategy calculates non- [CLS] based embeddings. 
   - **method(str):** All available models are `bert-base, pubmed-bert, bio-bert, longformer
 big-bird, clinical-bert, sap-bert`. These are string keys that fetch the different transformer models found in the mapping method_model.yaml file.
   - **topk(int):** Number of top matches to return for each query term in the query list

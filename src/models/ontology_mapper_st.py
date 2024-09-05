@@ -1,4 +1,3 @@
-
 from sentence_transformers import util
 import pandas as pd
 from sentence_transformers import SentenceTransformer
@@ -7,32 +6,37 @@ import torch
 import src.models.ontology_models as otm
 import src.CustomLogger.custom_logger
 
-
-
 logger = src.CustomLogger.custom_logger.CustomLogger()
 
-## type annotations for all the arguments and return values
-## build a different class for each type of models - sentence transformer class, LM class and LLM class
-## 3 base classes for 3 different types of models  
-## Avoid building 3 different mappers for treatment, bodysite and disease and build one curaMap 
 class OntoMapST(otm.OntoModelsBase):
-    
-    def __init__(self, method: str, topk: int, query: list, corpus: list, from_tokenizer:bool=False, yaml_path: str = 'method_model.yaml') -> None:
+    """
+    A class to map ontologies using sentence transformers.
+
+    Attributes:
+        method (str): The method to use for the model.
+        query (list[str]): The list of query strings.
+        corpus (list[str]): The list of corpus strings.
+        topk (int): The number of top results to consider.
+        from_tokenizer (bool): Whether to use a tokenizer.
+        yaml_path (str): Path to the YAML configuration file.
+        _query_embeddings (torch.Tensor or None): Embeddings for the queries.
+        _corpus_embeddings (torch.Tensor or None): Embeddings for the corpus.
+        _model (AutoModel or SentenceTransformer or None): The model instance.
+        _tokenizer (AutoTokenizer or None): The tokenizer instance.
+        logger (CustomLogger): Logger instance.
+    """
+
+    def __init__(self, method: str, topk: int, query: list[str], corpus: list[str], from_tokenizer: bool = False, yaml_path: str = 'method_model.yaml') -> None:
         """
-        Description of __init__
+        Initializes the OntoMapST class.
 
         Args:
-            self (undefined):
-            method (str):
-            topk (int):
-            query (list):
-            corpus (list):
-            from_tokenizer (bool=False):
-            yaml_path (str='method_model.yaml'):
-
-        Returns:
-            None
-
+            method (str): The method to use for the model.
+            topk (int): The number of top results to consider.
+            query (list[str]): The list of query strings.
+            corpus (list[str]): The list of corpus strings.
+            from_tokenizer (bool, optional): Whether to use a tokenizer. Defaults to False.
+            yaml_path (str, optional): Path to the YAML configuration file. Defaults to 'method_model.yaml'.
         """
         super().__init__(method, topk, query, corpus, yaml_path)
 
@@ -46,7 +50,13 @@ class OntoMapST(otm.OntoModelsBase):
 
     @property
     def tokenizer(self):
-        if self.from_tokenizer is True:
+        """
+        Gets the tokenizer instance.
+
+        Returns:
+            AutoTokenizer or None: The tokenizer instance if from_tokenizer is True, otherwise None.
+        """
+        if self.from_tokenizer:
             self._tokenizer = AutoTokenizer.from_pretrained(self.method_model_dict[self.method])
             return self._tokenizer
         else:
@@ -54,60 +64,92 @@ class OntoMapST(otm.OntoModelsBase):
 
     @property
     def model(self):
-        if self.from_tokenizer is True:
+        """
+        Gets the model instance.
+
+        Returns:
+            AutoModel or SentenceTransformer: The model instance.
+        """
+        if self.from_tokenizer:
             self._model = AutoModel.from_pretrained(self.method_model_dict[self.method])             
         else:
             self._model = SentenceTransformer(self.method_model_dict[self.method])
         return self._model 
 
-    
     @property    
     def query_embeddings(self):
+        """
+        Gets the embeddings for the queries.
+
+        Returns:
+            torch.Tensor: The query embeddings.
+        """
         if self._query_embeddings is None:
             embd = self.create_embeddings(self.query)
         return embd
         
     @property
     def corpus_embeddings(self):
+        """
+        Gets the embeddings for the corpus.
+
+        Returns:
+            torch.Tensor: The corpus embeddings.
+        """
         if self._corpus_embeddings is None:
             embd = self.create_embeddings(self.corpus)
         return embd 
 
-    def create_embeddings(self, query_list:list, convert_to_tensor:bool=True):
+    def create_embeddings(self, query_list: list[str], convert_to_tensor: bool = True):
         """
-        Function to create embeddings for sentence transformer model 
+        Creates embeddings for the sentence transformer model.
 
-        ARGS:
-            query_list: list of str items 
-            convert_to_tensor: boolean value for numpy or tensor datatype for output embeddings 
+        Args:
+            query_list (list[str]): List of query strings.
+            convert_to_tensor (bool, optional): Whether to convert the output embeddings to tensor. Defaults to True.
 
-        RETURNS:
-            numpy or tensor datatype for output embeddings
-         """
-        return self.model.encode(query_list, convert_to_tensor = convert_to_tensor)
-
-    def get_match_result_single_query(self, query:str, cosine_sim_df:pd.DataFrame):
+        Returns:
+            numpy.ndarray or torch.Tensor: The output embeddings.
         """
-        Generates match results for a single query using cosine_sim_df
+        return self.model.encode(query_list, convert_to_tensor=convert_to_tensor)
+
+    def get_match_result_single_query(self, query: str, cosine_sim_df: pd.DataFrame):
+        """
+        Generates match results for a single query using cosine similarity DataFrame.
+
+        Args:
+            query (str): The query string.
+            cosine_sim_df (pd.DataFrame): DataFrame containing cosine similarity scores.
+
+        Raises:
+            NotImplementedError: This method is not implemented yet.
         """
         raise NotImplementedError("get_match_result_single_query will be implemented later")
     
     def get_match_results_mp(self):
         """
-        Generates match results for the given queries and corpus using multiprocessing
+        Generates match results for the given queries and corpus using multiprocessing.
+
+        Raises:
+            NotImplementedError: This method is not implemented yet.
         """
         raise NotImplementedError("get_match_results_mp will be implemented later")
-       
-    def get_match_results(self, cura_map:dict[str, str]=None, topk:int=5, test_or_prod:str='test'):
+        
+    def get_match_results(self, cura_map: dict[str, str] = None, topk: int = 5, test_or_prod: str = 'test') -> pd.DataFrame:
         """
         Generates match results for the given queries and corpus.
 
-        Parameters:
-            top_k (int): The number of top most similar vectors to retrieve from the corpus. Default is 5.
+        Args:
+            cura_map (dict[str, str], optional): A dictionary mapping queries to curated values. Required for 'test' mode. Defaults to None.
+            topk (int, optional): The number of top most similar vectors to retrieve from the corpus. Defaults to 5.
+            test_or_prod (str, optional): Mode of operation, either 'test' or 'prod'. Defaults to 'test'.
 
         Returns:
-            pandas.DataFrame: A DataFrame containing the match results, including the original value, curated ontology,
-                              top matches, match scores, and match levels.
+            pd.DataFrame: A DataFrame containing the match results, including the original value, curated ontology,
+                          top matches, match scores, and match levels.
+
+        Raises:
+            ValueError: If cura_map is not provided in 'test' mode.
         """
         if test_or_prod == 'test':
             if cura_map is None:
@@ -120,7 +162,6 @@ class OntoMapST(otm.OntoModelsBase):
 
         query_emb = self.create_embeddings(queries, convert_to_tensor=False)
         corpus_emb = self.create_embeddings(corpus, convert_to_tensor=False)
-
 
         logger_child.info("Calculating cosine similarity matrix")
         cosine_sim_df = self.calc_similarity(query_emb, corpus_emb)
