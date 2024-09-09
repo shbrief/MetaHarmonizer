@@ -1,3 +1,4 @@
+import grequests
 import requests
 import json
 import logging 
@@ -5,24 +6,19 @@ from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import MongoDBAtlasVectorSearch
+from langchain_openai import ChatOpenAI
 from pathos.multiprocessing import ProcessingPool as Pool
+import grequests
 
 class UMLSDb:
     """
-    A class to interact with the UMLS database.
-
-    Attributes:
-        api_key (str): The API key for accessing UMLS.
-        _base_url (str): The base URL for UMLS API.
-        _version (str): The version of the UMLS API.
+    A class to interact with the UMLS (Unified Medical Language System) API.
     """
-
-    def __init__(self, api_key: str) -> None:
+    def __init__(self, api_key):
         """
-        Initializes the UMLSDb class with the provided API key.
+        Initialize the UMLSDb class with the provided API key.
 
-        Args:
-            api_key (str): The API key for accessing UMLS.
+        :param api_key: The API key for accessing the UMLS API.
         """
         self.api_key = api_key
         self._base_url = 'https://uts-ws.nlm.nih.gov/rest'
@@ -30,15 +26,12 @@ class UMLSDb:
     
     def search_single_term(self, version: str = None, string_query: str = None, searchType: str = 'normalizedWords'):
         """
-        Searches for a single term in the UMLS database.
+        Search for a single term in the UMLS database.
 
-        Args:
-            version (str, optional): The version of the UMLS API. Defaults to None.
-            string_query (str, optional): The query string to search for. Defaults to None.
-            searchType (str, optional): The type of search to perform. Defaults to 'normalizedWords'.
-
-        Returns:
-            dict: The search results from the UMLS API.
+        :param version: The version of the UMLS database to use.
+        :param string_query: The term to search for.
+        :param searchType: The type of search to perform (default is 'normalizedWords').
+        :return: The search results in JSON format.
         """
         version = self._version
         string = string_query
@@ -59,7 +52,7 @@ class UMLSDb:
                 
                 if len(items) == 0:
                     if page == 1:
-                        print('No results found.\n')
+                        print('No results found.' + '\n')
                         break
                     else:
                         break
@@ -80,15 +73,13 @@ class UMLSDb:
             
     def get_nci_code_by_term(self, term: str):
         """
-        Retrieves the NCI code for a given term.
+        Get the NCI code for a given term.
 
-        Args:
-            term (str): The term to search for.
-
-        Returns:
-            tuple: A tuple containing the search results and a list of NCI codes.
+        :param term: The term to search for.
+        :return: A tuple containing the search results and a list of NCI codes.
         """
         version = "current"
+        term_str = term
         uri = "https://uts-ws.nlm.nih.gov"
         content_endpoint = "/rest/search/" + version
         full_url = uri + content_endpoint
@@ -99,7 +90,6 @@ class UMLSDb:
                 page += 1
                 query = {'string': term, 'apiKey': self.api_key, 'pageNumber': page, 'searchType': 'exact', 'sabs': 'NCI'}
                 query['returnIdType'] = ['code']
-   
                 r = requests.get(full_url, params=query)
                 r.raise_for_status()
                 print(r.url)
@@ -109,7 +99,7 @@ class UMLSDb:
                 
                 if len(items) == 0:
                     if page == 1:
-                        print('No results found.\n')
+                        print('No results found.' + '\n')
                         break
                     else:
                         break
@@ -135,207 +125,60 @@ class UMLSDb:
             
 class NCIDb:
     """
-    A class to interact with the NCI database.
-
-    Attributes:
-        _base_url (str): The base URL for NCI API.
-        _umls_api_key (str): The API key for accessing UMLS.
-        _umls_db (UMLSDb): An instance of the UMLSDb class.
-        _terminology (str): The terminology to use for NCI.
+    A class to interact with the NCI (National Cancer Institute) API.
     """
-
-    def __init__(self) -> None:
+    def __init__(self):
         """
-        Initializes the NCIDb class.
+        Initialize the NCIDb class.
         """
         self._base_url = "https://api-evsrest.nci.nih.gov/api/v1"
         self._umls_api_key = "acf85d30-60c7-4b65-97c1-07e6df7c624a"
         self._umls_db = UMLSDb(self._umls_api_key)
         self._terminology = "ncit"
-        
-    def get_synonyms(self, ncit_code: str, limit: int, n_children: int):
-        """
-        Retrieves synonyms for a given NCIT code.
-
-        Args:
-            ncit_code (str): The NCIT code to search for.
-            limit (int): The limit on the number of results.
-            n_children (int): The number of children to include.
-
-        Returns:
-            dict: The synonyms for the given NCIT code.
-        """
-        url = f"{self._base_url}/concept/{self._terminology}/{ncit_code}?limit={limit}&include=definitions%2C%20synonyms%2C%{n_children}children"
-        response = requests.get(url)
-        pretty_print = json.loads(response.text)
-        logging.info(json.dumps(pretty_print, indent=2))
-        return pretty_print
-
-    def get_synonyms_by_term(self, term: str):
-        """
-        Retrieves synonyms for a given term.
-
-        Args:
-            term (str): The term to search for.
-
-        Returns:
-            dict: The synonyms for the given term.
-        """
-        url = self._base_url + f"/concept/ncit/search?terminology=ncit&term={term}&synonymType=FULL_SYN"
-        response = requests.get(url)
-        pretty_print = json.loads(response.text)
-        logging.info(json.dumps(pretty_print, indent=2))
-        return pretty_print
-
-    def get_minimal_concept_list_by_code(self, list_of_codes: list[str]):
-        """
-        Retrieves minimal concept information for a list of codes.
-
-        Args:
-            list_of_codes (list[str]): The list of codes to search for.
-
-        Returns:
-            dict: The minimal concept information for the given codes.
-        """
-        ls_str = ','.join(list_of_codes)
-        logging.info(f"Get minimal concepts by list - {ls_str}")
-        logging.info("url = " + self._base_url + f"/concept/ncit?include=minimal&list={ls_str}")
-        response = requests.get(self._base_url + f"/concept/ncit?include=minimal&list={ls_str}")
-        assert response.status_code == requests.codes.ok
-        pretty_print = json.loads(response.text)
-        logging.info(json.dumps(pretty_print, indent=2))
-        return pretty_print
-
-    def get_concept_by_search_term_match(self, term: str):
-        """
-        Retrieves concepts matching a search term with a search type of "match".
-
-        Args:
-            term (str): The term to search for.
-
-        Returns:
-            dict: The concepts matching the search term.
-        """
-        logging.info("Get concepts matching a search term within a specified terminology and a search type of 'match'.")
-        logging.info("url = " + self._base_url + f"/concept/ncit/search?terminology=ncit&term={term}&term=match")
-        response = requests.get(self._base_url + f"/concept/ncit/search?terminology=ncit&term={term}&term=match")
-        assert response.status_code == requests.codes.ok
-        pretty_print = json.loads(response.text)
-        logging.info(json.dumps(pretty_print, indent=2))
-        return pretty_print
-
-    def get_concept_by_search_term_highlights(self, term: str):
-        """
-        Retrieves concepts matching a search term and includes synonyms and highlighted text in the response.
-
-        Args:
-            term (str): The term to search for.
-
-        Returns:
-            dict: The concepts matching the search term with highlights.
-        """
-        logging.info("Get concepts matching a search term within a specified terminology and include synonyms and highlighted text in the response.")
-        logging.info("url = " + self._base_url + f"/concept/ncit/search?terminology=ncit&term={term}&include=synonyms,highlights")
-        response = requests.get(self._base_url + f"/concept/ncit/search?terminology=ncit&term={term}&include=synonyms,highlights")
-        assert response.status_code == requests.codes.ok
-        pretty_print = json.loads(response.text)
-        logging.info(json.dumps(pretty_print, indent=2))
-        return pretty_print   
-
-    def get_property_by_code_or_label(self, term_list: list[str]):
-        """
-        Retrieves properties for the specified codes or labels.
-
-        Args:
-            term_list (list[str]): The list of terms to search for.
-
-        Returns:
-            dict: The properties for the given terms.
-        """
-        term_ls_str = ','.join(term_list)
-        logging.info(f"Get Property By Code or Label - {term_ls_str}")
-        logging.info("url = " + self._base_url + f"/metadata/ncit/properties?include=summary&list={term_ls_str}")
-        response = requests.get(self._base_url + f"/metadata/ncit/properties?include=summary&list={term_ls_str}")
-        assert response.status_code == requests.codes.ok
-        pretty_print = json.loads(response.text)
-        logging.info(json.dumps(pretty_print, indent=2))
-        return pretty_print
     
-    def get_summary_concept_by_code(self, term_code: str):
+    def get_term_concept_urls(self, terms: list[str], list_of_concepts):
         """
-        Retrieves summary information for a specified code.
+        Generate URLs for term concepts.
 
-        Args:
-            term_code (str): The code to search for.
-
-        Returns:
-            dict: The summary information for the given code.
-        """
-        logging.info(f"Get summary concepts by code - {term_code}")
-        logging.info("url = " + self._base_url + f"/concept/ncit/{term_code}?include=summary")
-        response = requests.get(self._base_url + f"/concept/ncit/{term_code}?include=summary&list=C3224")
-        assert response.status_code == requests.codes.ok
-        pretty_print = json.loads(response.text)
-        logging.info(json.dumps(pretty_print, indent=2))
-        return pretty_print
-    
-    def get_custom_concept_by_code(self, term_code: str, list_of_concepts: list[str]):
-        """
-        Retrieves custom concept information for a given terminology and code.
-
-        Args:
-            term_code (str): The code to search for.
-            list_of_concepts (list[str]): The list of concepts to include.
-
-        Returns:
-            tuple: A tuple containing the custom concept information and the response.
+        :param terms: A list of terms to generate URLs for.
+        :param list_of_concepts: A list of concepts to include in the URLs.
+        :return: A list of URLs.
         """
         ls_concept_str = ','.join(list_of_concepts)
-        logging.info(f"Get custom concepts by code - {term_code}")
-        logging.info("url = " + self._base_url + f"/concept/ncit/{term_code}?include={ls_concept_str}")
-        response = requests.get(self._base_url + f"/concept/ncit/{term_code}?include={ls_concept_str}")
-        assert response.status_code == requests.codes.ok
-        pretty_print = json.loads(response.text)
+        urls = [self._base_url + f"/concept/ncit/{term_code}?include={ls_concept_str}" for term_code in terms]
+        return urls
+    
+    def get_custom_concepts_by_codes(self, terms, list_of_concepts):
+        """
+        Return custom concept information for a given terminology and code.
+
+        :param terms: A list of terms to search for.
+        :param list_of_concepts: A list of concepts to include in the search.
+        :return: A dictionary mapping terms to their corresponding responses.
+        """
+        urls = self.get_term_concept_urls(terms, list_of_concepts)
+        rs = (grequests.get(u) for u in urls)
+        responses = grequests.map(rs)
+        term_response_map = {}
+        pretty_print = []
+        
+        for term, response in zip(terms, responses):
+            if response is None:
+                continue
+            if response.status_code == requests.codes.ok:
+                response_json = json.loads(response.text)
+                pretty_print.append(response_json)
+                term_response_map[term] = response_json
+
         logging.info(json.dumps(pretty_print, indent=2))
-        return pretty_print, response
-
-    def get_context_list(self, string: str):
-        """
-        Retrieves the context list for a given string.
-
-        Args:
-            string (str): The string to search for.
-
-        Returns:
-            list: The context list for the given string.
-        """
-        code = self._umls_db.get_nci_code_by_term(string)[1][0]
-        concepts = self.get_custom_concept_by_code(code, list_of_concepts=['synonyms', 'children', 'roles', 'definitions', 'parents'])
-        return self.create_context_list(concepts[0])
-
-    def create_context_list_mp(self, nci_codes: list[str]):
-        """
-        Creates a context list using multiprocessing.
-
-        Args:
-            nci_codes (list[str]): The list of NCI codes.
-
-        Returns:
-            list: The context list.
-        """
-        pool = Pool(processes=12)
-        context_list = pool.map(self.get_context_list, nci_codes)
-        return context_list
+        return term_response_map
     
     def create_context_list(self, concepts_for_curated_term2: dict[str]):
         """
-        Creates a context list from the given concepts.
+        Create a context list from the given concepts.
 
-        Args:
-            concepts_for_curated_term2 (dict[str]): The concepts for the curated term.
-
-        Returns:
-            str: The context list as a string.
+        :param concepts_for_curated_term2: A dictionary of concepts for a curated term.
+        :return: A string representing the context list.
         """
         context_list = []
         concepts = ['synonyms', 'children', 'roles', 'definitions', 'parents']
@@ -368,30 +211,22 @@ class NCIDb:
                     context_list.append(str_tmp)
         
         return '.'.join(context_list)
-    
+        
 class MongoDBUtils:
     """
-    A class to interact with MongoDB.
-
-    Attributes:
-        conn_str (str): The connection string for MongoDB.
-        _client (MongoClient): The MongoDB client.
-        _db (Database): The MongoDB database.
-        _atlas_search_index_name (str): The name of the Atlas search index.
-        collection (Collection): The MongoDB collection.
+    A utility class for interacting with MongoDB.
     """
-
-    def __init__(self, connection_str: str, db: str, collection: str = None) -> None:
+    def __init__(self, connection_str, db, collection) -> None:
         """
-        Initializes the MongoDBUtils class.
+        Initialize the MongoDBUtils class.
 
-        Args:
-            connection_str (str): The connection string for MongoDB.
-            db (str): The name of the database.
-            collection (str, optional): The name of the collection. Defaults to None.
+        :param connection_str: The connection string for MongoDB.
+        :param db: The name of the database.
+        :param collection: The name of the collection.
         """
         self.conn_str = connection_str
         self._client = MongoClient(self.conn_str, server_api=ServerApi('1'))
+        self._default_model = OpenAIEmbeddings(disallowed_special=())
         self._db = self._client[db]
         self._atlas_search_index_name = "RAGDataIndex"
         if collection is not None:
@@ -401,7 +236,7 @@ class MongoDBUtils:
             
     def ping(self):
         """
-        Sends a ping to confirm a successful connection to MongoDB.
+        Send a ping to confirm a successful connection to MongoDB.
         """
         try:
             self._client.admin.command('ping')
@@ -409,13 +244,12 @@ class MongoDBUtils:
         except Exception as e:
             print(e)
 
-    def create_collection(self, collection_name: str, validator: dict = None):
+    def create_collection(self, collection_name, validator=None):
         """
-        Creates a collection in MongoDB.
+        Create a new collection in the database.
 
-        Args:
-            collection_name (str): The name of the collection.
-            validator (dict, optional): The validator for the collection. Defaults to None.
+        :param collection_name: The name of the collection to create.
+        :param validator: Optional validator for the collection.
         """
         if collection_name not in self._db.list_collection_names():
             if validator:
@@ -425,43 +259,97 @@ class MongoDBUtils:
         else:
             print(f"Collection '{collection_name}' already exists.") 
             
-    def insert_data_to_mongo(self, records: list[dict]):
+    def insert_data_to_mongo(self, records):
         """
-        Inserts data into the MongoDB collection.
+        Insert multiple records into the collection.
 
-        Args:
-            records (list[dict]): The list of records to insert.
+        :param records: A list of records to insert.
         """
         collection = self.collection
         collection.insert_many(records)
         return 
     
-    def create_docs(self, context_list: list[str], corpus_term: str):
+    def create_docs(self, context_dict):
         """
-        Creates documents from the context list and corpus term.
+        Create documents from a context dictionary.
 
-        Args:
-            context_list (list[str]): The list of contexts.
-            corpus_term (str): The corpus term.
-
-        Returns:
-            list[dict]: The list of documents.
+        :param context_dict: A dictionary of context data.
+        :return: A list of documents.
         """
         corpus_docs = []
-        for context in context_list:
-            corpus_docs.append({"term": corpus_term, "context": context})
+        for context_key, context_value in context_dict.items():
+            corpus_docs.append({"term": context_key, "context": context_value})
         return corpus_docs
-    
-    def create_vector_search_from_texts(self, context_list: list[str], curated_term_list: list[str]):
+
+    def create_filter_for_embedding(self, term: str):
         """
-        Creates a MongoDBAtlasVectorSearch object using the connection string, database, and collection names, along with the OpenAI embeddings and index configuration.
+        Create a filter for documents that need embeddings.
 
-        Args:
-            context_list (list[str]): The list of contexts.
-            curated_term_list (list[str]): The list of curated terms.
+        :param term: The term to filter by.
+        :return: A filter dictionary.
+        """
+        filter_field = {'$and': [{term: {'$exists': True}}, {'embeddings': {'$exists': False}}]}
+        return filter_field
+    
+    def insert_sapbert_embeddings(self, sapbert_model):
+        """
+        Insert SapBert embeddings into documents without existing embeddings.
+        
+        :param sapbert_model: The SapBert model to use for creating embeddings.
+        """
+        filter = {'$and': [{'context': {'$exists': True}}, {'embeddings': {'$exists': False}}]}
+        count = 0
+        
+        for document in self.collection.find(filter):
+            text = document['context']
+            np_embeddings = list(sapbert_model.create_embeddings(text)[0])
+            embedding = [float(i) for i in np_embeddings]
+            self.collection.update_one({'_id': document['_id']}, {"$set": {'embeddings': embedding}}, upsert=True)
+            count += 1
+            print(f"Documents updated: {count}")
 
-        Returns:
-            MongoDBAtlasVectorSearch: The MongoDBAtlasVectorSearch object.
+    def insert_openai_embeddings(self, model=None):
+        """
+        Insert OpenAI embeddings into documents without existing embeddings.
+        
+        :param model: The OpenAI model to use for creating embeddings. If None, uses the default model.
+        """
+        if model is None:
+            model = self._default_model
+        
+        filter = {'$and': [{'context': {'$exists': True}}, {'embeddings': {'$exists': False}}]}
+        count = 0
+        
+        for document in self.collection.find(filter):
+            text = document['context']
+            embedding = model.embed_query(text)
+            self.collection.update_one({'_id': document['_id']}, {"$set": {'embeddings': embedding}}, upsert=True)
+            count += 1
+            print(f"Documents updated: {count}")
+
+    def insert_embeddings(self, embedding_type='openai', model=None):
+        """
+        Insert embeddings into documents based on the specified type.
+        
+        :param embedding_type: Type of embedding to use ('openai' or 'sapbert').
+        :param model: The model to use for creating embeddings. Required for 'sapbert', optional for 'openai'.
+        """
+        if embedding_type == 'openai':
+            self.insert_openai_embeddings(model)
+        elif embedding_type == 'sapbert':
+            if model is None:
+                raise ValueError("SapBert model must be provided for sapbert embeddings.")
+            self.insert_sapbert_embeddings(model)
+        else:
+            raise ValueError("Invalid embedding type. Choose 'openai' or 'sapbert'.")
+    
+    def create_vector_search_from_texts(self, context_list, curated_term_list):
+        """
+        Create a MongoDBAtlasVectorSearch object from texts.
+
+        :param context_list: A list of context texts.
+        :param curated_term_list: A list of curated terms.
+        :return: A MongoDBAtlasVectorSearch object.
         """
         vector_search = MongoDBAtlasVectorSearch.from_texts(
             texts=[context_list],
