@@ -140,12 +140,29 @@ class OntoMapEngine:
         onto_map = self._om_model_from_strategy(non_exact_query_list=non_exact_query_list)
         return onto_map.get_match_results(cura_map=self.cura_map, topk=topk, test_or_prod=self._test_or_prod)    
 
+    # def run(self):
+    #     """
+    #     Runs the OntoMap Engine module.
+
+    #     Returns:
+    #         tuple: A tuple containing the exact matches and the ontology mapping results.
+    #     """
+    #     self._logger.info("Running Ontology Mapping")
+    #     self._logger.info("Separating exact and non-exact matches")
+    #     exact_matches = self._exact_matching()
+    #     non_exact_matches_ls = self._separate_matches(matching_type='exact')
+        
+    #     self._logger.info("Running OntoMap model for non-exact matches")
+    #     onto_map_res = self.get_results_for_non_exact(non_exact_query_list=non_exact_matches_ls, topk=self.topk)
+    #     return exact_matches, onto_map_res
+
+
     def run(self):
         """
         Runs the OntoMap Engine module.
 
         Returns:
-            tuple: A tuple containing the exact matches and the ontology mapping results.
+            pd.DataFrame: A DataFrame containing both exact and non-exact matches.
         """
         self._logger.info("Running Ontology Mapping")
         self._logger.info("Separating exact and non-exact matches")
@@ -154,4 +171,20 @@ class OntoMapEngine:
         
         self._logger.info("Running OntoMap model for non-exact matches")
         onto_map_res = self.get_results_for_non_exact(non_exact_query_list=non_exact_matches_ls, topk=self.topk)
-        return exact_matches, onto_map_res
+        
+        # Create DataFrame for exact matches
+        exact_df = pd.DataFrame({'original_value': exact_matches})
+        exact_df['curated_ontology'] = exact_df['original_value']  # For exact matches, these are the same
+        exact_df['match_level'] = 1
+        exact_df['stage'] = 1
+        for i in range(1, self.topk + 1):
+            exact_df[f'top{i}_match'] = exact_df['curated_ontology']
+            exact_df[f'top{i}_score'] = 1.00
+        
+        # Add stage column to onto_map_res
+        onto_map_res['stage'] = 2
+        
+        # Combine exact matches and non-exact matches
+        combined_results = pd.concat([exact_df, onto_map_res], ignore_index=True)
+        
+        return combined_results
