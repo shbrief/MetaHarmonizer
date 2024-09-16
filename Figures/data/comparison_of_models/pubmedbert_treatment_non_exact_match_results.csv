@@ -1,0 +1,919 @@
+original_value,curated_ontology,match_level,stage,top1_match,top1_score,top2_match,top2_score,top3_match,top3_score,top4_match,top4_score,top5_match,top5_score
+Abiraterone,Abiraterone,1,1,Abiraterone,1.0,Abiraterone,1.0,Abiraterone,1.0,Abiraterone,1.0,Abiraterone,1.0
+Adalimumab,Adalimumab,1,1,Adalimumab,1.0,Adalimumab,1.0,Adalimumab,1.0,Adalimumab,1.0,Adalimumab,1.0
+Afatinib,Afatinib,1,1,Afatinib,1.0,Afatinib,1.0,Afatinib,1.0,Afatinib,1.0,Afatinib,1.0
+Alisertib,Alisertib,1,1,Alisertib,1.0,Alisertib,1.0,Alisertib,1.0,Alisertib,1.0,Alisertib,1.0
+Alpelisib,Alpelisib,1,1,Alpelisib,1.0,Alpelisib,1.0,Alpelisib,1.0,Alpelisib,1.0,Alpelisib,1.0
+Anastomosis,Anastomosis,1,1,Anastomosis,1.0,Anastomosis,1.0,Anastomosis,1.0,Anastomosis,1.0,Anastomosis,1.0
+Anterior Pelvic Exenteration,Anterior Pelvic Exenteration,1,1,Anterior Pelvic Exenteration,1.0,Anterior Pelvic Exenteration,1.0,Anterior Pelvic Exenteration,1.0,Anterior Pelvic Exenteration,1.0,Anterior Pelvic Exenteration,1.0
+Arsenic Trioxide,Arsenic Trioxide,1,1,Arsenic Trioxide,1.0,Arsenic Trioxide,1.0,Arsenic Trioxide,1.0,Arsenic Trioxide,1.0,Arsenic Trioxide,1.0
+Aspiration,Aspiration,1,1,Aspiration,1.0,Aspiration,1.0,Aspiration,1.0,Aspiration,1.0,Aspiration,1.0
+Atezolizumab,Atezolizumab,1,1,Atezolizumab,1.0,Atezolizumab,1.0,Atezolizumab,1.0,Atezolizumab,1.0,Atezolizumab,1.0
+Autopsy,Autopsy,1,1,Autopsy,1.0,Autopsy,1.0,Autopsy,1.0,Autopsy,1.0,Autopsy,1.0
+Axitinib,Axitinib,1,1,Axitinib,1.0,Axitinib,1.0,Axitinib,1.0,Axitinib,1.0,Axitinib,1.0
+Azacitidine,Azacitidine,1,1,Azacitidine,1.0,Azacitidine,1.0,Azacitidine,1.0,Azacitidine,1.0,Azacitidine,1.0
+Azathioprine,Azathioprine,1,1,Azathioprine,1.0,Azathioprine,1.0,Azathioprine,1.0,Azathioprine,1.0,Azathioprine,1.0
+Bevacizumab,Bevacizumab,1,1,Bevacizumab,1.0,Bevacizumab,1.0,Bevacizumab,1.0,Bevacizumab,1.0,Bevacizumab,1.0
+Bicalutamide,Bicalutamide,1,1,Bicalutamide,1.0,Bicalutamide,1.0,Bicalutamide,1.0,Bicalutamide,1.0,Bicalutamide,1.0
+Bilateral Mastectomy,Bilateral Mastectomy,1,1,Bilateral Mastectomy,1.0,Bilateral Mastectomy,1.0,Bilateral Mastectomy,1.0,Bilateral Mastectomy,1.0,Bilateral Mastectomy,1.0
+Bilateral Salpingectomy,Bilateral Salpingectomy,1,1,Bilateral Salpingectomy,1.0,Bilateral Salpingectomy,1.0,Bilateral Salpingectomy,1.0,Bilateral Salpingectomy,1.0,Bilateral Salpingectomy,1.0
+Biochemotherapy,Biochemotherapy,1,1,Biochemotherapy,1.0,Biochemotherapy,1.0,Biochemotherapy,1.0,Biochemotherapy,1.0,Biochemotherapy,1.0
+Biopsy,Biopsy,1,1,Biopsy,1.0,Biopsy,1.0,Biopsy,1.0,Biopsy,1.0,Biopsy,1.0
+Bleomycin,Bleomycin,1,1,Bleomycin,1.0,Bleomycin,1.0,Bleomycin,1.0,Bleomycin,1.0,Bleomycin,1.0
+Bortezomib,Bortezomib,1,1,Bortezomib,1.0,Bortezomib,1.0,Bortezomib,1.0,Bortezomib,1.0,Bortezomib,1.0
+Buparlisib,Buparlisib,1,1,Buparlisib,1.0,Buparlisib,1.0,Buparlisib,1.0,Buparlisib,1.0,Buparlisib,1.0
+Busulfan,Busulfan,1,1,Busulfan,1.0,Busulfan,1.0,Busulfan,1.0,Busulfan,1.0,Busulfan,1.0
+Cabazitaxel,Cabazitaxel,1,1,Cabazitaxel,1.0,Cabazitaxel,1.0,Cabazitaxel,1.0,Cabazitaxel,1.0,Cabazitaxel,1.0
+Cabozantinib,Cabozantinib,1,1,Cabozantinib,1.0,Cabozantinib,1.0,Cabozantinib,1.0,Cabozantinib,1.0,Cabozantinib,1.0
+Capecitabine,Capecitabine,1,1,Capecitabine,1.0,Capecitabine,1.0,Capecitabine,1.0,Capecitabine,1.0,Capecitabine,1.0
+Carboplatin,Carboplatin,1,1,Carboplatin,1.0,Carboplatin,1.0,Carboplatin,1.0,Carboplatin,1.0,Carboplatin,1.0
+Carmustine,Carmustine,1,1,Carmustine,1.0,Carmustine,1.0,Carmustine,1.0,Carmustine,1.0,Carmustine,1.0
+Cediranib,Cediranib,1,1,Cediranib,1.0,Cediranib,1.0,Cediranib,1.0,Cediranib,1.0,Cediranib,1.0
+Cetuximab,Cetuximab,1,1,Cetuximab,1.0,Cetuximab,1.0,Cetuximab,1.0,Cetuximab,1.0,Cetuximab,1.0
+Cilengitide,Cilengitide,1,1,Cilengitide,1.0,Cilengitide,1.0,Cilengitide,1.0,Cilengitide,1.0,Cilengitide,1.0
+Cisplatin,Cisplatin,1,1,Cisplatin,1.0,Cisplatin,1.0,Cisplatin,1.0,Cisplatin,1.0,Cisplatin,1.0
+Cladribine,Cladribine,1,1,Cladribine,1.0,Cladribine,1.0,Cladribine,1.0,Cladribine,1.0,Cladribine,1.0
+Clofarabine,Clofarabine,1,1,Clofarabine,1.0,Clofarabine,1.0,Clofarabine,1.0,Clofarabine,1.0,Clofarabine,1.0
+Cobimetinib,Cobimetinib,1,1,Cobimetinib,1.0,Cobimetinib,1.0,Cobimetinib,1.0,Cobimetinib,1.0,Cobimetinib,1.0
+Craniotomy,Craniotomy,1,1,Craniotomy,1.0,Craniotomy,1.0,Craniotomy,1.0,Craniotomy,1.0,Craniotomy,1.0
+Crenolanib,Crenolanib,1,1,Crenolanib,1.0,Crenolanib,1.0,Crenolanib,1.0,Crenolanib,1.0,Crenolanib,1.0
+Cyclophosphamide,Cyclophosphamide,1,1,Cyclophosphamide,1.0,Cyclophosphamide,1.0,Cyclophosphamide,1.0,Cyclophosphamide,1.0,Cyclophosphamide,1.0
+Cystectomy,Cystectomy,1,1,Cystectomy,1.0,Cystectomy,1.0,Cystectomy,1.0,Cystectomy,1.0,Cystectomy,1.0
+Cytarabine,Cytarabine,1,1,Cytarabine,1.0,Cytarabine,1.0,Cytarabine,1.0,Cytarabine,1.0,Cytarabine,1.0
+Cytosine,Cytosine,1,1,Cytosine,1.0,Cytosine,1.0,Cytosine,1.0,Cytosine,1.0,Cytosine,1.0
+Dabrafenib,Dabrafenib,1,1,Dabrafenib,1.0,Dabrafenib,1.0,Dabrafenib,1.0,Dabrafenib,1.0,Dabrafenib,1.0
+Dacomitinib,Dacomitinib,1,1,Dacomitinib,1.0,Dacomitinib,1.0,Dacomitinib,1.0,Dacomitinib,1.0,Dacomitinib,1.0
+Daratumumab,Daratumumab,1,1,Daratumumab,1.0,Daratumumab,1.0,Daratumumab,1.0,Daratumumab,1.0,Daratumumab,1.0
+Dasatinib,Dasatinib,1,1,Dasatinib,1.0,Dasatinib,1.0,Dasatinib,1.0,Dasatinib,1.0,Dasatinib,1.0
+Daunorubicin,Daunorubicin,1,1,Daunorubicin,1.0,Daunorubicin,1.0,Daunorubicin,1.0,Daunorubicin,1.0,Daunorubicin,1.0
+Decitabine,Decitabine,1,1,Decitabine,1.0,Decitabine,1.0,Decitabine,1.0,Decitabine,1.0,Decitabine,1.0
+Dexamethasone,Dexamethasone,1,1,Dexamethasone,1.0,Dexamethasone,1.0,Dexamethasone,1.0,Dexamethasone,1.0,Dexamethasone,1.0
+Docetaxel,Docetaxel,1,1,Docetaxel,1.0,Docetaxel,1.0,Docetaxel,1.0,Docetaxel,1.0,Docetaxel,1.0
+Donor Lymphocyte Infusion,Donor Lymphocyte Infusion,1,1,Donor Lymphocyte Infusion,1.0,Donor Lymphocyte Infusion,1.0,Donor Lymphocyte Infusion,1.0,Donor Lymphocyte Infusion,1.0,Donor Lymphocyte Infusion,1.0
+Doxorubicin,Doxorubicin,1,1,Doxorubicin,1.0,Doxorubicin,1.0,Doxorubicin,1.0,Doxorubicin,1.0,Doxorubicin,1.0
+Doxorubicin Hydrochloride,Doxorubicin Hydrochloride,1,1,Doxorubicin Hydrochloride,1.0,Doxorubicin Hydrochloride,1.0,Doxorubicin Hydrochloride,1.0,Doxorubicin Hydrochloride,1.0,Doxorubicin Hydrochloride,1.0
+Durvalumab,Durvalumab,1,1,Durvalumab,1.0,Durvalumab,1.0,Durvalumab,1.0,Durvalumab,1.0,Durvalumab,1.0
+Dutasteride,Dutasteride,1,1,Dutasteride,1.0,Dutasteride,1.0,Dutasteride,1.0,Dutasteride,1.0,Dutasteride,1.0
+Enasidenib,Enasidenib,1,1,Enasidenib,1.0,Enasidenib,1.0,Enasidenib,1.0,Enasidenib,1.0,Enasidenib,1.0
+Entospletinib,Entospletinib,1,1,Entospletinib,1.0,Entospletinib,1.0,Entospletinib,1.0,Entospletinib,1.0,Entospletinib,1.0
+Enucleation,Enucleation,1,1,Enucleation,1.0,Enucleation,1.0,Enucleation,1.0,Enucleation,1.0,Enucleation,1.0
+Enzalutamide,Enzalutamide,1,1,Enzalutamide,1.0,Enzalutamide,1.0,Enzalutamide,1.0,Enzalutamide,1.0,Enzalutamide,1.0
+Epirubicin,Epirubicin,1,1,Epirubicin,1.0,Epirubicin,1.0,Epirubicin,1.0,Epirubicin,1.0,Epirubicin,1.0
+Eribulin,Eribulin,1,1,Eribulin,1.0,Eribulin,1.0,Eribulin,1.0,Eribulin,1.0,Eribulin,1.0
+Esophagectomy,Esophagectomy,1,1,Esophagectomy,1.0,Esophagectomy,1.0,Esophagectomy,1.0,Esophagectomy,1.0,Esophagectomy,1.0
+Estramustine,Estramustine,1,1,Estramustine,1.0,Estramustine,1.0,Estramustine,1.0,Estramustine,1.0,Estramustine,1.0
+Etoposide,Etoposide,1,1,Etoposide,1.0,Etoposide,1.0,Etoposide,1.0,Etoposide,1.0,Etoposide,1.0
+Everolimus,Everolimus,1,1,Everolimus,1.0,Everolimus,1.0,Everolimus,1.0,Everolimus,1.0,Everolimus,1.0
+Excision,Excision,1,1,Excision,1.0,Excision,1.0,Excision,1.0,Excision,1.0,Excision,1.0
+Exemestane,Exemestane,1,1,Exemestane,1.0,Exemestane,1.0,Exemestane,1.0,Exemestane,1.0,Exemestane,1.0
+Filgrastim,Filgrastim,1,1,Filgrastim,1.0,Filgrastim,1.0,Filgrastim,1.0,Filgrastim,1.0,Filgrastim,1.0
+Fludarabine,Fludarabine,1,1,Fludarabine,1.0,Fludarabine,1.0,Fludarabine,1.0,Fludarabine,1.0,Fludarabine,1.0
+Fluorouracil,Fluorouracil,1,1,Fluorouracil,1.0,Fluorouracil,1.0,Fluorouracil,1.0,Fluorouracil,1.0,Fluorouracil,1.0
+Fotemustine,Fotemustine,1,1,Fotemustine,1.0,Fotemustine,1.0,Fotemustine,1.0,Fotemustine,1.0,Fotemustine,1.0
+Galunisertib,Galunisertib,1,1,Galunisertib,1.0,Galunisertib,1.0,Galunisertib,1.0,Galunisertib,1.0,Galunisertib,1.0
+Gastrectomy,Gastrectomy,1,1,Gastrectomy,1.0,Gastrectomy,1.0,Gastrectomy,1.0,Gastrectomy,1.0,Gastrectomy,1.0
+Gefitinib,Gefitinib,1,1,Gefitinib,1.0,Gefitinib,1.0,Gefitinib,1.0,Gefitinib,1.0,Gefitinib,1.0
+Gemcitabine,Gemcitabine,1,1,Gemcitabine,1.0,Gemcitabine,1.0,Gemcitabine,1.0,Gemcitabine,1.0,Gemcitabine,1.0
+Gemtuzumab,Gemtuzumab,1,1,Gemtuzumab,1.0,Gemtuzumab,1.0,Gemtuzumab,1.0,Gemtuzumab,1.0,Gemtuzumab,1.0
+Gemtuzumab Ozogamicin,Gemtuzumab Ozogamicin,1,1,Gemtuzumab Ozogamicin,1.0,Gemtuzumab Ozogamicin,1.0,Gemtuzumab Ozogamicin,1.0,Gemtuzumab Ozogamicin,1.0,Gemtuzumab Ozogamicin,1.0
+Gilteritinib,Gilteritinib,1,1,Gilteritinib,1.0,Gilteritinib,1.0,Gilteritinib,1.0,Gilteritinib,1.0,Gilteritinib,1.0
+Hydroxyurea,Hydroxyurea,1,1,Hydroxyurea,1.0,Hydroxyurea,1.0,Hydroxyurea,1.0,Hydroxyurea,1.0,Hydroxyurea,1.0
+Hysterectomy,Hysterectomy,1,1,Hysterectomy,1.0,Hysterectomy,1.0,Hysterectomy,1.0,Hysterectomy,1.0,Hysterectomy,1.0
+Ibrutinib,Ibrutinib,1,1,Ibrutinib,1.0,Ibrutinib,1.0,Ibrutinib,1.0,Ibrutinib,1.0,Ibrutinib,1.0
+Idarubicin,Idarubicin,1,1,Idarubicin,1.0,Idarubicin,1.0,Idarubicin,1.0,Idarubicin,1.0,Idarubicin,1.0
+Idasanutlin,Idasanutlin,1,1,Idasanutlin,1.0,Idasanutlin,1.0,Idasanutlin,1.0,Idasanutlin,1.0,Idasanutlin,1.0
+Ifosfamide,Ifosfamide,1,1,Ifosfamide,1.0,Ifosfamide,1.0,Ifosfamide,1.0,Ifosfamide,1.0,Ifosfamide,1.0
+Imatinib,Imatinib,1,1,Imatinib,1.0,Imatinib,1.0,Imatinib,1.0,Imatinib,1.0,Imatinib,1.0
+Immunoglobulin,Immunoglobulin,1,1,Immunoglobulin,1.0,Immunoglobulin,1.0,Immunoglobulin,1.0,Immunoglobulin,1.0,Immunoglobulin,1.0
+Indoximod,Indoximod,1,1,Indoximod,1.0,Indoximod,1.0,Indoximod,1.0,Indoximod,1.0,Indoximod,1.0
+Iniparib,Iniparib,1,1,Iniparib,1.0,Iniparib,1.0,Iniparib,1.0,Iniparib,1.0,Iniparib,1.0
+Ipilimumab,Ipilimumab,1,1,Ipilimumab,1.0,Ipilimumab,1.0,Ipilimumab,1.0,Ipilimumab,1.0,Ipilimumab,1.0
+Irinotecan,Irinotecan,1,1,Irinotecan,1.0,Irinotecan,1.0,Irinotecan,1.0,Irinotecan,1.0,Irinotecan,1.0
+Isotretinoin,Isotretinoin,1,1,Isotretinoin,1.0,Isotretinoin,1.0,Isotretinoin,1.0,Isotretinoin,1.0,Isotretinoin,1.0
+Itacitinib,Itacitinib,1,1,Itacitinib,1.0,Itacitinib,1.0,Itacitinib,1.0,Itacitinib,1.0,Itacitinib,1.0
+Ivosidenib,Ivosidenib,1,1,Ivosidenib,1.0,Ivosidenib,1.0,Ivosidenib,1.0,Ivosidenib,1.0,Ivosidenib,1.0
+Ketoconazole,Ketoconazole,1,1,Ketoconazole,1.0,Ketoconazole,1.0,Ketoconazole,1.0,Ketoconazole,1.0,Ketoconazole,1.0
+Laparoscopic Biopsy,Laparoscopic Biopsy,1,1,Laparoscopic Biopsy,1.0,Laparoscopic Biopsy,1.0,Laparoscopic Biopsy,1.0,Laparoscopic Biopsy,1.0,Laparoscopic Biopsy,1.0
+Laparoscopic Prostatectomy,Laparoscopic Prostatectomy,1,1,Laparoscopic Prostatectomy,1.0,Laparoscopic Prostatectomy,1.0,Laparoscopic Prostatectomy,1.0,Laparoscopic Prostatectomy,1.0,Laparoscopic Prostatectomy,1.0
+Lapatinib,Lapatinib,1,1,Lapatinib,1.0,Lapatinib,1.0,Lapatinib,1.0,Lapatinib,1.0,Lapatinib,1.0
+Lenalidomide,Lenalidomide,1,1,Lenalidomide,1.0,Lenalidomide,1.0,Lenalidomide,1.0,Lenalidomide,1.0,Lenalidomide,1.0
+Letrozole,Letrozole,1,1,Letrozole,1.0,Letrozole,1.0,Letrozole,1.0,Letrozole,1.0,Letrozole,1.0
+Liposomal Cytarabine,Liposomal Cytarabine,1,1,Liposomal Cytarabine,1.0,Liposomal Cytarabine,1.0,Liposomal Cytarabine,1.0,Liposomal Cytarabine,1.0,Liposomal Cytarabine,1.0
+Liver Biopsy,Liver Biopsy,1,1,Liver Biopsy,1.0,Liver Biopsy,1.0,Liver Biopsy,1.0,Liver Biopsy,1.0,Liver Biopsy,1.0
+Lobectomy,Lobectomy,1,1,Lobectomy,1.0,Lobectomy,1.0,Lobectomy,1.0,Lobectomy,1.0,Lobectomy,1.0
+Lomustine,Lomustine,1,1,Lomustine,1.0,Lomustine,1.0,Lomustine,1.0,Lomustine,1.0,Lomustine,1.0
+Lumpectomy,Lumpectomy,1,1,Lumpectomy,1.0,Lumpectomy,1.0,Lumpectomy,1.0,Lumpectomy,1.0,Lumpectomy,1.0
+Macitentan,Macitentan,1,1,Macitentan,1.0,Macitentan,1.0,Macitentan,1.0,Macitentan,1.0,Macitentan,1.0
+Mastectomy,Mastectomy,1,1,Mastectomy,1.0,Mastectomy,1.0,Mastectomy,1.0,Mastectomy,1.0,Mastectomy,1.0
+Mefloquine,Mefloquine,1,1,Mefloquine,1.0,Mefloquine,1.0,Mefloquine,1.0,Mefloquine,1.0,Mefloquine,1.0
+Melphalan,Melphalan,1,1,Melphalan,1.0,Melphalan,1.0,Melphalan,1.0,Melphalan,1.0,Melphalan,1.0
+Memantine,Memantine,1,1,Memantine,1.0,Memantine,1.0,Memantine,1.0,Memantine,1.0,Memantine,1.0
+Mercaptopurine,Mercaptopurine,1,1,Mercaptopurine,1.0,Mercaptopurine,1.0,Mercaptopurine,1.0,Mercaptopurine,1.0,Mercaptopurine,1.0
+Methotrexate,Methotrexate,1,1,Methotrexate,1.0,Methotrexate,1.0,Methotrexate,1.0,Methotrexate,1.0,Methotrexate,1.0
+Midostaurin,Midostaurin,1,1,Midostaurin,1.0,Midostaurin,1.0,Midostaurin,1.0,Midostaurin,1.0,Midostaurin,1.0
+Mitomycin,Mitomycin,1,1,Mitomycin,1.0,Mitomycin,1.0,Mitomycin,1.0,Mitomycin,1.0,Mitomycin,1.0
+Mitoxantrone,Mitoxantrone,1,1,Mitoxantrone,1.0,Mitoxantrone,1.0,Mitoxantrone,1.0,Mitoxantrone,1.0,Mitoxantrone,1.0
+Modified Radical Mastectomy,Modified Radical Mastectomy,1,1,Modified Radical Mastectomy,1.0,Modified Radical Mastectomy,1.0,Modified Radical Mastectomy,1.0,Modified Radical Mastectomy,1.0,Modified Radical Mastectomy,1.0
+Mogamulizumab,Mogamulizumab,1,1,Mogamulizumab,1.0,Mogamulizumab,1.0,Mogamulizumab,1.0,Mogamulizumab,1.0,Mogamulizumab,1.0
+Momelotinib,Momelotinib,1,1,Momelotinib,1.0,Momelotinib,1.0,Momelotinib,1.0,Momelotinib,1.0,Momelotinib,1.0
+Monalizumab,Monalizumab,1,1,Monalizumab,1.0,Monalizumab,1.0,Monalizumab,1.0,Monalizumab,1.0,Monalizumab,1.0
+Nelarabine,Nelarabine,1,1,Nelarabine,1.0,Nelarabine,1.0,Nelarabine,1.0,Nelarabine,1.0,Nelarabine,1.0
+Nephrectomy,Nephrectomy,1,1,Nephrectomy,1.0,Nephrectomy,1.0,Nephrectomy,1.0,Nephrectomy,1.0,Nephrectomy,1.0
+Nintedanib,Nintedanib,1,1,Nintedanib,1.0,Nintedanib,1.0,Nintedanib,1.0,Nintedanib,1.0,Nintedanib,1.0
+Nivolumab,Nivolumab,1,1,Nivolumab,1.0,Nivolumab,1.0,Nivolumab,1.0,Nivolumab,1.0,Nivolumab,1.0
+Olaparib,Olaparib,1,1,Olaparib,1.0,Olaparib,1.0,Olaparib,1.0,Olaparib,1.0,Olaparib,1.0
+Orchiectomy,Orchiectomy,1,1,Orchiectomy,1.0,Orchiectomy,1.0,Orchiectomy,1.0,Orchiectomy,1.0,Orchiectomy,1.0
+Other,Other,1,1,Other,1.0,Other,1.0,Other,1.0,Other,1.0,Other,1.0
+Oxaliplatin,Oxaliplatin,1,1,Oxaliplatin,1.0,Oxaliplatin,1.0,Oxaliplatin,1.0,Oxaliplatin,1.0,Oxaliplatin,1.0
+Paclitaxel,Paclitaxel,1,1,Paclitaxel,1.0,Paclitaxel,1.0,Paclitaxel,1.0,Paclitaxel,1.0,Paclitaxel,1.0
+Palbociclib,Palbociclib,1,1,Palbociclib,1.0,Palbociclib,1.0,Palbociclib,1.0,Palbociclib,1.0,Palbociclib,1.0
+Partial Cystectomy,Partial Cystectomy,1,1,Partial Cystectomy,1.0,Partial Cystectomy,1.0,Partial Cystectomy,1.0,Partial Cystectomy,1.0,Partial Cystectomy,1.0
+Partial Salpingectomy,Partial Salpingectomy,1,1,Partial Salpingectomy,1.0,Partial Salpingectomy,1.0,Partial Salpingectomy,1.0,Partial Salpingectomy,1.0,Partial Salpingectomy,1.0
+Pembrolizumab,Pembrolizumab,1,1,Pembrolizumab,1.0,Pembrolizumab,1.0,Pembrolizumab,1.0,Pembrolizumab,1.0,Pembrolizumab,1.0
+Pemetrexed,Pemetrexed,1,1,Pemetrexed,1.0,Pemetrexed,1.0,Pemetrexed,1.0,Pemetrexed,1.0,Pemetrexed,1.0
+Pericardial Effusion,Pericardial Effusion,1,1,Pericardial Effusion,1.0,Pericardial Effusion,1.0,Pericardial Effusion,1.0,Pericardial Effusion,1.0,Pericardial Effusion,1.0
+Pertuzumab,Pertuzumab,1,1,Pertuzumab,1.0,Pertuzumab,1.0,Pertuzumab,1.0,Pertuzumab,1.0,Pertuzumab,1.0
+Pexidartinib,Pexidartinib,1,1,Pexidartinib,1.0,Pexidartinib,1.0,Pexidartinib,1.0,Pexidartinib,1.0,Pexidartinib,1.0
+Platinum,Platinum,1,1,Platinum,1.0,Platinum,1.0,Platinum,1.0,Platinum,1.0,Platinum,1.0
+Pleural Effusion,Pleural Effusion,1,1,Pleural Effusion,1.0,Pleural Effusion,1.0,Pleural Effusion,1.0,Pleural Effusion,1.0,Pleural Effusion,1.0
+Ponatinib,Ponatinib,1,1,Ponatinib,1.0,Ponatinib,1.0,Ponatinib,1.0,Ponatinib,1.0,Ponatinib,1.0
+Pracinostat,Pracinostat,1,1,Pracinostat,1.0,Pracinostat,1.0,Pracinostat,1.0,Pracinostat,1.0,Pracinostat,1.0
+Pravastatin,Pravastatin,1,1,Pravastatin,1.0,Pravastatin,1.0,Pravastatin,1.0,Pravastatin,1.0,Pravastatin,1.0
+Prednisolone,Prednisolone,1,1,Prednisolone,1.0,Prednisolone,1.0,Prednisolone,1.0,Prednisolone,1.0,Prednisolone,1.0
+Prednisone,Prednisone,1,1,Prednisone,1.0,Prednisone,1.0,Prednisone,1.0,Prednisone,1.0,Prednisone,1.0
+Procarbazine,Procarbazine,1,1,Procarbazine,1.0,Procarbazine,1.0,Procarbazine,1.0,Procarbazine,1.0,Procarbazine,1.0
+Quizartinib,Quizartinib,1,1,Quizartinib,1.0,Quizartinib,1.0,Quizartinib,1.0,Quizartinib,1.0,Quizartinib,1.0
+Radical Cystectomy,Radical Cystectomy,1,1,Radical Cystectomy,1.0,Radical Cystectomy,1.0,Radical Cystectomy,1.0,Radical Cystectomy,1.0,Radical Cystectomy,1.0
+Radical Cystoprostatectomy,Radical Cystoprostatectomy,1,1,Radical Cystoprostatectomy,1.0,Radical Cystoprostatectomy,1.0,Radical Cystoprostatectomy,1.0,Radical Cystoprostatectomy,1.0,Radical Cystoprostatectomy,1.0
+Radical Hysterectomy,Radical Hysterectomy,1,1,Radical Hysterectomy,1.0,Radical Hysterectomy,1.0,Radical Hysterectomy,1.0,Radical Hysterectomy,1.0,Radical Hysterectomy,1.0
+Radical Prostatectomy,Radical Prostatectomy,1,1,Radical Prostatectomy,1.0,Radical Prostatectomy,1.0,Radical Prostatectomy,1.0,Radical Prostatectomy,1.0,Radical Prostatectomy,1.0
+Ramucirumab,Ramucirumab,1,1,Ramucirumab,1.0,Ramucirumab,1.0,Ramucirumab,1.0,Ramucirumab,1.0,Ramucirumab,1.0
+Regorafenib,Regorafenib,1,1,Regorafenib,1.0,Regorafenib,1.0,Regorafenib,1.0,Regorafenib,1.0,Regorafenib,1.0
+Resection,Resection,1,1,Resection,1.0,Resection,1.0,Resection,1.0,Resection,1.0,Resection,1.0
+Rigosertib,Rigosertib,1,1,Rigosertib,1.0,Rigosertib,1.0,Rigosertib,1.0,Rigosertib,1.0,Rigosertib,1.0
+Rituximab,Rituximab,1,1,Rituximab,1.0,Rituximab,1.0,Rituximab,1.0,Rituximab,1.0,Rituximab,1.0
+Ruxolitinib,Ruxolitinib,1,1,Ruxolitinib,1.0,Ruxolitinib,1.0,Ruxolitinib,1.0,Ruxolitinib,1.0,Ruxolitinib,1.0
+Samalizumab,Samalizumab,1,1,Samalizumab,1.0,Samalizumab,1.0,Samalizumab,1.0,Samalizumab,1.0,Samalizumab,1.0
+Segmental Mastectomy,Segmental Mastectomy,1,1,Segmental Mastectomy,1.0,Segmental Mastectomy,1.0,Segmental Mastectomy,1.0,Segmental Mastectomy,1.0,Segmental Mastectomy,1.0
+Selinexor,Selinexor,1,1,Selinexor,1.0,Selinexor,1.0,Selinexor,1.0,Selinexor,1.0,Selinexor,1.0
+Sirolimus,Sirolimus,1,1,Sirolimus,1.0,Sirolimus,1.0,Sirolimus,1.0,Sirolimus,1.0,Sirolimus,1.0
+Sorafenib,Sorafenib,1,1,Sorafenib,1.0,Sorafenib,1.0,Sorafenib,1.0,Sorafenib,1.0,Sorafenib,1.0
+Sunitinib,Sunitinib,1,1,Sunitinib,1.0,Sunitinib,1.0,Sunitinib,1.0,Sunitinib,1.0,Sunitinib,1.0
+Tandutinib,Tandutinib,1,1,Tandutinib,1.0,Tandutinib,1.0,Tandutinib,1.0,Tandutinib,1.0,Tandutinib,1.0
+Tasadenoturev,Tasadenoturev,1,1,Tasadenoturev,1.0,Tasadenoturev,1.0,Tasadenoturev,1.0,Tasadenoturev,1.0,Tasadenoturev,1.0
+Temozolomide,Temozolomide,1,1,Temozolomide,1.0,Temozolomide,1.0,Temozolomide,1.0,Temozolomide,1.0,Temozolomide,1.0
+Temsirolimus,Temsirolimus,1,1,Temsirolimus,1.0,Temsirolimus,1.0,Temsirolimus,1.0,Temsirolimus,1.0,Temsirolimus,1.0
+Thalidomide,Thalidomide,1,1,Thalidomide,1.0,Thalidomide,1.0,Thalidomide,1.0,Thalidomide,1.0,Thalidomide,1.0
+Thioguanine,Thioguanine,1,1,Thioguanine,1.0,Thioguanine,1.0,Thioguanine,1.0,Thioguanine,1.0,Thioguanine,1.0
+Thiotepa,Thiotepa,1,1,Thiotepa,1.0,Thiotepa,1.0,Thiotepa,1.0,Thiotepa,1.0,Thiotepa,1.0
+Topotecan,Topotecan,1,1,Topotecan,1.0,Topotecan,1.0,Topotecan,1.0,Topotecan,1.0,Topotecan,1.0
+Total Abdominal Hysterectomy,Total Abdominal Hysterectomy,1,1,Total Abdominal Hysterectomy,1.0,Total Abdominal Hysterectomy,1.0,Total Abdominal Hysterectomy,1.0,Total Abdominal Hysterectomy,1.0,Total Abdominal Hysterectomy,1.0
+Total Hepatectomy,Total Hepatectomy,1,1,Total Hepatectomy,1.0,Total Hepatectomy,1.0,Total Hepatectomy,1.0,Total Hepatectomy,1.0,Total Hepatectomy,1.0
+Total Mastectomy,Total Mastectomy,1,1,Total Mastectomy,1.0,Total Mastectomy,1.0,Total Mastectomy,1.0,Total Mastectomy,1.0,Total Mastectomy,1.0
+Trametinib,Trametinib,1,1,Trametinib,1.0,Trametinib,1.0,Trametinib,1.0,Trametinib,1.0,Trametinib,1.0
+Trastuzumab,Trastuzumab,1,1,Trastuzumab,1.0,Trastuzumab,1.0,Trastuzumab,1.0,Trastuzumab,1.0,Trastuzumab,1.0
+Tremelimumab,Tremelimumab,1,1,Tremelimumab,1.0,Tremelimumab,1.0,Tremelimumab,1.0,Tremelimumab,1.0,Tremelimumab,1.0
+Treosulfan,Treosulfan,1,1,Treosulfan,1.0,Treosulfan,1.0,Treosulfan,1.0,Treosulfan,1.0,Treosulfan,1.0
+Tretinoin,Tretinoin,1,1,Tretinoin,1.0,Tretinoin,1.0,Tretinoin,1.0,Tretinoin,1.0,Tretinoin,1.0
+Unilateral Oophorectomy,Unilateral Oophorectomy,1,1,Unilateral Oophorectomy,1.0,Unilateral Oophorectomy,1.0,Unilateral Oophorectomy,1.0,Unilateral Oophorectomy,1.0,Unilateral Oophorectomy,1.0
+Ureterectomy,Ureterectomy,1,1,Ureterectomy,1.0,Ureterectomy,1.0,Ureterectomy,1.0,Ureterectomy,1.0,Ureterectomy,1.0
+Urethrectomy,Urethrectomy,1,1,Urethrectomy,1.0,Urethrectomy,1.0,Urethrectomy,1.0,Urethrectomy,1.0,Urethrectomy,1.0
+Valproic Acid,Valproic Acid,1,1,Valproic Acid,1.0,Valproic Acid,1.0,Valproic Acid,1.0,Valproic Acid,1.0,Valproic Acid,1.0
+Vemurafenib,Vemurafenib,1,1,Vemurafenib,1.0,Vemurafenib,1.0,Vemurafenib,1.0,Vemurafenib,1.0,Vemurafenib,1.0
+Venetoclax,Venetoclax,1,1,Venetoclax,1.0,Venetoclax,1.0,Venetoclax,1.0,Venetoclax,1.0,Venetoclax,1.0
+Vinblastine,Vinblastine,1,1,Vinblastine,1.0,Vinblastine,1.0,Vinblastine,1.0,Vinblastine,1.0,Vinblastine,1.0
+Vincristine,Vincristine,1,1,Vincristine,1.0,Vincristine,1.0,Vincristine,1.0,Vincristine,1.0,Vincristine,1.0
+Vincristine Sulfate,Vincristine Sulfate,1,1,Vincristine Sulfate,1.0,Vincristine Sulfate,1.0,Vincristine Sulfate,1.0,Vincristine Sulfate,1.0,Vincristine Sulfate,1.0
+Vinorelbine,Vinorelbine,1,1,Vinorelbine,1.0,Vinorelbine,1.0,Vinorelbine,1.0,Vinorelbine,1.0,Vinorelbine,1.0
+Vorinostat,Vorinostat,1,1,Vorinostat,1.0,Vorinostat,1.0,Vorinostat,1.0,Vorinostat,1.0,Vorinostat,1.0
+Wide Local Excision,Wide Local Excision,1,1,Wide Local Excision,1.0,Wide Local Excision,1.0,Wide Local Excision,1.0,Wide Local Excision,1.0,Wide Local Excision,1.0
+17-DMAG,Alvespimycin,99,2,Anti-CD33 Antibody-drug Conjugate IMGN779,0.9131,MDM2/MDMX Inhibitor ALRN-6924,0.9130,HDM2 Inhibitor MK-8242,0.9120,Gemtuzumab,0.9101,PSMA-targeting Agent;Antineoplastic Antibody-Drug Conjugate,0.9097
+19D12,Robatumumab,99,2,AALL0232 ALL Study Identifier;Dexamethasone,0.8962,Pracinostat,0.8937,MDM2/MDMX Inhibitor ALRN-6924,0.8909,Denintuzumab Mafodotin,0.8878,PSMA-targeting Agent;Antineoplastic Antibody-Drug Conjugate,0.8872
+5 fu,Fluorouracil,1,2,Fluorouracil,0.9518,Fluoropyrimidine,0.9310,Fotemustine,0.9190,Floxuridine,0.9170,Ifosfamide,0.9100
+5-FU,Fluorouracil,1,2,Fluorouracil,0.9556,Fluoropyrimidine,0.9384,Fotemustine,0.9265,Floxuridine,0.9236,Ifosfamide,0.9182
+5-fluorouracil,Fluorouracil,1,2,Fluorouracil,0.9747,Fluoropyrimidine,0.9459,Fotemustine,0.9287,Floxuridine,0.9281,Folic Acid,0.9212
+5/FU,Fluorouracil,1,2,Fluorouracil,0.9367,Fluoropyrimidine,0.9206,Fotemustine,0.9148,Floxuridine,0.9095,FLT3/CDK4/6 Inhibitor FLX925,0.9028
+5FU,Fluorouracil,1,2,Fluorouracil,0.9576,Fluoropyrimidine,0.9360,Floxuridine,0.9237,Fotemustine,0.9224,Fludarabine,0.9156
+6-MP,Mercaptopurine,2,2,Mapatumumab,0.9171,Mercaptopurine,0.9168,Tamoxifen,0.9051,PSMA-targeting Agent;Antineoplastic Antibody-Drug Conjugate,0.9019,Peginterferon Alfa-2a,0.8988
+6MP,Mercaptopurine,1,2,Mercaptopurine,0.9167,Mapatumumab,0.9053,Mycophenolate Mofetil,0.8975,Tamoxifen,0.8881,Methotrexate,0.8866
+AA,Antiandrogen Therapy,99,2,AALL0331 ALL Study Identifier,0.9225,AALL0232 ALL Study Identifier,0.9173,AALL0232 ALL Study Identifier;Dexamethasone,0.9152,Adalimumab,0.9036,Tamibarotene,0.8955
+AALL0232 therapy,AALL0232 ALL Study Identifier,1,2,AALL0232 ALL Study Identifier,0.9624,AALL0331 ALL Study Identifier,0.9560,AALL0232 ALL Study Identifier;Dexamethasone,0.9539,Anti-CD33 Monoclonal Antibody BI 836858,0.9124,Gamma-Secretase Inhibitor RO4929097,0.9114
+AALL0232 w/Dex,AALL0232 ALL Study Identifier;Dexamethasone,1,2,AALL0232 ALL Study Identifier;Dexamethasone,0.9625,AALL0232 ALL Study Identifier,0.9479,AALL0331 ALL Study Identifier,0.9467,Anti-CD33 Monoclonal Antibody BI 836858,0.9127,MDM2/MDMX Inhibitor ALRN-6924,0.9120
+AALL0331,AALL0331 ALL Study Identifier,1,2,AALL0331 ALL Study Identifier,0.9740,AALL0232 ALL Study Identifier,0.9606,AALL0232 ALL Study Identifier;Dexamethasone,0.9502,Anti-CD33 Monoclonal Antibody BI 836858,0.8990,Purine Analogue NSC 750854,0.8972
+ABRAXANE,Nab-paclitaxel,99,2,Pexidartinib,0.9140,Crenolanib,0.9119,Lorazepam,0.9119,Afatinib,0.9075,Abiraterone,0.9068
+ABSTRACTION_PENDING,Chart Abstraction;Pending,1,2,Chart Abstraction;Pending,0.9686,Bicalutamide,0.8979,Wertheim operation (procedure),0.8965,Abiraterone,0.8954,Seviteronel,0.8952
+ABT-199,Venetoclax,99,2,Nab-paclitaxel,0.9206,JAK2 Inhibitor AZD1480,0.9190,Bevacizumab,0.9158,Anti-CD33 Monoclonal Antibody BI 836858,0.9150,CENP-E Inhibitor GSK-923295A,0.9127
+ABT-263,Navitoclax,99,2,Anti-CD33 Monoclonal Antibody BI 836858,0.9183,Capecitabine,0.9115,Docetaxel,0.9105,JAK2 Inhibitor AZD1480,0.9101,Erlotinib,0.9097
+ABT888,Veliparib,99,2,Anti-CD33 Monoclonal Antibody BI 836858,0.9133,Abiraterone,0.9004,Anti-CD33 Antibody-drug Conjugate IMGN779,0.8987,JAK2 Inhibitor AZD1480,0.8971,Folate Receptor-Targeted Tubulysin Conjugate EC1456,0.8962
+AC220 (Ambit),Quizartinib Dihydrochloride,99,2,Akt Inhibitor MK2206,0.9077,AALL0232 ALL Study Identifier;Dexamethasone,0.9014,Anti-CD33 Monoclonal Antibody BI 836858,0.8995,Anti-CD33 Antibody-drug Conjugate IMGN779,0.8970,Bicalutamide,0.8969
+ACTINOMYCIN D,Dactinomycin,99,2,Anthracycline Antineoplastic Antibiotic,0.9139,Dexamethasone,0.9082,Doxorubicin,0.9079,Adalimumab,0.9051,Azathioprine,0.9050
+AG-120,Ivosidenib,99,2,Anti-ErbB3 Monoclonal Antibody REGN1400,0.9025,Polyamine Analogue PG11047,0.8982,Anti-CD33 Monoclonal Antibody BI 836858,0.8919,Anti-CD33 Antibody-drug Conjugate IMGN779,0.8901,Gemtuzumab,0.8868
+AG-221,Enasidenib,99,2,AALL0232 ALL Study Identifier;Dexamethasone,0.8972,Polyamine Analogue PG11047,0.8969,PIM Kinase Inhibitor SGI-1776,0.8920,Anti-CD33 Monoclonal Antibody BI 836858,0.8913,Peginterferon Alfa-2a,0.8907
+AIS,Aromatase Inhibitor,99,2,Estramustine,0.9005,Amifostine,0.8951,Gefitinib,0.8934,Momelotinib,0.8908,Abiraterone,0.8900
+AKTi,AKT Inhibitor,1,2,AKT Inhibitor,0.9542,Pan-AKT Kinase Inhibitor GSK690693,0.9303,Trastuzumab,0.9205,Akt Inhibitor MK2206,0.9149,Vadastuximab Talirine,0.9097
+ALND,Axillary Lymph Node Dissection,99,2,MDM2/MDMX Inhibitor ALRN-6924,0.9208,Cediranib,0.9110,Sentinel Lymph Node Biopsy Followed by Axillary Lymph Node Biopsy,0.9082,Axillary Lymph Node;Sentinel Lymph Node Biopsy,0.9082,Sentinel Lymph Node Biopsy,0.9063
+ALPELISIB,Alpelisib,1,2,Alpelisib,1.0000,Acalisib,0.9299,Taselisib,0.9259,Pilaralisib,0.9151,Pravastatin,0.9090
+ALRN-6924,MDM2/MDMX Inhibitor ALRN-6924,1,2,MDM2/MDMX Inhibitor ALRN-6924,0.9599,NAMPT Inhibitor STF-118804,0.9140,AALL0331 ALL Study Identifier,0.9116,AALL0232 ALL Study Identifier,0.9113,AALL0232 ALL Study Identifier;Dexamethasone,0.9073
+AMD,Dactinomycin,99,2,Daratumumab,0.9207,Denintuzumab Mafodotin,0.9143,Ramucirumab,0.9084,Vadastuximab Talirine,0.9083,Adalimumab,0.9055
+ANTHRACYCLINE,Anthracycline Antineoplastic Antibiotic,1,2,Anthracycline Antineoplastic Antibiotic,0.9651,Doxorubicin,0.9547,Doxorubicin Hydrochloride,0.9335,Daunorubicin,0.9318,Imatinib,0.9280
+ANTIHER2,HER2-targeting Agent,5,2,Anti-TIM-3 Monoclonal Antibody,0.9034,Anti-HGF Monoclonal Antibody TAK-701,0.9031,Anti-LAG-3 Monoclonal Antibody,0.9016,Peginterferon Alfa-2a,0.9006,HER2-targeting Agent,0.9000
+APLIDIN,Plitidepsin,2,2,Apalutamide,0.9148,Plitidepsin,0.9075,Pipobroman,0.9073,Plerixafor,0.9070,Alvespimycin,0.9041
+APR,Abdominoperineal Resection,99,2,Peginterferon Alfa-2a,0.8988,Radical;Anterior Pelvic Exenteration,0.8983,Anterior Pelvic Exenteration,0.8965,Everolimus,0.8950,Pelvic Lymphadenectomy,0.8936
+ARN 509,Apalutamide,99,2,Anti-ErbB3 Monoclonal Antibody REGN1400,0.8988,MDM2/MDMX Inhibitor ALRN-6924,0.8935,Anti-CD98 Monoclonal Antibody IGN523,0.8902,Dutasteride,0.8896,Anti-HGF Monoclonal Antibody TAK-701,0.8888
+ARN509,Apalutamide,99,2,Anti-CD98 Monoclonal Antibody IGN523,0.8877,Anti-ErbB3 Monoclonal Antibody REGN1400,0.8871,MDM2/MDMX Inhibitor ALRN-6924,0.8850,Gamma-Secretase Inhibitor RO4929097,0.8796,Trametinib,0.8796
+ATG,Anti-Thymocyte Globulin,99,2,Ipilimumab,0.8980,Imatinib,0.8959,Erlotinib,0.8940,Anti-EGFR Monoclonal Antibody,0.8924,Docetaxel,0.8918
+ATRA,Tretinoin,99,2,Tamibarotene,0.9276,Erlotinib,0.9240,Abiraterone Acetate,0.9176,Abiraterone,0.9164,Tamoxifen,0.9152
+ATRA (Tretinoin),Tretinoin,1,2,Tretinoin,0.9729,Isotretinoin,0.9380,Treosulfan,0.9294,Topotecan,0.9245,Tamibarotene,0.9219
+ATRA started,Tretinoin,99,2,Tamibarotene,0.9049,Abiraterone Acetate,0.8956,Steroid Therapy,0.8952,Gilteritinib,0.8945,Erlotinib,0.8944
+AZD-2171,Cediranib,99,2,HDM2 Inhibitor MK-8242,0.9280,mTOR Kinase Inhibitor AZD8055,0.9279,PIM Kinase Inhibitor SGI-1776,0.9263,JAK2 Inhibitor AZD1480,0.9241,CENP-E Inhibitor GSK-923295A,0.9175
+AZD-6244,Selumetinib,99,2,mTOR Kinase Inhibitor AZD8055,0.9489,HDM2 Inhibitor MK-8242,0.9476,MDM2/MDMX Inhibitor ALRN-6924,0.9331,Dual IGF-1R/InsR Inhibitor BMS-754807,0.9326,JAK2 Inhibitor AZD1480,0.9312
+AZD1480,JAK2 Inhibitor AZD1480,1,2,JAK2 Inhibitor AZD1480,0.9726,mTOR Kinase Inhibitor AZD8055,0.9221,Folate Receptor-Targeted Tubulysin Conjugate EC1456,0.9155,HDM2 Inhibitor MK-8242,0.9124,Erlotinib,0.9121
+AZD8055,mTOR Kinase Inhibitor AZD8055,1,2,mTOR Kinase Inhibitor AZD8055,0.9725,JAK2 Inhibitor AZD1480,0.9210,HDM2 Inhibitor MK-8242,0.9200,Anti-CD33 Antibody-drug Conjugate IMGN779,0.9187,Gamma-Secretase Inhibitor RO4929097,0.9164
+AbiCabazi (abiraterone),Abiraterone,1,2,Abiraterone,0.9711,Abiraterone Acetate,0.9599,Cinrebafusp Alfa,0.9294,Bicalutamide,0.9292,Dabrafenib,0.9292
+Abiraterone acetate,Abiraterone Acetate,1,2,Abiraterone Acetate,1.0000,Abiraterone,0.9848,Sirolimus,0.9295,Dabrafenib,0.9284,Bicalutamide,0.9268
+Additional resection/ margins (taken after first margin positive),Resection,99,2,Surgical Margin;Resection,0.9508,Re-Excision;Superior;Margin,0.9502,Re-Excision;Inferior;Margin,0.9489,Inner;Upper;Surgical Margin;Re-Excision,0.9453,Right Breast;Re-Excision,0.9347
+Adr,Doxorubicin Hydrochloride,99,2,Adalimumab,0.9097,Doxorubicin,0.9049,Ramucirumab,0.9026,MDM2/MDMX Inhibitor ALRN-6924,0.9014,Prednisolone,0.9006
+Adriamycine,Doxorubicin Hydrochloride,2,2,Doxorubicin,0.9635,Doxorubicin Hydrochloride,0.9412,Daunorubicin,0.9330,Anthracycline Antineoplastic Antibiotic,0.9322,Adalimumab,0.9223
+Alliance (enzalutamide),Enzalutamide,1,2,Enzalutamide,0.9712,Bicalutamide,0.9387,Abiraterone Acetate,0.9217,Antiandrogen Therapy,0.9215,PSMA-targeting Agent;Antineoplastic Antibody-Drug Conjugate,0.9205
+AntiEGFR,Anti-EGFR Monoclonal Antibody,1,2,Anti-EGFR Monoclonal Antibody,0.9528,Anti-LAG-3 Monoclonal Antibody,0.9224,Anti-CD47 Monoclonal Antibody,0.9186,Anti-HGF Monoclonal Antibody TAK-701,0.9182,Antiandrogen Therapy,0.9157
+Ara,Cytarabine,2,2,Pexidartinib,0.9120,Cytarabine,0.9089,Rituximab,0.9088,Cladribine,0.9054,Anti-EGFR Monoclonal Antibody,0.9052
+Ara C,Cytarabine,1,2,Cytarabine,0.9044,Cladribine,0.9018,Chimeric Antigen Receptor T-Cell Therapy,0.8950,Chimeric Antigen Receptor T-Cell Therapy;Therapeutic Apheresis,0.8947,Carboxyamidotriazole,0.8932
+Ara-C,Cytarabine,1,2,Cytarabine,0.9177,Cladribine,0.9124,Chimeric Antigen Receptor T-Cell Therapy;Therapeutic Apheresis,0.9093,Chimeric Antigen Receptor T-Cell Therapy,0.9085,Liposomal Cytarabine,0.9076
+Arsenic.,Arsenic,1,2,Arsenic,0.9993,Arsenic Trioxide,0.9470,Seviteronel,0.9053,PSMA-targeting Agent;Antineoplastic Antibody-Drug Conjugate,0.9015,Vadastuximab Talirine,0.8996
+Ascites,Ascites Drainage,1,2,Ascites Drainage,0.9631,Pericardial Effusion,0.9109,Pleural Effusion,0.9095,Adalimumab,0.9047,Peginterferon Alfa-2a,0.9039
+Auto,Autologous Hematopoietic Stem Cell Transplantation,1,2,Autologous Hematopoietic Stem Cell Transplantation,0.8907,Erlotinib,0.8879,Ipilimumab,0.8869,MDM2/MDMX Inhibitor ALRN-6924,0.8868,Apoptotic Pathway-targeting Antineoplastic Agent,0.8853
+Avastin,Bevacizumab,1,2,Bevacizumab,0.9330,Vadastuximab Talirine,0.9125,Asparaginase,0.9096,Sorafenib,0.9093,Ivosidenib,0.9078
+Avatin,Lorazepam,99,2,Vinorelbine,0.9198,Vincristine,0.9150,Vinblastine,0.9108,Asparaginase,0.9101,Ivosidenib,0.9068
+Aza,Azacitidine,1,2,Azacitidine,0.9528,Azathioprine,0.9403,Azacitidine Regimen,0.9303,Azathioprine Sodium,0.9121,Decitabine,0.9098
+B/L Pelvic LN dissection,Bilateral Pelvic Lymph Node Dissection,1,2,Bilateral Pelvic Lymph Node Dissection,0.9598,Pelvic Lymphadenectomy,0.9575,Bilateral;Pelvic Lymphadenectomy,0.9493,Extend;Pelvic Lymphadenectomy,0.9443,Axillary Lymph Node Level I;Axillary Lymph Node Level II;Lymphadenectomy,0.9408
+BAL101553,Lisavanbulin,99,2,Anti-CD33 Monoclonal Antibody BI 836858,0.9037,Anti-HGF Monoclonal Antibody TAK-701,0.9009,FACT Complex-targeting Curaxin CBL0137,0.9001,NAMPT Inhibitor STF-118804,0.8971,AALL0232 ALL Study Identifier;Dexamethasone,0.8964
+BAY1161909,Empesertib,99,2,Dual IGF-1R/InsR Inhibitor BMS-754807,0.8975,Polyamine Analogue PG11047,0.8949,Gamma-Secretase Inhibitor RO4929097,0.8938,Glembatumumab,0.8906,FAK Inhibitor VS-4718,0.8894
+BCG,Bacillus Calmette-Guerin Antigen,1,2,Bacillus Calmette-Guerin Antigen,0.9257,Bleomycin,0.9195,Vaccine,0.9113,Bevacizumab,0.9097,Ipilimumab,0.9053
+BCNU,Carmustine,99,2,Navitoclax,0.9026,Neobladder,0.9009,Birinapant,0.8960,Orthotopic;Neobladder,0.8941,Crenolanib,0.8935
+BEV,Bevacizumab,1,2,Bevacizumab,0.9195,Mivobulin Isethionate,0.9155,Bortezomib,0.9135,Buparlisib,0.9094,Valproic Acid,0.9081
+BEZ235,Dactolisib,99,2,mTOR Inhibitor;Immunotherapeutic Agent,0.9151,Zoligratinib,0.9145,Lapatinib,0.9141,Bortezomib,0.9140,Everolimus,0.9139
+BI 836858 (anti-CD33),Anti-CD33 Monoclonal Antibody BI 836858,1,2,Anti-CD33 Monoclonal Antibody BI 836858,0.9930,Anti-CD3 Monoclonal Antibody,0.9625,Anti-CD33 Antibody-drug Conjugate IMGN779,0.9521,Anti-TIM-3 Monoclonal Antibody,0.9437,Anti-HGF Monoclonal Antibody TAK-701,0.9365
+BI6727 (VOLASERTIB),Volasertib,1,2,Volasertib,0.9616,Anti-CD33 Monoclonal Antibody BI 836858,0.9265,Dual IGF-1R/InsR Inhibitor BMS-754807,0.9185,FAK Inhibitor VS-4718,0.9172,Bevacizumab,0.9158
+BI836858 (anti-CD33),Anti-CD33 Monoclonal Antibody BI 836858,1,2,Anti-CD33 Monoclonal Antibody BI 836858,0.9884,Anti-CD3 Monoclonal Antibody,0.9573,Anti-CD33 Antibody-drug Conjugate IMGN779,0.9499,Anti-TIM-3 Monoclonal Antibody,0.9384,Anti-CD98 Monoclonal Antibody IGN523,0.9327
+BKM120,Buparlisib,99,2,Binimetinib,0.8971,mTOR Kinase Inhibitor AZD8055,0.8887,DNA-PK/TOR Kinase Inhibitor CC-115,0.8885,Anti-PLGF Monoclonal Antibody TB-403,0.8882,Cetuximab,0.8874
+BL-8040,Motixafortide,99,2,Anti-PLGF Monoclonal Antibody TB-403,0.9103,Anti-HGF Monoclonal Antibody TAK-701,0.9084,Anti-CD33 Monoclonal Antibody BI 836858,0.9058,Anti-CD33 Antibody-drug Conjugate IMGN779,0.9032,mTOR Kinase Inhibitor AZD8055,0.9027
+BMN-673,Talazoparib,99,2,Anti-CD33 Monoclonal Antibody BI 836858,0.9140,MDM2/MDMX Inhibitor ALRN-6924,0.9124,Purine Analogue NSC 750854,0.9076,Dual IGF-1R/InsR Inhibitor BMS-754807,0.9058,Anti-CD33 Antibody-drug Conjugate IMGN779,0.9030
+BMS-354825,Dasatinib,99,2,Dual IGF-1R/InsR Inhibitor BMS-754807,0.9392,Purine Analogue NSC 750854,0.9240,CENP-E Inhibitor GSK-923295A,0.9230,NAMPT Inhibitor STF-118804,0.9230,HDM2 Inhibitor MK-8242,0.9228
+BMS-754807,Dual IGF-1R/InsR Inhibitor BMS-754807,1,2,Dual IGF-1R/InsR Inhibitor BMS-754807,0.9536,MDM2/MDMX Inhibitor ALRN-6924,0.9272,Purine Analogue NSC 750854,0.9259,Glembatumumab,0.9251,NAMPT Inhibitor STF-118804,0.9235
+BMS-986205 (IDO inhibitor),Linrodostat,99,2,Dual IGF-1R/InsR Inhibitor BMS-754807,0.9525,IDO Inhibitor,0.9451,HDM2 Inhibitor MK-8242,0.9414,Anti-CD33 Monoclonal Antibody BI 836858,0.9412,NAMPT Inhibitor STF-118804,0.9412
+BMS-986205 (P1T986205),Linrodostat,99,2,Purine Analogue NSC 750854,0.9322,NAMPT Inhibitor STF-118804,0.9275,Dual IGF-1R/InsR Inhibitor BMS-754807,0.9275,Anti-CD33 Monoclonal Antibody BI 836858,0.9246,PSMA-targeting Agent;Antineoplastic Antibody-Drug Conjugate,0.9196
+BORTEZOMIB,Bortezomib,1,2,Bortezomib,1.0000,Bevacizumab,0.9326,Nab-paclitaxel,0.9276,Vinblastine,0.9247,Paclitaxel,0.9226
+BP1001,Prexigebersen,99,2,Everolimus,0.9029,JAK1 Inhibitor,0.8964,JAK2 Inhibitor AZD1480,0.8918,Pembrolizumab,0.8909,mTOR Kinase Inhibitor AZD8055,0.8868
+BPX-501,Rivogenlecleucel,99,2,Anti-PLGF Monoclonal Antibody TB-403,0.9061,Purine Analogue NSC 750854,0.9060,Binimetinib,0.9056,Nab-paclitaxel,0.9049,Dual IGF-1R/InsR Inhibitor BMS-754807,0.9035
+BREAST CONSERVING,Breast Conservation Treatment,1,2,Breast Conservation Treatment,0.9586,Bilateral;Skin-Sparing Mastectomy,0.9257,Lumpectomy;Right Breast,0.9159,Mastectomy,0.9144,Skin-Sparing Mastectomy;Radical Mastectomy,0.9140
+BSO,Buthionine Sulfoximine,4,2,Buparlisib,0.9035,Bilateral Salpingectomy,0.8992,Binimetinib,0.8970,Buthionine Sulfoximine,0.8964,Bevacizumab,0.8946
+BU,Busulfan,1,2,Busulfan,0.9061,Bevacizumab,0.8947,Crenolanib,0.8939,Buparlisib,0.8916,Bleomycin,0.8882
+BYL719,Alpelisib,99,2,MDM2/MDMX Inhibitor ALRN-6924,0.9100,Ifabotuzumab,0.9031,Dual IGF-1R/InsR Inhibitor BMS-754807,0.9022,Purine Analogue NSC 750854,0.9015,Gamma-Secretase Inhibitor RO4929097,0.9010
+Bacillus Calmette-Guerin,Bacillus Calmette-Guerin Antigen,1,2,Bacillus Calmette-Guerin Antigen,0.9730,Lisavanbulin,0.9061,Liposome-encapsulated Daunorubicin-Cytarabine,0.9054,Vaccine,0.9049,Imatinib,0.9021
+Bacillus Calmette-Guerin (BCG),Bacillus Calmette-Guerin Antigen,1,2,Bacillus Calmette-Guerin Antigen,0.9702,Vaccine,0.9194,Lisavanbulin,0.9152,Glembatumumab,0.9108,Imatinib,0.9095
+Bevasizumab,Bevacizumab,1,2,Bevacizumab,0.9335,Vinorelbine,0.9261,Vinblastine,0.9227,Vorinostat,0.9220,Vemurafenib,0.9214
+Bevicizumab,Bevacizumab,1,2,Bevacizumab,0.9282,Bortezomib,0.9163,Mivobulin Isethionate,0.9143,Cabiralizumab,0.9121,Ramucirumab,0.9107
+Bilateral Ovarian cystectomy,Bilateral;Ovarian;Cystectomy,1,2,Bilateral;Ovarian;Cystectomy,0.9893,Cystectomy,0.9547,Bilateral Salpingectomy with Oophorectomy,0.9535,Bilateral Salpingectomy,0.9534,Unilateral Salpingo-oophorectomy,0.9486
+Bilateral Salpingo-Oophorectomy,Bilateral Salpingectomy with Oophorectomy,1,2,Bilateral Salpingectomy with Oophorectomy,0.9848,Unilateral Salpingo-oophorectomy,0.9845,Bilateral Salpingectomy,0.9792,Unilateral Oophorectomy,0.9678,Bilateral;Ovarian;Cystectomy,0.9570
+Bilateral breast reconstruction with tissue expanders.,Tissue Expander-Implant Breast Reconstruction;Bilateral,1,2,Tissue Expander-Implant Breast Reconstruction;Bilateral,0.9892,Bilateral Mastectomy,0.9424,Bilateral;Total Mastectomy,0.9424,Bilateral;Skin-Sparing Mastectomy,0.9387,Bilateral;Ovarian;Cystectomy,0.9374
+Bilateral skin sparing Mastectomy,Bilateral;Skin-Sparing Mastectomy,1,2,Bilateral;Skin-Sparing Mastectomy,0.9959,Skin-Sparing Mastectomy;Radical Mastectomy,0.9688,Bilateral Mastectomy,0.9488,Bilateral;Total Mastectomy,0.9379,Mastectomy,0.9361
+Bile Duct Resection,Bile Duct;Resection,1,2,Bile Duct;Resection,0.9910,Resection,0.9432,Lung;Resection,0.9293,Pancreaticoduodenectomy,0.9259,Hepatectomy,0.9225
+Binimetinib (MEK162),Binimetinib,1,2,Binimetinib,0.9785,Cobimetinib,0.9455,Anti-CD33 Monoclonal Antibody BI 836858,0.9308,Dual IGF-1R/InsR Inhibitor BMS-754807,0.9294,Axitinib,0.9233
+Biochemo,Biochemotherapy,1,2,Biochemotherapy,0.9580,Bleomycin,0.8988,Dasatinib,0.8952,Sabatolimab,0.8866,Ifabotuzumab,0.8855
+Bisulfan,Busulfan,4,2,Pracinostat,0.9135,Vorinostat,0.9096,Histone Deacetylase Inhibitor,0.9094,Busulfan,0.9064,Azathioprine,0.9052
+Bladder diverticulectomy,bladder diverticulectomy,1,2,bladder diverticulectomy,1.0000,Nephroureterectomy with Cuff of Bladder;Endoscopic Resection,0.9263,Cystectomy,0.9260,Nephroureterectomy,0.9158,Transurethral Resection of Bladder Tumor,0.9143
+Bleo,Bleomycin,2,2,Bevacizumab,0.9161,Bleomycin,0.9144,Biopsy,0.8919,Binimetinib,0.8918,Bilateral Salpingectomy,0.8907
+Blood Draw,Blood Sample,1,2,Blood Sample,0.9485,Donor Lymphocyte Infusion,0.9060,Biopsy,0.9040,Skin Biopsy,0.8920,Liver Biopsy,0.8907
+Bone marrow transplant,Bone Marrow Transplantation,1,2,Bone Marrow Transplantation,0.9911,Hematopoietic Cell Transplantation,0.9430,Autologous Hematopoietic Stem Cell Transplantation,0.9316,Sibling;Allogeneic Hematopoietic Stem Cell Transplantation,0.9177,Matched Unrelated Donor;Allogeneic Hematopoietic Stem Cell Transplantation,0.9152
+Breast Conservation,Breast Conservation Treatment,1,2,Breast Conservation Treatment,0.9747,Bilateral;Skin-Sparing Mastectomy,0.9271,Left;Biopsy of Breast,0.9190,Lumpectomy;Right Breast,0.9143,Tissue Flap Breast Reconstruction,0.9142
+Bu,Busulfan,1,2,Busulfan,0.9061,Bevacizumab,0.8947,Crenolanib,0.8939,Buparlisib,0.8916,Bleomycin,0.8882
+Busul,Busulfan,1,2,Busulfan,0.9366,Lisavanbulin,0.8928,Bevacizumab,0.8909,Lapatinib,0.8883,Zoligratinib,0.8871
+CABOZANTINIB (XL-148),Cabozantinib,1,2,Cabozantinib,0.9621,Cabazitaxel,0.9419,JAK2 Inhibitor AZD1480,0.9225,Cabiralizumab,0.9214,Nab-paclitaxel,0.9188
+CAI (NABTT 97212),Carboxyamidotriazole,99,2,Nab-paclitaxel,0.9245,AALL0232 ALL Study Identifier;Dexamethasone,0.9239,AALL0232 ALL Study Identifier,0.9145,Anti-CD33 Monoclonal Antibody BI 836858,0.9142,Anti-CD98 Monoclonal Antibody IGN523,0.9139
+CAPECITABINE,Capecitabine,1,2,Capecitabine,1.0000,Gemcitabine,0.9270,Temozolomide,0.9240,Docetaxel,0.9227,Letrozole,0.9211
+CARBOPLATIN,Carboplatin,1,2,Carboplatin,1.0000,Cisplatin,0.9385,Cetuximab,0.9345,Cyclophosphamide,0.9253,Platinum,0.9244
+CBL0137,FACT Complex-targeting Curaxin CBL0137,1,2,FACT Complex-targeting Curaxin CBL0137,0.9368,AALL0331 ALL Study Identifier,0.9050,Anti-CD98 Monoclonal Antibody IGN523,0.9039,AALL0232 ALL Study Identifier,0.9012,Gamma-Secretase Inhibitor RO4929097,0.9008
+CC115,DNA-PK/TOR Kinase Inhibitor CC-115,1,2,DNA-PK/TOR Kinase Inhibitor CC-115,0.9293,Celecoxib,0.9082,FACT Complex-targeting Curaxin CBL0137,0.8961,Anti-CD98 Monoclonal Antibody IGN523,0.8916,Capecitabine,0.8901
+CCNU,Lomustine,99,2,Celecoxib,0.9151,Carboplatin,0.9060,Cyclin-Dependent Kinase Inhibitor,0.9053,Everolimus,0.9040,Cetuximab,0.9013
+CD123,Immunotherapeutic Agent,99,2,AALL0232 ALL Study Identifier;Dexamethasone,0.9072,Dexamethasone,0.8988,Anti-CD33 Monoclonal Antibody BI 836858,0.8979,Anti-CD3 Monoclonal Antibody,0.8949,Anti-CD98 Monoclonal Antibody IGN523,0.8934
+CD3,Anti-CD3 Monoclonal Antibody,1,2,Anti-CD3 Monoclonal Antibody,0.9601,Anti-CD33 Monoclonal Antibody BI 836858,0.9457,Anti-CD33 Antibody-drug Conjugate IMGN779,0.9133,Chimeric Antigen Receptor T-Cell Therapy,0.9123,Cetuximab,0.9110
+CDK46,Cyclin-Dependent Kinase Inhibitor,1,2,Cyclin-Dependent Kinase Inhibitor,0.9126,FLT3/CDK4/6 Inhibitor FLX925,0.9086,Vorinostat,0.8997,Lenalidomide,0.8972,FAK Inhibitor VS-4718,0.8967
+CDX-011 (GLEMBATUMUMAB),Glembatumumab,1,2,Glembatumumab,0.9504,Anti-CD98 Monoclonal Antibody IGN523,0.9386,Anti-CD33 Monoclonal Antibody BI 836858,0.9332,Anti-CD33 Antibody-drug Conjugate IMGN779,0.9311,AALL0232 ALL Study Identifier;Dexamethasone,0.9268
+CELECOXIB,Celecoxib,1,2,Celecoxib,1.0000,Cetuximab,0.9257,Cyclophosphamide,0.9155,Everolimus,0.9145,Carboplatin,0.9145
+CGC(PG)-11047,Polyamine Analogue PG11047,1,2,Polyamine Analogue PG11047,0.9439,Topoisomerase I Inhibitor Genz-644282,0.9171,DNA-PK/TOR Kinase Inhibitor CC-115,0.9167,Purine Analogue NSC 750854,0.9127,Gamma-Secretase Inhibitor RO4929097,0.9105
+CI-980,Mivobulin Isethionate,99,2,Cixutumumab,0.9187,Gamma-Secretase Inhibitor RO4929097,0.9087,Anti-CD98 Monoclonal Antibody IGN523,0.9077,CENP-E Inhibitor GSK-923295A,0.9065,Purine Analogue NSC 750854,0.9040
+CIS,Cisplatin,1,2,Cisplatin,0.9037,Cixutumumab,0.9009,Carboplatin,0.8985,Azacitidine,0.8897,Cetuximab,0.8893
+CISPLATIN,Cisplatin,1,2,Cisplatin,1.0000,Platinum,0.9493,Carboplatin,0.9385,Oxaliplatin,0.9214,Cetuximab,0.9208
+CORE,Core Biopsy,1,2,Core Biopsy,0.9543,Core Biopsy;Liver Lesion,0.9409,Cinrebafusp Alfa,0.8787,Liver Biopsy,0.8785,mTOR Inhibitor;Immunotherapeutic Agent,0.8771
+CPI-613,Devimistat,99,2,Purine Analogue NSC 750854,0.9121,Nitrogen Mustard Prodrug PR-104,0.9101,DNA-PK/TOR Kinase Inhibitor CC-115,0.9063,Ponatinib,0.9025,Topoisomerase I Inhibitor Genz-644282,0.9025
+CPT-11,Irinotecan Hydrochloride,5,2,Irinotecan,0.9176,DNA-PK/TOR Kinase Inhibitor CC-115,0.9154,PSMA-targeting Agent;Antineoplastic Antibody-Drug Conjugate,0.9122,Topoisomerase-I Inhibitor,0.9120,Irinotecan Hydrochloride,0.9113
+CPX-351,Liposome-encapsulated Daunorubicin-Cytarabine,99,2,Purine Analogue NSC 750854,0.9144,Paclitaxel,0.9103,Anti-PLGF Monoclonal Antibody TB-403,0.9078,Nitrogen Mustard Prodrug PR-104,0.9074,FACT Complex-targeting Curaxin CBL0137,0.9064
+CPX351,Liposome-encapsulated Daunorubicin-Cytarabine,99,2,Purine Analogue NSC 750854,0.9052,CXCR4 Inhibitor,0.9021,Gamma-Secretase Inhibitor RO4929097,0.8980,Nitrogen Mustard Prodrug PR-104,0.8974,DNA-PK/TOR Kinase Inhibitor CC-115,0.8963
+CSF1R inhibitor,Immunosuppressant,99,2,CXCR4 Inhibitor,0.9309,FLT3/CDK4/6 Inhibitor FLX925,0.9294,mTOR Inhibitor,0.9246,AKT Inhibitor,0.9242,Gamma-Secretase Inhibitor RO4929097,0.9238
+CTL019,Tisagenlecleucel,99,2,Talimogene Laherparepvec,0.8991,Vadastuximab Talirine,0.8972,FACT Complex-targeting Curaxin CBL0137,0.8958,Anti-CD98 Monoclonal Antibody IGN523,0.8907,Cilengitide,0.8906
+CVT,Regadenoson,99,2,Valspodar,0.9135,Cyclophosphamide,0.9117,Cixutumumab,0.9084,Cetuximab,0.9065,Cytarabine,0.9061
+CX-01,Dociparstat sodium,99,2,Cixutumumab,0.9109,DNA-PK/TOR Kinase Inhibitor CC-115,0.8983,Celecoxib,0.8920,FACT Complex-targeting Curaxin CBL0137,0.8908,NY-ESO-1 Peptide Vaccine,0.8905
+CX-5461 (POL1),Pidnarulex,99,2,Purine Analogue NSC 750854,0.9287,Topoisomerase I Inhibitor Genz-644282,0.9274,HDM2 Inhibitor MK-8242,0.9230,CENP-E Inhibitor GSK-923295A,0.9224,DNA-PK/TOR Kinase Inhibitor CC-115,0.9222
+CXCR4 inhibitor,CXCR4 Inhibitor,1,2,CXCR4 Inhibitor,1.0000,AKT Inhibitor,0.9320,Aromatase Inhibitor,0.9301,FLT3/CDK4/6 Inhibitor FLX925,0.9245,Topoisomerase-I Inhibitor,0.9240
+CY,Cyclophosphamide,1,2,Cyclophosphamide,0.9315,Cytarabine,0.9111,Cyclosporine,0.9110,Cetuximab,0.9095,Cixutumumab,0.9092
+CYCLOPHOSPHAMIDE,Cyclophosphamide,1,2,Cyclophosphamide,1.0000,Carboplatin,0.9253,Azathioprine,0.9185,Temozolomide,0.9171,Cladribine,0.9170
+CYSTOPROSTATECTOMY,Radical Cystoprostatectomy,1,2,Radical Cystoprostatectomy,0.9804,Robot-Assisted Surgery;Radical Cystoprostatectomy,0.9605,Radical Cystoprostatectomy;Robot-Assisted Surgery,0.9600,Robot-Assisted Surgery;Laparoscopy;Radical Cystoprostatectomy,0.9548,Partial Cystectomy,0.9444
+CYTARABINE,Cytarabine,1,2,Cytarabine,1.0000,Liposomal Cytarabine,0.9671,Liposome-encapsulated Daunorubicin-Cytarabine,0.9303,Cytosine,0.9231,Cyclosporine,0.9182
+Cabivalizumab,Cabiralizumab,1,2,Cabiralizumab,0.9658,Cabazitaxel,0.9510,Cabozantinib,0.9393,Bevacizumab,0.9223,Ibrutinib,0.9207
+Cabo,Cabozantinib,1,2,Cabozantinib,0.9507,Cabazitaxel,0.9490,Cabiralizumab,0.9345,Cetuximab,0.8870,Bicalutamide,0.8836
+Cape,Capecitabine,3,2,Cetuximab,0.9058,Cytarabine,0.9036,Capecitabine,0.9020,Celecoxib,0.9000,Entospletinib,0.8942
+Capectitabine,Capecitabine,99,2,Cladribine,0.9214,Azathioprine,0.9193,Gemtuzumab,0.9189,Clofarabine,0.9161,Gemcitabine,0.9139
+Carbo,Carboplatin,4,2,Celecoxib,0.8976,Cytosine,0.8972,Carboxyamidotriazole,0.8933,Carboplatin,0.8919,Cyclophosphamide,0.8899
+Cart-T cell therapy,Chimeric Antigen Receptor T-Cell Therapy,1,2,Chimeric Antigen Receptor T-Cell Therapy,0.9478,Chimeric Antigen Receptor T-Cell Therapy;Therapeutic Apheresis,0.9350,mTOR Inhibitor;Immunotherapeutic Agent,0.9145,Hematopoietic Cell Transplantation,0.9144,Anti-CD3 Monoclonal Antibody,0.9142
+Casodex,Bicalutamide,99,2,Cetuximab,0.9082,Dutasteride,0.8971,Serdemetan,0.8956,Alisertib,0.8930,Dociparstat sodium,0.8928
+Casoxdex,Bicalutamide,99,2,Indoximod,0.9138,Buthionine Sulfoximine,0.9069,Anti-CD33 Monoclonal Antibody BI 836858,0.9030,Anti-CD98 Monoclonal Antibody IGN523,0.9022,Cixutumumab,0.9016
+Caudate segmentectomy,Caudate Lobe;Segmentectomy,1,2,Caudate Lobe;Segmentectomy,0.9850,Segmentectomy;Single,0.9430,Segmentectomy;Multiple,0.9166,Lobectomy,0.9150,Ureterectomy,0.9106
+Celgene CC-15,DNA-PK/TOR Kinase Inhibitor CC-115,1,2,DNA-PK/TOR Kinase Inhibitor CC-115,0.9117,Cyclophosphamide,0.9096,Celecoxib,0.9085,Decitabine,0.8954,Cytosine,0.8949
+Cellcept,Mycophenolate Mofetil,99,2,Chimeric Antigen Receptor T-Cell Therapy,0.9164,Rituximab,0.9163,Cetuximab,0.9115,Anti-CD33 Monoclonal Antibody BI 836858,0.9109,Ifabotuzumab,0.9094
+Cepecitabine,Capecitabine,99,2,Decitabine,0.9387,Dacomitinib,0.9237,Azacitidine,0.9222,Edicotinib,0.9175,Cytarabine,0.9170
+Cis,Cisplatin,1,2,Cisplatin,0.9037,Cixutumumab,0.9009,Carboplatin,0.8985,Azacitidine,0.8897,Cetuximab,0.8893
+Cobemitinib,Cobimetinib,1,2,Cobimetinib,0.9497,Dacomitinib,0.9292,Cytarabine,0.9267,Gilteritinib,0.9222,Liposomal Cytarabine,0.9184
+Conformal,"Radiotherapy, Conformal",1,2,"Radiotherapy, Conformal",0.9516,External Beam Radiation Therapy;3-Dimensional Conformal Radiation Therapy,0.9148,Proton Beam Radiation Therapy;3-Dimensional Conformal Radiation Therapy,0.9096,Rovalpituzumab Tesirine,0.8874,Azacitidine Regimen,0.8847
+Core Biopsy of liver lesion,Core Biopsy;Liver Lesion,1,2,Core Biopsy;Liver Lesion,0.9945,Core Biopsy,0.9681,Liver Biopsy,0.9631,Biopsy,0.9239,Skin Biopsy,0.9207
+CsPt,Cisplatin,99,2,Celecoxib,0.9031,DNA-PK/TOR Kinase Inhibitor CC-115,0.9028,Anti-PLGF Monoclonal Antibody TB-403,0.9020,PSMA-targeting Agent;Antineoplastic Antibody-Drug Conjugate,0.9019,Cyclosporine,0.9018
+Ctx,Cyclophosphamide,1,2,Cyclophosphamide,0.9247,Capecitabine,0.9191,Cetuximab,0.9189,Celecoxib,0.9149,Carboplatin,0.9136
+Cy,Cyclophosphamide,1,2,Cyclophosphamide,0.9315,Cytarabine,0.9111,Cyclosporine,0.9110,Cetuximab,0.9095,Cixutumumab,0.9092
+CyPh,Cyclophosphamide,1,2,Cyclophosphamide,0.9086,Ketoconazole,0.9038,Cytarabine,0.9037,Prednisolone,0.9033,Cyclosporine,0.9011
+Cyclophoshamide,Cyclophosphamide,99,2,Apalutamide,0.9118,Phenethyl Isothiocyanate,0.9076,Purine Analogue NSC 750854,0.9075,Hydroxyurea,0.9061,Carboxyamidotriazole,0.9039
+Cyclophospha,Cyclophosphamide,99,2,Valspodar,0.9125,Cyclosporine,0.9052,Prednisone,0.9011,Apalutamide,0.8984,Prednisolone,0.8967
+Cystoprostatectomy,Radical Cystoprostatectomy,1,2,Radical Cystoprostatectomy,0.9804,Robot-Assisted Surgery;Radical Cystoprostatectomy,0.9605,Radical Cystoprostatectomy;Robot-Assisted Surgery,0.9600,Robot-Assisted Surgery;Laparoscopy;Radical Cystoprostatectomy,0.9548,Partial Cystectomy,0.9444
+Cystoprostatectomy (robotic),Radical Cystoprostatectomy;Robot-Assisted Surgery,2,2,Robot-Assisted Surgery;Radical Cystoprostatectomy,0.9807,Radical Cystoprostatectomy;Robot-Assisted Surgery,0.9798,Robot-Assisted Surgery;Laparoscopy;Radical Cystoprostatectomy,0.9761,Radical Cystoprostatectomy,0.9733,Robot-Assisted Surgery;Cystectomy,0.9574
+Cystoprotatectomy,Radical Cystoprostatectomy,1,2,Radical Cystoprostatectomy,0.9561,Radical Cystoprostatectomy;Robot-Assisted Surgery,0.9442,Robot-Assisted Surgery;Radical Cystoprostatectomy,0.9440,Robot-Assisted Surgery;Laparoscopy;Radical Cystoprostatectomy,0.9401,Partial Cystectomy,0.9302
+Cytarabine - liposomal,Liposomal Cytarabine,1,2,Liposomal Cytarabine,0.9874,Cytarabine,0.9661,Liposome-encapsulated Daunorubicin-Cytarabine,0.9610,Cyclosporine,0.9148,Chimeric Antigen Receptor T-Cell Therapy;Therapeutic Apheresis,0.9147
+Cytoxan,Cyclophosphamide,99,2,Liposomal Cytarabine,0.9263,Cytarabine,0.9251,Mitoxantrone,0.9231,Capecitabine,0.9139,Cixutumumab,0.9133
+Cyx,Cyclophosphamide,1,2,Cyclophosphamide,0.9271,Cixutumumab,0.9251,Cytarabine,0.9068,Cyclosporine,0.9063,Cetuximab,0.9048
+DC vaccine,Dendritic Cell Vaccine,1,2,Dendritic Cell Vaccine,0.9684,Vaccine,0.9395,Decitabine,0.9181,Dexamethasone,0.9111,Liposome-encapsulated Daunorubicin-Cytarabine,0.9110
+DC_VAX,Dendritic Cell Vaccine,2,2,Vadastuximab Talirine,0.9088,Dendritic Cell Vaccine,0.9063,Dactinomycin,0.8997,Vinorelbine,0.8957,Seviteronel,0.8953
+DLL4/VEGF antibody OMP-305B83,Navicixizumab,99,2,Anti-PLGF Monoclonal Antibody TB-403,0.9424,FLT3/CDK4/6 Inhibitor FLX925,0.9289,Anti-CD98 Monoclonal Antibody IGN523,0.9266,Anti-HGF Monoclonal Antibody TAK-701,0.9259,Anti-CD33 Monoclonal Antibody BI 836858,0.9233
+DOPAMINE,Dopamine,1,2,Dopamine,1.0000,Daunorubicin,0.9075,Epinephrine,0.9049,Adalimumab,0.9031,Liposome-encapsulated Daunorubicin-Cytarabine,0.9031
+DTIC,Dacarbazine,1,2,Dacarbazine,0.9170,Dactolisib,0.9135,Dactinomycin,0.9133,Adalimumab,0.9096,Ifabotuzumab,0.9090
+DURVALUMAB,Durvalumab,1,2,Durvalumab,1.0000,Daratumumab,0.9169,Ramucirumab,0.9113,Veliparib,0.9112,Robatumumab,0.9105
+Debio-1347,Zoligratinib,99,2,Primary Debulking Surgery,0.9030,Purine Analogue NSC 750854,0.9014,PIM Kinase Inhibitor SGI-1776,0.8945,Anti-PLGF Monoclonal Antibody TB-403,0.8938,AALL0232 ALL Study Identifier;Dexamethasone,0.8921
+Debulking surgery,Tumor Debulking,1,2,Tumor Debulking,0.9743,Primary Debulking Surgery,0.9736,Interval Debulking Surgery,0.9544,Secondary;Tumor Debulking,0.9486,Vulva;Resection,0.9061
+Decitbne,Decitabine,1,2,Decitabine,0.9371,Dactinomycin,0.9084,Devimistat,0.9042,Dacarbazine,0.9022,Dactolisib,0.9006
+Decortin H,Prednisolone,99,2,Dactinomycin,0.9195,Ivosidenib,0.8993,Decitabine,0.8990,Dacomitinib,0.8988,Denintuzumab Mafodotin,0.8981
+Distal pancreatectomy,Distal Pancreatectomy,1,2,Distal Pancreatectomy,1.0000,Pancreaticoduodenectomy,0.9545,Total Pancreatectomy,0.9454,Pylorus-sparing pancreaticoduodenectomy (procedure),0.9313,Uncinate Process of Pancreas;Resection,0.9256
+Double Umbilical Cord Blood Transplant (DUCBT),Double-Unit Umbilical Cord Blood Transplantation,1,2,Double-Unit Umbilical Cord Blood Transplantation,0.9689,Matched Unrelated Donor;Allogeneic Hematopoietic Stem Cell Transplantation,0.9338,Sibling;Allogeneic Hematopoietic Stem Cell Transplantation,0.9236,Dual IGF-1R/InsR Inhibitor BMS-754807,0.9187,Autologous Hematopoietic Stem Cell Transplantation,0.9164
+Durvalumab (GIC026),Durvalumab,1,2,Durvalumab,0.9607,Anti-CD98 Monoclonal Antibody IGN523,0.9287,MDM2/MDMX Inhibitor ALRN-6924,0.9282,AALL0232 ALL Study Identifier;Dexamethasone,0.9260,Dual IGF-1R/InsR Inhibitor BMS-754807,0.9213
+E7070,Indisulam,99,2,Anti-CD98 Monoclonal Antibody IGN523,0.8865,FAK Inhibitor VS-4718,0.8848,Imatinib,0.8838,Talimogene Laherparepvec,0.8795,Anti-PLGF Monoclonal Antibody TB-403,0.8795
+E7438/EPZ6438,Tazemetostat,99,2,Anti-PLGF Monoclonal Antibody TB-403,0.8947,Esophagectomy;External,0.8937,CENP-E Inhibitor GSK-923295A,0.8924,Topoisomerase I Inhibitor Genz-644282,0.8920,Entospletinib,0.8892
+EBRT,External Beam Radiation Therapy,1,2,External Beam Radiation Therapy,0.9307,External Beam Radiation Therapy;3-Dimensional Conformal Radiation Therapy,0.9198,Abiraterone,0.9170,Radiation Therapy,0.9161,Everolimus,0.9148
+EC1456,Folate Receptor-Targeted Tubulysin Conjugate EC1456,1,2,Folate Receptor-Targeted Tubulysin Conjugate EC1456,0.9307,JAK2 Inhibitor AZD1480,0.9038,FAK Inhibitor VS-4718,0.8958,Etoposide,0.8947,Apoptotic Pathway-targeting Antineoplastic Agent,0.8945
+EGFR inhibitor,Anti-EGFR Monoclonal Antibody,1,2,Anti-EGFR Monoclonal Antibody,0.9617,AKT Inhibitor,0.9335,Gefitinib,0.9321,Erlotinib,0.9317,Aromatase Inhibitor,0.9292
+EPINEPHRINE,Epinephrine,1,2,Epinephrine,1.0000,Epirubicin,0.9147,l-Norepinephrine,0.9098,Dopamine,0.9049,Etoposide,0.9026
+ERIBULIN,Eribulin,1,2,Eribulin,1.0000,Empesertib,0.9158,Regorafenib,0.9147,Dabrafenib,0.9133,Epirubicin,0.9110
+ESD,Endoscopic Submucosal Dissection,1,2,Endoscopic Submucosal Dissection,0.9344,Esophagectomy,0.9168,Everolimus,0.9162,Edicotinib,0.9119,Decitabine,0.9102
+EXCISION,Excision,1,2,Excision,1.0000,Skin Excision,0.9746,Excisional Biopsy,0.9607,Transanal Excision,0.9471,Re-Excision,0.9433
+EXCISION WITH NEEDLE WIRE LOCALIZATION,Excision;Wire-Guided Localization,1,2,Excision;Wire-Guided Localization,0.9767,Wire-Guided Localization;Segmental Mastectomy,0.9543,Wire-Guided Localization;Right Breast;Biopsy;Wire-Guided Localization;Right Breast,0.9470,Wire-Guided Localization,0.9452,Excision,0.9312
+Endoxan,Cyclophosphamide,99,2,Epinephrine,0.9082,Epirubicin,0.9078,Edicotinib,0.9069,Prexasertib,0.9021,Exploratory Surgery;External,0.9021
+Esophagectomy (outside),Esophagectomy;External,2,2,Esophagectomy,0.9590,Esophagectomy;External,0.9567,Exploratory Surgery;External,0.9286,Right;Mediastinal Mass;Excision,0.9218,Nephroureterectomy with Cuff of Bladder;Endoscopic Resection,0.9213
+Et,Etoposide,99,2,Trametinib,0.8891,Tamibarotene,0.8886,Tamoxifen,0.8886,Gemtuzumab,0.8853,Folate Receptor-Targeted Tubulysin Conjugate EC1456,0.8837
+Etopside,Etoposide,1,2,Etoposide,0.9305,Topotecan,0.9103,Etoposide Phosphate,0.9059,Oxaliplatin,0.9033,Craniotomy,0.9010
+Excisional biopsy,Excisional Biopsy,1,2,Excisional Biopsy,1.0000,Excision,0.9607,Skin Excision,0.9473,Re-Excision;Biopsy Site,0.9366,Punch Biopsy,0.9339
+Excisional biospy,Excisional Biopsy,1,2,Excisional Biopsy,0.9460,Excision,0.9401,Skin Excision,0.9237,Re-Excision;Original;Lumpectomy;Surgical Site,0.9127,Local excision (procedure),0.9122
+Exploration,Exploratory Surgery,1,2,Exploratory Surgery,0.9197,Exploratory Surgery;Laparotomy,0.9133,Exploratory Surgery;External,0.9059,Excision;Wire-Guided Localization,0.8948,Retromammary space (body structure);Lymphadenectomy,0.8937
+Exploration (outside),Exploratory Surgery;External,1,2,Exploratory Surgery;External,0.9185,Inner;Upper;Surgical Margin;Re-Excision,0.9028,Wide;Re-Excision;Biopsy,0.9020,Excision;Wire-Guided Localization,0.9020,Esophagectomy;External,0.8998
+Exploratory laparotomy,Exploratory Surgery;Laparotomy,1,2,Exploratory Surgery;Laparotomy,0.9831,Exploratory Surgery,0.9712,Exploratory Surgery;External,0.9385,Pelvic Exenteration,0.9162,Appendectomy,0.9120
+Extended Lobectomy,Extend;Lobectomy,1,2,Extend;Lobectomy,0.9677,Lobectomy,0.9519,Lung;Resection,0.9183,Left Hemihepatectomy,0.9141,Right Hemihepatectomy,0.9104
+External Beam,External Beam Radiation Therapy,1,2,External Beam Radiation Therapy,0.9828,External Beam Radiation Therapy;3-Dimensional Conformal Radiation Therapy,0.9361,Esophagectomy;External,0.9283,Exploratory Surgery;External,0.9179,Proton Beam Radiation Therapy,0.9164
+"External Beam, 3D Conformal",External Beam Radiation Therapy;3-Dimensional Conformal Radiation Therapy,1,2,External Beam Radiation Therapy;3-Dimensional Conformal Radiation Therapy,0.9769,External Beam Radiation Therapy,0.9567,"Radiotherapy, Conformal",0.9550,Proton Beam Radiation Therapy;3-Dimensional Conformal Radiation Therapy,0.9548,Proton Beam Radiation Therapy,0.9149
+FENRETINIDE,Fenretinide,1,2,Fenretinide,1.0000,Isotretinoin,0.9242,Clofarabine,0.9206,Fluorouracil,0.9136,Ifosfamide,0.9131
+FLUORO-PYRIMIDINE,Fluoropyrimidine,1,2,Fluoropyrimidine,0.9778,Fluorouracil,0.9420,Floxuridine,0.9180,Fludarabine,0.9175,Afatinib,0.9134
+FLX925,FLT3/CDK4/6 Inhibitor FLX925,1,2,FLT3/CDK4/6 Inhibitor FLX925,0.9482,Afatinib,0.9032,FAK Inhibitor VS-4718,0.9004,Fludarabine,0.8993,Ifosfamide,0.8981
+FNA,Fine-Needle Aspiration,1,2,Fine-Needle Aspiration,0.9487,Aspiration,0.9243,Fluorouracil,0.9198,Afatinib,0.9155,Biopsy,0.9089
+FOLIC_ACID,Folic Acid,1,2,Folic Acid,0.9892,Valproic Acid,0.9242,Fluorouracil,0.9198,Clofarabine,0.9139,Purine Analogue NSC 750854,0.9076
+FSRT,Fractionated Stereotactic Radiation Therapy,99,2,Ifosfamide,0.9227,Fluorouracil,0.9204,Afatinib,0.9127,Pexidartinib,0.9106,Fotemustine,0.9100
+FU,Fluorouracil,1,2,Fluorouracil,0.9595,Fotemustine,0.9233,Fluoropyrimidine,0.9196,Floxuridine,0.9189,Fludarabine,0.9173
+FUDR,Floxuridine,3,2,Fluorouracil,0.9464,Fludarabine,0.9314,Floxuridine,0.9213,Fotemustine,0.9193,Fluoropyrimidine,0.9152
+FULVESTRANT,Fulvestrant,1,2,Fulvestrant,1.0000,Afatinib,0.9265,Tamoxifen,0.9234,Vemurafenib,0.9209,Dabrafenib,0.9192
+Fine Needle aspiration biopsy,Fine-Needle Aspiration,1,2,Fine-Needle Aspiration,0.9879,Biopsy,0.9290,Aspiration,0.9217,Core Biopsy,0.9166,Skin Biopsy,0.9152
+Fine needle aspiration biopsy,Fine-Needle Aspiration,1,2,Fine-Needle Aspiration,0.9879,Biopsy,0.9290,Aspiration,0.9217,Core Biopsy,0.9166,Skin Biopsy,0.9152
+Flu,Fludarabine,1,2,Fludarabine,0.9470,Fluorouracil,0.9092,Afatinib,0.9058,Fluoropyrimidine,0.8993,Fenretinide,0.8986
+Fluorouracil (5-FU),Fluorouracil,1,2,Fluorouracil,0.9770,Fluoropyrimidine,0.9478,Fotemustine,0.9343,Floxuridine,0.9334,Fludarabine,0.9294
+Fluropyrimidine,Fluoropyrimidine,1,2,Fluoropyrimidine,0.9630,Fludarabine,0.9330,Fluorouracil,0.9285,Afatinib,0.9169,Clofarabine,0.9129
+G-CSF,Granulocyte Colony-Stimulating Factor,1,2,Granulocyte Colony-Stimulating Factor,0.9386,Gemtuzumab,0.9165,Immunoglobulin,0.9102,Gemtuzumab Ozogamicin,0.9098,Gemcitabine,0.9091
+G3139,Oblimersen Sodium,99,2,Anti-ErbB3 Monoclonal Antibody REGN1400,0.8972,PIM Kinase Inhibitor SGI-1776,0.8968,Gemcitabine,0.8916,Purine Analogue NSC 750854,0.8911,Polyamine Analogue PG11047,0.8905
+GCSF,Granulocyte Colony-Stimulating Factor,1,2,Granulocyte Colony-Stimulating Factor,0.9075,Glasdegib,0.8986,Ganetespib,0.8929,Gefitinib,0.8854,Cytosine,0.8851
+GDC0032,Taselisib,99,2,Purine Analogue NSC 750854,0.9002,AALL0232 ALL Study Identifier;Dexamethasone,0.9001,PIM Kinase Inhibitor SGI-1776,0.8986,Polyamine Analogue PG11047,0.8967,Anti-CD98 Monoclonal Antibody IGN523,0.8945
+GEM,Gemcitabine,3,2,Gemtuzumab,0.9676,Gemtuzumab Ozogamicin,0.9526,Gemcitabine,0.9300,Pemetrexed,0.9104,Gefitinib,0.9065
+GENZ-644282,Topoisomerase I Inhibitor Genz-644282,1,2,Topoisomerase I Inhibitor Genz-644282,0.9664,PIM Kinase Inhibitor SGI-1776,0.9026,DNA-PK/TOR Kinase Inhibitor CC-115,0.9008,Gamma-Secretase Inhibitor RO4929097,0.8990,AALL0232 ALL Study Identifier;Dexamethasone,0.8985
+GK,Gamma Knife,1,2,Gamma Knife,0.9280,Gemtuzumab,0.9143,Gemcitabine,0.9132,Gemtuzumab Ozogamicin,0.9119,Ganetespib,0.9030
+GS-9820,Acalisib,99,2,Gamma-Secretase Inhibitor RO4929097,0.9280,Anti-CD98 Monoclonal Antibody IGN523,0.9209,Purine Analogue NSC 750854,0.9194,Polyamine Analogue PG11047,0.9179,AALL0232 ALL Study Identifier;Dexamethasone,0.9162
+GSK690693,Pan-AKT Kinase Inhibitor GSK690693,1,2,Pan-AKT Kinase Inhibitor GSK690693,0.9590,CENP-E Inhibitor GSK-923295A,0.9239,FAK Inhibitor VS-4718,0.9117,FLT3/CDK4/6 Inhibitor FLX925,0.9087,PIM Kinase Inhibitor SGI-1776,0.9085
+GSK923295A,CENP-E Inhibitor GSK-923295A,1,2,CENP-E Inhibitor GSK-923295A,0.9548,Pan-AKT Kinase Inhibitor GSK690693,0.9354,FLT3/CDK4/6 Inhibitor FLX925,0.9277,Gamma-Secretase Inhibitor RO4929097,0.9259,FAK Inhibitor VS-4718,0.9221
+Gamma knife,Gamma Knife,1,2,Gamma Knife,1.0000,Stereotactic Radiosurgery,0.9025,Gamma-Secretase Inhibitor RO4929097,0.9018,Heat-Treated Varicella-Zoster Virus Vaccine V212,0.8936,Gemcitabine,0.8921
+Gem,Gemcitabine,3,2,Gemtuzumab,0.9676,Gemtuzumab Ozogamicin,0.9526,Gemcitabine,0.9300,Pemetrexed,0.9104,Gefitinib,0.9065
+Gemcitabin,Gemcitabine,1,2,Gemcitabine,0.9378,Gemtuzumab Ozogamicin,0.9223,Gemtuzumab,0.9200,Galunisertib,0.9106,Cladribine,0.9082
+Gemtuzumab ozogamicin,Gemtuzumab Ozogamicin,1,2,Gemtuzumab Ozogamicin,1.0000,Gemtuzumab,0.9775,Galunisertib,0.9204,Atezolizumab,0.9193,Gemcitabine,0.9185
+Genasense,Oblimersen Sodium,99,2,Topoisomerase I Inhibitor Genz-644282,0.9112,Galunisertib,0.8962,Gemcitabine,0.8925,Crenolanib,0.8912,Navitoclax,0.8887
+Gengraft (anti-GVHD),Cyclosporine,99,2,Topoisomerase I Inhibitor Genz-644282,0.9174,Granulocyte Colony-Stimulating Factor,0.9136,Anti-HGF Monoclonal Antibody TAK-701,0.9107,Graft,0.9105,Filgrastim,0.9076
+Gilteritinib (ASP2215),Gilteritinib,1,2,Gilteritinib,0.9674,PIM Kinase Inhibitor SGI-1776,0.9327,Dacomitinib,0.9271,AALL0232 ALL Study Identifier;Dexamethasone,0.9265,Peginterferon Alfa-2a,0.9256
+Gleevac,Imatinib Regimen,99,2,Glembatumumab,0.9086,Seviteronel,0.9027,Valspodar,0.9000,Imatinib,0.8954,Entospletinib,0.8907
+HAI,Intrahepatic Infusion Procedure,99,2,Trastuzumab,0.9073,Peginterferon Alfa-2a,0.9007,Anti-HGF Monoclonal Antibody TAK-701,0.8981,Ifabotuzumab,0.8950,Pertuzumab,0.8946
+HDAC inhibitor,Histone Deacetylase Inhibitor,1,2,Histone Deacetylase Inhibitor,0.9764,Vorinostat,0.9344,Topoisomerase-I Inhibitor,0.9330,Topoisomerase-II Inhibitor,0.9323,AKT Inhibitor,0.9319
+HDR,High-Dose Rate Brachytherapy,1,2,High-Dose Rate Brachytherapy,0.9194,Daratumumab,0.9135,Dutasteride,0.9121,Pulsed-Dose Rate Brachytherapy,0.9088,Trastuzumab,0.9076
+HGS-ETR1,Mapatumumab,99,2,Trastuzumab Emtansine,0.9121,Folate Receptor-Targeted Tubulysin Conjugate EC1456,0.9104,Gemtuzumab,0.9102,Trastuzumab,0.9085,DNA-PK/TOR Kinase Inhibitor CC-115,0.9037
+HSPPC-96 vaccine,Vitespen,99,2,Heat-Treated Varicella-Zoster Virus Vaccine V212,0.9147,Pan-AKT Kinase Inhibitor GSK690693,0.9142,CENP-E Inhibitor GSK-923295A,0.9136,Polyamine Analogue PG11047,0.9112,Gamma-Secretase Inhibitor RO4929097,0.9073
+HU,Hydroxyurea,1,2,Hydroxyurea,0.9214,Carboplatin,0.8865,Erlotinib Hydrochloride,0.8854,Anti-HGF Monoclonal Antibody TAK-701,0.8848,Anti-CD98 Monoclonal Antibody IGN523,0.8843
+Haplo,Haploidentical Hematopoietic Cell Transplantation,1,2,Haploidentical Hematopoietic Cell Transplantation,0.9017,Sibling;Allogeneic Hematopoietic Stem Cell Transplantation,0.8868,Buparlisib,0.8840,Lymphadenectomy,0.8837,Tamoxifen,0.8820
+Herceptin,Trastuzumab,1,2,Trastuzumab,0.9605,Lapatinib,0.9199,Trastuzumab Emtansine,0.9176,Ipilimumab,0.9156,HER2-targeting Agent,0.9118
+Hydrea,Hydroxyurea,3,2,Vorinostat,0.9036,Proton Beam Radiation Therapy;3-Dimensional Conformal Radiation Therapy,0.9001,Hydroxyurea,0.8960,Pertuzumab,0.8944,Histone Deacetylase Inhibitor,0.8936
+IDAC,Cytarabine,99,2,Idarubicin,0.9445,Idasanutlin,0.9378,Adalimumab,0.9132,Dabrafenib,0.9132,Iodine,0.9006
+IDO1 inhibitor,IDO Inhibitor,1,2,IDO Inhibitor,0.9899,JAK1 Inhibitor,0.9332,MDM2 Inhibitor,0.9256,Aromatase Inhibitor,0.9241,HDM2 Inhibitor MK-8242,0.9228
+IDO1 inhibitor (BMS986205),Linrodostat,99,2,IDO Inhibitor,0.9552,Dual IGF-1R/InsR Inhibitor BMS-754807,0.9499,HDM2 Inhibitor MK-8242,0.9386,MDM2/MDMX Inhibitor ALRN-6924,0.9375,Anti-CD33 Monoclonal Antibody BI 836858,0.9372
+IFR,Involved-Field Radiation Therapy,99,2,Ifosfamide,0.9505,Ifabotuzumab,0.9260,Fludarabine,0.9133,Fluorouracil,0.9129,Afatinib,0.9116
+IGN523,Anti-CD98 Monoclonal Antibody IGN523,1,2,Anti-CD98 Monoclonal Antibody IGN523,0.9297,Indoximod,0.9054,Anti-CD33 Antibody-drug Conjugate IMGN779,0.9038,mTOR Inhibitor;Immunotherapeutic Agent,0.8964,Dutasteride,0.8917
+IL-2,Aldesleukin,99,2,Peginterferon Alfa-2a,0.9234,Interferon Alpha,0.9180,mTOR Inhibitor;Immunotherapeutic Agent,0.9173,Anti-LAG-3 Monoclonal Antibody,0.9157,Anti-TIM-3 Monoclonal Antibody,0.9156
+IMATINIB,Imatinib,1,2,Imatinib,1.0000,Imatinib Regimen,0.9678,Dasatinib,0.9375,Sorafenib,0.9307,Tyrosine Kinase Inhibitor,0.9291
+IMC-A12,Cixutumumab,99,2,Anti-CD33 Antibody-drug Conjugate IMGN779,0.9228,Ifabotuzumab,0.8964,Cilengitide,0.8964,Denintuzumab Mafodotin,0.8957,Anti-CD33 Monoclonal Antibody BI 836858,0.8939
+IMGN779 (Immunogen Trial),Anti-CD33 Antibody-drug Conjugate IMGN779,1,2,Anti-CD33 Antibody-drug Conjugate IMGN779,0.9641,mTOR Inhibitor;Immunotherapeutic Agent,0.9171,Anti-CD98 Monoclonal Antibody IGN523,0.9168,Anti-CD33 Monoclonal Antibody BI 836858,0.9137,Immunotherapeutic Agent,0.9121
+IMRT,Intensity-Modulated Radiation Therapy,1,2,Intensity-Modulated Radiation Therapy,0.9369,Radiation Therapy,0.9269,"Radiotherapy, Conformal",0.9259,Ipilimumab,0.9234,External Beam Radiation Therapy;3-Dimensional Conformal Radiation Therapy,0.9205
+INK128-1110-028,Sapanisertib,99,2,AALL0232 ALL Study Identifier;Dexamethasone,0.9075,AALL0331 ALL Study Identifier,0.9047,AALL0232 ALL Study Identifier,0.9014,Iodine,0.8965,Anti-CD33 Monoclonal Antibody BI 836858,0.8963
+INTERFERON_ALPHA,Interferon Alpha,1,2,Interferon Alpha,0.9887,Peginterferon Alfa-2a,0.9351,Adalimumab,0.9172,Gonadotropin-releasing Hormone Analog,0.9127,PSMA-targeting Agent;Antineoplastic Antibody-Drug Conjugate,0.9120
+IODINE,Iodine,1,2,Iodine,1.0000,Epinephrine,0.9018,Peginterferon Alfa-2a,0.8981,Irinotecan,0.8979,Letrozole,0.8975
+IPI,Ipilimumab,3,2,Pipobroman,0.9152,Plitidepsin,0.9125,Ipilimumab,0.9097,Pilaralisib,0.9091,Pidnarulex,0.9079
+IT,Intrathecal Route of Administration,99,2,PSMA-targeting Agent;Antineoplastic Antibody-Drug Conjugate,0.9353,Retromammary space (body structure);Lymphadenectomy,0.9342,Other;Treatment Regimen,0.9330,Peginterferon Alfa-2a,0.9312,Other,0.9307
+IT Methotrexate,Methotrexate,1,2,Methotrexate,0.9984,Mitomycin,0.9252,Mercaptopurine,0.9198,Mycophenolate Mofetil,0.9174,Mefloquine,0.9171
+IT/IV Cytarabine,Cytarabine,1,2,Cytarabine,0.9568,Liposomal Cytarabine,0.9367,Ivosidenib,0.9352,Liposome-encapsulated Daunorubicin-Cytarabine,0.9194,Venetoclax,0.9121
+Ida,Idarubicin,1,2,Idarubicin,0.9432,Idasanutlin,0.9355,Adalimumab,0.9172,Dabrafenib,0.9116,Iodine,0.9036
+Ifosfamid,Ifosfamide,1,2,Ifosfamide,0.9949,Fludarabine,0.9242,Fluorouracil,0.9225,Afatinib,0.9196,Ifabotuzumab,0.9182
+Il-2,Aldesleukin,99,2,Peginterferon Alfa-2a,0.9234,Interferon Alpha,0.9180,mTOR Inhibitor;Immunotherapeutic Agent,0.9173,Anti-LAG-3 Monoclonal Antibody,0.9157,Anti-TIM-3 Monoclonal Antibody,0.9156
+Ileal conduit Creation,Urinary Diversion,99,2,Orthotopic;Neobladder,0.9029,Ureterectomy,0.9002,Robot-Assisted Surgery;Cystectomy,0.8997,Ureter;Biopsy,0.8983,Neobladder,0.8968
+Implants-tandem,Tandem Brachytherapy,1,2,Tandem Brachytherapy,0.9423,Vagina;Implant,0.9226,Tissue Expander-Implant Breast Reconstruction;Bilateral,0.9197,Dual IGF-1R/InsR Inhibitor BMS-754807,0.9033,Platinum Acetylacetonate-Titanium Dioxide Nanoparticles,0.8993
+Imuran,Azathioprine Sodium,99,2,Anti-CD33 Antibody-drug Conjugate IMGN779,0.9143,Vemurafenib,0.9090,Ivosidenib,0.9088,Indoximod,0.9071,Melphalan,0.9051
+Interval Debulking,Interval Debulking Surgery,1,2,Interval Debulking Surgery,0.9814,Tumor Debulking,0.9283,Primary Debulking Surgery,0.9239,Secondary;Tumor Debulking,0.9040,Azacitidine Regimen,0.8915
+Ipi,Ipilimumab,3,2,Pipobroman,0.9152,Plitidepsin,0.9125,Ipilimumab,0.9097,Pilaralisib,0.9091,Pidnarulex,0.9079
+Ipilumumab,Ipilimumab,1,2,Ipilimumab,0.9347,Mapatumumab,0.9210,Anti-PLGF Monoclonal Antibody TB-403,0.9208,Glembatumumab,0.9206,Durvalumab,0.9193
+JAK 1 inhibitor,JAK1 Inhibitor,1,2,JAK1 Inhibitor,0.9926,JAK2 Inhibitor AZD1480,0.9428,Tyrosine Kinase Inhibitor,0.9266,Cyclin-Dependent Kinase Inhibitor,0.9265,Mitogen-Activated Protein Kinase Kinase Inhibitor,0.9184
+JNJ-40346527 (CSF1R inhibitor),Edicotinib,99,2,Dual IGF-1R/InsR Inhibitor BMS-754807,0.9425,NAMPT Inhibitor STF-118804,0.9391,MDM2/MDMX Inhibitor ALRN-6924,0.9340,Gamma-Secretase Inhibitor RO4929097,0.9325,Topoisomerase I Inhibitor Genz-644282,0.9306
+JNJ26481585,Quisinostat,99,2,Topoisomerase I Inhibitor Genz-644282,0.9092,NAMPT Inhibitor STF-118804,0.9045,Dual IGF-1R/InsR Inhibitor BMS-754807,0.9002,AALL0232 ALL Study Identifier,0.8977,Purine Analogue NSC 750854,0.8976
+JNJ26854165,Serdemetan,99,2,NAMPT Inhibitor STF-118804,0.9022,Topoisomerase I Inhibitor Genz-644282,0.9015,Dual IGF-1R/InsR Inhibitor BMS-754807,0.9009,Gamma-Secretase Inhibitor RO4929097,0.8962,DNA-PK/TOR Kinase Inhibitor CC-115,0.8959
+Jakafi,Ruxolitinib,99,2,JAK1 Inhibitor,0.9219,Afatinib,0.9157,Axitinib,0.9088,FLT3/CDK4/6 Inhibitor FLX925,0.9058,Ipilimumab,0.9036
+KB004,Ifabotuzumab,99,2,FAK Inhibitor VS-4718,0.8957,Anti-PLGF Monoclonal Antibody TB-403,0.8882,Bevacizumab,0.8850,Dual IGF-1R/InsR Inhibitor BMS-754807,0.8849,Purine Analogue NSC 750854,0.8848
+KPT-330,Selinexor,99,2,DNA-PK/TOR Kinase Inhibitor CC-115,0.9195,NAMPT Inhibitor STF-118804,0.9124,Paclitaxel,0.9080,Pan-AKT Kinase Inhibitor GSK690693,0.9073,PSMA-targeting Agent;Antineoplastic Antibody-Drug Conjugate,0.9035
+L Radical Nephrectomy,Left;Radical Nephrectomy,1,2,Left;Radical Nephrectomy,0.9634,Nephrectomy,0.9458,Left;Radical;Nephroureterectomy,0.9394,Right;Partial Nephrectomy,0.9376,Right;Radical;Nephroureterectomy;Right;Nephroureterectomy,0.9354
+L Total Mastectomy,Left;Total Mastectomy,2,2,Total Mastectomy,0.9755,Left;Total Mastectomy,0.9687,Right;Total Mastectomy,0.9632,Bilateral;Total Mastectomy,0.9562,Mastectomy,0.9432
+L-Asparaginase,Asparaginase,1,2,Asparaginase,0.9729,l-Norepinephrine,0.9220,Leucovorin,0.9167,Peginterferon Alfa-2a,0.9159,Anthracycline Antineoplastic Antibiotic,0.9135
+LAPATINIB,Lapatinib,1,2,Lapatinib,1.0000,Trastuzumab,0.9351,Letrozole,0.9336,Sorafenib,0.9284,Paclitaxel,0.9239
+LAR,Low Anterior Resection,99,2,Leuprolide,0.9053,Leucovorin,0.9035,Retromammary space (body structure);Lymphadenectomy,0.9006,Axillary Lymph Node;Right,0.8998,Lapatinib,0.8995
+LBH,Panobinostat,99,2,Lisavanbulin,0.9106,Laparoscopic Biopsy,0.9086,l-Norepinephrine,0.9061,Leuprolide,0.9030,Anti-PLGF Monoclonal Antibody TB-403,0.8996
+LDR,Low-Dose Rate Brachytherapy,99,2,Plitidepsin,0.9097,Lapatinib,0.9057,Dexamethasone,0.9043,Lisavanbulin,0.9038,Decitabine,0.9037
+LE,Local excision (procedure),2,2,Leuprolide,0.8950,Local excision (procedure),0.8923,Alpelisib,0.8847,Talimogene Laherparepvec,0.8804,l-Norepinephrine,0.8802
+LENOLIDAMIDE,Lenalidomide,99,2,Lorazepam,0.9126,Lomustine,0.9088,Olaparib,0.9066,Thalidomide,0.9059,Talazoparib,0.9041
+LHRH,Gonadotrophin Releasing Hormone,3,2,Leuprolide,0.9303,Gonadotropin-releasing Hormone Analog,0.9273,Gonadotrophin Releasing Hormone,0.9128,Fenretinide,0.9034,Cabiralizumab,0.9026
+LHRH agonist,Gonadotropin-releasing Hormone Analog,1,2,Gonadotropin-releasing Hormone Analog,0.9429,Leuprolide,0.9253,Gonadotrophin Releasing Hormone,0.9141,Antiandrogen Therapy,0.9084,Anti-LAG-3 Monoclonal Antibody,0.9073
+LN dissection,Lymphadenectomy,2,2,Axillary Lymph Node Dissection,0.9468,Lymphadenectomy,0.9394,Left;Axillary Lymph Node Dissection,0.9335,Bilateral Pelvic Lymph Node Dissection,0.9298,Endoscopic Submucosal Dissection,0.9163
+LND,Lymphadenectomy,1,2,Lymphadenectomy,0.9171,Axillary Lymph Node Biopsy,0.9062,Sentinel Lymph Node Biopsy,0.9061,Axillary Lymph Node Level I;Axillary Lymph Node Level II;Lymphadenectomy,0.9053,Left;Axillary Lymph Node Dissection,0.9047
+LUMPCTOMY,Lumpectomy,1,2,Lumpectomy,0.9544,Left;Lumpectomy,0.9414,Lumpectomy;Right Breast,0.9333,Laparoscopic Prostatectomy,0.9206,Venetoclax,0.9147
+LUMPECTOMY,Lumpectomy,1,2,Lumpectomy,1.0000,Left;Lumpectomy,0.9748,Lumpectomy;Right Breast,0.9646,Re-Excision;Original;Lumpectomy;Surgical Site,0.9428,Sentinel Lymph Node;Lymphadenectomy;Right;Mammoplasty,0.9241
+LV,Leucovorin,2,2,Valspodar,0.9063,Leucovorin,0.9019,Lisavanbulin,0.9012,Vadastuximab Talirine,0.8984,l-Norepinephrine,0.8978
+LY 2606368,Prexasertib,99,2,mTOR Kinase Inhibitor AZD8055,0.9161,Gamma-Secretase Inhibitor RO4929097,0.9138,Purine Analogue NSC 750854,0.9065,Anti-CD33 Monoclonal Antibody BI 836858,0.9046,MDM2/MDMX Inhibitor ALRN-6924,0.9027
+Left Rnu,Left;Radical;Nephroureterectomy,2,2,Left;Radical Nephrectomy,0.9381,Left;Radical;Nephroureterectomy,0.9305,Right Eye;Enucleation,0.9280,Right;Radical;Nephroureterectomy;Right;Nephroureterectomy,0.9218,Right;Partial Nephrectomy,0.9213
+Left breast reexcision,Left Breast;Re-Excision,1,2,Left Breast;Re-Excision,0.9536,Right Breast;Re-Excision,0.9426,Left;Biopsy of Breast,0.9359,Lumpectomy;Right Breast,0.9346,Left;Total Mastectomy,0.9343
+Left hemihepatectomy,Left Hemihepatectomy,1,2,Left Hemihepatectomy,1.0000,Right Hemihepatectomy,0.9885,Left;Total Mastectomy,0.9365,Lobectomy,0.9347,Lumpectomy;Right Breast,0.9298
+Left segmental mastectomy,Segmental Mastectomy,3,2,Left;Segmental Mastectomy,0.9927,Right;Segmental Mastectomy,0.9842,Segmental Mastectomy,0.9810,Localized;Segmental Mastectomy,0.9773,Re-Excision;Segmental Mastectomy,0.9559
+Leukine,Sargramostim,99,2,Aldesleukin,0.9195,Leucovorin,0.9137,Liposomal Cytarabine,0.9134,Lisavanbulin,0.9106,Leuprolide,0.9105
+Liver Resection,Hepatectomy,2,2,Resection,0.9614,Hepatectomy,0.9555,Bile Duct;Resection,0.9530,Lung;Resection,0.9526,Partial Hepatectomy,0.9331
+Lupron,Leuprolide,1,2,Leuprolide,0.9178,Lisavanbulin,0.9084,Peginterferon Alfa-2a,0.9022,Letrozole,0.9011,Lymphadenectomy,0.8970
+MASTECTOMY,Mastectomy,1,2,Mastectomy,1.0000,Modified Radical Mastectomy,0.9572,Bilateral Mastectomy,0.9544,Total Mastectomy,0.9529,Left;Total Mastectomy,0.9499
+MBG453 (TIM-3 inhibitor),Sabatolimab,99,2,Anti-TIM-3 Monoclonal Antibody,0.9457,NAMPT Inhibitor STF-118804,0.9381,mTOR Inhibitor;Immunotherapeutic Agent,0.9329,Dual IGF-1R/InsR Inhibitor BMS-754807,0.9320,Anti-CD33 Antibody-drug Conjugate IMGN779,0.9316
+MEK,Mitogen-Activated Protein Kinase Kinase Inhibitor,1,2,Mitogen-Activated Protein Kinase Kinase Inhibitor,0.9228,Selumetinib,0.9140,Axitinib,0.9102,Ipilimumab,0.9102,Trametinib,0.9090
+MEK162,Binimetinib,99,2,Mitogen-Activated Protein Kinase Kinase Inhibitor,0.9198,mTOR Kinase Inhibitor AZD8055,0.9155,Akt Inhibitor MK2206,0.9083,Axitinib,0.9073,Sunitinib Malate,0.9046
+MET inhibitor,c-Met Inhibitor,1,2,c-Met Inhibitor,0.9626,mTOR Inhibitor,0.9273,Tyrosine Kinase Inhibitor,0.9223,Mitogen-Activated Protein Kinase Kinase Inhibitor,0.9179,mTOR Inhibitor;Immunotherapeutic Agent,0.9125
+METASTASECTOMY,Metastasectomy,1,2,Metastasectomy,1.0000,Resection;Pulmonary;Metastasis,0.9474,Resection,0.9231,Lobectomy,0.9227,Appendectomy,0.9215
+MGA271 anti B7H3 infusion,Enoblituzumab,99,2,Anti-CD33 Antibody-drug Conjugate IMGN779,0.9385,Anti-CD33 Monoclonal Antibody BI 836858,0.9343,Anti-CD98 Monoclonal Antibody IGN523,0.9306,Anti-CD3 Monoclonal Antibody,0.9291,Anti-EGFR Monoclonal Antibody,0.9287
+MGB453,Sabatolimab,99,2,Gemtuzumab Ozogamicin,0.9063,MDM2/MDMX Inhibitor ALRN-6924,0.9043,Anti-CD33 Antibody-drug Conjugate IMGN779,0.9020,Gemtuzumab,0.9018,AALL0232 ALL Study Identifier;Dexamethasone,0.9015
+MITOTANE,Mitotane,1,2,Mitotane,1.0000,Mitoxantrone,0.9338,Topotecan,0.9056,Coltuximab Ravtansine,0.9032,Memantine,0.9014
+MK 3475,Pembrolizumab,99,2,Anti-HGF Monoclonal Antibody TAK-701,0.8973,HDM2 Inhibitor MK-8242,0.8949,Gemtuzumab,0.8906,mTOR Kinase Inhibitor AZD8055,0.8898,Anti-PLGF Monoclonal Antibody TB-403,0.8870
+MK-2206,Akt Inhibitor MK2206,1,2,Akt Inhibitor MK2206,0.9393,HDM2 Inhibitor MK-8242,0.9298,mTOR Kinase Inhibitor AZD8055,0.9170,PIM Kinase Inhibitor SGI-1776,0.9062,Anti-HGF Monoclonal Antibody TAK-701,0.9002
+MK-8242,HDM2 Inhibitor MK-8242,1,2,HDM2 Inhibitor MK-8242,0.9657,Akt Inhibitor MK2206,0.9357,mTOR Kinase Inhibitor AZD8055,0.9250,Topoisomerase I Inhibitor Genz-644282,0.9161,CENP-E Inhibitor GSK-923295A,0.9116
+MK3475,Pembrolizumab,99,2,mTOR Kinase Inhibitor AZD8055,0.9247,HDM2 Inhibitor MK-8242,0.9241,Akt Inhibitor MK2206,0.9182,MDM2/MDMX Inhibitor ALRN-6924,0.9114,Dual IGF-1R/InsR Inhibitor BMS-754807,0.9085
+MLN0128 (mTORi),Sapanisertib,99,2,mTOR Inhibitor,0.9561,mTOR Inhibitor;Immunotherapeutic Agent,0.9465,mTOR Kinase Inhibitor AZD8055,0.9445,Everolimus,0.9285,NAMPT Inhibitor STF-118804,0.9270
+MLN4924,Pevonedistat,99,2,MDM2/MDMX Inhibitor ALRN-6924,0.9136,Gamma-Secretase Inhibitor RO4929097,0.9110,mTOR Kinase Inhibitor AZD8055,0.9082,CENP-E Inhibitor GSK-923295A,0.9059,Dual IGF-1R/InsR Inhibitor BMS-754807,0.9038
+MLN8237,Alisertib,99,2,HDM2 Inhibitor MK-8242,0.9223,NAMPT Inhibitor STF-118804,0.9134,mTOR Kinase Inhibitor AZD8055,0.9123,MDM2/MDMX Inhibitor ALRN-6924,0.9120,Topoisomerase I Inhibitor Genz-644282,0.9118
+MM-141,Istiratumab,99,2,Sunitinib Malate,0.9031,PIM Kinase Inhibitor SGI-1776,0.9002,HDM2 Inhibitor MK-8242,0.8998,PSMA-targeting Agent;Antineoplastic Antibody-Drug Conjugate,0.8988,DNA-PK/TOR Kinase Inhibitor CC-115,0.8982
+MMC,Mitomycin,1,2,Mitomycin,0.9406,Mastectomy,0.9099,Macitentan,0.9077,Tamoxifen,0.9070,Mycophenolate Mofetil,0.9041
+MTOR inhibitor,mTOR Inhibitor,1,2,mTOR Inhibitor,1.0000,mTOR Inhibitor;Immunotherapeutic Agent,0.9548,mTOR Kinase Inhibitor AZD8055,0.9538,Akt Inhibitor MK2206,0.9338,MDM2 Inhibitor,0.9261
+MTOR/VEGF inhibitor,mTOR Inhibitor;Immunotherapeutic Agent,2,2,mTOR Inhibitor,0.9686,mTOR Inhibitor;Immunotherapeutic Agent,0.9518,mTOR Kinase Inhibitor AZD8055,0.9356,Sirolimus,0.9232,Everolimus,0.9223
+MTX,Methotrexate,1,2,Methotrexate,0.9535,Pemetrexed,0.9321,Mitoxantrone,0.9259,Ruxolitinib,0.9250,PSMA-targeting Agent;Antineoplastic Antibody-Drug Conjugate,0.9229
+MUD,Matched Unrelated Donor;Allogeneic Hematopoietic Stem Cell Transplantation,99,2,Mercaptopurine,0.9017,Tremelimumab,0.8959,Momelotinib,0.8927,Mycophenolate Mofetil,0.8893,Lenalidomide,0.8885
+Margin resection,Surgical Margin;Resection,1,2,Surgical Margin;Resection,0.9728,Resection,0.9527,Lung;Resection,0.9326,Vulva;Resection,0.9292,Re-Excision;Inferior;Margin,0.9287
+Mastectomy NOS,Mastectomy,1,2,Mastectomy,0.9687,Total Mastectomy,0.9370,Modified Radical Mastectomy,0.9361,Bilateral Mastectomy,0.9344,Bilateral;Total Mastectomy,0.9341
+Mito,Mitoxantrone,1,2,Mitoxantrone,0.9506,Mitotane,0.9432,Methotrexate,0.9048,Mefloquine,0.9004,Momelotinib,0.8995
+Mk-3475,Pembrolizumab,99,2,HDM2 Inhibitor MK-8242,0.9143,Anti-HGF Monoclonal Antibody TAK-701,0.9093,mTOR Kinase Inhibitor AZD8055,0.9046,Gemtuzumab,0.9005,FAK Inhibitor VS-4718,0.8985
+Modified Radical Masectomy,Modified Radical Hysterectomy,2,2,Modified Radical Mastectomy,0.9678,Modified Radical Hysterectomy,0.9510,Mastectomy,0.9263,Radical Cystectomy,0.9191,Radical Trachelectomy,0.9165
+Modified radical mastectomy,Modified Radical Mastectomy,1,2,Modified Radical Mastectomy,1.0000,Modified Radical Hysterectomy,0.9716,Mastectomy,0.9572,Radical Hysterectomy,0.9345,Total Mastectomy,0.9333
+Mto,Mitoxantrone,99,2,Mycophenolate Mofetil,0.9038,Methotrexate,0.9030,Motixafortide,0.9030,Momelotinib,0.9005,Memantine,0.8987
+Mtx,Methotrexate,1,2,Methotrexate,0.9535,Pemetrexed,0.9321,Mitoxantrone,0.9259,Ruxolitinib,0.9250,PSMA-targeting Agent;Antineoplastic Antibody-Drug Conjugate,0.9229
+Mylotarg,Gemtuzumab Ozogamicin,99,2,Melphalan,0.9143,Zoligratinib,0.9123,Dacomitinib,0.9100,Apalutamide,0.9074,Cilengitide,0.9072
+NK cell infusion,NK Cell-enriched Donor Lymphocytes,1,2,NK Cell-enriched Donor Lymphocytes,0.9369,Donor Lymphocyte Infusion,0.9354,Hematopoietic Cell Transplantation,0.9302,Tumor Infiltrating Lymphocyte Therapy,0.9193,Autologous Hematopoietic Stem Cell Transplantation,0.9192
+NOM,Have Not Had Cancer Surgery,99,2,Nirogacestat,0.8831,Robot-Assisted Surgery;Laparoscopy;Nephroureterectomy,0.8820,Urethrectomy,0.8809,Nab-paclitaxel,0.8794,Nintedanib,0.8791
+NOREPINEPHRINE,l-Norepinephrine,1,2,l-Norepinephrine,0.9604,Epinephrine,0.9320,Nelarabine,0.9127,Dopamine,0.9032,Epirubicin,0.9020
+NOVO-TTF,NovoTTF-100A Device,1,2,NovoTTF-100A Device,0.9317,Tamibarotene,0.9101,Docetaxel,0.8914,Paclitaxel,0.8913,Tretinoin,0.8910
+NPT,Platinum Acetylacetonate-Titanium Dioxide Nanoparticles,99,2,Nab-paclitaxel,0.9192,Nitrogen Mustard Prodrug PR-104,0.9141,Panobinostat,0.9055,NAMPT Inhibitor STF-118804,0.9026,Paclitaxel,0.9017
+NSC750854,Purine Analogue NSC 750854,1,2,Purine Analogue NSC 750854,0.9473,Pan-AKT Kinase Inhibitor GSK690693,0.9108,Gamma-Secretase Inhibitor RO4929097,0.9092,NAMPT Inhibitor STF-118804,0.9060,Cilengitide,0.9016
+NY eso vaccine,NY-ESO-1 Peptide Vaccine,1,2,NY-ESO-1 Peptide Vaccine,0.9738,Vaccine,0.9121,Steroid Therapy,0.9049,Rovalpituzumab Tesirine,0.9007,Folate Receptor-Targeted Tubulysin Conjugate EC1456,0.9001
+Nephro-ureterectomy,Nephroureterectomy,2,2,Ureterectomy,0.9786,Nephroureterectomy,0.9647,Right;Ureterectomy,0.9559,Nephrectomy,0.9530,Nephroureterectomy with Cuff of Bladder;Endoscopic Resection,0.9526
+Nephroureterectomy with endoscopic bladder cuff resection,Nephroureterectomy with Cuff of Bladder;Endoscopic Resection,1,2,Nephroureterectomy with Cuff of Bladder;Endoscopic Resection,0.9940,Nephroureterectomy,0.9641,Transurethral Resection of Bladder Tumor,0.9523,Right;Nephroureterectomy,0.9466,Robot-Assisted Surgery;Laparoscopy;Nephroureterectomy,0.9457
+Nipple Sparing Total Mastectomy,Subcutaneous Mastectomy,99,2,Bilateral;Skin-Sparing Mastectomy,0.9534,Total Mastectomy,0.9513,Left;Total Mastectomy,0.9495,Right;Total Mastectomy,0.9464,Skin-Sparing Mastectomy;Radical Mastectomy,0.9462
+Nivo,Nivolumab,99,2,Seviteronel,0.8981,Vinorelbine,0.8956,Veliparib,0.8940,Denintuzumab Mafodotin,0.8925,Entospletinib,0.8896
+Nivolumab (P1T986205),Nivolumab,1,2,Nivolumab,0.9602,mTOR Inhibitor;Immunotherapeutic Agent,0.9319,Anti-CD33 Monoclonal Antibody BI 836858,0.9311,Anti-HGF Monoclonal Antibody TAK-701,0.9246,Ipilimumab,0.9243
+No (radiation),Radiation Therapy Not Received,1,2,Radiation Therapy Not Received,0.9374,Radiation Therapy,0.9251,Intensity-Modulated Radiation Therapy,0.9107,Radiation Therapy;Right Breast,0.9106,Radium Ra 223 Dichloride,0.9103
+"ODSH (2 O, 3-O Desulfated Heparin)",Dociparstat sodium,99,2,Anti-HGF Monoclonal Antibody TAK-701,0.9196,Purine Analogue NSC 750854,0.9130,Buthionine Sulfoximine,0.9106,Peginterferon Alfa-2a,0.9102,Pylorus-sparing pancreaticoduodenectomy (procedure),0.9100
+OSI-774,Erlotinib Hydrochloride,99,2,FAK Inhibitor VS-4718,0.8902,HDM2 Inhibitor MK-8242,0.8899,Purine Analogue NSC 750854,0.8889,Ifabotuzumab,0.8876,Anti-HGF Monoclonal Antibody TAK-701,0.8872
+OX,Oxaliplatin,1,2,Oxaliplatin,0.9094,Buthionine Sulfoximine,0.8976,Olaparib,0.8896,Indoximod,0.8892,Mitoxantrone,0.8888
+OX40 agonist MOXR0916,Vonlerolizumab,99,2,MDM2/MDMX Inhibitor ALRN-6924,0.9238,HDM2 Inhibitor MK-8242,0.9128,mTOR Inhibitor;Immunotherapeutic Agent,0.9096,Anti-ErbB3 Monoclonal Antibody REGN1400,0.9056,Anti-PLGF Monoclonal Antibody TB-403,0.9055
+OXALIPLATIN,Oxaliplatin,1,2,Oxaliplatin,1.0000,Cisplatin,0.9214,Cetuximab,0.9204,Pertuzumab,0.9190,Olaparib,0.9176
+OXi4503,Combretastatin A1 Diphosphate,99,2,Oxaliplatin,0.9136,Indoximod,0.9096,Gamma-Secretase Inhibitor RO4929097,0.9046,Capecitabine,0.9034,Olaparib,0.9001
+Observation,Clinical Observation,1,2,Clinical Observation,0.9667,Unknown,0.8825,Estramustine,0.8801,Enucleation;Tail of the Pancreas,0.8756,Right Eye;Enucleation,0.8729
+Optune device,NovoTTF-100A Device,2,2,mTOR Inhibitor;Immunotherapeutic Agent,0.8923,NovoTTF-100A Device,0.8879,Indoximod,0.8842,NAMPT Inhibitor STF-118804,0.8832,Right Eye;Enucleation,0.8826
+Other regimens,Other;Treatment Regimen,1,2,Other;Treatment Regimen,0.9603,Imatinib Regimen,0.9308,Azacitidine Regimen,0.9216,Cinrebafusp Alfa,0.9108,PSMA-targeting Agent;Antineoplastic Antibody-Drug Conjugate,0.9093
+Other surgery (specify),Other;Surgery,1,2,Other;Surgery,0.9849,Other;Treatment Regimen,0.9293,Surgical Procedure,0.9280,Other,0.9267,Robot-Assisted Surgery;Laparoscopy;Nephroureterectomy,0.9190
+PACLITAXEL,Paclitaxel,1,2,Paclitaxel,1.0000,Nab-paclitaxel,0.9573,PSMA-targeting Agent;Antineoplastic Antibody-Drug Conjugate,0.9294,Docetaxel,0.9290,Topotecan,0.9285
+PARTIAL_MASTECTOMY,Segmental Mastectomy,99,2,Left;Total Mastectomy,0.9508,Right;Total Mastectomy,0.9475,Bilateral;Total Mastectomy,0.9469,Mastectomy,0.9464,Partial Cystectomy,0.9452
+PCI-32765,Ibrutinib,99,2,PIM Kinase Inhibitor SGI-1776,0.9204,Topoisomerase I Inhibitor Genz-644282,0.9201,Mapatumumab,0.9134,Dual IGF-1R/InsR Inhibitor BMS-754807,0.9117,Irinotecan,0.9113
+PE,Pelvic Exenteration,99,2,Pevonedistat,0.9395,Plitidepsin,0.9084,Pipobroman,0.9019,Pericardial Effusion,0.9007,Epinephrine,0.8982
+PEITC,Phenethyl Isothiocyanate,1,2,Phenethyl Isothiocyanate,0.9228,Azacitidine,0.9053,Topotecan,0.9047,Cetuximab,0.9043,Pracinostat,0.9026
+PEMBRO,Pembrolizumab,1,2,Pembrolizumab,0.9745,Pemetrexed,0.9473,Lorazepam,0.9006,Nivolumab,0.8994,Atezolizumab,0.8980
+PEMBROLIZUMAB,Pembrolizumab,1,2,Pembrolizumab,1.0000,Pemetrexed,0.9542,Atezolizumab,0.9404,Monalizumab,0.9211,Mogamulizumab,0.9189
+PF-03084014,Nirogacestat,99,2,Purine Analogue NSC 750854,0.9259,Polyamine Analogue PG11047,0.9224,Gamma-Secretase Inhibitor RO4929097,0.9221,FLT3/CDK4/6 Inhibitor FLX925,0.9198,FAK Inhibitor VS-4718,0.9186
+PF-04449913 (Hedgehog Inhibitor),Glasdegib,99,2,FAK Inhibitor VS-4718,0.9367,Gamma-Secretase Inhibitor RO4929097,0.9285,CENP-E Inhibitor GSK-923295A,0.9279,Pan-AKT Kinase Inhibitor GSK690693,0.9269,FLT3/CDK4/6 Inhibitor FLX925,0.9212
+PIM kinase inhibitor,Serine/Threonine Kinase Inhibitor,99,2,PIM Kinase Inhibitor SGI-1776,0.9538,Mitogen-Activated Protein Kinase Kinase Inhibitor,0.9473,Cyclin-Dependent Kinase Inhibitor,0.9396,JAK1 Inhibitor,0.9358,AKT Inhibitor,0.9313
+PIXANTRONE,Pixantrone,1,2,Pixantrone,1.0000,Platinum,0.9042,Pexidartinib,0.9033,Galunisertib,0.9031,Pertuzumab,0.9026
+PLAT CAR-T cell infusion,Chimeric Antigen Receptor T-Cell Therapy,1,2,Chimeric Antigen Receptor T-Cell Therapy,0.9378,Chimeric Antigen Receptor T-Cell Therapy;Therapeutic Apheresis,0.9290,Paclitaxel,0.9181,Anti-CD33 Antibody-drug Conjugate IMGN779,0.9178,PSMA-targeting Agent;Antineoplastic Antibody-Drug Conjugate,0.9167
+PLATINUM,Platinum,1,2,Platinum,1.0000,Cisplatin,0.9493,Platinum Acetylacetonate-Titanium Dioxide Nanoparticles,0.9287,Carboplatin,0.9244,Oxaliplatin,0.9138
+PLX3397,Pexidartinib,99,2,FLT3/CDK4/6 Inhibitor FLX925,0.9259,Anti-PLGF Monoclonal Antibody TB-403,0.9256,Pan-AKT Kinase Inhibitor GSK690693,0.9153,FAK Inhibitor VS-4718,0.9141,Olaparib,0.9125
+PR-104,Nitrogen Mustard Prodrug PR-104,1,2,Nitrogen Mustard Prodrug PR-104,0.9384,Anti-PLGF Monoclonal Antibody TB-403,0.9074,Polyamine Analogue PG11047,0.9032,Pravastatin,0.8942,Anti-ErbB3 Monoclonal Antibody REGN1400,0.8930
+PROSTATECTOMY,Prostatectomy,1,2,Prostatectomy,1.0000,Radical Prostatectomy,0.9638,Laparoscopic Prostatectomy,0.9497,Laparoscopic Radical Prostatectomy with Robotics,0.9338,Hysterectomy,0.9322
+PRS-343,Cinrebafusp Alfa,99,2,Nitrogen Mustard Prodrug PR-104,0.9143,Purine Analogue NSC 750854,0.9054,Pylorus-sparing pancreaticoduodenectomy (procedure),0.9053,Anti-PLGF Monoclonal Antibody TB-403,0.9016,Right;Partial Nephrectomy,0.9015
+PSC,Valspodar,99,2,PSMA-targeting Agent;Antineoplastic Antibody-Drug Conjugate,0.9034,Prostatectomy,0.9029,Pravastatin,0.9019,Pylorus-sparing pancreaticoduodenectomy (procedure),0.9013,Phenethyl Isothiocyanate,0.8996
+PSMA ADC,PSMA-targeting Agent;Antineoplastic Antibody-Drug Conjugate,1,2,PSMA-targeting Agent;Antineoplastic Antibody-Drug Conjugate,0.9474,Adalimumab,0.9196,Ipilimumab,0.9158,Pracinostat,0.9116,Trastuzumab,0.9106
+PSMA-ADC,PSMA-targeting Agent;Antineoplastic Antibody-Drug Conjugate,1,2,PSMA-targeting Agent;Antineoplastic Antibody-Drug Conjugate,0.9524,Adalimumab,0.9198,Ipilimumab,0.9183,Pracinostat,0.9136,Anti-EGFR Monoclonal Antibody,0.9120
+PUNCH,Punch Biopsy,1,2,Punch Biopsy,0.9653,Excisional Biopsy,0.8920,Skin Excision,0.8892,Excision,0.8882,Bortezomib,0.8867
+Pancreaticoduodenectomy (Whipple Resection),Whipple Procedure,3,2,Pancreaticoduodenectomy,0.9696,Pylorus-sparing pancreaticoduodenectomy (procedure),0.9525,Whipple Procedure,0.9519,Distal Pancreatectomy,0.9429,Uncinate Process of Pancreas;Resection,0.9375
+Partial Mastectomy,Segmental Mastectomy,99,2,Partial Cystectomy,0.9474,Mastectomy,0.9458,Partial Salpingectomy,0.9455,Left;Total Mastectomy,0.9449,Bilateral;Total Mastectomy,0.9424
+Partial Vaginectomy,Partial;Vaginectomy,1,2,Partial;Vaginectomy,0.9943,Partial Cystectomy,0.9420,Partial Salpingectomy,0.9418,Left Hemihepatectomy,0.9277,Right Hemihepatectomy,0.9264
+Partial hepatectomy,Partial Hepatectomy,1,2,Partial Hepatectomy,1.0000,Hepatectomy,0.9559,Total Hepatectomy,0.9479,Right;Partial Nephrectomy,0.9382,Partial Salpingectomy,0.9309
+Partial mastectomy,Segmental Mastectomy,99,2,Partial Cystectomy,0.9474,Mastectomy,0.9458,Partial Salpingectomy,0.9455,Left;Total Mastectomy,0.9449,Bilateral;Total Mastectomy,0.9424
+Patey's Surgery,Modified Radical Mastectomy,99,2,Abdominoperineal Resection,0.9014,Appendectomy,0.9007,Surgical Procedure,0.9006,Exploratory Surgery;Laparotomy,0.8919,Pancreaticoduodenectomy,0.8912
+Pateys surgery,Modified Radical Mastectomy,99,2,Appendectomy,0.8973,Surgical Procedure,0.8957,Abdominoperineal Resection,0.8955,Anterior Pelvic Exenteration,0.8936,Radical;Anterior Pelvic Exenteration,0.8902
+Peg interferon alfa-2a,Peginterferon Alfa-2a,1,2,Peginterferon Alfa-2a,0.9806,Interferon Alpha,0.9529,Gonadotropin-releasing Hormone Analog,0.9272,Adalimumab,0.9241,Cinrebafusp Alfa,0.9207
+Pembro,Pembrolizumab,1,2,Pembrolizumab,0.9745,Pemetrexed,0.9473,Lorazepam,0.9006,Nivolumab,0.8994,Atezolizumab,0.8980
+Pembrolizumab (Arizona),Pembrolizumab,1,2,Pembrolizumab,0.9695,Atezolizumab,0.9394,Pemetrexed,0.9373,Anti-EGFR Monoclonal Antibody,0.9229,PSMA-targeting Agent;Antineoplastic Antibody-Drug Conjugate,0.9213
+Pentamadine,Pentamidine,1,2,Pentamidine,0.9416,Pexidartinib,0.9214,Pemetrexed,0.9119,Entospletinib,0.9055,Atezolizumab,0.9035
+PiBr,Pipobroman,99,2,Bortezomib,0.9249,Ibrutinib,0.9248,Pravastatin,0.9245,Bevacizumab,0.9204,Buparlisib,0.9200
+Plaque,Plaque Radiotherapy,1,2,Plaque Radiotherapy,0.9554,Pravastatin,0.9020,Uncinate Process of Pancreas;Resection,0.8946,Pertuzumab,0.8938,Peginterferon Alfa-2a,0.8899
+Pred,Prednisone,99,2,Pravastatin,0.9112,Prexasertib,0.9102,Denintuzumab Mafodotin,0.9063,Durvalumab,0.8991,Decitabine,0.8953
+Primary Debulking,Primary Debulking Surgery,1,2,Primary Debulking Surgery,0.9798,Secondary;Tumor Debulking,0.9485,Tumor Debulking,0.9325,Interval Debulking Surgery,0.9171,Durvalumab,0.8893
+Proton 3d conformal,Proton Beam Radiation Therapy;3-Dimensional Conformal Radiation Therapy,1,2,Proton Beam Radiation Therapy;3-Dimensional Conformal Radiation Therapy,0.9552,External Beam Radiation Therapy;3-Dimensional Conformal Radiation Therapy,0.9268,"Radiotherapy, Conformal",0.9197,Proton Beam Radiation Therapy,0.9115,Radical;Anterior Pelvic Exenteration,0.8820
+Proton beam,Proton Beam Radiation Therapy,1,2,Proton Beam Radiation Therapy,0.9831,Proton Beam Radiation Therapy;3-Dimensional Conformal Radiation Therapy,0.9378,External Beam Radiation Therapy,0.9243,Radiation Therapy,0.9178,External Beam Radiation Therapy;3-Dimensional Conformal Radiation Therapy,0.9016
+Provenge,Sipuleucel-T,99,2,Durvalumab,0.8853,Ponatinib,0.8845,Itacitinib,0.8804,Ipilimumab,0.8790,Crenolanib,0.8789
+Pylorus preserving pancreatoduodenectomy,Pylorus-sparing pancreaticoduodenectomy (procedure),1,2,Pylorus-sparing pancreaticoduodenectomy (procedure),0.9819,Pancreaticoduodenectomy,0.9496,Distal Pancreatectomy,0.9307,Total Pancreatectomy,0.9272,Uncinate Process of Pancreas;Resection,0.9169
+RAM,Ramucirumab,1,2,Ramucirumab,0.9381,Lenalidomide,0.9066,Rituximab,0.9063,Retromammary space (body structure);Lymphadenectomy,0.9000,Daratumumab,0.8922
+RAPAMYCIN,Sirolimus,1,2,Sirolimus,0.9494,mTOR Inhibitor;Immunotherapeutic Agent,0.9324,mTOR Inhibitor,0.9295,Everolimus,0.9293,Rituximab,0.9266
+REGN1400,Anti-ErbB3 Monoclonal Antibody REGN1400,1,2,Anti-ErbB3 Monoclonal Antibody REGN1400,0.9592,Regorafenib,0.9268,Regadenoson,0.9100,MDM2/MDMX Inhibitor ALRN-6924,0.8995,Ruxolitinib,0.8993
+REN1400,Anti-ErbB3 Monoclonal Antibody REGN1400,1,2,Anti-ErbB3 Monoclonal Antibody REGN1400,0.8929,Radical;Anterior Pelvic Exenteration,0.8811,NY-ESO-1 Peptide Vaccine,0.8798,Phenethyl Isothiocyanate,0.8794,Anti-PLGF Monoclonal Antibody TB-403,0.8791
+RG7112,MDM2 Inhibitor,99,2,Peginterferon Alfa-2a,0.9028,Gemtuzumab Ozogamicin,0.8960,Anti-ErbB3 Monoclonal Antibody REGN1400,0.8954,MDM2/MDMX Inhibitor ALRN-6924,0.8950,Gonadotropin-releasing Hormone Analog,0.8925
+RO4929097,Gamma-Secretase Inhibitor RO4929097,1,2,Gamma-Secretase Inhibitor RO4929097,0.9615,Rovalpituzumab Tesirine,0.9173,FAK Inhibitor VS-4718,0.9080,Purine Analogue NSC 750854,0.9066,Anti-CD98 Monoclonal Antibody IGN523,0.9054
+ROVA-T,Rovalpituzumab Tesirine,1,2,Rovalpituzumab Tesirine,0.9510,Gamma-Secretase Inhibitor RO4929097,0.9118,Vadastuximab Talirine,0.9065,Chimeric Antigen Receptor T-Cell Therapy,0.9042,Ifabotuzumab,0.9027
+RUXOLITINB,Ruxolitinib,1,2,Ruxolitinib,0.9844,FLT3/CDK4/6 Inhibitor FLX925,0.9211,Pexidartinib,0.9205,Rivogenlecleucel,0.9129,Floxuridine,0.9128
+Rabbit ATG,Lapine T-Lymphocyte Immune Globulin,99,2,Anti-EGFR Monoclonal Antibody,0.8932,Bortezomib,0.8905,mTOR Inhibitor;Immunotherapeutic Agent,0.8898,Rituximab,0.8883,Anti-PLGF Monoclonal Antibody TB-403,0.8879
+Rad001,Everolimus,1,2,Everolimus,0.9112,Axitinib,0.9060,Purine Analogue NSC 750854,0.9025,MDM2/MDMX Inhibitor ALRN-6924,0.9009,Vadastuximab Talirine,0.9001
+"Radiation Therapy, Unspecified",Radiation Therapy,1,2,Radiation Therapy,0.9329,Radiation Therapy Not Received,0.9309,Radiation Therapy;Right Breast,0.9250,Other;Treatment Regimen,0.9174,"Radiotherapy, Conformal",0.9171
+Radiation to right breast,Radiation Therapy;Right Breast,1,2,Radiation Therapy;Right Breast,0.9869,Radiation Therapy,0.9397,Lumpectomy;Right Breast,0.9366,Right Breast;Re-Excision,0.9365,Total-Body Irradiation,0.9283
+Radical anterior exenteration,Radical;Anterior Pelvic Exenteration,1,2,Radical;Anterior Pelvic Exenteration,0.9779,Anterior Pelvic Exenteration,0.9630,Pelvic Exenteration,0.9415,Radical Prostatectomy,0.9270,Radical Cystoprostatectomy;Robot-Assisted Surgery,0.9231
+Radical cystectomy,Radical Cystectomy,1,2,Radical Cystectomy,1.0000,Cystectomy,0.9763,Radical Cystoprostatectomy,0.9690,Partial Cystectomy,0.9551,Radical Prostatectomy,0.9526
+Radical cystoprostatectomy,Radical Cystoprostatectomy,1,2,Radical Cystoprostatectomy,1.0000,Radical Cystoprostatectomy;Robot-Assisted Surgery,0.9714,Radical Cystectomy,0.9690,Robot-Assisted Surgery;Radical Cystoprostatectomy,0.9690,Robot-Assisted Surgery;Laparoscopy;Radical Cystoprostatectomy,0.9614
+Radical trachelectomy,Radical Trachelectomy,1,2,Radical Trachelectomy,1.0000,Radical Cystectomy,0.9405,Radical Hysterectomy,0.9405,Radical Cystoprostatectomy,0.9305,Radical Prostatectomy,0.9288
+Radium-223 (Xofigo),Radium Ra 223 Dichloride,1,2,Radium Ra 223 Dichloride,0.9375,Radiation Therapy,0.9168,Letrozole,0.9136,Cixutumumab,0.9096,Peginterferon Alfa-2a,0.9095
+Ram,Ramucirumab,1,2,Ramucirumab,0.9381,Lenalidomide,0.9066,Rituximab,0.9063,Retromammary space (body structure);Lymphadenectomy,0.9000,Daratumumab,0.8922
+Re-Excision of Superior Margin,Re-Excision;Superior;Margin,1,2,Re-Excision;Superior;Margin,0.9868,Re-Excision;Inferior;Margin,0.9747,Inner;Upper;Surgical Margin;Re-Excision,0.9613,Re-Excision,0.9571,Left Breast;Re-Excision,0.9476
+Re-excision of original lumpectomy site,Re-Excision;Original;Lumpectomy;Surgical Site,1,2,Re-Excision;Original;Lumpectomy;Surgical Site,0.9877,Left Breast;Re-Excision,0.9573,Re-Excision;Biopsy Site,0.9516,Right Breast;Re-Excision,0.9506,Lumpectomy,0.9489
+Re-excision of the inferior margin,Re-Excision;Inferior;Margin,1,2,Re-Excision;Inferior;Margin,0.9875,Re-Excision;Superior;Margin,0.9724,Inner;Upper;Surgical Margin;Re-Excision,0.9568,Re-Excision,0.9508,Right Breast;Re-Excision,0.9454
+Reexc of biopsy site,Re-Excision;Biopsy Site,1,2,Re-Excision;Biopsy Site,0.9390,Biopsy,0.9197,Wide;Re-Excision;Biopsy,0.9184,Skin Biopsy,0.9134,Ureter;Biopsy,0.9078
+Reexcision,Re-Excision,5,2,Esophagectomy,0.9117,Wide;Re-Excision;Biopsy,0.9043,Re-Excision;Superior;Margin,0.9029,Re-Excision;Biopsy Site,0.9005,Re-Excision,0.8990
+Reexcision of segmental mastectomy,Re-Excision;Segmental Mastectomy,1,2,Re-Excision;Segmental Mastectomy,0.9718,Segmental Mastectomy,0.9591,Right;Segmental Mastectomy,0.9543,Left;Segmental Mastectomy,0.9539,Localized;Segmental Mastectomy,0.9489
+Regeneron,Cemiplimab,99,2,Sorafenib,0.9169,Rituximab,0.9114,Axitinib,0.9107,Re-Excision;Superior;Margin,0.9101,Imatinib,0.9094
+Resection of Pelvic tumor,Resection;Pelvis;Tumor Mass,2,2,Tumor Resection;Pelvis,0.9849,Resection;Pelvis;Tumor Mass,0.9712,Pelvic Lymphadenectomy,0.9576,Transurethral Resection of Bladder Tumor,0.9410,Vulva;Resection,0.9371
+Resection of pulmonary Mets,Resection;Pulmonary;Metastasis,1,2,Resection;Pulmonary;Metastasis,0.9524,Lung;Resection,0.9501,Resection,0.9407,Metastasectomy,0.9331,Resection;Pelvis;Tumor Mass,0.9282
+Revlimid,Lenalidomide,99,2,Vorinostat,0.9050,Rovalpituzumab Tesirine,0.9035,Talimogene Laherparepvec,0.9032,Cladribine,0.9019,Adalimumab,0.9006
+Revlmd,Lenalidomide,99,2,Rivogenlecleucel,0.9144,Volasertib,0.9104,Rovalpituzumab Tesirine,0.9098,Right Breast;Re-Excision,0.9097,Right;Radical;Nephroureterectomy;Right;Nephroureterectomy,0.9040
+Right Breast Reexcision,Right Breast;Re-Excision,1,2,Right Breast;Re-Excision,0.9585,Radiation Therapy;Right Breast,0.9482,Left Breast;Re-Excision,0.9474,Right Hemihepatectomy,0.9414,Lumpectomy;Right Breast,0.9389
+Right Breast reexcision,Right Breast;Re-Excision,1,2,Right Breast;Re-Excision,0.9585,Radiation Therapy;Right Breast,0.9482,Left Breast;Re-Excision,0.9474,Right Hemihepatectomy,0.9414,Lumpectomy;Right Breast,0.9389
+Right Mediastinal Mass Excision,Right;Mediastinal Mass;Excision,1,2,Right;Mediastinal Mass;Excision,0.9846,Excision;Chest Wall Mass,0.9513,Right Breast;Re-Excision,0.9452,Left Breast;Re-Excision,0.9327,Right Hemihepatectomy,0.9287
+Right Partial Nephrectomy,Right;Partial Nephrectomy,1,2,Right;Partial Nephrectomy,0.9909,Left;Radical Nephrectomy,0.9524,Right Hemihepatectomy,0.9429,Partial Hepatectomy,0.9428,Partial Cystectomy,0.9417
+Right Rnu,Right;Radical;Nephroureterectomy;Right;Nephroureterectomy,1,2,Right;Radical;Nephroureterectomy;Right;Nephroureterectomy,0.9317,Right;Radical;Nephroureterectomy;Radical Cystectomy;Right;Nephroureterectomy;Radical Cystectomy,0.9295,Right;Nephroureterectomy,0.9281,Right;Partial Nephrectomy,0.9266,Right Eye;Enucleation,0.9251
+Right Rnu / Rc,Right;Radical;Nephroureterectomy;Radical Cystectomy;Right;Nephroureterectomy;Radical Cystectomy,1,2,Right;Radical;Nephroureterectomy;Radical Cystectomy;Right;Nephroureterectomy;Radical Cystectomy,0.9339,Right;Radical;Nephroureterectomy;Right;Nephroureterectomy,0.9333,Right;Nephroureterectomy,0.9281,Right;Partial Nephrectomy,0.9259,Left;Radical;Nephroureterectomy,0.9253
+Right Total Mastectomy,Right;Total Mastectomy,1,2,Right;Total Mastectomy,0.9884,Left;Total Mastectomy,0.9770,Total Mastectomy,0.9672,Bilateral;Total Mastectomy,0.9607,Right Hemihepatectomy,0.9482
+Right eye enucleation,Right Eye;Enucleation,1,2,Right Eye;Enucleation,0.9912,Enucleation,0.9607,Right;Partial Nephrectomy,0.9364,Enucleation;Tail of the Pancreas,0.9357,Right Hemihepatectomy,0.9306
+Right hemihepatectomy,Right Hemihepatectomy,1,2,Right Hemihepatectomy,1.0000,Left Hemihepatectomy,0.9885,Right;Partial Nephrectomy,0.9401,Right;Total Mastectomy,0.9376,Radiation Therapy;Right Breast,0.9355
+Right mediastinal mass excision,Right;Mediastinal Mass;Excision,1,2,Right;Mediastinal Mass;Excision,0.9846,Excision;Chest Wall Mass,0.9513,Right Breast;Re-Excision,0.9452,Left Breast;Re-Excision,0.9327,Right Hemihepatectomy,0.9287
+Right segmental mastectomy,Right;Segmental Mastectomy,1,2,Right;Segmental Mastectomy,0.9912,Left;Segmental Mastectomy,0.9819,Segmental Mastectomy,0.9750,Localized;Segmental Mastectomy,0.9686,Re-Excision;Segmental Mastectomy,0.9607
+Right total mastectomy,Right;Total Mastectomy,1,2,Right;Total Mastectomy,0.9884,Left;Total Mastectomy,0.9770,Total Mastectomy,0.9672,Bilateral;Total Mastectomy,0.9607,Right Hemihepatectomy,0.9482
+Right uterectomy,Right;Ureterectomy,1,2,Right;Ureterectomy,0.9518,Right Hemihepatectomy,0.9460,Radiation Therapy;Right Breast,0.9428,Right Breast;Re-Excision,0.9413,Right;Partial Nephrectomy,0.9398
+Rituxan,Rituximab,1,2,Rituximab,0.9302,Radical;Anterior Pelvic Exenteration,0.9129,Mitoxantrone,0.9121,Plerixafor,0.9119,Splenectomy,0.9097
+Robotic assisted laparoscopic nephroureterectomy,Robot-Assisted Surgery;Laparoscopy;Nephroureterectomy,1,2,Robot-Assisted Surgery;Laparoscopy;Nephroureterectomy,0.9789,Laparoscopic Radical Prostatectomy with Robotics,0.9605,Nephroureterectomy,0.9605,Robot-Assisted Surgery;Laparoscopy;Radical Cystoprostatectomy,0.9540,Robot-Assisted Surgery;Radical Cystoprostatectomy,0.9520
+Robotic assisted laparoscopic radical cystoprostatectomy,Robot-Assisted Surgery;Laparoscopy;Radical Cystoprostatectomy,3,2,Robot-Assisted Surgery;Radical Cystoprostatectomy,0.9856,Radical Cystoprostatectomy;Robot-Assisted Surgery,0.9836,Robot-Assisted Surgery;Laparoscopy;Radical Cystoprostatectomy,0.9812,Radical Cystoprostatectomy,0.9729,Laparoscopic Radical Prostatectomy with Robotics,0.9688
+Robotic radical cystoprostatectomy,Robot-Assisted Surgery;Radical Cystoprostatectomy,2,2,Radical Cystoprostatectomy,0.9864,Robot-Assisted Surgery;Radical Cystoprostatectomy,0.9817,Radical Cystoprostatectomy;Robot-Assisted Surgery,0.9810,Robot-Assisted Surgery;Laparoscopy;Radical Cystoprostatectomy,0.9729,Laparoscopic Radical Prostatectomy with Robotics,0.9617
+Robotic-Assisted Laparoscopic Radical Prostatectomy,Laparoscopic Radical Prostatectomy with Robotics,1,2,Laparoscopic Radical Prostatectomy with Robotics,0.9904,Laparoscopic Prostatectomy,0.9702,Robot-Assisted Surgery;Laparoscopy;Radical Cystoprostatectomy,0.9666,Robot-Assisted Surgery;Radical Cystoprostatectomy,0.9664,Radical Cystoprostatectomy;Robot-Assisted Surgery,0.9655
+SAHA,Vorinostat,1,2,Vorinostat,0.9462,Histone Deacetylase Inhibitor,0.9246,Pracinostat,0.9190,Valproic Acid,0.9171,Azacitidine,0.9130
+SAR3419,Coltuximab Ravtansine,99,2,MDM2/MDMX Inhibitor ALRN-6924,0.9039,Sargramostim,0.9039,Sirolimus,0.8947,Anti-CD33 Monoclonal Antibody BI 836858,0.8921,Veliparib,0.8916
+SB-715992,Ispinesib,99,2,Purine Analogue NSC 750854,0.9222,NAMPT Inhibitor STF-118804,0.9138,Anti-CD33 Monoclonal Antibody BI 836858,0.9113,Dual IGF-1R/InsR Inhibitor BMS-754807,0.9099,MDM2/MDMX Inhibitor ALRN-6924,0.9079
+SCH 727965,Dinaciclib,99,2,Gamma-Secretase Inhibitor RO4929097,0.9146,Anti-HGF Monoclonal Antibody TAK-701,0.9128,Anti-CD33 Monoclonal Antibody BI 836858,0.9069,MDM2/MDMX Inhibitor ALRN-6924,0.9058,Purine Analogue NSC 750854,0.9055
+SGI-1776,PIM Kinase Inhibitor SGI-1776,1,2,PIM Kinase Inhibitor SGI-1776,0.9479,Topoisomerase I Inhibitor Genz-644282,0.8952,NAMPT Inhibitor STF-118804,0.8908,Polyamine Analogue PG11047,0.8904,DNA-PK/TOR Kinase Inhibitor CC-115,0.8900
+SGN-CD19A,Denintuzumab Mafodotin,99,2,PIM Kinase Inhibitor SGI-1776,0.9073,Dexamethasone,0.9023,Anti-CD33 Monoclonal Antibody BI 836858,0.8959,Anti-CD33 Antibody-drug Conjugate IMGN779,0.8946,Anti-CD3 Monoclonal Antibody,0.8924
+SGN-CD33A,Vadastuximab Talirine,99,2,Anti-CD3 Monoclonal Antibody,0.9144,Anti-CD33 Monoclonal Antibody BI 836858,0.9114,PIM Kinase Inhibitor SGI-1776,0.9085,Anti-CD33 Antibody-drug Conjugate IMGN779,0.9010,Dexamethasone,0.9005
+SKIN LESION BIOPSY,Skin Biopsy,1,2,Skin Biopsy,0.9745,Biopsy,0.9420,Liver Biopsy,0.9394,Punch Biopsy,0.9330,Excisional Biopsy,0.9307
+SKIN SPARING RADICAL MASTECTOMY,Skin-Sparing Mastectomy;Radical Mastectomy,1,2,Skin-Sparing Mastectomy;Radical Mastectomy,0.9850,Bilateral;Skin-Sparing Mastectomy,0.9772,Subcutaneous Mastectomy,0.9413,Mastectomy,0.9366,Re-Excision;Segmental Mastectomy,0.9267
+SLND,Sentinel Lymph Node;Lymphadenectomy,2,2,Sentinel Lymph Node Biopsy,0.9436,Sentinel Lymph Node;Lymphadenectomy,0.9367,Left;Sentinel Lymph Node Biopsy,0.9341,Axillary Lymph Node;Sentinel Lymph Node Biopsy,0.9331,Right;Sentinel Lymph Node Biopsy,0.9322
+SMAC,Apoptotic Pathway-targeting Antineoplastic Agent,99,2,Macitentan,0.9034,Samalizumab,0.9019,Acalisib,0.8994,Mitotane,0.8940,PSMA-targeting Agent;Antineoplastic Antibody-Drug Conjugate,0.8933
+SORAFENIB,Sorafenib,1,2,Sorafenib,1.0000,Sunitinib,0.9370,Imatinib,0.9307,Sunitinib Malate,0.9302,Lapatinib,0.9284
+STA9090 (GANETESPIB),Ganetespib,1,2,Ganetespib,0.9470,Sapacitabine,0.9199,Pan-AKT Kinase Inhibitor GSK690693,0.9081,Abiraterone,0.9067,Anti-HGF Monoclonal Antibody TAK-701,0.9024
+STF-118804,NAMPT Inhibitor STF-118804,1,2,NAMPT Inhibitor STF-118804,0.9585,FAK Inhibitor VS-4718,0.9181,DNA-PK/TOR Kinase Inhibitor CC-115,0.9174,Dual IGF-1R/InsR Inhibitor BMS-754807,0.9153,Purine Analogue NSC 750854,0.9149
+SU11248,Sunitinib Malate,99,2,Gamma-Secretase Inhibitor RO4929097,0.9090,Anti-CD98 Monoclonal Antibody IGN523,0.9077,Polyamine Analogue PG11047,0.9045,Purine Analogue NSC 750854,0.8975,FAK Inhibitor VS-4718,0.8973
+SVV-001,Seneca Valley Virus-001,1,2,Seneca Valley Virus-001,0.9220,Seviteronel,0.9122,FAK Inhibitor VS-4718,0.9001,Vadastuximab Talirine,0.8995,Valspodar,0.8930
+SY-1425 (Tamibarotene),Tamibarotene,1,2,Tamibarotene,0.9560,PIM Kinase Inhibitor SGI-1776,0.9214,NAMPT Inhibitor STF-118804,0.9210,Folate Receptor-Targeted Tubulysin Conjugate EC1456,0.9198,Tamoxifen,0.9187
+Sacrococcygeal Resection,Sacrococcygeal Teratoma;Resection,1,2,Sacrococcygeal Teratoma;Resection,0.9744,Resection,0.9337,Abdominoperineal Resection,0.9294,Vulva;Resection,0.9252,Surgical Margin;Resection,0.9206
+Sapacitabine (CYC682-06),Sapacitabine,1,2,Sapacitabine,0.9768,Anti-CD33 Monoclonal Antibody BI 836858,0.9213,Itacitinib,0.9212,Cladribine,0.9177,PIM Kinase Inhibitor SGI-1776,0.9177
+Secondary Debulking,Secondary;Tumor Debulking,1,2,Secondary;Tumor Debulking,0.9709,Primary Debulking Surgery,0.9592,Tumor Debulking,0.9285,Interval Debulking Surgery,0.9170,Sipuleucel-T,0.8910
+Segmental mastectomy,Segmental Mastectomy,1,2,Segmental Mastectomy,1.0000,Localized;Segmental Mastectomy,0.9818,Left;Segmental Mastectomy,0.9789,Right;Segmental Mastectomy,0.9760,Re-Excision;Segmental Mastectomy,0.9672
+Segmental ureterectomy,Ureterectomy,1,2,Ureterectomy,0.9656,Right;Ureterectomy,0.9449,Segmental Mastectomy,0.9432,Segmentectomy;Single,0.9375,Left;Segmental Mastectomy,0.9368
+"Segmentectomy, Multiple",Segmentectomy;Multiple,1,2,Segmentectomy;Multiple,0.9980,Segmentectomy;Single,0.9680,Caudate Lobe;Segmentectomy,0.9274,Re-Excision;Segmental Mastectomy,0.9207,Re-Excision;Original;Lumpectomy;Surgical Site,0.9166
+"Segmentectomy, Single",Segmentectomy;Single,1,2,Segmentectomy;Single,0.9965,Segmentectomy;Multiple,0.9659,Caudate Lobe;Segmentectomy,0.9440,Left;Segmental Mastectomy,0.9196,Ureterectomy,0.9182
+Sentinel Node Biopsy,Sentinel Lymph Node Biopsy,1,2,Sentinel Lymph Node Biopsy,0.9952,Axillary Lymph Node;Sentinel Lymph Node Biopsy,0.9772,Sentinel Lymph Node Biopsy Followed by Axillary Lymph Node Biopsy,0.9705,Left;Sentinel Lymph Node Biopsy,0.9694,Right;Sentinel Lymph Node Biopsy,0.9692
+Simple Hysterectomy,Total Hysterectomy,2,2,Hysterectomy,0.9465,Total Hysterectomy,0.9281,Robotic Hysterectomy,0.9205,Modified Radical Hysterectomy,0.9196,Radical Hysterectomy,0.9166
+Simple Mastectomy,Total Mastectomy,5,2,Mastectomy,0.9547,Bilateral;Skin-Sparing Mastectomy,0.9410,Modified Radical Mastectomy,0.9302,Bilateral Mastectomy,0.9288,Total Mastectomy,0.9285
+Skin excision,Skin Excision,1,2,Skin Excision,1.0000,Excision,0.9746,Wide Skin Excision,0.9535,Excisional Biopsy,0.9473,Re-Excision,0.9428
+Stereotactic,Stereotactic Radiosurgery,1,2,Stereotactic Radiosurgery,0.9639,Fractionated Stereotactic Radiation Therapy,0.9375,Seviteronel,0.9047,Wire-Guided Localization;Segmental Mastectomy,0.9021,Wire-Guided Localization;Right Breast;Biopsy;Wire-Guided Localization;Right Breast,0.8987
+Steroids,Steroid Therapy,1,2,Steroid Therapy,0.9663,Prednisone,0.9398,Prednisolone,0.9383,Dexamethasone,0.9321,Sirolimus,0.9197
+Surgical,Surgical Procedure,1,2,Surgical Procedure,0.9717,Other;Surgery,0.9398,Surgical Margin;Resection,0.9334,Sacrococcygeal Teratoma;Resection,0.9198,Craniotomy,0.9157
+Surgical Resection,Resection,1,2,Resection,0.9826,Surgical Margin;Resection,0.9650,Lung;Resection,0.9567,Surgical Procedure,0.9465,Vulva;Resection,0.9460
+Surgical resection,Resection,1,2,Resection,0.9826,Surgical Margin;Resection,0.9650,Lung;Resection,0.9567,Surgical Procedure,0.9465,Vulva;Resection,0.9460
+Systemic,Systemic Therapy,1,2,Systemic Therapy,0.9740,Bilateral;Skin-Sparing Mastectomy,0.8976,Sunitinib Malate,0.8905,Intrathecal Route of Administration,0.8900,Sunitinib,0.8897
+T cell apheresis,Chimeric Antigen Receptor T-Cell Therapy;Therapeutic Apheresis,1,2,Chimeric Antigen Receptor T-Cell Therapy;Therapeutic Apheresis,0.9429,Autologous Hematopoietic Stem Cell Transplantation,0.9198,Chimeric Antigen Receptor T-Cell Therapy,0.9188,Donor Lymphocyte Infusion,0.9136,Anti-CD3 Monoclonal Antibody,0.9109
+TACE,Transarterial Chemoembolization,1,2,Transarterial Chemoembolization,0.9271,Erlotinib,0.9237,Trastuzumab,0.9224,Sorafenib,0.9202,Hepatectomy,0.9156
+TACEb,Transarterial Chemoembolization,2,2,Trastuzumab,0.9204,Transarterial Chemoembolization,0.9181,Erlotinib,0.9173,Topotecan,0.9159,Bevacizumab,0.9156
+TAE,Transanal Excision,99,2,Taselisib,0.9037,Topotecan,0.9036,Tamoxifen,0.9027,Trametinib,0.8957,Vadastuximab Talirine,0.8957
+TAK-701,Anti-HGF Monoclonal Antibody TAK-701,1,2,Anti-HGF Monoclonal Antibody TAK-701,0.9574,NAMPT Inhibitor STF-118804,0.9109,Anti-CD33 Monoclonal Antibody BI 836858,0.9090,Ifabotuzumab,0.9080,Anti-CD98 Monoclonal Antibody IGN523,0.9072
+TAMIS,Transanal Excision;Minimally Invasive Surgery,99,2,Tamibarotene,0.9446,Tamoxifen,0.9291,Mastectomy,0.9044,Tasadenoturev,0.9035,Letrozole,0.9007
+TAMOXIFEN,Tamoxifen,1,2,Tamoxifen,1.0000,Trastuzumab,0.9327,Tamibarotene,0.9307,Letrozole,0.9288,Fulvestrant,0.9234
+TB-403,Anti-PLGF Monoclonal Antibody TB-403,1,2,Anti-PLGF Monoclonal Antibody TB-403,0.9512,Tamibarotene,0.9054,Ifabotuzumab,0.8998,Anti-ErbB3 Monoclonal Antibody REGN1400,0.8997,Anti-CD33 Monoclonal Antibody BI 836858,0.8878
+TBI,Total-Body Irradiation,1,2,Total-Body Irradiation,0.9181,Craniotomy,0.9079,Bleomycin,0.9071,Ifabotuzumab,0.9065,Bortezomib,0.9052
+TDM-1,Trastuzumab Emtansine,99,2,DNA-PK/TOR Kinase Inhibitor CC-115,0.9078,Thalidomide,0.9009,NAMPT Inhibitor STF-118804,0.9008,Anti-HGF Monoclonal Antibody TAK-701,0.8990,Treosulfan,0.8983
+TEMODAR,Temozolomide,99,2,Temsirolimus,0.9087,Topotecan,0.8890,Valspodar,0.8844,Doxorubicin,0.8826,Mitoxantrone,0.8809
+TIL infusion,Tumor Infiltrating Lymphocyte Therapy,1,2,Tumor Infiltrating Lymphocyte Therapy,0.9263,Trastuzumab,0.9196,Donor Lymphocyte Infusion,0.9186,Intrahepatic Infusion Procedure,0.9080,Vadastuximab Talirine,0.9063
+TKI,Tyrosine Kinase Inhibitor,3,2,Erlotinib,0.9497,Imatinib,0.9452,Tyrosine Kinase Inhibitor,0.9443,Sorafenib,0.9380,Gefitinib,0.9353
+TL32711,Birinapant,99,2,AALL0232 ALL Study Identifier,0.9214,AALL0232 ALL Study Identifier;Dexamethasone,0.9166,AALL0331 ALL Study Identifier,0.9145,Anti-PLGF Monoclonal Antibody TB-403,0.9112,NAMPT Inhibitor STF-118804,0.9092
+TLI,Total Lymphoid Irradiation,99,2,Dactolisib,0.9095,Anti-PLGF Monoclonal Antibody TB-403,0.9088,Thalidomide,0.9058,Venetoclax,0.9055,Topotecan,0.9054
+TM,Trametinib,3,2,Tamoxifen,0.9092,Anti-TIM-3 Monoclonal Antibody,0.9052,Trametinib,0.9049,Trastuzumab Emtansine,0.9043,Macitentan,0.9037
+TMZ,Temozolomide,1,2,Temozolomide,0.9536,Gemtuzumab,0.9251,Ipilimumab,0.9202,Carmustine,0.9201,Sorafenib,0.9197
+TOPO_II_INH,Topoisomerase-II Inhibitor,1,2,Topoisomerase-II Inhibitor,0.9393,Topoisomerase-I Inhibitor,0.9317,Topotecan,0.9266,Topoisomerase I Inhibitor Genz-644282,0.9220,HDM2 Inhibitor MK-8242,0.9110
+TOPO_I_INH,Topoisomerase-I Inhibitor,1,2,Topoisomerase-I Inhibitor,0.9348,Topotecan,0.9293,Topoisomerase-II Inhibitor,0.9283,Topoisomerase I Inhibitor Genz-644282,0.9232,CENP-E Inhibitor GSK-923295A,0.9111
+TOPTECAN,Topotecan,1,2,Topotecan,0.9456,Thiotepa,0.9070,Tretinoin,0.9019,Docetaxel,0.9006,Temsirolimus,0.8994
+TOTAL MASTECTOMY,Total Mastectomy,1,2,Total Mastectomy,1.0000,Left;Total Mastectomy,0.9709,Bilateral;Total Mastectomy,0.9700,Right;Total Mastectomy,0.9699,Total Hysterectomy,0.9589
+TRAMP,TRAM Flap Procedure,2,2,Trametinib,0.9616,TRAM Flap Procedure,0.9485,Tamoxifen,0.9076,Ipilimumab,0.9044,Tamibarotene,0.9016
+TRAS,Trastuzumab,2,2,Chimeric Antigen Receptor T-Cell Therapy,0.9060,Trastuzumab,0.9032,Chimeric Antigen Receptor T-Cell Therapy;Therapeutic Apheresis,0.9019,Tamibarotene,0.8995,Anti-TIM-3 Monoclonal Antibody,0.8983
+TRASTUZUMAB,Trastuzumab,1,2,Trastuzumab,1.0000,Trastuzumab Emtansine,0.9543,Lapatinib,0.9351,Tamoxifen,0.9327,Daratumumab,0.9327
+TRISENOX(ATO),Arsenic Trioxide,99,2,Tamoxifen,0.9135,Chimeric Antigen Receptor T-Cell Therapy;Therapeutic Apheresis,0.9105,Anti-CD33 Monoclonal Antibody BI 836858,0.9086,Topotecan,0.9081,Anti-TIM-3 Monoclonal Antibody,0.9048
+TUR,Transurethral Resection,1,2,Transurethral Resection,0.9022,Transurethral Resection of Bladder Tumor,0.8997,Topotecan,0.8972,Nephroureterectomy with Cuff of Bladder;Endoscopic Resection,0.8878,Coltuximab Ravtansine,0.8868
+TURBT,Transurethral Resection of Bladder Tumor,99,2,Ifabotuzumab,0.9003,Topotecan,0.9003,Tretinoin,0.8995,Docetaxel,0.8986,Tazemetostat,0.8964
+TURBT (transurethral resection of bladder tumor),Transurethral Resection of Bladder Tumor,1,2,Transurethral Resection of Bladder Tumor,0.9619,Transurethral Resection,0.9480,Nephroureterectomy with Cuff of Bladder;Endoscopic Resection,0.9377,Resection;Pelvis;Tumor Mass,0.9312,Right;Radical;Nephroureterectomy;Radical Cystectomy;Right;Nephroureterectomy;Radical Cystectomy,0.9299
+TVRC-biopsy,Biopsy,1,2,Biopsy,0.9248,Ureter;Biopsy,0.9176,Skin Biopsy,0.9114,Wide;Re-Excision;Biopsy,0.9106,Re-Excision;Biopsy Site,0.9094
+Tasadeoturev,Tasadenoturev,1,2,Tasadenoturev,0.9666,Taselisib,0.9156,Vadastuximab Talirine,0.8983,Tisagenlecleucel,0.8931,Tamibarotene,0.8914
+Taxol,Paclitaxel,1,2,Paclitaxel,0.9473,Docetaxel,0.9427,Nab-paclitaxel,0.9276,Topotecan,0.9255,Tamoxifen,0.9180
+Taxotere,Docetaxel,1,2,Docetaxel,0.9348,Topotecan,0.9179,Paclitaxel,0.9134,Tamoxifen,0.9089,Nab-paclitaxel,0.9057
+Temodar,Temozolomide,99,2,Temsirolimus,0.9087,Topotecan,0.8890,Valspodar,0.8844,Doxorubicin,0.8826,Mitoxantrone,0.8809
+Temozolamide,Temozolomide,1,2,Temozolomide,0.9507,Dacarbazine,0.9123,Carmustine,0.9122,Celecoxib,0.9087,Procarbazine,0.9085
+Thymoglobulin,Lapine T-Lymphocyte Immune Globulin,99,2,Anti-Thymocyte Globulin,0.9312,Gemtuzumab,0.9092,Trastuzumab,0.9079,Topotecan,0.9058,Immunoglobulin,0.9052
+Thymoglobulin (Bu/Flu/ATG),Lapine T-Lymphocyte Immune Globulin,99,2,Ifabotuzumab,0.9271,Anti-Thymocyte Globulin,0.9268,Gemtuzumab,0.9221,mTOR Inhibitor;Immunotherapeutic Agent,0.9212,Anti-PLGF Monoclonal Antibody TB-403,0.9208
+Thymoglobulin (Bu/Flu/Cy/ATG),Lapine T-Lymphocyte Immune Globulin,99,2,Anti-Thymocyte Globulin,0.9274,mTOR Inhibitor;Immunotherapeutic Agent,0.9242,Chimeric Antigen Receptor T-Cell Therapy;Therapeutic Apheresis,0.9238,Chimeric Antigen Receptor T-Cell Therapy,0.9228,Ifabotuzumab,0.9223
+Total Abdominal,Total Abdominal Hysterectomy,1,2,Total Abdominal Hysterectomy,0.9658,Total Hepatectomy,0.9313,Total Hysterectomy,0.9263,Total-Body Irradiation,0.9227,Total Pancreatectomy,0.9215
+Total Body Irradiation,Total-Body Irradiation,1,2,Total-Body Irradiation,0.9985,Total Lymphoid Irradiation,0.9622,Radiation Therapy,0.9312,Radiation Therapy;Right Breast,0.9260,Total Hepatectomy,0.9257
+Total mastectomy,Total Mastectomy,1,2,Total Mastectomy,1.0000,Left;Total Mastectomy,0.9709,Bilateral;Total Mastectomy,0.9700,Right;Total Mastectomy,0.9699,Total Hysterectomy,0.9589
+Total pancreatectomy,Total Pancreatectomy,1,2,Total Pancreatectomy,1.0000,Distal Pancreatectomy,0.9454,Total Hepatectomy,0.9451,Pancreaticoduodenectomy,0.9430,Total Abdominal Hysterectomy,0.9328
+Transplant,Graft,5,2,Bone Marrow Transplantation,0.9354,Hematopoietic Cell Transplantation,0.9271,Autologous Hematopoietic Stem Cell Transplantation,0.9125,Sibling;Allogeneic Hematopoietic Stem Cell Transplantation,0.9091,Graft,0.9082
+Transurethral resection,Transurethral Resection,1,2,Transurethral Resection,1.0000,Transurethral Resection of Bladder Tumor,0.9783,Resection,0.9427,Transanal Excision,0.9405,Transanal Excision;Minimally Invasive Surgery,0.9388
+UNK,Unknown,1,2,Unknown,0.9083,Galunisertib,0.8978,Right Eye;Enucleation,0.8889,Enucleation,0.8887,Uncinate Process of Pancreas;Resection,0.8858
+Uncinate process resection,Uncinate Process of Pancreas;Resection,1,2,Uncinate Process of Pancreas;Resection,0.9803,Resection,0.9242,Vulva;Resection,0.9186,Ureterectomy,0.9174,Resection;Pelvis;Tumor Mass,0.9166
+Unilateral Salpingo- Oophorectomy,Unilateral Salpingo-oophorectomy,1,2,Unilateral Salpingo-oophorectomy,1.0000,Unilateral Oophorectomy,0.9876,Bilateral Salpingectomy with Oophorectomy,0.9733,Bilateral Salpingectomy,0.9649,Bilateral;Ovarian;Cystectomy,0.9473
+Unilateral Salpingo-Oophorectomy,Unilateral Salpingo-oophorectomy,1,2,Unilateral Salpingo-oophorectomy,1.0000,Unilateral Oophorectomy,0.9876,Bilateral Salpingectomy with Oophorectomy,0.9733,Bilateral Salpingectomy,0.9649,Bilateral;Ovarian;Cystectomy,0.9473
+Ureteral Biopsy,Ureter;Biopsy,1,2,Ureter;Biopsy,0.9773,Biopsy,0.9558,Ureterectomy,0.9378,Laparoscopic Biopsy,0.9346,Skin Biopsy,0.9333
+V212,Heat-Treated Varicella-Zoster Virus Vaccine V212,1,2,Heat-Treated Varicella-Zoster Virus Vaccine V212,0.9308,HER2-targeting Agent,0.8904,Peginterferon Alfa-2a,0.8854,Akt Inhibitor MK2206,0.8854,AALL0232 ALL Study Identifier,0.8811
+VB,Vinblastine,2,2,Bevacizumab,0.9213,Vinblastine,0.9178,Vinorelbine,0.9146,Valspodar,0.9122,Bortezomib,0.9121
+VCR,Vincristine,3,2,Vorinostat,0.9159,Valspodar,0.9157,Vincristine,0.9150,Veliparib,0.9102,Vinblastine,0.9081
+VINCRISTINE,Vincristine,1,2,Vincristine,1.0000,Vincristine Sulfate,0.9550,Vinorelbine,0.9401,Vinblastine,0.9390,Bortezomib,0.9195
+VP-16,Etoposide,99,2,Valspodar,0.9149,Heat-Treated Varicella-Zoster Virus Vaccine V212,0.9107,Peginterferon Alfa-2a,0.9090,Veliparib,0.9086,Topoisomerase I Inhibitor Genz-644282,0.9013
+VS-4718,FAK Inhibitor VS-4718,1,2,FAK Inhibitor VS-4718,0.9525,MDM2/MDMX Inhibitor ALRN-6924,0.9066,Gamma-Secretase Inhibitor RO4929097,0.9050,Rovalpituzumab Tesirine,0.9026,Topoisomerase I Inhibitor Genz-644282,0.9020
+VT-464,Seviteronel,99,2,FAK Inhibitor VS-4718,0.9175,Vincristine,0.8936,Anti-HGF Monoclonal Antibody TAK-701,0.8921,Valspodar,0.8915,Fulvestrant,0.8914
+Velcade,Bortezomib,4,2,Valspodar,0.9195,Vinblastine,0.9180,Veliparib,0.9164,Bortezomib,0.9137,Brentuximab Vedotin,0.9047
+Vem,Vemurafenib,1,2,Vemurafenib,0.9539,Vorinostat,0.9296,Volasertib,0.9245,Ipilimumab,0.9214,Seviteronel,0.9144
+Venetoclax (ABT-199),Venetoclax,1,2,Venetoclax,0.9752,Navitoclax,0.9305,Brentuximab Vedotin,0.9296,Bortezomib,0.9285,Navicixizumab,0.9267
+Vidaza,Azacitidine Regimen,99,2,Vadastuximab Talirine,0.9112,Vincristine,0.9089,Ivosidenib,0.9083,Valspodar,0.9057,Vinorelbine,0.9029
+Vinorelbrine,Vinorelbine,1,2,Vinorelbine,0.9789,Vinblastine,0.9567,Vincristine,0.9417,Bortezomib,0.9243,Vorinostat,0.9214
+Vulvar resecetion,Vulva;Resection,1,2,Vulva;Resection,0.9305,Re-Excision;Superior;Margin,0.9176,Re-Excision,0.9162,Re-Excision;Original;Lumpectomy;Surgical Site,0.9134,Right Breast;Re-Excision,0.9099
+Wertheim Meiggs,Wertheim operation (procedure),1,2,Wertheim operation (procedure),0.9361,Motixafortide,0.8993,Fotemustine,0.8920,Quizartinib,0.8900,Gemtuzumab,0.8895
+Wide Excision,Wide Skin Excision,1,2,Wide Skin Excision,0.9912,Wide Local Excision,0.9853,Wide;Re-Excision;Biopsy,0.9515,Skin Excision,0.9301,Excision,0.9280
+Wide local excision,Wide Local Excision,1,2,Wide Local Excision,1.0000,Wide Skin Excision,0.9816,Local excision (procedure),0.9496,Wide;Re-Excision;Biopsy,0.9451,Skin Excision,0.9299
+Wide re-excisional biopsy,Wide;Re-Excision;Biopsy,1,2,Wide;Re-Excision;Biopsy,0.9786,Wide Skin Excision,0.9653,Re-Excision;Biopsy Site,0.9600,Wide Local Excision,0.9586,Re-Excision,0.9489
+XL147,Pilaralisib,99,2,JAK2 Inhibitor AZD1480,0.9123,Anti-EGFR Monoclonal Antibody,0.9030,Anti-CD98 Monoclonal Antibody IGN523,0.9028,Folate Receptor-Targeted Tubulysin Conjugate EC1456,0.9028,Gamma-Secretase Inhibitor RO4929097,0.9023
+Yes vaccine,Vaccine,1,2,Vaccine,0.9576,Dendritic Cell Vaccine,0.9140,NY-ESO-1 Peptide Vaccine,0.9117,Heat-Treated Varicella-Zoster Virus Vaccine V212,0.9101,Bacillus Calmette-Guerin Antigen,0.9067
+abiraterone,Abiraterone,1,2,Abiraterone,1.0000,Abiraterone Acetate,0.9848,Sirolimus,0.9348,Dabrafenib,0.9330,Docetaxel,0.9315
+abiraterone acetate,Abiraterone Acetate,1,2,Abiraterone Acetate,1.0000,Abiraterone,0.9848,Sirolimus,0.9295,Dabrafenib,0.9284,Bicalutamide,0.9268
+abraxane,Nab-paclitaxel,99,2,Pexidartinib,0.9140,Crenolanib,0.9119,Lorazepam,0.9119,Afatinib,0.9075,Abiraterone,0.9068
+added ipilimumab),Ipilimumab,1,2,Ipilimumab,0.9478,mTOR Inhibitor;Immunotherapeutic Agent,0.9077,Immunotherapeutic Agent,0.8965,PSMA-targeting Agent;Antineoplastic Antibody-Drug Conjugate,0.8958,Anti-CD33 Antibody-drug Conjugate IMGN779,0.8941
+adriamycin,Doxorubicin Hydrochloride,2,2,Doxorubicin,0.9634,Doxorubicin Hydrochloride,0.9431,Anthracycline Antineoplastic Antibiotic,0.9361,Daunorubicin,0.9317,Adalimumab,0.9202
+amifostine,Amifostine,1,2,Amifostine,1.0000,Midostaurin,0.9219,Mitoxantrone,0.9216,Fludarabine,0.9150,Fluorouracil,0.9133
+anterior exenteration,Anterior Pelvic Exenteration,1,2,Anterior Pelvic Exenteration,0.9762,Pelvic Exenteration,0.9513,Radical;Anterior Pelvic Exenteration,0.9493,Low Anterior Resection,0.9059,Exploratory Surgery;External,0.9044
+anthracycline,Anthracycline Antineoplastic Antibiotic,1,2,Anthracycline Antineoplastic Antibiotic,0.9651,Doxorubicin,0.9547,Doxorubicin Hydrochloride,0.9335,Daunorubicin,0.9318,Imatinib,0.9280
+anti-CD123,Immunotherapeutic Agent,99,2,Anti-CD3 Monoclonal Antibody,0.9496,Anti-CD33 Monoclonal Antibody BI 836858,0.9394,Anti-LAG-3 Monoclonal Antibody,0.9391,Anti-TIM-3 Monoclonal Antibody,0.9382,Anti-CD47 Monoclonal Antibody,0.9369
+anti-CD33,Immunotherapeutic Agent,99,2,Anti-CD3 Monoclonal Antibody,0.9876,Anti-CD33 Monoclonal Antibody BI 836858,0.9685,Anti-TIM-3 Monoclonal Antibody,0.9441,Anti-LAG-3 Monoclonal Antibody,0.9432,Anti-CD33 Antibody-drug Conjugate IMGN779,0.9420
+anti-LAG3,Anti-LAG-3 Monoclonal Antibody,1,2,Anti-LAG-3 Monoclonal Antibody,0.9700,Anti-CD47 Monoclonal Antibody,0.9175,Anti-Thymocyte Globulin,0.9150,Anti-TIM-3 Monoclonal Antibody,0.9144,Anti-EGFR Monoclonal Antibody,0.9134
+anti-TIM3,Anti-TIM-3 Monoclonal Antibody,1,2,Anti-TIM-3 Monoclonal Antibody,0.9738,Anti-Thymocyte Globulin,0.9287,Anti-LAG-3 Monoclonal Antibody,0.9281,Anti-CD3 Monoclonal Antibody,0.9270,Anti-CD33 Monoclonal Antibody BI 836858,0.9268
+appendectomy,Appendectomy,1,2,Appendectomy,1.0000,Ureterectomy,0.9227,Metastasectomy,0.9215,Exploratory Surgery;Laparotomy,0.9187,Exploratory Surgery,0.9182
+autologous stem cell transplant,Autologous Hematopoietic Stem Cell Transplantation,1,2,Autologous Hematopoietic Stem Cell Transplantation,0.9841,Hematopoietic Cell Transplantation,0.9359,Sibling;Allogeneic Hematopoietic Stem Cell Transplantation,0.9348,Bone Marrow Transplantation,0.9300,Matched Unrelated Donor;Allogeneic Hematopoietic Stem Cell Transplantation,0.9299
+autologout SCT,Autologous Hematopoietic Stem Cell Transplantation,1,2,Autologous Hematopoietic Stem Cell Transplantation,0.9257,Matched Unrelated Donor;Allogeneic Hematopoietic Stem Cell Transplantation,0.9034,Chimeric Antigen Receptor T-Cell Therapy;Therapeutic Apheresis,0.9032,Sibling;Allogeneic Hematopoietic Stem Cell Transplantation,0.9020,Hematopoietic Cell Transplantation,0.9009
+axillary dissection,Axillary Lymph Node Dissection,1,2,Axillary Lymph Node Dissection,0.9846,Left;Axillary Lymph Node Dissection,0.9643,Axillary Lymph Node Biopsy,0.9557,Axillary Lymph Node;Right,0.9363,Axillary Lymph Node Level I;Axillary Lymph Node Level II;Lymphadenectomy,0.9296
+axillary lymph node biopsy,Axillary Lymph Node Biopsy,1,2,Axillary Lymph Node Biopsy,1.0000,Axillary Lymph Node Dissection,0.9729,Axillary Lymph Node;Sentinel Lymph Node Biopsy,0.9690,Sentinel Lymph Node Biopsy Followed by Axillary Lymph Node Biopsy,0.9626,Left;Axillary Lymph Node Dissection,0.9607
+axillary lymph node dissection,Axillary Lymph Node Dissection,1,2,Axillary Lymph Node Dissection,1.0000,Left;Axillary Lymph Node Dissection,0.9792,Axillary Lymph Node Biopsy,0.9729,Axillary Lymph Node;Right,0.9498,Axillary Lymph Node Level I;Axillary Lymph Node Level II;Lymphadenectomy,0.9470
+axillary node dissection,Axillary Lymph Node Dissection,1,2,Axillary Lymph Node Dissection,0.9954,Left;Axillary Lymph Node Dissection,0.9715,Axillary Lymph Node Biopsy,0.9705,Axillary Lymph Node;Right,0.9461,Axillary Lymph Node;Sentinel Lymph Node Biopsy,0.9421
+axillary sentinel lymph node biopsy,Axillary Lymph Node;Sentinel Lymph Node Biopsy,1,2,Axillary Lymph Node;Sentinel Lymph Node Biopsy,0.9926,Sentinel Lymph Node Biopsy,0.9868,Sentinel Lymph Node Biopsy Followed by Axillary Lymph Node Biopsy,0.9828,Axillary Lymph Node Biopsy,0.9779,Left;Sentinel Lymph Node Biopsy,0.9680
+azacitidine,Azacitidine,1,2,Azacitidine,1.0000,Azacitidine Regimen,0.9771,Decitabine,0.9310,Azathioprine,0.9271,Pracinostat,0.9168
+bevacizumab,Bevacizumab,1,2,Bevacizumab,1.0000,Bortezomib,0.9326,Sorafenib,0.9259,Rituximab,0.9245,Nab-paclitaxel,0.9214
+bicalutamide,Bicalutamide,1,2,Bicalutamide,1.0000,Enzalutamide,0.9517,Abiraterone Acetate,0.9268,Abiraterone,0.9257,Antiandrogen Therapy,0.9230
+bilateral pelvic lymph node dissection,Bilateral Pelvic Lymph Node Dissection,1,2,Bilateral Pelvic Lymph Node Dissection,1.0000,Bilateral;Pelvic Lymphadenectomy,0.9829,Pelvic Lymphadenectomy,0.9647,Bilateral Salpingectomy,0.9482,Extend;Pelvic Lymphadenectomy,0.9477
+bilateral pelvic lymphadenectomy,Bilateral;Pelvic Lymphadenectomy,1,2,Bilateral;Pelvic Lymphadenectomy,0.9951,Bilateral Pelvic Lymph Node Dissection,0.9847,Pelvic Lymphadenectomy,0.9675,Bilateral Salpingectomy,0.9561,Extend;Pelvic Lymphadenectomy,0.9501
+bilateral total mastectomies,Bilateral;Total Mastectomy,1,2,Bilateral;Total Mastectomy,0.9769,Total Mastectomy,0.9623,Left;Total Mastectomy,0.9609,Bilateral Mastectomy,0.9585,Right;Total Mastectomy,0.9580
+biopsy,Biopsy,1,2,Biopsy,1.0000,Skin Biopsy,0.9629,Liver Biopsy,0.9552,Ureter;Biopsy,0.9523,Laparoscopic Biopsy,0.9452
+bleomycin,Bleomycin,1,2,Bleomycin,1.0000,Vinblastine,0.9172,Bortezomib,0.9160,Bevacizumab,0.9121,Lapatinib,0.9120
+breast conserving therapy,Breast Conservation Treatment,1,2,Breast Conservation Treatment,0.9747,Bilateral;Skin-Sparing Mastectomy,0.9241,Lumpectomy;Right Breast,0.9205,Radiation Therapy;Right Breast,0.9157,Skin-Sparing Mastectomy;Radical Mastectomy,0.9146
+brentuximab vedotin,Brentuximab Vedotin,1,2,Brentuximab Vedotin,1.0000,Vinblastine,0.9226,Docetaxel,0.9226,PSMA-targeting Agent;Antineoplastic Antibody-Drug Conjugate,0.9206,Vadastuximab Talirine,0.9198
+cape,Capecitabine,3,2,Cetuximab,0.9058,Cytarabine,0.9036,Capecitabine,0.9020,Celecoxib,0.9000,Entospletinib,0.8942
+capecitabine,Capecitabine,1,2,Capecitabine,1.0000,Gemcitabine,0.9270,Temozolomide,0.9240,Docetaxel,0.9227,Letrozole,0.9211
+carbo,Carboplatin,4,2,Celecoxib,0.8976,Cytosine,0.8972,Carboxyamidotriazole,0.8933,Carboplatin,0.8919,Cyclophosphamide,0.8899
+carboplatin,Carboplatin,1,2,Carboplatin,1.0000,Cisplatin,0.9385,Cetuximab,0.9345,Cyclophosphamide,0.9253,Platinum,0.9244
+carmustine,Carmustine,1,2,Carmustine,1.0000,Lomustine,0.9606,Fotemustine,0.9369,Gemtuzumab,0.9100,Temozolomide,0.9094
+carvo,Carboplatin,99,2,Carmustine,0.9110,Vadastuximab Talirine,0.8971,Venetoclax,0.8911,Pevonedistat,0.8910,Valspodar,0.8894
+cd47mAb,Anti-CD47 Monoclonal Antibody,1,2,Anti-CD47 Monoclonal Antibody,0.9628,Anti-CD33 Antibody-drug Conjugate IMGN779,0.9218,Anti-CD98 Monoclonal Antibody IGN523,0.9065,Anti-CD3 Monoclonal Antibody,0.9033,PSMA-targeting Agent;Antineoplastic Antibody-Drug Conjugate,0.9032
+cetuximab,Cetuximab,1,2,Cetuximab,1.0000,Carboplatin,0.9345,Anti-EGFR Monoclonal Antibody,0.9333,Pertuzumab,0.9320,Celecoxib,0.9257
+cis,Cisplatin,1,2,Cisplatin,0.9037,Cixutumumab,0.9009,Carboplatin,0.8985,Azacitidine,0.8897,Cetuximab,0.8893
+cisplatin,Cisplatin,1,2,Cisplatin,1.0000,Platinum,0.9493,Carboplatin,0.9385,Oxaliplatin,0.9214,Cetuximab,0.9208
+clofarabine,Clofarabine,1,2,Clofarabine,1.0000,Fludarabine,0.9272,Fenretinide,0.9206,Cladribine,0.9175,Folic Acid,0.9167
+cob,Cobimetinib,1,2,Cobimetinib,0.9441,Cetuximab,0.9149,Cytarabine,0.9097,Carboplatin,0.9043,Celecoxib,0.9032
+cobimetinib,Cobimetinib,1,2,Cobimetinib,1.0000,Binimetinib,0.9585,Itacitinib,0.9241,Selumetinib,0.9240,Axitinib,0.9200
+combo resection,Combination;Resection,2,2,Resection,0.9206,Combination;Resection,0.9136,Lung;Resection,0.9124,Sacrococcygeal Teratoma;Resection,0.9120,Vulva;Resection,0.9111
+cos,Cisplatin,99,2,Oxaliplatin,0.8783,Etoposide,0.8768,Ifosfamide,0.8756,Liposome-encapsulated Daunorubicin-Cytarabine,0.8735,Treosulfan,0.8732
+creation of ileal conduit,Urinary Diversion,99,2,Ureterectomy,0.9064,Orthotopic;Neobladder,0.9056,Ureter;Biopsy,0.9043,Robot-Assisted Surgery;Cystectomy,0.9030,Nephroureterectomy with Cuff of Bladder;Endoscopic Resection,0.8994
+creation of neobladder,Neobladder,1,2,Neobladder,0.9669,Orthotopic;Neobladder,0.9414,Robot-Assisted Surgery;Laparoscopy;Nephroureterectomy,0.9144,Nephroureterectomy with Cuff of Bladder;Endoscopic Resection,0.9096,Nephroureterectomy,0.9091
+creation of orthotopic neobladder,Orthotopic;Neobladder,1,2,Orthotopic;Neobladder,0.9648,Neobladder,0.9459,Nephroureterectomy with Cuff of Bladder;Endoscopic Resection,0.9154,Robot-Assisted Surgery;Cystectomy,0.9114,Robot-Assisted Surgery;Radical Cystoprostatectomy,0.9078
+cvt,Regadenoson,99,2,Valspodar,0.9135,Cyclophosphamide,0.9117,Cixutumumab,0.9084,Cetuximab,0.9065,Cytarabine,0.9061
+cyclophosphamide,Cyclophosphamide,1,2,Cyclophosphamide,1.0000,Carboplatin,0.9253,Azathioprine,0.9185,Temozolomide,0.9171,Cladribine,0.9170
+cystoprostatectomy,Radical Cystoprostatectomy,1,2,Radical Cystoprostatectomy,0.9804,Robot-Assisted Surgery;Radical Cystoprostatectomy,0.9605,Radical Cystoprostatectomy;Robot-Assisted Surgery,0.9600,Robot-Assisted Surgery;Laparoscopy;Radical Cystoprostatectomy,0.9548,Partial Cystectomy,0.9444
+cytarabine,Cytarabine,1,2,Cytarabine,1.0000,Liposomal Cytarabine,0.9671,Liposome-encapsulated Daunorubicin-Cytarabine,0.9303,Cytosine,0.9231,Cyclosporine,0.9182
+dacarbazine,Dacarbazine,1,2,Dacarbazine,1.0000,Procarbazine,0.9504,Dactinomycin,0.9448,Decitabine,0.9320,Dactolisib,0.9291
+dauna,Daunorubicin,1,2,Daunorubicin,0.9230,Dopamine,0.9028,Docetaxel,0.8881,Cediranib,0.8881,Liposome-encapsulated Daunorubicin-Cytarabine,0.8878
+dauno,Daunorubicin,1,2,Daunorubicin,0.9487,Liposome-encapsulated Daunorubicin-Cytarabine,0.9021,Dinaciclib,0.8896,Cediranib,0.8892,Galunisertib,0.8884
+dcVax,Dendritic Cell Vaccine,1,2,Dendritic Cell Vaccine,0.9349,Dactinomycin,0.9169,Decitabine,0.9154,Liposome-encapsulated Daunorubicin-Cytarabine,0.9147,Dexamethasone,0.9126
+desatinib,Dasatinib,99,2,Cediranib,0.9077,Dutasteride,0.9057,Cladribine,0.9017,Entospletinib,0.9010,Devimistat,0.8970
+dex,Dexamethasone,1,2,Dexamethasone,0.9567,Prednisolone,0.9296,Decitabine,0.9245,Prednisone,0.9227,Steroid Therapy,0.9222
+dexamethasone,Dexamethasone,1,2,Dexamethasone,1.0000,Prednisolone,0.9406,Prednisone,0.9366,AALL0232 ALL Study Identifier;Dexamethasone,0.9338,Steroid Therapy,0.9332
+docetaxel,Docetaxel,1,2,Docetaxel,1.0000,Abiraterone,0.9315,Paclitaxel,0.9290,Mitoxantrone,0.9280,Capecitabine,0.9227
+doxorubicin,Doxorubicin,1,2,Doxorubicin,1.0000,Doxorubicin Hydrochloride,0.9710,Daunorubicin,0.9479,Anthracycline Antineoplastic Antibiotic,0.9451,Liposome-encapsulated Daunorubicin-Cytarabine,0.9348
+doxorubicin hydrochloride,Doxorubicin Hydrochloride,1,2,Doxorubicin Hydrochloride,1.0000,Doxorubicin,0.9710,Irinotecan Hydrochloride,0.9502,Anthracycline Antineoplastic Antibiotic,0.9366,Erlotinib Hydrochloride,0.9327
+enucleation,Enucleation,1,2,Enucleation,1.0000,Right Eye;Enucleation,0.9632,Enucleation;Tail of the Pancreas,0.9489,Enasidenib,0.9237,Enoblituzumab,0.9187
+enucleation in the pancretic tail,Enucleation;Tail of the Pancreas,1,2,Enucleation;Tail of the Pancreas,0.9839,Enucleation,0.9497,Right Eye;Enucleation,0.9416,Pancreaticoduodenectomy,0.9347,Uncinate Process of Pancreas;Resection,0.9301
+enzalutamide,Enzalutamide,1,2,Enzalutamide,1.0000,Bicalutamide,0.9517,Leuprolide,0.9170,Dutasteride,0.9170,Abiraterone,0.9163
+epirubicin,Epirubicin,1,2,Epirubicin,1.0000,Idarubicin,0.9616,Abiraterone,0.9195,External Beam Radiation Therapy;3-Dimensional Conformal Radiation Therapy,0.9163,Liposome-encapsulated Daunorubicin-Cytarabine,0.9152
+erlotinib,Erlotinib,1,2,Erlotinib,1.0000,Erlotinib Hydrochloride,0.9605,Gefitinib,0.9296,Everolimus,0.9275,Imatinib,0.9245
+etoposide,Etoposide,1,2,Etoposide,1.0000,Etoposide Phosphate,0.9606,Topoisomerase-I Inhibitor,0.9240,Erlotinib,0.9222,Irinotecan,0.9201
+etoposide phosphate,Etoposide Phosphate,1,2,Etoposide Phosphate,1.0000,Etoposide,0.9606,Topoisomerase-I Inhibitor,0.9174,Topoisomerase-II Inhibitor,0.9162,Prednisolone,0.9125
+everolimus,Everolimus,1,2,Everolimus,1.0000,Axitinib,0.9394,Sirolimus,0.9393,mTOR Inhibitor;Immunotherapeutic Agent,0.9324,Ipilimumab,0.9276
+excision of mass on chest wall,Excision;Chest Wall Mass,1,2,Excision;Chest Wall Mass,0.9913,Right;Mediastinal Mass;Excision,0.9592,Re-Excision;Original;Lumpectomy;Surgical Site,0.9393,Skin Excision,0.9384,Left Breast;Re-Excision,0.9372
+excisional biopsy,Excisional Biopsy,1,2,Excisional Biopsy,1.0000,Excision,0.9607,Skin Excision,0.9473,Re-Excision;Biopsy Site,0.9366,Punch Biopsy,0.9339
+extended pelvic lymph node dissection,Extend;Pelvic Lymphadenectomy,1,2,Extend;Pelvic Lymphadenectomy,0.9621,Bilateral Pelvic Lymph Node Dissection,0.9610,Pelvic Lymphadenectomy,0.9534,Bilateral;Pelvic Lymphadenectomy,0.9361,Axillary Lymph Node Dissection,0.9346
+fluorouracil,Fluorouracil,1,2,Fluorouracil,1.0000,Fluoropyrimidine,0.9473,Fotemustine,0.9333,Floxuridine,0.9326,Fludarabine,0.9316
+folinic acid,Leucovorin,99,2,Folic Acid,0.9374,Valproic Acid,0.9270,Fluorouracil,0.9112,Vinorelbine,0.9064,Fotemustine,0.9020
+gem,Gemcitabine,3,2,Gemtuzumab,0.9676,Gemtuzumab Ozogamicin,0.9526,Gemcitabine,0.9300,Pemetrexed,0.9104,Gefitinib,0.9065
+gemcitabine,Gemcitabine,1,2,Gemcitabine,1.0000,Gemtuzumab,0.9271,Capecitabine,0.9270,Gefitinib,0.9220,Gemtuzumab Ozogamicin,0.9185
+gleevec,Imatinib Regimen,99,2,Glembatumumab,0.9093,Seviteronel,0.9053,Valspodar,0.9011,Imatinib,0.8943,Volasertib,0.8911
+hydrea,Hydroxyurea,3,2,Vorinostat,0.9036,Proton Beam Radiation Therapy;3-Dimensional Conformal Radiation Therapy,0.9001,Hydroxyurea,0.8960,Pertuzumab,0.8944,Histone Deacetylase Inhibitor,0.8936
+hysterectomy,Hysterectomy,1,2,Hysterectomy,1.0000,Robotic Hysterectomy,0.9583,Total Hysterectomy,0.9523,Radical Hysterectomy,0.9484,Modified Radical Hysterectomy,0.9385
+ifosfamide,Ifosfamide,1,2,Ifosfamide,1.0000,Fludarabine,0.9235,Ifabotuzumab,0.9192,Afatinib,0.9151,Fluorouracil,0.9144
+ileal conduit,Urinary Diversion,99,2,Orthotopic;Neobladder,0.9081,Neobladder,0.9029,J-Pouch Coloanal Anastomosis,0.9014,Ureter;Biopsy,0.8999,Nephroureterectomy with Cuff of Bladder;Endoscopic Resection,0.8991
+ileal conduit urinary diversion,Urinary Diversion,1,2,Urinary Diversion,0.9664,Orthotopic;Neobladder,0.9208,Ureterectomy,0.9185,Neobladder,0.9180,Nephroureterectomy with Cuff of Bladder;Endoscopic Resection,0.9175
+inner-upper margin re-excision,Inner;Upper;Surgical Margin;Re-Excision,1,2,Inner;Upper;Surgical Margin;Re-Excision,0.9817,Re-Excision;Superior;Margin,0.9605,Re-Excision;Inferior;Margin,0.9585,Re-Excision,0.9404,Left Breast;Re-Excision,0.9349
+ipi,Ipilimumab,3,2,Pipobroman,0.9152,Plitidepsin,0.9125,Ipilimumab,0.9097,Pilaralisib,0.9091,Pidnarulex,0.9079
+ipilimumab,Ipilimumab,1,2,Ipilimumab,1.0000,mTOR Inhibitor;Immunotherapeutic Agent,0.9360,PSMA-targeting Agent;Antineoplastic Antibody-Drug Conjugate,0.9281,Temozolomide,0.9278,Everolimus,0.9276
+irinotecan,Irinotecan,1,2,Irinotecan,1.0000,Irinotecan Hydrochloride,0.9762,Sirolimus,0.9247,Paclitaxel,0.9245,Sorafenib,0.9225
+isotretinoin,Isotretinoin,1,2,Isotretinoin,1.0000,Tretinoin,0.9356,Fenretinide,0.9242,Gonadotropin-releasing Hormone Analog,0.9135,Treosulfan,0.9131
+left axillary lymph node dissection,Left;Axillary Lymph Node Dissection,1,2,Left;Axillary Lymph Node Dissection,0.9928,Axillary Lymph Node Dissection,0.9830,Axillary Lymph Node;Right,0.9602,Axillary Lymph Node Biopsy,0.9588,Bilateral Pelvic Lymph Node Dissection,0.9497
+left breast biopsy,Left;Biopsy of Breast,1,2,Left;Biopsy of Breast,0.9819,Lumpectomy;Right Breast,0.9456,Left Breast;Re-Excision,0.9427,Wire-Guided Localization;Right Breast;Biopsy;Wire-Guided Localization;Right Breast,0.9417,Left;Axillary Lymph Node Dissection,0.9389
+left segmental mastectomy,Left;Segmental Mastectomy,1,2,Left;Segmental Mastectomy,0.9927,Right;Segmental Mastectomy,0.9842,Segmental Mastectomy,0.9810,Localized;Segmental Mastectomy,0.9773,Re-Excision;Segmental Mastectomy,0.9559
+left sentinel lymph node biospy,Left;Sentinel Lymph Node Biopsy,1,2,Left;Sentinel Lymph Node Biopsy,0.9749,Right;Sentinel Lymph Node Biopsy,0.9690,Sentinel Lymph Node Biopsy,0.9569,Sentinel Lymph Node;Lymphadenectomy;Right;Mammoplasty,0.9543,Sentinel Lymph Node;Lymphadenectomy,0.9541
+lenalidomide,Lenalidomide,1,2,Lenalidomide,1.0000,Melphalan,0.9309,Thalidomide,0.9268,Rituximab,0.9248,Ramucirumab,0.9225
+lenaloidomide,Lenalidomide,1,2,Lenalidomide,0.9435,Thalidomide,0.9133,Dexamethasone,0.9129,Ruxolitinib,0.9123,Temozolomide,0.9085
+leucovorin,Leucovorin,1,2,Leucovorin,1.0000,Vincristine,0.9032,Liposomal Cytarabine,0.9025,Asparaginase,0.9021,FLT3/CDK4/6 Inhibitor FLX925,0.9017
+level 1 and level 2 axillary dissection,Axillary Lymph Node Level I;Axillary Lymph Node Level II;Lymphadenectomy,1,2,Axillary Lymph Node Level I;Axillary Lymph Node Level II;Lymphadenectomy,0.9750,Axillary Lymph Node Dissection,0.9491,Left;Axillary Lymph Node Dissection,0.9447,Axillary Lymph Node Biopsy,0.9312,Axillary Lymph Node;Right,0.9295
+limb infusion,Isolated Chemotherapeutic Limb Perfusion,1,2,Isolated Chemotherapeutic Limb Perfusion,0.9359,Intrahepatic Infusion Procedure,0.9313,Donor Lymphocyte Infusion,0.9151,Biochemotherapy,0.8975,Ureterectomy,0.8966
+localized segmental mastectomy,Localized;Segmental Mastectomy,1,2,Localized;Segmental Mastectomy,0.9952,Segmental Mastectomy,0.9769,Left;Segmental Mastectomy,0.9678,Right;Segmental Mastectomy,0.9619,Wire-Guided Localization;Segmental Mastectomy,0.9584
+lomustine,Lomustine,1,2,Lomustine,1.0000,Carmustine,0.9606,Fotemustine,0.9463,Melphalan,0.9269,Venetoclax,0.9132
+lumpectomy right breast (breast cancer),Lumpectomy;Right Breast,1,2,Lumpectomy;Right Breast,0.9893,Left;Lumpectomy,0.9724,Lumpectomy,0.9649,Radiation Therapy;Right Breast,0.9500,Left;Biopsy of Breast,0.9483
+lung resection,Lung;Resection,1,2,Lung;Resection,0.9891,Resection,0.9645,Resection;Pulmonary;Metastasis,0.9481,Lobectomy,0.9473,Surgical Margin;Resection,0.9364
+lymph node dissection,Lymphadenectomy,3,2,Axillary Lymph Node Dissection,0.9720,Left;Axillary Lymph Node Dissection,0.9553,Lymphadenectomy,0.9549,Bilateral Pelvic Lymph Node Dissection,0.9534,Axillary Lymph Node Biopsy,0.9386
+lymph node left axillary lymph node excision,Left;Axillary Lymph Node Dissection,1,2,Left;Axillary Lymph Node Dissection,0.9770,Axillary Lymph Node Dissection,0.9667,Axillary Lymph Node Biopsy,0.9587,Axillary Lymph Node;Right,0.9542,Left Breast;Re-Excision,0.9450
+lymphadenectomy,Lymphadenectomy,1,2,Lymphadenectomy,1.0000,Pelvic Lymphadenectomy,0.9590,Sentinel Lymph Node;Lymphadenectomy,0.9542,Bilateral;Pelvic Lymphadenectomy,0.9473,Extend;Pelvic Lymphadenectomy,0.9412
+mEK162,Binimetinib,99,2,Mitogen-Activated Protein Kinase Kinase Inhibitor,0.9198,mTOR Kinase Inhibitor AZD8055,0.9155,Akt Inhibitor MK2206,0.9083,Axitinib,0.9073,Sunitinib Malate,0.9046
+mek162,Binimetinib,99,2,Mitogen-Activated Protein Kinase Kinase Inhibitor,0.9198,mTOR Kinase Inhibitor AZD8055,0.9155,Akt Inhibitor MK2206,0.9083,Axitinib,0.9073,Sunitinib Malate,0.9046
+melphalan,Melphalan,1,2,Melphalan,1.0000,Lenalidomide,0.9309,Lomustine,0.9269,Liposomal Cytarabine,0.9209,Mycophenolate Mofetil,0.9170
+methotrexate,Methotrexate,1,2,Methotrexate,1.0000,Mitomycin,0.9233,Mercaptopurine,0.9197,Mycophenolate Mofetil,0.9183,Mefloquine,0.9169
+mitotane,Mitotane,1,2,Mitotane,1.0000,Mitoxantrone,0.9338,Topotecan,0.9056,Coltuximab Ravtansine,0.9032,Memantine,0.9014
+mitoxantrone,Mitoxantrone,1,2,Mitoxantrone,1.0000,Mitotane,0.9338,Docetaxel,0.9280,Macitentan,0.9224,Amifostine,0.9216
+needle directed right breast biopsy,Wire-Guided Localization;Right Breast;Biopsy;Wire-Guided Localization;Right Breast,1,2,Wire-Guided Localization;Right Breast;Biopsy;Wire-Guided Localization;Right Breast,0.9603,Left;Biopsy of Breast,0.9533,Radiation Therapy;Right Breast,0.9416,Lumpectomy;Right Breast,0.9348,Right Breast;Re-Excision,0.9339
+needle localized segmental mastectomy,Wire-Guided Localization;Segmental Mastectomy,3,2,Localized;Segmental Mastectomy,0.9825,Segmental Mastectomy,0.9663,Wire-Guided Localization;Segmental Mastectomy,0.9636,Left;Segmental Mastectomy,0.9580,Right;Segmental Mastectomy,0.9538
+nivo,Nivolumab,99,2,Seviteronel,0.8981,Vinorelbine,0.8956,Veliparib,0.8940,Denintuzumab Mafodotin,0.8925,Entospletinib,0.8896
+nivolumab,Nivolumab,1,2,Nivolumab,1.0000,Sunitinib,0.9230,Ipilimumab,0.9196,Sorafenib,0.9193,Adalimumab,0.9157
+novel agent,Pharmacologic Substance,99,2,mTOR Inhibitor;Immunotherapeutic Agent,0.9184,Apoptotic Pathway-targeting Antineoplastic Agent,0.9175,Immunotherapeutic Agent,0.9162,PSMA-targeting Agent;Antineoplastic Antibody-Drug Conjugate,0.9140,Nab-paclitaxel,0.9102
+oncovex,Talimogene Laherparepvec,99,2,Oxaliplatin,0.9172,PSMA-targeting Agent;Antineoplastic Antibody-Drug Conjugate,0.9163,Capecitabine,0.9123,mTOR Inhibitor;Immunotherapeutic Agent,0.9075,Anthracycline Antineoplastic Antibiotic,0.9066
+orthotopic neobladder,Orthotopic;Neobladder,1,2,Orthotopic;Neobladder,0.9830,Neobladder,0.9661,Nephroureterectomy with Cuff of Bladder;Endoscopic Resection,0.9198,Urethrectomy,0.9135,PSMA-targeting Agent;Antineoplastic Antibody-Drug Conjugate,0.9104
+ovoids,Mini Ovoid Brachytherapy,1,2,Mini Ovoid Brachytherapy,0.9235,Vagina;Implant,0.9008,Vincristine,0.9008,Vinorelbine,0.9001,Vinblastine,0.8990
+ox,Oxaliplatin,1,2,Oxaliplatin,0.9094,Buthionine Sulfoximine,0.8976,Olaparib,0.8896,Indoximod,0.8892,Mitoxantrone,0.8888
+oxali,Oxaliplatin,1,2,Oxaliplatin,0.9411,Erlotinib,0.9038,Carboplatin,0.9037,Pertuzumab,0.9017,Cisplatin,0.8955
+oxaliplatin,Oxaliplatin,1,2,Oxaliplatin,1.0000,Cisplatin,0.9214,Cetuximab,0.9204,Pertuzumab,0.9190,Olaparib,0.9176
+paclitaxel,Paclitaxel,1,2,Paclitaxel,1.0000,Nab-paclitaxel,0.9573,PSMA-targeting Agent;Antineoplastic Antibody-Drug Conjugate,0.9294,Docetaxel,0.9290,Topotecan,0.9285
+pancreatoduodenectomy,Pancreaticoduodenectomy,1,2,Pancreaticoduodenectomy,0.9714,Total Pancreatectomy,0.9556,Distal Pancreatectomy,0.9485,Pylorus-sparing pancreaticoduodenectomy (procedure),0.9419,Uncinate Process of Pancreas;Resection,0.9297
+partial left mastectomy,Left;Lumpectomy,99,2,Left;Total Mastectomy,0.9620,Right;Total Mastectomy,0.9518,Right;Partial Nephrectomy,0.9506,Partial Salpingectomy,0.9460,Partial Cystectomy,0.9459
+partial mastectomy,Segmental Mastectomy,99,2,Partial Cystectomy,0.9474,Mastectomy,0.9458,Partial Salpingectomy,0.9455,Left;Total Mastectomy,0.9449,Bilateral;Total Mastectomy,0.9424
+pelvic lymphadenectomy,Pelvic Lymphadenectomy,1,2,Pelvic Lymphadenectomy,1.0000,Extend;Pelvic Lymphadenectomy,0.9689,Bilateral;Pelvic Lymphadenectomy,0.9667,Bilateral Pelvic Lymph Node Dissection,0.9647,Lymphadenectomy,0.9590
+pembrolizumab,Pembrolizumab,1,2,Pembrolizumab,1.0000,Pemetrexed,0.9542,Atezolizumab,0.9404,Monalizumab,0.9211,Mogamulizumab,0.9189
+pemetrexed treatment,Pemetrexed,1,2,Pemetrexed,0.9761,Pembrolizumab,0.9415,PSMA-targeting Agent;Antineoplastic Antibody-Drug Conjugate,0.9218,Pexidartinib,0.9212,Atezolizumab,0.9181
+pertuzumab,Pertuzumab,1,2,Pertuzumab,1.0000,Cetuximab,0.9320,Lapatinib,0.9236,Paclitaxel,0.9217,Gemtuzumab,0.9204
+plexifor,Plerixafor,2,2,Pipobroman,0.9079,Plerixafor,0.9064,Vemurafenib,0.9014,Interferon Alpha,0.8987,Seviteronel,0.8982
+pouch res.,J-Pouch Coloanal Anastomosis,1,2,J-Pouch Coloanal Anastomosis,0.9007,Re-Excision,0.8956,Pilaralisib,0.8950,Resection,0.8942,Right Breast;Re-Excision,0.8935
+pred,Prednisone,99,2,Pravastatin,0.9112,Prexasertib,0.9102,Denintuzumab Mafodotin,0.9063,Durvalumab,0.8991,Decitabine,0.8953
+prednisone,Prednisone,1,2,Prednisone,1.0000,Prednisolone,0.9597,Dexamethasone,0.9366,Steroid Therapy,0.9359,Pexidartinib,0.9206
+procarbazine,Procarbazine,1,2,Procarbazine,1.0000,Dacarbazine,0.9504,Temozolomide,0.9137,Apalutamide,0.9115,Plerixafor,0.9020
+pulse dose rate,Pulsed-Dose Rate Brachytherapy,1,2,Pulsed-Dose Rate Brachytherapy,0.9457,High-Dose Rate Brachytherapy,0.9180,Low-Dose Rate Brachytherapy,0.9127,Prednisone,0.8956,Peginterferon Alfa-2a,0.8918
+quizartinib,Quizartinib,1,2,Quizartinib,1.0000,Quizartinib Dihydrochloride,0.9505,Entospletinib,0.9152,Pexidartinib,0.8989,Galunisertib,0.8967
+radical cystoprostatectomy,Radical Cystoprostatectomy,1,2,Radical Cystoprostatectomy,1.0000,Radical Cystoprostatectomy;Robot-Assisted Surgery,0.9714,Radical Cystectomy,0.9690,Robot-Assisted Surgery;Radical Cystoprostatectomy,0.9690,Robot-Assisted Surgery;Laparoscopy;Radical Cystoprostatectomy,0.9614
+radical cystoprotatectomy,Radical Cystoprostatectomy,1,2,Radical Cystoprostatectomy,0.9814,Radical Cystoprostatectomy;Robot-Assisted Surgery,0.9594,Radical Cystectomy,0.9572,Robot-Assisted Surgery;Radical Cystoprostatectomy,0.9569,Robot-Assisted Surgery;Laparoscopy;Radical Cystoprostatectomy,0.9508
+radical cytoprostatectomy,Radical Cystoprostatectomy,1,2,Radical Cystoprostatectomy,0.9508,Radical Cystectomy,0.9489,Radical Hysterectomy,0.9418,Radical Trachelectomy,0.9418,Radical Prostatectomy,0.9404
+ram,Ramucirumab,1,2,Ramucirumab,0.9381,Lenalidomide,0.9066,Rituximab,0.9063,Retromammary space (body structure);Lymphadenectomy,0.9000,Daratumumab,0.8922
+ramucirumab,Ramucirumab,1,2,Ramucirumab,1.0000,Daratumumab,0.9273,Lenalidomide,0.9225,Regorafenib,0.9211,Cobimetinib,0.9199
+regorafenib,Regorafenib,1,2,Regorafenib,1.0000,Dabrafenib,0.9358,Regadenoson,0.9288,Vemurafenib,0.9227,Anti-ErbB3 Monoclonal Antibody REGN1400,0.9214
+removal of pelvic,Tumor Resection;Pelvis,2,2,Pelvic Lymphadenectomy,0.9524,Tumor Resection;Pelvis,0.9470,Bilateral Pelvic Lymph Node Dissection,0.9410,Bilateral;Pelvic Lymphadenectomy,0.9402,Pelvic Exenteration,0.9380
+resection,Resection,1,2,Resection,1.0000,Lung;Resection,0.9652,Surgical Margin;Resection,0.9567,Combination;Resection,0.9550,Bile Duct;Resection,0.9515
+retromammary lymph node excision,Retromammary space (body structure);Lymphadenectomy,1,2,Retromammary space (body structure);Lymphadenectomy,0.9443,Re-Excision;Original;Lumpectomy;Surgical Site,0.9389,Axillary Lymph Node Dissection,0.9287,Axillary Lymph Node Biopsy,0.9284,Left Breast;Re-Excision,0.9270
+right nephroureterectomy,Right;Nephroureterectomy,1,2,Right;Nephroureterectomy,0.9849,Left;Radical;Nephroureterectomy,0.9765,Right;Radical;Nephroureterectomy;Right;Nephroureterectomy,0.9757,Nephroureterectomy,0.9713,Right;Radical;Nephroureterectomy;Radical Cystectomy;Right;Nephroureterectomy;Radical Cystectomy,0.9707
+right segmental mastectomy,Right;Segmental Mastectomy,1,2,Right;Segmental Mastectomy,0.9912,Left;Segmental Mastectomy,0.9819,Segmental Mastectomy,0.9750,Localized;Segmental Mastectomy,0.9686,Re-Excision;Segmental Mastectomy,0.9607
+right sentinel lymph node biopsy,Right;Sentinel Lymph Node Biopsy,1,2,Right;Sentinel Lymph Node Biopsy,0.9859,Left;Sentinel Lymph Node Biopsy,0.9776,Sentinel Lymph Node Biopsy,0.9638,Sentinel Lymph Node;Lymphadenectomy;Right;Mammoplasty,0.9627,Axillary Lymph Node;Sentinel Lymph Node Biopsy,0.9569
+right sentinel node biopsy,Right;Sentinel Lymph Node Biopsy,1,2,Right;Sentinel Lymph Node Biopsy,0.9814,Left;Sentinel Lymph Node Biopsy,0.9715,Sentinel Lymph Node;Lymphadenectomy;Right;Mammoplasty,0.9573,Sentinel Lymph Node Biopsy,0.9553,Axillary Lymph Node;Sentinel Lymph Node Biopsy,0.9481
+right total mastectomy,Right;Total Mastectomy,1,2,Right;Total Mastectomy,0.9884,Left;Total Mastectomy,0.9770,Total Mastectomy,0.9672,Bilateral;Total Mastectomy,0.9607,Right Hemihepatectomy,0.9482
+rigth axillary lymph node,Axillary Lymph Node;Right,1,2,Axillary Lymph Node;Right,0.9363,Axillary Lymph Node Biopsy,0.9265,Axillary Lymph Node Level I;Axillary Lymph Node Level II;Lymphadenectomy,0.9230,Axillary Lymph Node Dissection,0.9202,Axillary Lymph Node;Sentinel Lymph Node Biopsy,0.9179
+rituximab,Rituximab,1,2,Rituximab,1.0000,Ibrutinib,0.9315,Adalimumab,0.9265,Lenalidomide,0.9248,Bevacizumab,0.9245
+robotic cystectomy,Robot-Assisted Surgery;Cystectomy,1,2,Robot-Assisted Surgery;Cystectomy,0.9794,Cystectomy,0.9706,Radical Cystectomy,0.9702,Robot-Assisted Surgery;Radical Cystoprostatectomy,0.9657,Radical Cystoprostatectomy;Robot-Assisted Surgery,0.9633
+robotic_HYSTERECTOMY,Robotic Hysterectomy,1,2,Robotic Hysterectomy,0.9926,Hysterectomy,0.9618,Laparoscopic Radical Prostatectomy with Robotics,0.9551,Radical Hysterectomy,0.9477,Robot-Assisted Surgery;Laparoscopy;Radical Cystoprostatectomy,0.9434
+segmental mastectomy,Segmental Mastectomy,1,2,Segmental Mastectomy,1.0000,Localized;Segmental Mastectomy,0.9818,Left;Segmental Mastectomy,0.9789,Right;Segmental Mastectomy,0.9760,Re-Excision;Segmental Mastectomy,0.9672
+sentinel axillary lymph node biopsy,Sentinel Lymph Node Biopsy Followed by Axillary Lymph Node Biopsy,3,2,Axillary Lymph Node;Sentinel Lymph Node Biopsy,0.9924,Sentinel Lymph Node Biopsy,0.9894,Sentinel Lymph Node Biopsy Followed by Axillary Lymph Node Biopsy,0.9830,Axillary Lymph Node Biopsy,0.9742,Left;Sentinel Lymph Node Biopsy,0.9691
+sentinel lymoh node biopsy,Sentinel Lymph Node Biopsy,1,2,Sentinel Lymph Node Biopsy,0.9735,Axillary Lymph Node;Sentinel Lymph Node Biopsy,0.9597,Sentinel Lymph Node;Lymphadenectomy,0.9585,Sentinel Lymph Node Biopsy Followed by Axillary Lymph Node Biopsy,0.9554,Left;Sentinel Lymph Node Biopsy,0.9548
+sentinel lymph node,Sentinel Lymph Node Biopsy,1,2,Sentinel Lymph Node Biopsy,0.9815,Sentinel Lymph Node;Lymphadenectomy,0.9814,Axillary Lymph Node;Sentinel Lymph Node Biopsy,0.9737,Left;Sentinel Lymph Node Biopsy,0.9645,Right;Sentinel Lymph Node Biopsy,0.9636
+sentinel lymph node biopsy,Sentinel Lymph Node Biopsy,1,2,Sentinel Lymph Node Biopsy,1.0000,Axillary Lymph Node;Sentinel Lymph Node Biopsy,0.9823,Sentinel Lymph Node Biopsy Followed by Axillary Lymph Node Biopsy,0.9764,Left;Sentinel Lymph Node Biopsy,0.9750,Right;Sentinel Lymph Node Biopsy,0.9737
+sentinel lymph node dissection,Sentinel Lymph Node;Lymphadenectomy,2,2,Sentinel Lymph Node Biopsy,0.9754,Sentinel Lymph Node;Lymphadenectomy,0.9749,Axillary Lymph Node;Sentinel Lymph Node Biopsy,0.9641,Sentinel Lymph Node Biopsy Followed by Axillary Lymph Node Biopsy,0.9613,Left;Sentinel Lymph Node Biopsy,0.9594
+sentinel lymph node dissection right reconstruction,Sentinel Lymph Node;Lymphadenectomy;Right;Mammoplasty,1,2,Sentinel Lymph Node;Lymphadenectomy;Right;Mammoplasty,0.9641,Right;Sentinel Lymph Node Biopsy,0.9614,Left;Sentinel Lymph Node Biopsy,0.9524,Sentinel Lymph Node;Lymphadenectomy,0.9479,Left;Axillary Lymph Node Dissection,0.9427
+sentinel lymph node excision,Sentinel Lymph Node;Lymphadenectomy,2,2,Sentinel Lymph Node Biopsy,0.9745,Sentinel Lymph Node;Lymphadenectomy,0.9676,Axillary Lymph Node;Sentinel Lymph Node Biopsy,0.9622,Sentinel Lymph Node Biopsy Followed by Axillary Lymph Node Biopsy,0.9572,Left;Sentinel Lymph Node Biopsy,0.9557
+sentinel node biopsy,Sentinel Lymph Node Biopsy,1,2,Sentinel Lymph Node Biopsy,0.9952,Axillary Lymph Node;Sentinel Lymph Node Biopsy,0.9772,Sentinel Lymph Node Biopsy Followed by Axillary Lymph Node Biopsy,0.9705,Left;Sentinel Lymph Node Biopsy,0.9694,Right;Sentinel Lymph Node Biopsy,0.9692
+sentinel node dissection,Sentinel Lymph Node;Lymphadenectomy,2,2,Sentinel Lymph Node Biopsy,0.9703,Sentinel Lymph Node;Lymphadenectomy,0.9698,Axillary Lymph Node;Sentinel Lymph Node Biopsy,0.9580,Sentinel Lymph Node Biopsy Followed by Axillary Lymph Node Biopsy,0.9547,Left;Sentinel Lymph Node Biopsy,0.9527
+sib Allo,Sibling;Allogeneic Hematopoietic Stem Cell Transplantation,1,2,Sibling;Allogeneic Hematopoietic Stem Cell Transplantation,0.9222,Matched Unrelated Donor;Allogeneic Hematopoietic Stem Cell Transplantation,0.9099,Anti-HGF Monoclonal Antibody TAK-701,0.9017,Autologous Hematopoietic Stem Cell Transplantation,0.9002,Sabatolimab,0.8997
+simple mastectomy,Total Mastectomy,5,2,Mastectomy,0.9547,Bilateral;Skin-Sparing Mastectomy,0.9410,Modified Radical Mastectomy,0.9302,Bilateral Mastectomy,0.9288,Total Mastectomy,0.9285
+sorafenib,Sorafenib,1,2,Sorafenib,1.0000,Sunitinib,0.9370,Imatinib,0.9307,Sunitinib Malate,0.9302,Lapatinib,0.9284
+splenectomy,Splenectomy,1,2,Splenectomy,1.0000,Nephrectomy,0.9288,Hepatectomy,0.9275,Pylorus-sparing pancreaticoduodenectomy (procedure),0.9251,Lymphadenectomy,0.9220
+stem cell transplant,Hematopoietic Cell Transplantation,2,2,Autologous Hematopoietic Stem Cell Transplantation,0.9507,Hematopoietic Cell Transplantation,0.9497,Bone Marrow Transplantation,0.9407,Sibling;Allogeneic Hematopoietic Stem Cell Transplantation,0.9399,Matched Unrelated Donor;Allogeneic Hematopoietic Stem Cell Transplantation,0.9281
+steroids,Steroid Therapy,1,2,Steroid Therapy,0.9663,Prednisone,0.9398,Prednisolone,0.9383,Dexamethasone,0.9321,Sirolimus,0.9197
+study drug,Pharmacologic Substance,99,2,Dual IGF-1R/InsR Inhibitor BMS-754807,0.9213,AALL0232 ALL Study Identifier;Dexamethasone,0.9179,PSMA-targeting Agent;Antineoplastic Antibody-Drug Conjugate,0.9146,Anti-CD33 Antibody-drug Conjugate IMGN779,0.9124,Anti-CD33 Monoclonal Antibody BI 836858,0.9116
+surgical resection,Resection,1,2,Resection,0.9826,Surgical Margin;Resection,0.9650,Lung;Resection,0.9567,Surgical Procedure,0.9465,Vulva;Resection,0.9460
+tamoxifen,Tamoxifen,1,2,Tamoxifen,1.0000,Trastuzumab,0.9327,Tamibarotene,0.9307,Letrozole,0.9288,Fulvestrant,0.9234
+taxol,Paclitaxel,1,2,Paclitaxel,0.9473,Docetaxel,0.9427,Nab-paclitaxel,0.9276,Topotecan,0.9255,Tamoxifen,0.9180
+tem,Temozolomide,99,2,Temsirolimus,0.9302,Topotecan,0.8986,Gemtuzumab,0.8960,Tamoxifen,0.8915,Tasadenoturev,0.8898
+temodar,Temozolomide,99,2,Temsirolimus,0.9087,Topotecan,0.8890,Valspodar,0.8844,Doxorubicin,0.8826,Mitoxantrone,0.8809
+temozolomide,Temozolomide,1,2,Temozolomide,1.0000,Ipilimumab,0.9278,Capecitabine,0.9240,Sorafenib,0.9235,Azathioprine,0.9216
+tissue reconstruction,Tissue Flap Breast Reconstruction,1,2,Tissue Flap Breast Reconstruction,0.9612,Tissue Expander-Implant Breast Reconstruction;Bilateral,0.9224,Anastomosis,0.9097,Resection,0.9060,Transurethral Resection,0.9055
+topotecan,Topotecan,1,2,Topotecan,1.0000,Temsirolimus,0.9347,Paclitaxel,0.9285,Topoisomerase-I Inhibitor,0.9245,Tamoxifen,0.9223
+total hip arthroplasty,Total;Hip Replacement;Total,1,2,Total;Hip Replacement;Total,0.9742,Total Hysterectomy,0.9421,Total Abdominal Hysterectomy,0.9358,Total Hepatectomy,0.9336,Total Mastectomy,0.9254
+total mastectomy,Total Mastectomy,1,2,Total Mastectomy,1.0000,Left;Total Mastectomy,0.9709,Bilateral;Total Mastectomy,0.9700,Right;Total Mastectomy,0.9699,Total Hysterectomy,0.9589
+transplant,Graft,5,2,Bone Marrow Transplantation,0.9354,Hematopoietic Cell Transplantation,0.9271,Autologous Hematopoietic Stem Cell Transplantation,0.9125,Sibling;Allogeneic Hematopoietic Stem Cell Transplantation,0.9091,Graft,0.9082
+tras,Trastuzumab,2,2,Chimeric Antigen Receptor T-Cell Therapy,0.9060,Trastuzumab,0.9032,Chimeric Antigen Receptor T-Cell Therapy;Therapeutic Apheresis,0.9019,Tamibarotene,0.8995,Anti-TIM-3 Monoclonal Antibody,0.8983
+trastuzumab,Trastuzumab,1,2,Trastuzumab,1.0000,Trastuzumab Emtansine,0.9543,Lapatinib,0.9351,Tamoxifen,0.9327,Daratumumab,0.9327
+vaccine,Vaccine,1,2,Vaccine,1.0000,Dendritic Cell Vaccine,0.9337,Heat-Treated Varicella-Zoster Virus Vaccine V212,0.9217,Bacillus Calmette-Guerin Antigen,0.9162,Immunotherapeutic Agent,0.9141
+vaginal implant,Vagina;Implant,1,2,Vagina;Implant,0.9761,Aromatase Inhibitor,0.9166,Mini Ovoid Brachytherapy,0.9101,Tissue Expander-Implant Breast Reconstruction;Bilateral,0.9093,Fulvestrant,0.9067
+vem,Vemurafenib,1,2,Vemurafenib,0.9539,Vorinostat,0.9296,Volasertib,0.9245,Ipilimumab,0.9214,Seviteronel,0.9144
+vemurafenib,Vemurafenib,1,2,Vemurafenib,1.0000,Dabrafenib,0.9393,Ipilimumab,0.9231,Regorafenib,0.9227,Vorinostat,0.9218
+vinblastine,Vinblastine,1,2,Vinblastine,1.0000,Vinorelbine,0.9590,Vincristine,0.9390,Bortezomib,0.9247,Brentuximab Vedotin,0.9226
+vincrisinte,Vincristine,1,2,Vincristine,0.9310,Vincristine Sulfate,0.9207,Vinblastine,0.9123,Vinorelbine,0.9120,Vorinostat,0.9120
+vincristine,Vincristine,1,2,Vincristine,1.0000,Vincristine Sulfate,0.9550,Vinorelbine,0.9401,Vinblastine,0.9390,Bortezomib,0.9195
+vincristine sulfate,Vincristine Sulfate,1,2,Vincristine Sulfate,1.0000,Vincristine,0.9550,Vinorelbine,0.9231,Vinblastine,0.9186,Valspodar,0.9185
+wide local excision,Wide Local Excision,1,2,Wide Local Excision,1.0000,Wide Skin Excision,0.9816,Local excision (procedure),0.9496,Wide;Re-Excision;Biopsy,0.9451,Skin Excision,0.9299
+wire localization,Wire-Guided Localization,1,2,Wire-Guided Localization,0.9811,Wire-Guided Localization;Right Breast;Biopsy;Wire-Guided Localization;Right Breast,0.9531,Excision;Wire-Guided Localization,0.9521,Wire-Guided Localization;Segmental Mastectomy,0.9439,Localized;Segmental Mastectomy,0.8816
+xeloda,Capecitabine,99,2,Selinexor,0.9151,Pexidartinib,0.9012,Atezolizumab,0.8989,Cixutumumab,0.8973,Ruxolitinib,0.8954

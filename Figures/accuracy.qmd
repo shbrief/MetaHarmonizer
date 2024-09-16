@@ -1,0 +1,78 @@
+---
+title: "Untitled"
+format: html
+editor: visual
+---
+
+```{r calculate_accuracy function}
+## Load required library
+library(stringdist)
+
+## Function to get top k matching terms for i-th query
+T <- function(i, data, k = 5) {
+    colnames <- paste0("top", seq_len(k), "_match")
+    res <- data %>% select(colnames) %>% .[i,] %>% as.character
+    return(res)
+}
+
+## Function to get the manually curated term (i.e., gold standard)
+C <- function(i, data) {
+    data$curated_ontology[i]
+}
+
+## Function to calculate accuracy
+calculate_accuracy <- function(data, k) {
+  N <- nrow(data)
+  
+  total_matches <- 0
+  for (n in 1:N) {
+    suggestions <- T(n, data, k)
+    curated <- C(n, data)
+    
+    ## Check for exact match
+    if (curated %in% suggestions) {
+      total_matches <- total_matches + 1
+    }
+  }
+  
+  accuracy <- total_matches / N
+  return(accuracy)
+}
+```
+
+```{r}
+dir <- "~/OmicsMLRepo/OmicsMLRepoHarmonizer/Figures/data/comparison_of_models"
+s_trt <- readr::read_csv(file.path(dir, "sapbert_treatment_non_exact_match_results.csv"))
+s_disease <- readr::read_csv(file.path(dir, "sapbert_disease_non_exact_match_results.csv"))
+s_bs <- readr::read_csv(file.path(dir, "sapbert_bodysite_non_exact_match_results.csv"))
+p_trt <- readr::read_csv(file.path(dir, "pubmedbert_treatment_non_exact_match_results.csv"))
+p_disease <- readr::read_csv(file.path(dir, "pubmedbert_disease_non_exact_match_results.csv"))
+p_bs <- readr::read_csv(file.path(dir, "pubmedbert_bodysite_non_exact_match_results.csv"))
+```
+
+```{r}
+res_tb <- as.data.frame(matrix(NA, nrow = 5, ncol = 6))
+colnames(res_tb) <- c("sapbert_treatment", "sapbert_disease", "sapbert_bodysite",
+                      "pubmedbert_treatment", "pubmedbert_disease", "pubmedbert_bodysite")
+
+for (i in 1:5) { # top 5 matches
+    for (j in seq_len(ncol(res_tb))) {
+        resName <- colnames(res_tb)[j]
+        dat <- read.csv(file.path(dir, paste0(resName, "_non_exact_match_results.csv")))
+        
+        res <- calculate_accuracy(dat, i)
+        res_tb[i, resName] <- res
+    }
+}
+```
+
+```{r eval=FALSE}
+write.csv(res_tb, "ontology_mapping_result.csv", row.names = FALSE)
+```
+
+# Plot
+```{r}
+res_tb <- readr::read_csv("ontology_mapping_result.csv")
+```
+
+
