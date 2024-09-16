@@ -71,8 +71,31 @@ write.csv(res_tb, "ontology_mapping_result.csv", row.names = FALSE)
 ```
 
 # Plot
+
 ```{r}
 res_tb <- readr::read_csv("ontology_mapping_result.csv")
 ```
 
+```{r}
+df <- tidyr::gather(res_tb, "example", "accuracy", 1:6)
+df$topk <- rep(1:5, 6)
+df$method <- sapply(df$example, function(x) {strsplit(x, "_") %>% unlist %>% .[1]})
+df$attribute <- sapply(df$example, function(x) {strsplit(x, "_") %>% unlist %>% .[2]})
+
+df$method <- ifelse(df$method == "pubmedbert", "PubMedBERT", "SapBERT")
+   
+safe_colorblind_palette <- c("#88CCEE", "#CC6677", "#DDCC77", "#117733", 
+                             "#332288", "#AA4499", "#44AA99", "#999933", 
+                             "#882255", "#661100", "#6699CC", "#888888")
+
+## Visualization
+ggplot(df, aes(x = topk, y = accuracy)) + 
+    geom_line(aes(color = attribute, linetype = method), size = 1) +
+    theme_bw() +
+    labs(title = "Accuracy of ontology mapping") +
+    xlab("# of top matches") + 
+    ylab("Accuracy") +
+    scale_color_manual(values = safe_colorblind_palette[c(2,3,11)]) +
+    ylim(0.6, 1)
+```
 
