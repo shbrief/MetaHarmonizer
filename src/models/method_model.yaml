@@ -5,3 +5,4 @@ longformer: yikuan8/Clinical-Longformer
 big-bird: yikuan8/Clinical-BigBird
 clinical-bert: emilyalsentzer/Bio_ClinicalBERT
 sap-bert: cambridgeltl/SapBERT-from-PubmedBERT-fulltext
+openai: openai
