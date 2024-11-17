@@ -11,7 +11,7 @@ ol <- Ontologies()
 ncit <- Ontology("ncit")
 trm <- Term(ncit, "NCIT:C1909") # covering 311 out of 557 curated terms
 allDesc <- descendants(trm)
-allTerms <- termId(allDesc) %>% names # 22738 terms
+allTerms <- termId(allDesc) %>% names # 22,738 terms
 
 trt_name_corpus <- getOntoInfo(allTerms[1], ontology = "ncit", exact = TRUE)
 for (i in 2:length(allTerms)) {
