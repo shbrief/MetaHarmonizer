@@ -1,0 +1,919 @@
+,original_value,curated_ontology,match_level,top1_match,top1_score,top2_match,top2_score,top3_match,top3_score,top4_match,top4_score,top5_match,top5_score
+0,17-DMAG,Alvespimycin,99,17-Alpha-Hydroxypregnenolone,0.9145,Anti-ENPP3/MMAF Antibody-Drug Conjugate AGS-16M8F,0.9090,SGN-17/19,0.9020,12-Allyldeoxoartemisinin,0.9014,Anti-AGS-16 Monoclonal Antibody AGS-16M18,0.8995
+1,19D12,Robatumumab,99,Monoclonal Antibody 11D10,0.9070,19-Norprogesterone,0.8972,SGN-17/19,0.8920,COVID-19 Vaccine,0.8875,Monoclonal Antibody 14G2A,0.8872
+2,5 fu,Fluorouracil,2,5-[18F]Fluorouracil,0.9421,Fluorouracil,0.9382,5-Fluoropyrimidinone,0.9287,Topical Fluorouracil,0.9273,Fuprazole,0.9224
+3,5-FU,Fluorouracil,4,5-[18F]Fluorouracil,0.9515,5-Fluoro-2-Deoxycytidine,0.9420,5-Fluoropyrimidinone,0.9402,Fluorouracil,0.9393,5-Fluorouracil/Salicylic Acid Topical Solution,0.9341
+4,5-fluorouracil,Fluorouracil,1,Fluorouracil,0.9644,5-[18F]Fluorouracil,0.9638,5-Fluoropyrimidinone,0.9496,Topical Fluorouracil,0.9477,5-Fluoro-2-Deoxycytidine,0.9473
+5,5/FU,Fluorouracil,4,5-[18F]Fluorouracil,0.9308,5-Fluorouracil/Salicylic Acid Topical Solution,0.9224,5-Fluoropyrimidinone,0.9215,Fluorouracil,0.9199,2-Fluorofucose,0.9166
+6,5FU,Fluorouracil,1,Fluorouracil,0.9457,5-[18F]Fluorouracil,0.9425,Topical Fluorouracil,0.9313,5-Fluoropyrimidinone,0.9283,Finafloxacin,0.9168
+7,6-MP,Mercaptopurine,99,6-Azauridine,0.9243,9-Ethyl 6-Mercaptopurine,0.9119,Anti-IL-6 Monoclonal Antibody,0.9092,6 Helper Peptide,0.9091,6alpha-Methyl-11-oxoprogesterone,0.9080
+8,6MP,Mercaptopurine,1,Mercaptopurine,0.8935,9-Ethyl 6-Mercaptopurine,0.8933,Mapatumumab,0.8821,Morforex,0.8818,Anti-PD-L1/TGFbetaRII Fusion Protein 6MW3511,0.8807
+9,AA,Antiandrogen Therapy,99,Acavameran,0.8944,Aspirin,0.8937,Adalimumab,0.8932,Mafenide,0.8896,Mabuprofen,0.8892
+10,AALL0232 therapy,AALL0232 ALL Study Identifier,99,Anti-IL-4/IL-13 Combination Agent QBX258,0.8984,Androgen Receptor Antagonist TAS3681,0.8976,AS02A,0.8920,Anti-LAG-3 Monoclonal Antibody TQB2223,0.8911,Anti-interleukin-1 Beta Monoclonal Antibody FL-101,0.8897
+11,AALL0232 w/Dex,AALL0232 ALL Study Identifier;Dexamethasone,99,Dexproxibutene,0.8976,Dexloxiglumide,0.8948,Androgen Receptor/Glucocorticoid Receptor Antagonist CB-03-10,0.8932,Dexoxadrol,0.8927,Dexefaroxan,0.8925
+12,AALL0331,AALL0331 ALL Study Identifier,99,AS04 Adjuvant,0.8827,AS02A,0.8791,Androgen Receptor Antagonist TAS3681,0.8762,Anbalcabtagene Autoleucel,0.8751,Albifylline,0.8736
+13,ABRAXANE,Nab-paclitaxel,99,Oraxol,0.9408,Benaxibine,0.9216,Abrineurin,0.9148,Ribaxamase,0.9147,Letaxaban,0.9129
+14,ABSTRACTION_PENDING,Chart Abstraction;Pending,99,Pefcalcitol,0.8716,Declopramide,0.8708,Acetosulfone,0.8705,Vapiprost,0.8698,Iproclozide,0.8697
+15,ABT-199,Venetoclax,99,EGFR/HER2 Inhibitor ABT-101,0.9303,BH3 Mimetic ABT-737,0.9297,TSP-1 Mimetic ABT-510,0.9217,Anti-CTLA4 Monoclonal Antibody BMS-986218,0.9127,PARP-1/2 Inhibitor ABT-767,0.9115
+16,ABT-263,Navitoclax,99,BH3 Mimetic ABT-737,0.9414,TSP-1 Mimetic ABT-510,0.9267,T-type Calcium Channel Blocker ABT-639,0.9253,PARP-1/2 Inhibitor ABT-767,0.9152,EGFR/HER2 Inhibitor ABT-101,0.9144
+17,ABT888,Veliparib,99,BH3 Mimetic ABT-737,0.9001,EGFR/HER2 Inhibitor ABT-101,0.8989,BMS-188797,0.8947,Abituzumab,0.8927,Aminothiazole,0.8921
+18,AC220 (Ambit),Quizartinib Dihydrochloride,99,Ambuside,0.9181,Anti-PD-L1/Anti-TIGIT Bispecific Antibody PM1022,0.9026,Ambucetamide,0.9020,Ambamustine,0.9012,Ambutonium,0.9007
+19,ACTINOMYCIN D,Dactinomycin,99,Actinomycin Antineoplastic Antibiotic,0.9521,Actinomycin C2,0.9474,Actinomycin F1,0.9452,Actinomycin C3,0.9402,Anisomycin,0.9111
+20,AG-120,Ivosidenib,99,gp-120 Antigen,0.9386,Tyrphostin AG 126,0.9140,Alpha-Gal AGI-134,0.9098,Anti-Progranulin Monoclonal Antibody AG01,0.8971,Tyrphostin AG 1433,0.8956
+21,AG-221,Enasidenib,99,AG 1732,0.9161,Alpha-Gal AGI-134,0.8999,Tyrphostin AG 1433,0.8929,Anti-Progranulin Monoclonal Antibody AG01,0.8895,Adagrasib,0.8895
+22,AIS,Aromatase Inhibitor,99,Anastrozole,0.8933,Bifarcept,0.8855,Semaxanib,0.8848,Imafen,0.8846,Idenast,0.8831
+23,AKTi,AKT Inhibitor,1,AKT Inhibitor,0.9459,RCAS-Akt,0.9194,Trastuzumab,0.9077,Akt Inhibitor SR13668,0.9056,Akt-1/2 Inhibitor-treated Tumor Infiltrating Lymphocytes,0.9050
+24,ALND,Axillary Lymph Node Dissection,99,Alniditan,0.9230,Alnuctamab,0.9195,Alnespirone,0.9149,Alogabat,0.9105,Alofanib,0.9081
+25,ALPELISIB,Alpelisib,1,Alpelisib,1.0000,Alprafenone,0.9190,Alprenolol,0.9146,Acalisib,0.9145,Alpertine,0.9126
+26,ALRN-6924,MDM2/MDMX Inhibitor ALRN-6924,1,MDM2/MDMX Inhibitor ALRN-6924,0.9344,AL721,0.9121,Alrestatin,0.8937,PR-54 (ras-13 Asp) Peptide,0.8897,Alrizomadlin,0.8893
+27,AMD,Dactinomycin,99,Amdoxovir,0.9389,Darusentan,0.9277,Amdakefalin,0.9221,Amdizalisib,0.9203,Amdinocillin,0.9196
+28,ANTHRACYCLINE,Anthracycline Antineoplastic Antibiotic,1,Anthracycline Antineoplastic Antibiotic,0.9571,Doxorubicin,0.9427,Anthramycin,0.9256,Amifloxacin,0.9243,Amiterol,0.9196
+29,ANTIHER2,HER2-targeting Agent,99,Antihemophilic Factor Human,0.9112,Antihelminthic Agent,0.9074,2-Hydroxyestrogen,0.9025,2-Hydroxyestrone,0.9007,Cryoprecipitated Antihemophilic Factor,0.8995
+30,APLIDIN,Plitidepsin,99,Aplaviroc,0.9132,Aplindore,0.9104,Glabridin,0.9053,Azaperone,0.8981,Aplaviroc Hydrochloride,0.8976
+31,APR,Abdominoperineal Resection,99,Apramycin,0.9451,Apraglutide,0.9412,Apratastat,0.9397,Aprepitant,0.9366,Aprindine,0.9339
+32,ARN 509,Apalutamide,99,Arnolol,0.9031,Bispecific Antibody AMG 509,0.8896,Revamilast,0.8686,Onterodrimer,0.8669,Orotirelin,0.8660
+33,ARN509,Apalutamide,99,Arnolol,0.9076,Naratriptan,0.8767,Oncolytic HSV-1 rRp450,0.8724,Montanide ISA 51 VG,0.8715,50% Oxygen/50% Nitrous Oxide Premix,0.8714
+34,ATG,Anti-Thymocyte Globulin,99,ATR Inhibitor ATG-018,0.9125,CD73 Inhibitor ATG-037,0.8914,Ipilimumab,0.8857,Ticagrelor,0.8847,Imatinib,0.8829
+35,ATRA,Tretinoin,99,Atracurium,0.9500,Atrasentan,0.9467,Atracurium Besylate,0.9291,Atrasentan Hydrochloride,0.9210,Retinoic Acid Agent,0.9180
+36,ATRA (Tretinoin),Tretinoin,1,Tretinoin,0.9648,Tretinoin Tocoferil,0.9391,Trestolone,0.9300,Tretinoin Liposome,0.9287,Trestolone Acetate,0.9252
+37,ATRA started,Tretinoin,99,Atracurium,0.9190,Atrasentan,0.9113,Atracurium Besylate,0.9048,Atrasentan Hydrochloride,0.8972,Retinoic Acid Agent,0.8889
+38,AZD-2171,Cediranib,99,FGFR Inhibitor AZD4547,0.9089,Anti-B7-H4/ TOP1i Antibody-drug Conjugate AZD8205,0.9080,Checkpoint Kinase Inhibitor AZD7762,0.9078,BMS-214662,0.9068,ATM Kinase Inhibitor AZD0156,0.9047
+39,AZD-6244,Selumetinib,99,FGFR Inhibitor AZD4547,0.9330,mTOR Kinase Inhibitor AZD8055,0.9234,KSP Inhibitor AZD4877,0.9231,HDM2 Inhibitor MK-8242,0.9212,Androgen Receptor Downregulator AZD3514,0.9200
+40,AZD1480,JAK2 Inhibitor AZD1480,1,JAK2 Inhibitor AZD1480,0.9627,PARP Inhibitor AZD2461,0.9272,ATM Kinase Inhibitor AZD1390,0.9154,DNA-PK inhibitor AZD7648,0.9090,PI3Kalpha Inhibitor AZD8835,0.9090
+41,AZD8055,mTOR Kinase Inhibitor AZD8055,1,mTOR Kinase Inhibitor AZD8055,0.9523,KSP Inhibitor AZD4877,0.9235,PARP1 Inhibitor AZD9574,0.9204,APC8015F,0.9199,MEK Inhibitor AZD8330,0.9194
+42,AbiCabazi (abiraterone),Abiraterone,1,Abiraterone,0.9646,Abiraterone Acetate,0.9502,Abiraterone Decanoate,0.9467,Abivertinib,0.9361,Abituzumab,0.9291
+43,Abiraterone,Abiraterone,1,Abiraterone,1.0000,Abiraterone Acetate,0.9832,Abiraterone Decanoate,0.9695,Abiraterone Decanoate Depot,0.9472,Abivertinib,0.9455
+44,Abiraterone acetate,Abiraterone Acetate,1,Abiraterone Acetate,1.0000,Abiraterone,0.9832,Abiraterone Decanoate,0.9654,Abiraterone Decanoate Depot,0.9522,Abiraterone Acetate/Niraparib,0.9409
+45,Adalimumab,Adalimumab,1,Adalimumab,1.0000,Adalimumab Fosimdesonide,0.9450,Infliximab,0.9270,Dusigitumab,0.9188,Doxorubicin,0.9186
+46,Additional resection/ margins (taken after first margin positive),Resection,99,TM4SF1-CAR/EpCAM-CAR-expressing Autologous T Cells,0.8720,Autologous Anti-EGFR/Anti-IL13Ralpha2 CAR T-cells,0.8692,Recombinant Transforming Growth Factor-Beta 1,0.8686,Autologous c-Met/PD-L1-specific CAR T-cells,0.8683,Anti-PRAME T-cell Receptor/Anti-CD3 scFv Fusion Protein IMC-F106C,0.8682
+47,Adr,Doxorubicin Hydrochloride,99,Adrabetadex,0.9369,Adrafinil,0.9256,Adrogolide,0.9255,Adrogolide Hydrochloride,0.9131,Apramycin,0.9031
+48,Adriamycine,Doxorubicin Hydrochloride,99,Doxorubicin,0.9548,Apramycin,0.9397,Rifamycin,0.9369,Ansamycin Antineoplastic Antibiotic,0.9363,Rutamycin,0.9357
+49,Afatinib,Afatinib,1,Afatinib,1.0000,Afimoxifene,0.9377,Afatinib Dimaleate,0.9355,Finafloxacin,0.9320,Flumbatinib,0.9300
+50,Alisertib,Alisertib,1,Alisertib,1.0000,Alisertib Sodium,0.9776,Ipatasertib,0.9335,Adavosertib,0.9260,Sapanisertib,0.9228
+51,Alliance (enzalutamide),Enzalutamide,1,Enzalutamide,0.9585,Bicalutamide,0.9145,Androgen Receptor Antagonist ONC1-0013B,0.8993,Actisomide,0.8992,Enzacamene,0.8990
+52,Alpelisib,Alpelisib,1,Alpelisib,1.0000,Alprafenone,0.9190,Alprenolol,0.9146,Acalisib,0.9145,Alpertine,0.9126
+53,Anastomosis,Anastomosis,99,Larazotide,0.8831,Amoxecaine,0.8826,Infliximab,0.8817,Aspirin,0.8805,Adjuvant,0.8782
+54,Anterior Pelvic Exenteration,Anterior Pelvic Exenteration,99,Exalamide,0.9017,Ex-Lax,0.8994,Exicorilant,0.8994,Exaprolol,0.8933,Exarafenib,0.8914
+55,AntiEGFR,Anti-EGFR Monoclonal Antibody,1,Anti-EGFR Monoclonal Antibody,0.9303,Antiestrogen,0.9250,Antipyrine,0.9203,Anti-EGFR Monoclonal Antibody GC1118,0.9190,Antienite,0.9160
+56,Ara,Cytarabine,99,Aranose,0.9599,Araprofen,0.9512,Aranotin,0.9426,Arazasetron,0.9312,Aranidipine,0.9285
+57,Ara C,Cytarabine,99,Aranose,0.9318,Araprofen,0.9157,Fluorine F 18 Ara-G,0.9139,Arasertaconazole,0.9116,Aranotin,0.9112
+58,Ara-C,Cytarabine,99,Aranose,0.9395,2'-F-ara-deoxyuridine,0.9329,Fluorine F 18 Ara-G,0.9289,Araprofen,0.9262,Arasertaconazole,0.9237
+59,Arsenic Trioxide,Arsenic Trioxide,1,Arsenic Trioxide,1.0000,Trioxifene,0.9545,Trioxifene Mesylate,0.9371,Trioxsalen,0.9227,Arsenic Trioxide Capsule Formulation ORH 2014,0.9156
+60,Arsenic.,Arsenic,99,Arsenic Trioxide,0.9384,Sodium Selenate,0.8963,Selenium Sulfide,0.8930,Quinine Arsenate,0.8926,Antisense RNA,0.8906
+61,Ascites,Ascites Drainage,99,Adalimumab,0.8908,Sorafenib,0.8862,Pegaptanib,0.8857,Metethoheptazine,0.8844,Metibride,0.8830
+62,Aspiration,Aspiration,99,Delanterone,0.8817,N-Acetylcysteine Amide,0.8738,Ambucaine,0.8727,Alinastine,0.8705,Vapitadine,0.8701
+63,Atezolizumab,Atezolizumab,1,Atezolizumab,1.0000,Atezolizumab and Recombinant Human Hyaluronidase,0.9362,Etaracizumab,0.9318,Atenolol,0.9313,Vedolizumab,0.9301
+64,Auto,Autologous Hematopoietic Stem Cell Transplantation,99,Autogene Cevumeran,0.9077,Autologous Anti-CD19/CD22 CAR T-cells AUTO3,0.9026,Mozafancogene Autotemcel,0.9024,Letetresgene Autoleucel,0.9013,Brexucabtagene Autoleucel,0.8993
+65,Autopsy,Autopsy,99,Carcainium,0.8731,Burapitant,0.8728,Examorelin,0.8725,Anatibant,0.8717,Avasimibe,0.8701
+66,Avastin,Bevacizumab,3,Avobenzone,0.9278,Avasimibe,0.9261,Bevacizumab,0.9233,Avorelin,0.9209,Avoparcin,0.9197
+67,Avatin,Lorazepam,99,Avorelin,0.9288,Avoplacel,0.9267,Avoralstat,0.9245,Avoparcin,0.9214,Avatrombopag,0.9199
+68,Axitinib,Axitinib,1,Axitinib,1.0000,Axitirome,0.9326,Everolimus,0.9222,Elenestinib,0.9132,Selumetinib,0.9129
+69,Aza,Azacitidine,99,Azabon,0.9582,Azatadine,0.9508,Azaribine,0.9492,Azarole,0.9485,Azaloxan,0.9467
+70,Azacitidine,Azacitidine,1,Azacitidine,1.0000,Oral Azacitidine,0.9700,Azacyclonol,0.9355,Azatadine,0.9329,Azaribine,0.9292
+71,Azathioprine,Azathioprine,1,Azathioprine,1.0000,Azathioprine Sodium,0.9645,Mercaptopurine,0.9339,Azaloxan,0.9187,Thiouracil,0.9186
+72,B/L Pelvic LN dissection,Bilateral Pelvic Lymph Node Dissection,99,Pyrantel,0.8599,Pancopride,0.8582,Leuprolide,0.8578,Cloponone,0.8577,Bensalan,0.8570
+73,BAL101553,Lisavanbulin,99,Balicatib,0.9272,Baloxavir,0.9209,Baloramotide,0.9209,Balamapimod,0.9132,Balovaptan,0.9124
+74,BAY1161909,Empesertib,99,Antibody-Drug Conjugate BAY79-4620,0.9079,Androgen Receptor Antagonist BAY 1161116,0.9046,Anti-HER2 Monoclonal Antibody BAY2701438,0.9034,BMS-188797,0.8933,Aryl Hydrocarbon Receptor Antagonist BAY2416964,0.8912
+75,BCG,Bacillus Calmette-Guerin Antigen,99,BCG Vaccine,0.9737,BCG Solution,0.9512,BCG Tokyo-172 Strain Vaccine,0.9260,BCG Tokyo-172 Strain Solution,0.9210,Tuberculin,0.9208
+76,BCNU,Carmustine,99,PCNU,0.9225,Anti-BCMA Monoclonal Antibody,0.8981,Anti-BCMA Antibody-drug Conjugate,0.8976,Brensocatib,0.8963,Abecomotide,0.8958
+77,BEV,Bevacizumab,99,Bevurogant,0.9549,Bevonium,0.9431,Bevifimod,0.9420,Bevenopran,0.9412,Bebtelovimab,0.9392
+78,BEZ235,Dactolisib,99,Bezitramide,0.9270,Bezafibrate,0.9266,Bezuclastinib,0.9197,Bezlotoxumab,0.9163,Bezeparsen,0.9040
+79,BI 836858 (anti-CD33),Anti-CD33 Monoclonal Antibody BI 836858,1,Anti-CD33 Monoclonal Antibody BI 836858,0.9897,Anti-CD37 Monoclonal Antibody BI 836826,0.9852,Anti-CD32B Monoclonal Antibody BI-1607,0.9586,Anti-CD32B Monoclonal Antibody BI-1206,0.9579,Anti-CD33 Monoclonal Antibody,0.9537
+80,BI6727 (VOLASERTIB),Volasertib,1,Volasertib,0.9501,Barasertib,0.9277,Volasertib Trihydrochloride,0.9243,Plk1 Inhibitor BI 2536,0.9079,mTORC1/2 Kinase Inhibitor BI 860585,0.9072
+81,BI836858 (anti-CD33),Anti-CD33 Monoclonal Antibody BI 836858,1,Anti-CD33 Monoclonal Antibody BI 836858,0.9856,Anti-CD37 Monoclonal Antibody BI 836826,0.9818,Anti-CD32B Monoclonal Antibody BI-1206,0.9571,Anti-CD32B Monoclonal Antibody BI-1607,0.9566,Anti-CD39 Monoclonal Antibody AB598,0.9517
+82,BKM120,Buparlisib,99,Polymyxin B1,0.8883,RevM10 Gene,0.8865,RevM10 gene/polAS gene,0.8831,Polymyxin B2,0.8810,Bleomycin B2,0.8745
+83,BL-8040,Motixafortide,99,EGFR Exon 20 Insertion Inhibitor BLU-451,0.8946,BL22 Immunotoxin,0.8942,Anti-ILT4 Monoclonal Antibody MK-4830,0.8934,Indium In 111 Chimeric Monoclonal Antibody 806,0.8933,Monoclonal Antibody SHR-8068,0.8914
+84,BMN-673,Talazoparib,99,BMS-184476,0.9203,FLT3 Inhibitor BMF-500,0.9120,BMS-214662,0.9118,BMS-188797,0.9042,BMX Inhibitor,0.8991
+85,BMS-354825,Dasatinib,99,BMS-214662,0.9606,BMS-184476,0.9518,BMS-188797,0.9394,ATM Inhibitor M 3541,0.9293,BMS-275183,0.9273
+86,BMS-754807,Dual IGF-1R/InsR Inhibitor BMS-754807,99,BMS-184476,0.9607,BMS-188797,0.9490,BMS-214662,0.9458,BMS-275183,0.9401,CCR2/CCR5 Antagonist BMS-813160,0.9253
+87,BMS-986205 (IDO inhibitor),Linrodostat,99,IDO1 Inhibitor MK-7162,0.9434,IDO1 Inhibitor PF-06840003,0.9420,Anti-CD73 Monoclonal Antibody BMS-986179,0.9404,BET Inhibitor BMS-986158,0.9393,IDO1 Inhibitor,0.9388
+88,BMS-986205 (P1T986205),Linrodostat,99,BMS-188797,0.9304,Anti-CD73 Monoclonal Antibody BMS-986179,0.9268,BMS-184476,0.9261,BMS-214662,0.9245,JNK1 Inhibitor BMS-986360,0.9242
+89,BORTEZOMIB,Bortezomib,1,Bortezomib,1.0000,Bevacizumab,0.9227,Vancomycin,0.9127,Verapamil,0.9103,Voxilaprevir,0.9081
+90,BP1001,Prexigebersen,99,BP16 Vaccine,0.9338,PD-L1 Inhibitor BPI-371153,0.9064,Liposomal Bcl-2 Antisense Oligonucleotide BP1002,0.8984,PARP1 Inhibitor AZD9574,0.8942,Everolimus,0.8916
+91,BPX-501,Rivogenlecleucel,99,PD-L1 Inhibitor BPI-371153,0.9233,CDK4/6 Inhibitor BPI-16350,0.9205,CDK4/6 Inhibitor BPI-1178,0.9147,Anti-GARP/PD-L1 Bispecific Antibody BPB-101,0.9076,EGFR T790M Antagonist BPI-15086,0.9052
+92,BREAST CONSERVING,Breast Conservation Treatment,99,Lapatinib,0.8821,Letrozole,0.8795,Dibusadol,0.8786,Tilorone,0.8780,Fadrozole,0.8766
+93,BSO,Buthionine Sulfoximine,99,TLR Agonist BSG-001,0.9081,Bietaserpine,0.9009,Bietamiverine,0.8960,Bisbendazole,0.8909,Bisoprolol,0.8908
+94,BU,Busulfan,99,Buformin,0.9395,Bumetanide,0.9334,Buflomedil,0.9315,Bufogenin,0.9289,Bufalin,0.9266
+95,BYL719,Alpelisib,99,Anti-c-Met Antibody-drug Conjugate BYON3521,0.8943,Insulin Sensitizer S-707106,0.8918,Silatecan AR-67,0.8887,Relenopride,0.8854,Upinitatug Rilsodotin,0.8846
+96,Bacillus Calmette-Guerin,Bacillus Calmette-Guerin Antigen,1,Bacillus Calmette-Guerin Antigen,0.9571,Bacillus Calmette-Guerin Substrain Montreal Live Antigen,0.9360,Bacillus Calmette-Guerin Substrain Tice Live Antigen,0.9326,Bacillus Calmette-Guerin Substrain Danish 1331 Live Antigen,0.9262,Bacillus Calmette-Guerin Substrain Connaught Live Antigen,0.9258
+97,Bacillus Calmette-Guerin (BCG),Bacillus Calmette-Guerin Antigen,1,Bacillus Calmette-Guerin Antigen,0.9530,BCG Vaccine,0.9504,BCG Solution,0.9395,Bacillus Calmette-Guerin Substrain Tice Live Antigen,0.9355,Bacillus Calmette-Guerin Substrain Montreal Live Antigen,0.9331
+98,Bevacizumab,Bevacizumab,1,Bevacizumab,1.0000,Rebastinib,0.9297,Brivanib,0.9271,Bevacizumab-IRDye 800CW,0.9268,Bortezomib,0.9227
+99,Bevasizumab,Bevacizumab,99,Bevasiranib,0.9459,Bevasiranib Sodium,0.9363,Befovacimab,0.9337,Bevirimat,0.9336,Bevenopran,0.9307
+100,Bevicizumab,Bevacizumab,99,Befovacimab,0.9250,Bevantolol,0.9241,Bebtelovimab,0.9198,Bevenopran,0.9145,Bevifimod,0.9141
+101,Bicalutamide,Bicalutamide,1,Bicalutamide,1.0000,Enzalutamide,0.9358,Biclofibrate,0.9307,Bictegravir,0.9292,Biclodil,0.9275
+102,Bilateral Mastectomy,Bilateral Mastectomy,99,Bleomycin A2,0.8805,Trastuzumab Botidotin,0.8803,Bietamiverine,0.8780,Tamoxifen,0.8759,Trastuzumab,0.8758
+103,Bilateral Ovarian cystectomy,Bilateral;Ovarian;Cystectomy,99,Cysteamine,0.8985,Cysteamine Hydrochloride,0.8834,Nacubactam,0.8826,Autologous Oxidized Ovarian Tumor Cell Lysate Vaccine,0.8810,Trastuzumab Botidotin,0.8807
+104,Bilateral Salpingectomy,Bilateral Salpingectomy,99,Salantel,0.8915,Salsalate,0.8897,Salazodine,0.8823,Salicin,0.8806,Salmeterol,0.8800
+105,Bilateral Salpingo-Oophorectomy,Bilateral Salpingectomy with Oophorectomy,99,Trastuzumab/Hyaluronidase-oysk,0.8829,2-Hydroxyestradiol,0.8813,Salantel,0.8807,Conjugated Estrogen/Medroxyprogesterone-containing Formulation,0.8794,2-Hydroxyestrogen,0.8780
+106,Bilateral breast reconstruction with tissue expanders.,Tissue Expander-Implant Breast Reconstruction;Bilateral,99,Trastuzumab Botidotin,0.8811,Estradiol Benzoate,0.8805,Ibrexafungerp,0.8802,Ex Vivo-Expanded HER2-Specific T Cells,0.8774,Bifepramide,0.8767
+107,Bilateral skin sparing Mastectomy,Bilateral;Skin-Sparing Mastectomy,99,Trebenzomine,0.8743,Serclutamab,0.8727,Setmelanotide,0.8713,Topical Sirolimus,0.8705,Trastuzumab Botidotin,0.8702
+108,Bile Duct Resection,Bile Duct;Resection,99,Bile Acid Sequestrant,0.8854,Colestipol,0.8569,Colestolone,0.8567,Hepatitis B Vaccine,0.8557,AFP Gene Hepatocellular Carcinoma Vaccine,0.8548
+109,Binimetinib (MEK162),Binimetinib,1,Binimetinib,0.9737,Cobimetinib,0.9275,MEK inhibitor BI 3011441,0.9184,MEK/Aurora Kinase Inhibitor BI 847325,0.9172,MEK Inhibitor REC-4881,0.9168
+110,Biochemo,Biochemotherapy,99,Baclofen,0.8932,Detox,0.8857,Tocofenoxate,0.8809,Baquiloprim,0.8807,Diarbarone,0.8798
+111,Biochemotherapy,Biochemotherapy,99,Bleomycin Antibiotic,0.8944,Chemotherapeutic Topical Agent,0.8940,Theramide,0.8936,Detox,0.8910,Tocofibrate,0.8905
+112,Biopsy,Biopsy,99,Bleomycin,0.8951,Abciximab,0.8947,Baclofen,0.8906,Carbamazepine,0.8890,Belimumab,0.8888
+113,Bisulfan,Busulfan,99,Clopidogrel Bisulfate,0.9597,Sulfamethazine Bisulfate,0.9446,Chlortetracycline Bisulfate,0.9411,Cyclomethycaine Bisulfate,0.9283,Sulfacytine,0.9079
+114,Bladder diverticulectomy,bladder diverticulectomy,99,Bocodepsin,0.8707,Bocodepsin Besylate,0.8682,Denibulin,0.8682,Vinburnine,0.8680,Umibecestat,0.8674
+115,Bleo,Bleomycin,5,Bleselumab,0.9216,Rebastinib,0.9061,Bilastine,0.9044,Bevacizumab,0.8989,Bleomycin,0.8985
+116,Bleomycin,Bleomycin,1,Bleomycin,1.0000,Bleomycin Antibiotic,0.9611,Bleomycin B2,0.9555,Bleomycin A2,0.9479,Bleomycin Sulfate,0.9424
+117,Blood Draw,Blood Sample,99,Abciximab,0.8697,Meluadrine,0.8679,Peripheral Blood Lymphocyte Vaccine,0.8675,Bremelanotide,0.8657,Bevacizumab,0.8656
+118,Bone marrow transplant,Bone Marrow Transplantation,99,MSCV (MGMTP140K) Retroviral Vector-Transduced CD34+ Autologous PBSC,0.8906,Therapeutic Hematopoietic Stem Cells,0.8886,Activated Marrow Infiltrating Lymphocytes,0.8853,CD3+/CD19+ Cell-depleted Unrelated or Partially Matched Donor-derived Allogeneic Peripheral Blood Stem Cells,0.8836,TBX-4000-treated Hematopoietic Stem Cells TBX-2400,0.8836
+119,Bortezomib,Bortezomib,1,Bortezomib,1.0000,Bevacizumab,0.9227,Vancomycin,0.9127,Verapamil,0.9103,Voxilaprevir,0.9081
+120,Breast Conservation,Breast Conservation Treatment,99,Trastuzumab Botidotin,0.8837,Brobactam,0.8760,Nacubactam,0.8753,Dibusadol,0.8744,Estradiol Benzoate,0.8727
+121,Bu,Busulfan,99,Buformin,0.9395,Bumetanide,0.9334,Buflomedil,0.9315,Bufogenin,0.9289,Bufalin,0.9266
+122,Buparlisib,Buparlisib,1,Buparlisib,1.0000,Buparlisib Hydrochloride,0.9734,Buparvaquone,0.9473,Bupropion,0.9258,Bupranolol,0.9207
+123,Busul,Busulfan,2,Buspirone,0.9258,Busulfan,0.9212,Buserelin,0.9205,Buspirone Hydrochloride,0.8981,Besulpamide,0.8928
+124,Busulfan,Busulfan,1,Busulfan,1.0000,Mesulfen,0.9309,Buspirone,0.9257,Ritrosulfan,0.9195,Pentosan Polysulfate,0.9188
+125,CABOZANTINIB (XL-148),Cabozantinib,1,Cabozantinib,0.9469,Cabozantinib S-malate,0.9241,Cabazitaxel,0.9166,Anti-PRL-3 Monoclonal Antibody PRL3-zumab,0.9122,Cabastine,0.9116
+126,CAI (NABTT 97212),Carboxyamidotriazole,99,CAIX Inhibitor SLC-0111,0.9092,Anti-CAIX CAR T Cells,0.9084,PD-L1/4-1BB/HSA Trispecific Fusion Protein NM21-1480,0.9006,Nabilone,0.8993,Nab-paclitaxel,0.8988
+127,CAPECITABINE,Capecitabine,1,Capecitabine,1.0000,Capecitabine Rapidly Disintegrating Tablet,0.9394,Gemcitabine,0.9101,Dasatinib,0.9066,Temozolomide,0.9053
+128,CARBOPLATIN,Carboplatin,1,Carboplatin,1.0000,Cisplatin,0.9259,Cetuximab,0.9212,Carbon C14-labeled Carboplatin,0.9148,Dicycloplatin,0.9125
+129,CBL0137,FACT Complex-targeting Curaxin CBL0137,2,CBL-B Inhibitor HST-1011,0.9030,FACT Complex-targeting Curaxin CBL0137,0.8952,CBL-B Inhibitor NX-1607,0.8912,VCL-CB01 Vaccine,0.8910,Anti-CLDN18.2 CAR T Cells LY011,0.8877
+130,CC115,DNA-PK/TOR Kinase Inhibitor CC-115,3,Radiolabeled CC49,0.9098,I 131 Monoclonal Antibody CC49,0.9080,DNA-PK/TOR Kinase Inhibitor CC-115,0.9027,Y 90 Monoclonal Antibody CC49,0.8997,Curcumin,0.8977
+131,CCNU,Lomustine,99,Celecoxib,0.9045,Cinoxolone,0.8976,Cinobufagin,0.8943,Radicicol,0.8940,Norcodeine,0.8912
+132,CD123,Immunotherapeutic Agent,99,Anti-CD123 Monoclonal Antibody,0.9389,Anti-CD123 Monoclonal Antibody KHK2823,0.9251,CD15 Antigen,0.9244,CD137 Agonist,0.9168,Autologous Anti-CD123 CAR-T Cells,0.9145
+133,CD3,Anti-CD3 Monoclonal Antibody,1,Anti-CD3 Monoclonal Antibody,0.9422,Anti-CD33 Monoclonal Antibody,0.9420,Anti-CD30 Monoclonal Antibody,0.9314,Anti-CD33 Monoclonal Antibody BI 836858,0.9289,CD30 Immunotoxin,0.9279
+134,CDK46,Cyclin-Dependent Kinase Inhibitor,99,CDK4/6 Inhibitor TQB3616,0.9230,CDK4 Inhibitor P1446A-05,0.9223,CDK4/6 Inhibitor BPI-1178,0.9195,CDK4/6 Inhibitor SPH4336,0.9180,CDK4/6 Inhibitor HS-10342,0.9171
+135,CDX-011 (GLEMBATUMUMAB),Glembatumumab,2,Anti-CD40 Agonist Monoclonal Antibody CDX-1140,0.9352,Glembatumumab,0.9308,Anti-CD70 Monoclonal Antibody MDX-1411,0.9295,Antibody-drug Conjugate Anti-TIM-1-vcMMAE CDX-014,0.9289,Anti-CD70 Antibody-Drug Conjugate MDX-1203,0.9280
+136,CELECOXIB,Celecoxib,1,Celecoxib,1.0000,Topical Celecoxib,0.9530,Suclofenide,0.9283,Cyclooxygenase Inhibitor,0.9207,Curcumin,0.9182
+137,CGC(PG)-11047,Polyamine Analogue PG11047,3,CGP-6809,0.9147,gp100:44-59,0.9135,Polyamine Analogue PG11047,0.9027,CpG-28 Oligodeoxynucleotide,0.8971,ISS 1018 CpG Oligodeoxynucleotide,0.8947
+138,CI-980,Mivobulin Isethionate,99,MEK Inhibitor CI-1040,0.9025,Cistinexine,0.9012,Cizolirtine,0.9009,Cixutumumab,0.8959,Cioteronel,0.8948
+139,CIS,Cisplatin,99,Cisapride,0.9515,Cisconazole,0.9389,Cismadinone,0.9250,Cistinexine,0.9247,Cisatracurium,0.9181
+140,CISPLATIN,Cisplatin,1,Cisplatin,1.0000,Cisplatin Liposomal,0.9523,Carboplatin,0.9259,Cisplatin-E Therapeutic Implant,0.9255,Platinum Compound,0.9232
+141,CORE,Core Biopsy,99,CoREST Inhibitor TNG260,0.8752,Calpurbatug,0.8745,Curcumin,0.8720,Curcuminoid,0.8691,Cotoretigene Toliparvovec,0.8651
+142,CPI-613,Devimistat,99,CP-547632,0.9351,ITK Inhibitor CPI-818,0.9216,Nanoparticle Formulation CPI-300,0.9184,Indium In 111 Minigastrin Analog CP04,0.9053,PD-L1 Inhibitor BPI-371153,0.9039
+143,CPT-11,Irinotecan Hydrochloride,99,11C Topotecan,0.9056,CTP-37,0.8994,HPV-11 Vaccine,0.8991,Monoclonal Antibody 7C11,0.8989,Irinotecan,0.8982
+144,CPX-351,Liposome-encapsulated Daunorubicin-Cytarabine,99,CP-547632,0.9327,Nanoparticle Formulation CPI-300,0.9300,ITK Inhibitor CPI-818,0.9105,Anti-EGFR Antibody-drug Conjugate CPO301,0.8995,PR-151 Peptide,0.8989
+145,CPX351,Liposome-encapsulated Daunorubicin-Cytarabine,99,CP-547632,0.9163,Nanoparticle Formulation CPI-300,0.9141,ITK Inhibitor CPI-818,0.9039,Axelopran,0.8985,Prucalopride,0.8981
+146,CSF1R inhibitor,Immunosuppressant,99,CSF1R Inhibitor,1.0000,CSF1R-targeting Agent,0.9615,CSF1R Inhibitor PLX73086,0.9572,Anti-CSF1R Monoclonal Antibody,0.9535,CSF1R Inhibitor HMPL-653,0.9514
+147,CTL019,Tisagenlecleucel,99,Anti-CD20 Monoclonal Antibody TL011,0.9016,VCL-CB01 Vaccine,0.8907,Melanoma TRP2 CTL Epitope Vaccine SCIB1,0.8898,Autologous Natural Killer Cell-like CTLs,0.8896,RAS Peptide Cancer Vaccine TG01,0.8883
+148,CVT,Regadenoson,99,Cyclovalone,0.9134,Ciheptolane,0.9115,Cioteronel,0.9089,Vancomycin,0.9084,Siccanin,0.9081
+149,CX-01,Dociparstat sodium,99,Thymidylate Synthase Inhibitor CX1106,0.8971,PD-1 Directed Probody CX-188,0.8955,Anti-CD71/vcMMAE Probody-drug Conjugate CX-2029,0.8930,CXC Chemokine Receptor 2 Antagonist AZD5069,0.8919,XPO1 Inhibitor WJ01075,0.8898
+150,CX-5461 (POL1),Pidnarulex,99,Thymidylate Synthase Inhibitor CX1106,0.9150,IDO1 Inhibitor PF-06840003,0.9091,CP-547632,0.9054,XPO1 Inhibitor WJ01075,0.9040,CK2-targeting Synthetic Peptide CIGB-300,0.9039
+151,CXCR4 inhibitor,CXCR4 Inhibitor,1,CXCR4 Inhibitor,1.0000,CXCR4 Inhibitor Q-122,0.9468,CXCR4 Inhibitor GPC-100,0.9400,CXCR4 Peptide Antagonist LY2510924,0.9375,CXCR4 Antagonist USL311,0.9343
+152,CY,Cyclophosphamide,4,CyA 246,0.9326,Cyheptamide,0.9304,Cyheptropine,0.9293,Cyclophosphamide,0.9245,Cyacetacide,0.9233
+153,CYCLOPHOSPHAMIDE,Cyclophosphamide,1,Cyclophosphamide,1.0000,Cyclophosphamide Anhydrous,0.9458,Carbamazepine,0.9199,Chloroprednisone,0.9132,Theophylline,0.9123
+154,CYSTOPROSTATECTOMY,Radical Cystoprostatectomy,99,Carboprost,0.9137,Cystamine,0.9047,Misoprostol,0.8990,Dinoprostone,0.8903,Carboprost Methyl,0.8889
+155,CYTARABINE,Cytarabine,1,Cytarabine,1.0000,Cytarabine Hydrochloride,0.9596,Liposomal Cytarabine,0.9526,Thiarabine,0.9371,Cytembena,0.9361
+156,Cabazitaxel,Cabazitaxel,1,Cabazitaxel,1.0000,Cabastine,0.9449,Cabergoline,0.9319,Cabiralizumab,0.9226,Cabozantinib,0.9164
+157,Cabivalizumab,Cabiralizumab,1,Cabiralizumab,0.9487,Cabazitaxel,0.9308,Cabastine,0.9253,Cabotegravir,0.9147,Cabergoline,0.9125
+158,Cabo,Cabozantinib,2,Cabastine,0.9469,Cabozantinib,0.9344,Cabazitaxel,0.9290,Cabiralizumab,0.9145,Cabotegravir,0.9122
+159,Cabozantinib,Cabozantinib,1,Cabozantinib,1.0000,Cabozantinib S-malate,0.9485,Cabastine,0.9271,Cabergoline,0.9173,Cabazitaxel,0.9164
+160,Cape,Capecitabine,99,Capeserod,0.9473,Ancitabine,0.9027,Censavudine,0.8941,Candicidin,0.8930,Chloramphenicol,0.8921
+161,Capecitabine,Capecitabine,1,Capecitabine,1.0000,Capecitabine Rapidly Disintegrating Tablet,0.9394,Gemcitabine,0.9101,Dasatinib,0.9066,Temozolomide,0.9053
+162,Capectitabine,Capecitabine,99,Capromorelin,0.9096,Tetrydamine,0.9015,Gemcabene,0.9000,Capromorelin Tartrate,0.8993,Ticarbodine,0.8965
+163,Carbo,Carboplatin,99,Carboquone,0.9568,Carbenzide,0.9437,Carbogen,0.9414,Carbocloral,0.9405,Carbaril,0.9385
+164,Carboplatin,Carboplatin,1,Carboplatin,1.0000,Cisplatin,0.9259,Cetuximab,0.9212,Carbon C14-labeled Carboplatin,0.9148,Dicycloplatin,0.9125
+165,Carmustine,Carmustine,1,Carmustine,1.0000,Carmustine in Ethanol,0.9524,Lomustine,0.9492,Elmustine,0.9486,Carmustine Implant,0.9445
+166,Cart-T cell therapy,Chimeric Antigen Receptor T-Cell Therapy,99,Allogeneic CRISPR-edited Anti-CD19 CAR T Cells PACE CART19,0.9318,Autologous Anti-CD22 CAR-4-1BB-TCRz-transduced T-lymphocytes CART22-65s,0.9265,Autologous Anti-BCMA-CAR-TCRz/4-1BB-expressing T-lymphocytes CART-BCMA,0.9259,Autologous CD19 CAR-expressing CD4+/CD8+ T-cells MB-CART19.1,0.9217,Autologous Anti-CD20 CAR Transduced CD4/CD8 Enriched T-cells MB-CART20.1,0.9193
+167,Casodex,Bicalutamide,99,Casimersen,0.9291,Casopitant,0.9187,Casokefamide,0.9153,Sulodexide,0.9151,Casanthranol,0.9082
+168,Casoxdex,Bicalutamide,99,Casimersen,0.9119,Disoxaril,0.9109,Casanthranol,0.9099,Casdozokitug,0.9096,Casopitant,0.9089
+169,Caudate segmentectomy,Caudate Lobe;Segmentectomy,99,Rodocaine,0.8720,Dexivacaine,0.8655,Simvastatin,0.8618,Exalamide,0.8614,Rolapitant,0.8606
+170,Cediranib,Cediranib,1,Cediranib,1.0000,Cediranib Maleate,0.9649,Cedirogant,0.9314,Cedefingol,0.9202,Disulfiram,0.9177
+171,Celgene CC-15,DNA-PK/TOR Kinase Inhibitor CC-115,99,Celmoleukin,0.8964,Celgosivir,0.8838,Cyclophosphamide,0.8825,Celivarone,0.8814,Celiprolol,0.8805
+172,Cellcept,Mycophenolate Mofetil,99,Cell Surface Antigen,0.9094,Rituximab,0.8941,Alefacept,0.8932,Infliximab,0.8929,Recifercept,0.8926
+173,Cepecitabine,Capecitabine,99,Decitabine,0.9333,Emtricitabine,0.9319,Cephapirin,0.9274,Ancitabine,0.9271,Cephacetrile,0.9249
+174,Cetuximab,Cetuximab,1,Cetuximab,1.0000,Cetuximab-IRDye 800CW,0.9342,Cetuximab Sarotalocan,0.9282,Colistin,0.9217,Carboplatin,0.9212
+175,Cilengitide,Cilengitide,1,Cilengitide,1.0000,Cilansetron,0.9295,Cilofexor,0.9288,Cilobamine,0.9278,Cilastatin,0.9260
+176,Cis,Cisplatin,99,Cisapride,0.9515,Cisconazole,0.9389,Cismadinone,0.9250,Cistinexine,0.9247,Cisatracurium,0.9181
+177,Cisplatin,Cisplatin,1,Cisplatin,1.0000,Cisplatin Liposomal,0.9523,Carboplatin,0.9259,Cisplatin-E Therapeutic Implant,0.9255,Platinum Compound,0.9232
+178,Cladribine,Cladribine,1,Cladribine,1.0000,Cycrimine,0.9259,Azaribine,0.9210,Cetrimide,0.9153,Cycrimine Hydrochloride,0.9146
+179,Clofarabine,Clofarabine,1,Clofarabine,1.0000,Clofurac,0.9472,Cloranolol,0.9367,Clofezone,0.9352,Clofoctol,0.9342
+180,Cobemitinib,Cobimetinib,2,Cobolimab,0.9430,Cobimetinib,0.9360,Cobicistat,0.9354,Ceritinib,0.9353,Cimemoxin,0.9200
+181,Cobimetinib,Cobimetinib,1,Cobimetinib,1.0000,Cobimetinib Fumarate,0.9678,Binimetinib,0.9429,Ralimetinib,0.9415,Cobicistat,0.9371
+182,Conformal,"Radiotherapy, Conformal",99,Cyproterone,0.8886,Chloral,0.8869,Chlorazanil,0.8856,Chlorambucil,0.8813,Cyclopregnol,0.8807
+183,Core Biopsy of liver lesion,Core Biopsy;Liver Lesion,99,Therapeutic Liver Cancer Peptide Vaccine IMA970A,0.8702,Hepatoprotective Agent,0.8688,Soluble Liver Antigen,0.8643,Tumor Necrosis Factor (CET),0.8633,Deterenol Hydrochloride,0.8633
+184,Craniotomy,Craniotomy,99,Alamecin,0.8900,Venetoclax,0.8893,Alanosine,0.8893,Topotecan,0.8859,Oxamyl,0.8843
+185,Crenolanib,Crenolanib,1,Crenolanib,1.0000,Crenolanib Besylate,0.9549,Nenocorilant,0.9024,Brivaracetam,0.9017,Selnoflast,0.9006
+186,CsPt,Cisplatin,99,Cephacetrile,0.8933,DetoxPC,0.8910,Cimepanol,0.8903,Cimpuciclib,0.8903,Ticalopride,0.8888
+187,Ctx,Cyclophosphamide,99,Cefoxazole,0.9257,Cephalexin,0.9245,Cefazedone,0.9231,Cefrotil,0.9175,Ceftriaxone,0.9170
+188,Cy,Cyclophosphamide,4,CyA 246,0.9326,Cyheptamide,0.9304,Cyheptropine,0.9293,Cyclophosphamide,0.9245,Cyacetacide,0.9233
+189,CyPh,Cyclophosphamide,99,Cyproquinate,0.9423,Cyprodenate,0.9410,Cyproterone,0.9319,Cyproheptadine,0.9318,Cyprazepam,0.9292
+190,Cyclophoshamide,Cyclophosphamide,99,Cyclophenazine,0.9480,Cyclopropane,0.9419,Cyclopentamine,0.9411,Cyclophenazine Hydrochloride,0.9389,Cyclopentamine Hydrochloride,0.9314
+191,Cyclophospha,Cyclophosphamide,99,Cyclopropane,0.9530,Cyclophenazine,0.9441,Cyclopregnol,0.9437,Cyclopyrronium,0.9432,Cyclopentamine,0.9401
+192,Cyclophosphamide,Cyclophosphamide,1,Cyclophosphamide,1.0000,Cyclophosphamide Anhydrous,0.9458,Carbamazepine,0.9199,Chloroprednisone,0.9132,Theophylline,0.9123
+193,Cystectomy,Cystectomy,99,Cysteamine,0.9271,Cystemustine,0.9153,Cysteamine Hydrochloride,0.9117,Cysteamine Bitartrate,0.8964,Nacubactam,0.8915
+194,Cystoprostatectomy,Radical Cystoprostatectomy,99,Carboprost,0.9137,Cystamine,0.9047,Misoprostol,0.8990,Dinoprostone,0.8903,Carboprost Methyl,0.8889
+195,Cystoprostatectomy (robotic),Radical Cystoprostatectomy;Robot-Assisted Surgery,99,Carboprost,0.9006,Misoprostol,0.8908,Ciprostene,0.8877,Cystamine,0.8851,Ciltoprazine,0.8849
+196,Cystoprotatectomy,Radical Cystoprostatectomy,99,Cystamine,0.9114,Periciazine,0.8959,Carbutamide,0.8887,Carboprost,0.8886,Pirazolac,0.8859
+197,Cytarabine,Cytarabine,1,Cytarabine,1.0000,Cytarabine Hydrochloride,0.9596,Liposomal Cytarabine,0.9526,Thiarabine,0.9371,Cytembena,0.9361
+198,Cytarabine - liposomal,Liposomal Cytarabine,1,Liposomal Cytarabine,0.9873,Cytarabine,0.9533,Liposome-encapsulated Daunorubicin-Cytarabine,0.9388,Cytarabine Hydrochloride,0.9376,Liposomal Amphotericin B,0.9246
+199,Cytosine,Cytosine,99,4-(3-Ethylureido)-Cytosine,0.9134,Cytarabine,0.9074,Cyclopentenyl Cytosine,0.9036,5-Methyl-4-(3-Ethylureido)-Cytosine,0.9020,Chloramphenicol,0.9019
+200,Cytoxan,Cyclophosphamide,99,Cytochlor,0.9323,Carbenoxolone,0.9170,Droxacin,0.9131,Bexarotene,0.9116,Paraxazone,0.9071
+201,Cyx,Cyclophosphamide,99,Cyheptropine,0.9300,Cyheptamide,0.9276,Carbenoxolone,0.9233,Cyacetacide,0.9214,Cyamemazine,0.9213
+202,DC vaccine,Dendritic Cell Vaccine,2,DC-OVA Vaccine,0.9733,Dendritic Cell Vaccine,0.9671,Dendritic Cell Tumor Peptide Vaccine,0.9387,Dendritic Cell Tumor Cell Lysate Vaccine,0.9342,Vaccine,0.9322
+203,DC_VAX,Dendritic Cell Vaccine,99,DC-OVA Vaccine,0.9025,Daxdilimab,0.9021,Vafidemstat,0.9009,Devafidugene Civaparvovec,0.8951,Vaborbactam,0.8946
+204,DLL4/VEGF antibody OMP-305B83,Navicixizumab,99,Anti-DLL4/Anti-VEGF-A Bispecific Antibody CTX-009,0.9270,Anti-VEGF/ANG2 Nanobody BI 836880,0.9259,Anti-VEGFC Monoclonal Antibody VGX-100,0.9226,Anti-VEGF Monoclonal Antibody hPV19,0.9203,Anti-VEGFR2 Monoclonal Antibody MSB0254,0.9185
+205,DOPAMINE,Dopamine,99,Dopamine Agonist,0.9545,Dopamine Hydrochloride,0.9512,Dopamine Antagonist,0.9353,Levodopa,0.9216,Haloperidol,0.9127
+206,DTIC,Dacarbazine,1,Dacarbazine,0.9061,Dacemazine,0.9025,Idazoxan,0.8990,Dacinostat,0.8988,Dazidamine,0.8957
+207,DURVALUMAB,Durvalumab,1,Durvalumab,1.0000,Durlobactam,0.9159,Radretumab,0.9090,Navivumab,0.9086,Avelumab,0.9069
+208,Dabrafenib,Dabrafenib,1,Dabrafenib,1.0000,Dabrafenib Mesylate,0.9632,Dabigatran,0.9417,Agerafenib,0.9385,Exarafenib,0.9347
+209,Dacomitinib,Dacomitinib,1,Dacomitinib,1.0000,Dacomitinib Anhydrous,0.9607,Carbon C-14 Dacomitinib,0.9427,Dacinostat,0.9306,Dacetuzumab,0.9214
+210,Daratumumab,Daratumumab,1,Daratumumab,1.0000,Iratumumab,0.9493,Conatumumab,0.9439,Ofatumumab,0.9375,Darodipine,0.9334
+211,Dasatinib,Dasatinib,1,Dasatinib,1.0000,Dasatinib Anhydrous,0.9466,Clopidogrel,0.9212,Imatinib,0.9209,Radotinib,0.9161
+212,Daunorubicin,Daunorubicin,1,Daunorubicin,1.0000,Daunorubicin Hydrochloride,0.9711,Daunorubicin Citrate,0.9463,Detorubicin,0.9359,Liposomal Daunorubicin Citrate,0.9325
+213,Debio-1347,Zoligratinib,99,Hsp90 Inhibitor Debio 0932,0.9026,Octreotide Sustained-release Formulation Debio 4126,0.8962,Anti-CD38/CD3 Bispecific Monoclonal Antibody GBR 1342,0.8884,Pegylated Deoxycytidine Analogue DFP-14927,0.8856,Debamestrocel,0.8854
+214,Debulking surgery,Tumor Debulking,99,Deboxamet,0.8942,Debamestrocel,0.8940,Ulodesine,0.8773,Decitabine,0.8680,Erbulozole,0.8680
+215,Decitabine,Decitabine,1,Decitabine,1.0000,Dectaflur,0.9393,Decitropine,0.9362,Decitabine and Cedazuridine,0.9303,Decimemide,0.9301
+216,Decitbne,Decitabine,1,Decitabine,0.9170,Decitropine,0.9103,Decoglurant,0.9071,Dectaflur,0.9050,Tabilautide,0.9041
+217,Decortin H,Prednisolone,99,Dactinomycin,0.8984,Dabelotine,0.8848,Elliptinium,0.8842,Albenatide,0.8840,Nictindole,0.8832
+218,Dexamethasone,Dexamethasone,1,Dexamethasone,1.0000,Dexamethasone Phosphate,0.9679,Dexamethasone Acetate,0.9616,Dexamethasone Acetate,0.9616,Dexamethasone Sodium Sulfate,0.9597
+219,Distal pancreatectomy,Distal Pancreatectomy,99,Pancrelipase,0.8914,Pancopride,0.8856,Insulin Defalan (Porcine),0.8819,Pancrelipase Amylase,0.8812,Pancrelipase Lipase,0.8779
+220,Docetaxel,Docetaxel,1,Docetaxel,1.0000,Oral Docetaxel,0.9712,Docetaxel-PNP,0.9531,Docetaxel Anhydrous,0.9528,Liposomal Docetaxel,0.9485
+221,Donor Lymphocyte Infusion,Donor Lymphocyte Infusion,99,Donor Lymphocytes,0.9560,Allogeneic CD25/Treg-depleted Donor Lymphocytes,0.9210,Therapeutic Allogeneic Lymphocytes,0.9183,HSV-TK-Transduced Donor Lymphocytes,0.9178,CD34/TK75 Retroviral Vector-Transduced Donor Lymphocytes,0.9134
+222,Double Umbilical Cord Blood Transplant (DUCBT),Double-Unit Umbilical Cord Blood Transplantation,99,hTERT mRNA/Survivin Peptide-double-loaded Autologous Dendritic Cell Vaccine,0.9032,CD3+/CD19+ Cell-depleted Unrelated or Partially Matched Donor-derived Allogeneic Peripheral Blood Stem Cells,0.8981,Dual-target CAR-T Cells BGT007,0.8960,Autologous CD34-positive BCL11A-disrupted Hematopoietic Progenitor Cells ST-400,0.8959,Allogeneic Double Negative T Cells,0.8955
+223,Doxorubicin,Doxorubicin,1,Doxorubicin,1.0000,Doxorubicin Hydrochloride,0.9678,Doxorubicin Preparation,0.9641,Rutamycin,0.9341,Doxorubicin-Eluting Beads,0.9323
+224,Doxorubicin Hydrochloride,Doxorubicin Hydrochloride,1,Doxorubicin Hydrochloride,1.0000,Doxorubicin,0.9678,Pegylated Liposomal Doxorubicin Hydrochloride,0.9563,Doxorubicin Preparation,0.9549,Doxycycline Hydrochloride,0.9503
+225,Durvalumab,Durvalumab,1,Durvalumab,1.0000,Durlobactam,0.9159,Radretumab,0.9090,Navivumab,0.9086,Avelumab,0.9069
+226,Durvalumab (GIC026),Durvalumab,1,Durvalumab,0.9482,Anti-CD70 Antibody-Drug Conjugate MDX-1203,0.9131,Anti-PD-1 Monoclonal Antibody GNR-051,0.9120,Autologous Anti-HLA-G CAR-T Cells IVS-3001,0.9111,Anti-CD70 Monoclonal Antibody MDX-1411,0.9096
+227,Dutasteride,Dutasteride,1,Dutasteride,1.0000,Dutogliptin,0.9507,Dutacatib,0.9352,Finasteride,0.9338,Bolasterone,0.9222
+228,E7070,Indisulam,99,Pladienolide Derivative E7107,0.9104,HPV16-E7-T512,0.9007,PARP Inhibitor E7016,0.8961,Halichondrin Analogue E7130,0.8956,Hemiasterlin Analog E7974,0.8930
+229,E7438/EPZ6438,Tazemetostat,99,Eperezolid,0.9001,PE/HPV16 E7/KDEL Fusion Protein/GPI-0100 TVGV-1,0.8978,Eptastigmine,0.8967,Epertinib,0.8936,Ep-CAM,0.8924
+230,EBRT,External Beam Radiation Therapy,99,Ebastine,0.9447,Ebrotidine,0.9238,Ebdarokimab,0.9213,Ebopiprant,0.9208,Ebronucimab,0.9191
+231,EC1456,Folate Receptor-Targeted Tubulysin Conjugate EC1456,4,Ecabapide,0.9141,Eculizumab,0.9048,COX-2 Inhibitor ECP-1014,0.8979,Folate Receptor-Targeted Tubulysin Conjugate EC1456,0.8951,Ecallantide,0.8943
+232,EGFR inhibitor,Anti-EGFR Monoclonal Antibody,5,EGFR-targeting Agent,0.9529,EGFR Inhibitor TY-9591,0.9487,EGFR Inhibitor WJ13404,0.9482,EGFR Inhibitor ERAS-801,0.9478,Anti-EGFR Monoclonal Antibody,0.9461
+233,EPINEPHRINE,Epinephrine,99,Epinephrine Hydrochloride,0.9601,Lidocaine Hydrochloride/Epinephrine,0.9357,Therapeutic Epinephrine,0.9341,Epinephrine Bitartrate,0.9285,Adrenergic Agonist,0.9139
+234,ERIBULIN,Eribulin,1,Eribulin,1.0000,Eribulin Mesylate,0.9516,Indibulin,0.9386,Denibulin,0.9324,Lexibulin,0.9302
+235,ESD,Endoscopic Submucosal Dissection,99,Etodroxizine,0.9085,Erdafitinib,0.9057,Escitalopram,0.9055,Edogestrone,0.9043,Everolimus,0.9031
+236,EXCISION,Excision,99,Elanzepine,0.8798,Ethion,0.8763,Segesterone,0.8746,Ezetimibe,0.8743,Ecleralimab,0.8734
+237,EXCISION WITH NEEDLE WIRE LOCALIZATION,Excision;Wire-Guided Localization,99,Micro Needle Array-Doxorubicin,0.8760,Bupivacaine,0.8603,Epiestriol,0.8603,Flerobuterol,0.8600,Aptiganel,0.8568
+238,Enasidenib,Enasidenib,1,Enasidenib,1.0000,Enasidenib Mesylate,0.9555,Vorasidenib,0.9270,Avasimibe,0.9173,Enalapril,0.9091
+239,Endoxan,Cyclophosphamide,99,Endomide,0.9331,Endobenzyline,0.9302,Edatrexate,0.9278,Efaroxan,0.9234,Dexefaroxan,0.9150
+240,Entospletinib,Entospletinib,1,Entospletinib,1.0000,Epertinib,0.9153,Enilospirone,0.9145,Entex,0.9140,Entolimod,0.9080
+241,Enucleation,Enucleation,99,Enoxolone,0.9339,Enrofloxacin,0.9320,Enoxacin,0.9287,Enrasentan,0.9229,Enflurane,0.9220
+242,Enzalutamide,Enzalutamide,1,Enzalutamide,1.0000,Bicalutamide,0.9358,Enzacamene,0.9297,Enzastaurin,0.9242,Proxalutamide,0.9228
+243,Epirubicin,Epirubicin,1,Epirubicin,1.0000,Epirubicin Hydrochloride,0.9776,Idarubicin,0.9436,Micellar Nanoparticle-encapsulated Epirubicin,0.9335,Leurubicin,0.9286
+244,Eribulin,Eribulin,1,Eribulin,1.0000,Eribulin Mesylate,0.9516,Indibulin,0.9386,Denibulin,0.9324,Lexibulin,0.9302
+245,Esophagectomy,Esophagectomy,99,Ezetimibe,0.8960,Ezutromid,0.8953,Elucaine,0.8950,Eclazolast,0.8938,Etafenone,0.8919
+246,Esophagectomy (outside),Esophagectomy;External,99,Ezutromid,0.8932,Ezetimibe,0.8833,Elucaine,0.8813,Emideltide,0.8770,Ersodetug,0.8769
+247,Estramustine,Estramustine,1,Estramustine,1.0000,Estramustine Phosphate Sodium,0.9439,Ambamustine,0.9438,Bendamustine,0.9391,Estramustine Phosphate Sodium Anhydrous,0.9350
+248,Et,Etoposide,99,Etorphine,0.9382,Etofibrate,0.9320,Etretinate,0.9299,Etozolin,0.9293,Etevritamab,0.9229
+249,Etoposide,Etoposide,1,Etoposide,1.0000,Etoposide Phosphate,0.9552,Etoposide Toniribate,0.9436,Etoprindole,0.9310,Etoprine,0.9301
+250,Etopside,Etoposide,5,Etoprine,0.9560,Etoprindole,0.9495,Etoperidone,0.9466,Etoperidone Hydrochloride,0.9277,Etoposide,0.9155
+251,Everolimus,Everolimus,1,Everolimus,1.0000,Everolimus Tablets for Oral Suspension,0.9358,Axitinib,0.9222,Sirolimus,0.9205,Erlotinib,0.9130
+252,Excision,Excision,99,Elanzepine,0.8798,Ethion,0.8763,Segesterone,0.8746,Ezetimibe,0.8743,Ecleralimab,0.8734
+253,Excisional biopsy,Excisional Biopsy,99,Endobenzyline,0.8820,Abiraterone Decanoate Depot,0.8762,Abiraterone Decanoate,0.8753,Abciximab,0.8736,Tenofovir Exalidex,0.8735
+254,Excisional biospy,Excisional Biopsy,99,Biosimilar,0.8803,Ecleralimab,0.8747,Endobenzyline,0.8728,Birabresib,0.8685,Recaticimab,0.8664
+255,Exemestane,Exemestane,1,Exemestane,1.0000,Formestane,0.9106,Algestone,0.9019,Tigestol,0.9019,Terestigmine,0.8947
+256,Exploration,Exploratory Surgery,99,Epaminurad,0.8700,Reproterol,0.8696,Etaminile,0.8667,Plevitrexed,0.8628,Aviscumine,0.8626
+257,Exploration (outside),Exploratory Surgery;External,99,Repinotan,0.8710,Exaluren,0.8682,Emepepimut-S,0.8680,Nisotirotide,0.8664,Selodenoson,0.8653
+258,Exploratory laparotomy,Exploratory Surgery;Laparotomy,99,Lapachone,0.8836,Ethaverine,0.8785,Epiestriol,0.8740,Ethoxzolamide,0.8725,Enadoline,0.8718
+259,Extended Lobectomy,Extend;Lobectomy,99,Extended Spectrum Penicillin Antibiotic,0.8865,Lobenzarit,0.8854,Rosterolone,0.8749,Lobeline,0.8745,Levomequitazine,0.8743
+260,External Beam,External Beam Radiation Therapy,99,Ebrotidine,0.8915,Epirubicin,0.8839,Endomide,0.8790,Evofosfamide,0.8778,Obefazimod,0.8755
+261,"External Beam, 3D Conformal",External Beam Radiation Therapy;3-Dimensional Conformal Radiation Therapy,99,4'-Iodo-4'-Deoxydoxorubicin,0.8805,Epirubicin,0.8790,Epipropidine,0.8778,Ebrotidine,0.8770,Bufeniode,0.8761
+262,FENRETINIDE,Fenretinide,1,Fenretinide,1.0000,Fenofibrate,0.9466,Fenozolone,0.9451,Fenalamide,0.9427,Fenoterol,0.9363
+263,FLUORO-PYRIMIDINE,Fluoropyrimidine,1,Fluoropyrimidine,0.9648,5-Fluoropyrimidinone,0.9478,2-Fluorofucose,0.9371,Fluorosalan,0.9284,5-Fluoro-2-Deoxycytidine,0.9281
+264,FLX925,FLT3/CDK4/6 Inhibitor FLX925,1,FLT3/CDK4/6 Inhibitor FLX925,0.9221,Faxeladol,0.9182,Fluoxetine,0.9094,Fexofenadine,0.9088,Fipexide,0.9046
+265,FNA,Fine-Needle Aspiration,99,Fluorouracil,0.9097,Fentanyl,0.9054,Fluoxetine,0.9029,Fluprednisolone,0.9027,Fluroxene,0.9027
+266,FOLIC_ACID,Folic Acid,99,Folic Acid Derivative,0.9508,In 111 Folic Acid,0.9360,Fenofibric Acid,0.9207,Folate-FITC,0.9203,Ascorbic Acid,0.9203
+267,FSRT,Fractionated Stereotactic Radiation Therapy,99,Fluocortolone,0.9249,Fluocortin,0.9236,Fimasartan,0.9167,Fazirsiran,0.9144,Flupirtine,0.9126
+268,FU,Fluorouracil,2,Fuprazole,0.9616,Fluorouracil,0.9548,Fuzapladib,0.9325,Fuzuloparib,0.9293,Fuzlocillin,0.9292
+269,FUDR,Floxuridine,99,Fuzapladib,0.9384,Fuprazole,0.9343,Fluorouracil,0.9309,Fuzuloparib,0.9275,Fludrocortisone,0.9254
+270,FULVESTRANT,Fulvestrant,1,Fulvestrant,1.0000,Fulranumab,0.9279,Bezafibrate,0.9164,Fulacimstat,0.9152,Fulimetibant,0.9151
+271,Filgrastim,Filgrastim,1,Filgrastim,1.0000,Pegfilgrastim,0.9388,Eflapegrastim,0.9381,Mecapegfilgrastim,0.9330,Filgotinib,0.9315
+272,Fine Needle aspiration biopsy,Fine-Needle Aspiration,99,Bezafibrate,0.8730,Nab-paclitaxel,0.8718,Afamelanotide,0.8694,Naftifine,0.8670,Nandrolone,0.8666
+273,Fine needle aspiration biopsy,Fine-Needle Aspiration,99,Bezafibrate,0.8730,Nab-paclitaxel,0.8718,Afamelanotide,0.8694,Naftifine,0.8670,Nandrolone,0.8666
+274,Flu,Fludarabine,99,Flualamide,0.9477,Fluvastatin,0.9468,Fluprofen,0.9459,Flufosal,0.9453,Flumizole,0.9426
+275,Fludarabine,Fludarabine,1,Fludarabine,1.0000,Fludalanine,0.9688,Fludarabine Phosphate,0.9663,Fludazonium,0.9634,Oral Fludarabine Phosphate,0.9568
+276,Fluorouracil,Fluorouracil,1,Fluorouracil,1.0000,Topical Fluorouracil,0.9630,Fluorouracil Implant,0.9499,5-[18F]Fluorouracil,0.9410,Fuprazole,0.9400
+277,Fluorouracil (5-FU),Fluorouracil,1,Fluorouracil,0.9687,5-[18F]Fluorouracil,0.9638,Topical Fluorouracil,0.9498,5-Fluoro-2-Deoxycytidine,0.9436,5-Fluoropyrimidinone,0.9432
+278,Fluropyrimidine,Fluoropyrimidine,1,Fluoropyrimidine,0.9543,Flurofamide,0.9431,Fluprofen,0.9366,Flualamide,0.9318,Flumeridone,0.9308
+279,Fotemustine,Fotemustine,1,Fotemustine,1.0000,Fomepizole,0.9258,Lomustine,0.9233,Bofumustine,0.9215,Carmustine,0.9151
+280,G-CSF,Granulocyte Colony-Stimulating Factor,99,GM-CSF DNA,0.9293,Glycosylated Recombinant Human G-CSF AVI-014,0.9195,Human Immunoglobulin G,0.9193,Recombinant Granulocyte-Macrophage Colony-Stimulating Factor,0.9184,Anti-GM-CSF Monoclonal Antibody,0.9170
+281,G3139,Oblimersen Sodium,99,Tyrphostin AG 1433,0.8871,I 131 Monoclonal Antibody A33,0.8855,NY-ESO-1/GLA-SE Vaccine ID-G305,0.8845,RG 13022,0.8800,Iodine I 124 Monoclonal Antibody A33,0.8794
+282,GCSF,Granulocyte Colony-Stimulating Factor,99,Apoptosis Inducer GCS-100,0.9037,Gancotamab,0.8897,Dexbudesonide,0.8892,Cortivazol,0.8892,Gentamicin,0.8879
+283,GDC0032,Taselisib,99,Chk1 Inhibitor GDC-0425,0.9182,mTOR Inhibitor GDC-0349,0.9176,Anti-GD3 Antibody-drug Conjugate PF-06688992,0.9120,Chk1 Inhibitor GDC-0575,0.9105,MEK Inhibitor GDC-0623,0.9083
+284,GEM,Gemcitabine,99,Gemtuzumab,0.9548,Gemigliptin,0.9475,Gemazocine,0.9474,Gemeprost,0.9438,Gemlapodect,0.9399
+285,GENZ-644282,Topoisomerase I Inhibitor Genz-644282,1,Topoisomerase I Inhibitor Genz-644282,0.9404,Microbiome GEN-001,0.8950,CDK4/6 Inhibitor XZP-3287,0.8874,Neoantigen Vaccine GEN-009,0.8865,Tumor Necrosis Factor (GEN),0.8843
+286,GK,Gamma Knife,99,Gemigliptin,0.9135,Potassium Glucaldrate,0.9094,Gosogliptin,0.9061,Glisentide,0.9058,Gabapentin,0.9049
+287,GS-9820,Acalisib,99,Nucleotide Analogue GS 9219,0.9288,MCL1 Inhibitor GS-9716,0.9208,Tyrphostin AG 1288,0.9070,Tyrphostin AG 957,0.9062,PI3Kdelta Inhibitor GS-9901,0.9007
+288,GSK690693,Pan-AKT Kinase Inhibitor GSK690693,1,Pan-AKT Kinase Inhibitor GSK690693,0.9354,PI3K-beta Inhibitor GSK2636771,0.9186,PI3K Inhibitor GSK1059615,0.9125,GSK-3 Inhibitor LY2090314,0.9062,FAK Inhibitor GSK2256098,0.9035
+289,GSK923295A,CENP-E Inhibitor GSK-923295A,1,CENP-E Inhibitor GSK-923295A,0.9255,FAK Inhibitor GSK2256098,0.9240,PI3K Inhibitor GSK1059615,0.9238,PI3K-beta Inhibitor GSK2636771,0.9217,GSK-3 Inhibitor LY2090314,0.9206
+290,Galunisertib,Galunisertib,1,Galunisertib,1.0000,Tanzisertib,0.9195,Galiximab,0.9128,Galocitabine,0.9125,Galcanezumab,0.9103
+291,Gamma knife,Gamma Knife,99,Nasaruplase Gamma,0.9019,Gamma Oryzanol,0.8946,Interferon Gamma-1a,0.8945,Gamma-Secretase Inhibitor,0.8936,Gabapentin,0.8936
+292,Gastrectomy,Gastrectomy,99,Satigrel,0.8943,Gersizangitide,0.8878,Granotapide,0.8868,Gestodene,0.8860,Gentamicin,0.8851
+293,Gefitinib,Gefitinib,1,Gefitinib,1.0000,Erlotinib,0.9119,Genistein,0.9105,Gemcitabine,0.9102,Imatinib,0.9064
+294,Gem,Gemcitabine,99,Gemtuzumab,0.9548,Gemigliptin,0.9475,Gemazocine,0.9474,Gemeprost,0.9438,Gemlapodect,0.9399
+295,Gemcitabin,Gemcitabine,4,Gemcabene,0.9469,Gemcadiol,0.9359,Gemcabene Calcium,0.9287,Gemcitabine,0.9230,Guadecitabine,0.9083
+296,Gemcitabine,Gemcitabine,1,Gemcitabine,1.0000,Gemcitabine Hydrochloride,0.9592,Aerosol Gemcitabine,0.9455,Topical Gemcitabine Hydrochloride,0.9412,Gemcitabine Elaidate,0.9365
+297,Gemtuzumab,Gemtuzumab,1,Gemtuzumab,1.0000,Gemtuzumab Ozogamicin,0.9705,Veltuzumab,0.9448,Gemogenovatucel-T,0.9426,Gemigliptin,0.9423
+298,Gemtuzumab Ozogamicin,Gemtuzumab Ozogamicin,1,Gemtuzumab Ozogamicin,1.0000,Gemtuzumab,0.9705,Inotuzumab Ozogamicin,0.9634,Ozogamicin,0.9495,Gemigliptin,0.9414
+299,Gemtuzumab ozogamicin,Gemtuzumab Ozogamicin,1,Gemtuzumab Ozogamicin,1.0000,Gemtuzumab,0.9705,Inotuzumab Ozogamicin,0.9634,Ozogamicin,0.9495,Gemigliptin,0.9414
+300,Genasense,Oblimersen Sodium,99,Tumor Necrosis Factor (GEN),0.9012,Gentamicin,0.8973,Aceglatone,0.8935,Ethaselen,0.8916,Acenocoumarol,0.8913
+301,Gengraft (anti-GVHD),Cyclosporine,99,Tumor Necrosis Factor (GEN),0.9115,Anti-CD3/Anti-5T4 Bispecific Antibody GEN1044,0.9063,Neoantigen-based Therapeutic Cancer Vaccine GRT-R904,0.9050,Anti-CD27 Monoclonal Antibody GEN1053/BNT313,0.9049,Anti-GFRAL Monoclonal Antibody NGM120,0.9048
+302,Gilteritinib,Gilteritinib,1,Gilteritinib,1.0000,Gilteritinib Fumarate,0.9683,Carbon C 14 Gilteritinib,0.9389,Ritlecitinib,0.9190,Clivatuzumab,0.9135
+303,Gilteritinib (ASP2215),Gilteritinib,1,Gilteritinib,0.9581,Gilteritinib Fumarate,0.9364,FGFR4 Inhibitor ABSK-011,0.9212,FGFR Inhibitor ASP5878,0.9196,Carbon C 14 Gilteritinib,0.9191
+304,Gleevac,Imatinib Regimen,99,Glecaprevir,0.9184,Glepaglutide,0.9111,Glesatinib,0.9104,Glenvastatin,0.9097,Glembatumumab Vedotin,0.9085
+305,HAI,Intrahepatic Infusion Procedure,99,Tiotropium,0.9002,Trastuzumab,0.8964,HPPH,0.8894,Metronidazole,0.8890,Methicillin,0.8874
+306,HDAC inhibitor,Histone Deacetylase Inhibitor,1,Histone Deacetylase Inhibitor,0.9667,HDAC Inhibitor CKD-581,0.9382,HDAC Inhibitor REC-2282,0.9380,HDAC Inhibitor OBP-801,0.9326,HDAC Class I/IIb Inhibitor HG146,0.9281
+307,HDR,High-Dose Rate Brachytherapy,99,Darodipine,0.9060,Darotropium,0.9016,Darusentan,0.8977,HPPH,0.8974,Isradipine,0.8951
+308,HGS-ETR1,Mapatumumab,99,Etretinate,0.8966,Etoglucid,0.8965,Eteplirsen,0.8905,Epratuzumab-cys-tesirine,0.8898,Etomidoline,0.8889
+309,HSPPC-96 vaccine,Vitespen,99,Recombinant Human Hsp110-gp100 Chaperone Complex Vaccine,0.9262,pTVG-HP Plasmid DNA Vaccine,0.9231,Hsp90 Inhibitor HSP990,0.9194,Autologous Heat-Shock Protein 70 Peptide Vaccine AG-858,0.9165,PSA/PSMA/PSCA-encoding DNA Plasmid Vaccine PF-06755990,0.9155
+310,HU,Hydroxyurea,3,Monoclonal Antibody HuPAM4,0.9122,Monoclonal Antibody HuAFP31,0.9096,Hydroxyurea,0.9086,HuaChanSu,0.9072,Huperzine A,0.9060
+311,Haplo,Haploidentical Hematopoietic Cell Transplantation,99,Bupropion,0.8853,HPPH,0.8786,Bupranolol,0.8785,Isoflurophate,0.8776,Homprenorphine,0.8763
+312,Herceptin,Trastuzumab,1,Trastuzumab,0.9473,Trastuzumab Botidotin,0.9197,Zafuleptine,0.9163,Tianeptine,0.9132,Trastuzumab Vedotin,0.9124
+313,Hydrea,Hydroxyurea,99,Halquinols,0.9068,Halazepam,0.9054,Halazone,0.9031,Vortioxetine Hemihydrobromide,0.9028,Halcinonide,0.9017
+314,Hydroxyurea,Hydroxyurea,1,Hydroxyurea,1.0000,Hydroxyzine,0.9413,Hydroxyzine Hydrochloride,0.9389,Hydroxyamphetamine,0.9324,Hydroxyflutamide,0.9316
+315,Hysterectomy,Hysterectomy,99,Trastuzumab,0.9008,Tamoxifen,0.8931,Histapyrrodine,0.8882,Dutasteride,0.8851,Trastuzumab Botidotin,0.8841
+316,IDAC,Cytarabine,99,Idactamab,0.9484,Idalopirdine,0.9435,Idazoxan,0.9430,Idaverine,0.9395,Idarucizumab,0.9344
+317,IDO1 inhibitor,IDO Inhibitor,99,IDO1 Inhibitor,1.0000,IDO1 Inhibitor MK-7162,0.9615,IDO1 Inhibitor KHK2455,0.9580,IDO1 Inhibitor PF-06840003,0.9477,IDO/TDO Inhibitor LY-01013,0.9474
+318,IDO1 inhibitor (BMS986205),Linrodostat,99,IDO1 Inhibitor,0.9612,IDO1 Inhibitor MK-7162,0.9521,IDO1/TDO2 Inhibitor DN1406131,0.9496,IDO1 Inhibitor PF-06840003,0.9495,IDO/TDO Inhibitor LY-01013,0.9427
+319,IFR,Involved-Field Radiation Therapy,99,Ifoxetine,0.9510,Ifosfamide,0.9430,Ifenprodil,0.9366,Iferanserin,0.9236,Ifebemtinib,0.9222
+320,IGN523,Anti-CD98 Monoclonal Antibody IGN523,1,Anti-CD98 Monoclonal Antibody IGN523,0.9056,Indoximod,0.8826,Indimilast,0.8813,Anagliptin,0.8805,Monoclonal Antibody 528,0.8803
+321,IL-2,Aldesleukin,99,Interleukin-2 Gene,0.9511,IL-2 Plasmid DNA,0.9496,Recombinant Interleukin-2,0.9492,Interleukin-2 Liposome,0.9394,PEG-interleukin-2,0.9337
+322,IMATINIB,Imatinib,1,Imatinib,1.0000,Imatinib Mesylate,0.9554,Dasatinib,0.9209,Alkotinib,0.9186,Sildenafil,0.9183
+323,IMC-A12,Cixutumumab,99,IMC-1C11,0.9460,Moenomycin A12,0.9191,Ex Vivo-expanded Autologous T Cells IMA101,0.9152,Imlifidase,0.9138,Imafen,0.9115
+324,IMGN779 (Immunogen Trial),Anti-CD33 Antibody-drug Conjugate IMGN779,1,Anti-CD33 Antibody-drug Conjugate IMGN779,0.9407,Anti-Integrin Monoclonal Antibody-DM4 Immunoconjugate IMGN388,0.9208,RFT5-dgA Immunotoxin IMTOX25,0.9097,Anti-CD47 Monoclonal Antibody IMC-002,0.9085,Anti-PRAME T-cell Receptor/Anti-CD3 scFv Fusion Protein IMC-F106C,0.9062
+325,IMRT,Intensity-Modulated Radiation Therapy,99,Modotuximab,0.9116,Ipilimumab,0.9081,Risperidone,0.9015,Naltrexone,0.8995,Iratumumab,0.8989
+326,INK128-1110-028,Sapanisertib,99,Gallium Ga 68-P16-093,0.8996,Iodine I 124 18B10(10L),0.8978,Iodine I-123 MIP-1095,0.8946,Iodine I 124 CPD-1028,0.8919,Iodine I 131 MIP-1095,0.8876
+327,INTERFERON_ALPHA,Interferon Alpha,99,Interferon Beta-1A,0.9676,Interferon Gamma-1a,0.9583,Recombinant Interferon Alfa-2a,0.9537,Interferon Beta-1B,0.9519,Interferon Alfacon-1,0.9495
+328,IODINE,Iodine,99,Iodine I-131,0.9638,Iodine I 131 IPA,0.9437,Iodine I 131 Iodocholesterol,0.9391,Iodine I 131 Rituximab,0.9375,Thyroxine I-131,0.9351
+329,IPI,Ipilimumab,99,Ipecac,0.9581,Ipivivint,0.9411,Ipenoxazone,0.9367,Ipidacrine,0.9308,Ipexidine,0.9257
+330,IT,Intrathecal Route of Administration,99,Vancomycin,0.9165,Ketamine,0.9157,Adalimumab,0.9155,Raloxifene,0.9154,Buprenorphine,0.9154
+331,IT Methotrexate,Methotrexate,1,Methotrexate,0.9978,Methotrexate Sodium,0.9524,Methotrexate-E Therapeutic Implant,0.9325,Methotrexate-Encapsulating Autologous Tumor-Derived Microparticles,0.9247,IGF-methotrexate Conjugate,0.9169
+332,IT/IV Cytarabine,Cytarabine,1,Cytarabine,0.9461,Cytarabine Hydrochloride,0.9218,Ivermectin,0.9153,Ivarmacitinib,0.9151,Liposomal Cytarabine,0.9132
+333,Ibrutinib,Ibrutinib,1,Ibrutinib,1.0000,Bosutinib,0.9423,Ibrolipim,0.9330,Tirabrutinib,0.9306,Brigatinib,0.9293
+334,Ida,Idarubicin,99,Idazoxan,0.9457,Idaverine,0.9425,Idalopirdine,0.9394,Idactamab,0.9385,Idarucizumab,0.9319
+335,Idarubicin,Idarubicin,1,Idarubicin,1.0000,Idarubicin Hydrochloride,0.9761,Idarucizumab,0.9556,Epirubicin,0.9436,Idarubicin-Eluting Beads,0.9419
+336,Idasanutlin,Idasanutlin,1,Idasanutlin,1.0000,Carbon C 14 Idasanutlin,0.9263,Carbon C 13 Idasanutlin,0.9258,Idalopirdine,0.9231,Idazoxan,0.9101
+337,Ifosfamid,Ifosfamide,1,Ifosfamide,0.9940,Ifoxetine,0.9409,Perfosfamide,0.9367,Evofosfamide,0.9355,Mafosfamide,0.9339
+338,Ifosfamide,Ifosfamide,1,Ifosfamide,1.0000,Ifoxetine,0.9417,Perfosfamide,0.9382,Flutamide,0.9370,Mafosfamide,0.9367
+339,Il-2,Aldesleukin,99,Interleukin-2 Gene,0.9511,IL-2 Plasmid DNA,0.9496,Recombinant Interleukin-2,0.9492,Interleukin-2 Liposome,0.9394,PEG-interleukin-2,0.9337
+340,Ileal conduit Creation,Urinary Diversion,99,Autologous Muscle-derived Cells for Gastrointestinal Repair,0.8669,Infliximab,0.8579,Loviride,0.8545,Nebicapone,0.8535,Therapeutic Vasoactive Intestinal Peptide,0.8526
+341,Imatinib,Imatinib,1,Imatinib,1.0000,Imatinib Mesylate,0.9554,Dasatinib,0.9209,Alkotinib,0.9186,Sildenafil,0.9183
+342,Immunoglobulin,Immunoglobulin,99,Human Immunoglobulin A,0.9578,Human Immunoglobulin G,0.9531,Human Immunoglobulin M,0.9477,Serum-derived Bovine Immunoglobulin Protein Isolate,0.9164,IgM-enriched Immunoglobulins,0.9077
+343,Implants-tandem,Tandem Brachytherapy,99,Yttrium Y-90 Ibritumomab Tiuxetan,0.8781,Yttrium Y-90 Tacatuzumab Tetraxetan,0.8755,Tioxidazole,0.8753,Lasofoxifene Tartrate,0.8751,Tioxolone,0.8744
+344,Imuran,Azathioprine Sodium,99,Imafen,0.9467,Imipramine,0.9304,Imazodan,0.9294,Imlifidase,0.9285,Imciromab,0.9252
+345,Indoximod,Indoximod,1,Indoximod,1.0000,Indoxole,0.9658,Navoximod,0.9399,Indanorex,0.9396,Indimitecan,0.9369
+346,Iniparib,Iniparib,1,Iniparib,1.0000,Pamiparib,0.9377,Veliparib,0.9348,Anipamil,0.9297,Rivipansel,0.9247
+347,Interval Debulking,Interval Debulking Surgery,99,Debamestrocel,0.8686,Irofulven,0.8581,Indocate,0.8576,Dimeprozan,0.8569,Ulodesine,0.8559
+348,Ipi,Ipilimumab,99,Ipecac,0.9581,Ipivivint,0.9411,Ipenoxazone,0.9367,Ipidacrine,0.9308,Ipexidine,0.9257
+349,Ipilimumab,Ipilimumab,1,Ipilimumab,1.0000,Melanoma Vaccine,0.9250,Infliximab,0.9247,Anti-CTLA-4 Monoclonal Antibody IBI310,0.9162,Everolimus,0.9126
+350,Ipilumumab,Ipilimumab,99,Pritumumab,0.9377,Votumumab,0.9339,Intetumumab,0.9279,Rilotumumab,0.9255,Teprotumumab,0.9201
+351,Irinotecan,Irinotecan,1,Irinotecan,1.0000,Irinotecan Hydrochloride,0.9719,Irinotecan Sucrosofate,0.9480,Oral Irinotecan Hydrochloride Formulation VAL-413,0.9417,Pegylated Liposomal Irinotecan,0.9366
+352,Isotretinoin,Isotretinoin,1,Isotretinoin,1.0000,Isotretinoin Anisatil,0.9464,Isotiquimide,0.9313,Motretinide,0.9254,Etretinate,0.9219
+353,Itacitinib,Itacitinib,1,Itacitinib,1.0000,Itacitinib Adipate,0.9594,Tofacitinib,0.9470,Gusacitinib,0.9341,Tofacitinib Citrate,0.9238
+354,Ivosidenib,Ivosidenib,1,Ivosidenib,1.0000,Ivicentamab,0.9229,Ivospemin,0.9187,Navivumab,0.9127,Avoparcin,0.9120
+355,JAK 1 inhibitor,JAK1 Inhibitor,1,JAK1 Inhibitor,0.9907,JAK Inhibitor,0.9826,JAK1 Inhibitor INCB052793,0.9535,JAK2 Inhibitor,0.9452,JAK Inhibitor INCB047986,0.9407
+356,JNJ-40346527 (CSF1R inhibitor),Edicotinib,99,CSF1R Inhibitor,0.9501,BTK Inhibitor JNJ-64264681,0.9387,CSF1R Inhibitor PLX73086,0.9378,CSF1R Inhibitor HMPL-653,0.9376,ERK1/2 Inhibitor JSI-1187,0.9366
+357,JNJ26481585,Quisinostat,99,TLR7 Agonist JNJ-64794964,0.9276,DHODH Inhibitor JNJ-74856665,0.9252,BTK Inhibitor JNJ-64264681,0.9218,KRASG12C Inhibitor JNJ-74699157,0.9214,Adenovirus Serotype 26-expressing HPV18 Vaccine JNJ-63682931,0.9081
+358,JNJ26854165,Serdemetan,99,DHODH Inhibitor JNJ-74856665,0.9216,KRASG12C Inhibitor JNJ-74699157,0.9198,TLR7 Agonist JNJ-64794964,0.9165,Adenovirus Serotype 26-expressing HPV18 Vaccine JNJ-63682931,0.9143,BTK Inhibitor JNJ-64264681,0.9119
+359,Jakafi,Ruxolitinib,99,JAK Inhibitor,0.9142,Tianafac,0.9090,Bezafibrate,0.9038,JAK1 Inhibitor,0.9027,Finafloxacin,0.8985
+360,KB004,Ifabotuzumab,99,BMS-188797,0.8827,CDK4/6 Inhibitor BPI-16350,0.8825,CDK9 Inhibitor KB-0742,0.8791,TRK Inhibitor VC004,0.8777,CDK4/6 Inhibitor BPI-1178,0.8761
+361,KPT-330,Selinexor,99,MMP Inhibitor S-3304,0.9005,Engineered IL-12 Prodrug WTX-330,0.8897,pan-RAF Kinase Inhibitor CCT3833,0.8887,CRL4-CRBN Modulator KPG-818,0.8883,pNGVL3-hICD Vaccine AST-301,0.8870
+362,Ketoconazole,Ketoconazole,1,Ketoconazole,1.0000,Ketorolac,0.9496,Azaconazole,0.9443,Ketoprofen,0.9373,Sulconazole,0.9366
+363,L Radical Nephrectomy,Left;Radical Nephrectomy,99,Rolistobart,0.8820,Reloxaliase,0.8801,Renal Tumor-Reactive Autologous Tumor Infiltrating Lymphocyte,0.8795,Rolapitant,0.8769,Resveratrol,0.8768
+364,L Total Mastectomy,Left;Total Mastectomy,99,Tamoxifen,0.8822,Trastuzumab,0.8764,Lumretuzumab,0.8681,Tamibarotene,0.8677,Myralact,0.8669
+365,L-Asparaginase,Asparaginase,1,Asparaginase,0.9665,Glutaminase-Asparaginase,0.9585,Asparaginase-based Agent,0.9400,PEG-Glutaminase-Asparaginase,0.9353,Asparaginase Erwinia chrysanthemi,0.9319
+366,LAPATINIB,Lapatinib,1,Lapatinib,1.0000,Lapatinib Ditosylate,0.9422,Lithium Benzoate,0.9157,Trastuzumab,0.9154,Telatinib,0.9141
+367,LAR,Low Anterior Resection,99,Larazotide,0.9524,Laronidase,0.9457,Larotaxel,0.9388,Laropiprant,0.9367,Larcaviximab,0.9323
+368,LBH,Panobinostat,99,Anti-LAG-3 Monoclonal Antibody LBL-007,0.8953,Anti-PD-1/TGFbRII Fusion Protein LBL-015,0.8941,Vilobelimab,0.8937,Laflunimus,0.8936,Benzoclidine,0.8923
+369,LDR,Low-Dose Rate Brachytherapy,99,Ulodesine,0.9079,Feladilimab,0.9068,Ilodecakin,0.9024,Ibudilast,0.9022,Zaldaride,0.9021
+370,LE,Local excision (procedure),99,Lebrikizumab,0.9058,Lesogaberan,0.9004,Lesinidase Alfa,0.8979,Lesinurad,0.8959,Bliretrigine,0.8936
+371,LENOLIDAMIDE,Lenalidomide,99,Lenvatinib,0.9298,Lenperone Hydrochloride,0.9270,Lenzilumab,0.9218,Leniquinsin,0.9187,Lenabasum,0.9160
+372,LHRH,Gonadotrophin Releasing Hormone,99,Leuprolide,0.9102,TLR7 Agonist LHC165,0.9087,Recombinant Luteinizing Hormone,0.9081,HPPH,0.9064,Gonadotropin-releasing Hormone Analog,0.9013
+373,LHRH agonist,Gonadotropin-releasing Hormone Analog,2,TLR7 Agonist LHC165,0.9334,Gonadotropin-releasing Hormone Analog,0.9270,Orexin Receptor Agonist,0.9221,Gonadotropin Releasing Hormone Antagonist,0.9206,Dopamine Agonist,0.9139
+374,LN dissection,Lymphadenectomy,99,Trolnitrate,0.8710,Lacidipine,0.8702,Naltalimide,0.8697,Naldemedine Tosylate,0.8652,Levomilnacipran,0.8651
+375,LND,Lymphadenectomy,99,Retrovirus Vector LN,0.9130,Trolnitrate,0.9129,Levomilnacipran,0.9031,Lonapalene,0.9027,Naltalimide,0.9021
+376,LUMPCTOMY,Lumpectomy,99,Lumasiran,0.9066,Lumateperone,0.9004,Lumretuzumab,0.8984,Zetomipzomib,0.8941,Lumiracoxib,0.8935
+377,LUMPECTOMY,Lumpectomy,99,Lumretuzumab,0.9120,Lumateperone,0.9039,Lumasiran,0.9032,Venetoclax,0.8974,Lumicitabine,0.8943
+378,LV,Leucovorin,99,Levosimendan,0.9122,Levofloxacin,0.9098,Vasopressor,0.9072,Levonebivolol,0.9048,Loviride,0.9036
+379,LY 2606368,Prexasertib,99,p70S6K Inhibitor LY2584702,0.8977,NLRP3 Agonist BMS-986299,0.8932,KRAS-G12C Inhibitor LY3537982,0.8919,Anti-Met/EGFR Monoclonal Antibody LY3164530,0.8894,Anti-CD226 Agonist Antibody LY3435151,0.8886
+380,Laparoscopic Biopsy,Laparoscopic Biopsy,99,Lifibrol,0.8893,Lifibrate,0.8859,Lapisteride,0.8856,Liposomal Bupivacaine,0.8839,Pelubiprofen,0.8822
+381,Laparoscopic Prostatectomy,Laparoscopic Prostatectomy,99,Leuprolide,0.8996,Lapaquistat,0.8934,Rolodine,0.8891,Rolipram,0.8890,Lapretolimod,0.8871
+382,Lapatinib,Lapatinib,1,Lapatinib,1.0000,Lapatinib Ditosylate,0.9422,Lithium Benzoate,0.9157,Trastuzumab,0.9154,Telatinib,0.9141
+383,Left Rnu,Left;Radical;Nephroureterectomy,99,Nemorubicin,0.8799,Levorphanol,0.8781,Ribonucleotide Reductase Inhibitor,0.8780,Tolnidamine,0.8762,Anti-NRP1 Antibody ASP1948,0.8740
+384,Left breast reexcision,Left Breast;Re-Excision,99,Levormeloxifene,0.8862,Levosimendan,0.8783,Clemizole Undecylate,0.8763,Doxepin,0.8736,Elamipretide,0.8725
+385,Left hemihepatectomy,Left Hemihepatectomy,99,Hydrocortisone Hemisuccinate,0.8815,Methylprednisolone Hemisuccinate,0.8798,Heptaverine,0.8792,Hymecromone,0.8779,Pranlukast Hemihydrate,0.8772
+386,Left segmental mastectomy,Segmental Mastectomy,99,Somatosalm,0.8790,Lidocaine Topical,0.8789,Liposomal Bupivacaine,0.8752,Lidocaine,0.8747,Dibusadol,0.8686
+387,Lenalidomide,Lenalidomide,1,Lenalidomide,1.0000,Riluzole,0.9155,Lenalidomide Analog KPG-121,0.9150,Alepride,0.9143,Imidoline,0.9136
+388,Letrozole,Letrozole,1,Letrozole,1.0000,Liarozole,0.9428,Anastrozole,0.9415,Letaxaban,0.9388,Letimide,0.9286
+389,Leukine,Sargramostim,99,Recombinant Leukoregulin,0.9097,Lidocaine,0.9071,Lactulose,0.9029,Lisofylline,0.9023,Lisuride,0.9019
+390,Liposomal Cytarabine,Liposomal Cytarabine,1,Liposomal Cytarabine,1.0000,Cytarabine,0.9526,Liposomal Amphotericin B,0.9372,Cytarabine Hydrochloride,0.9365,Liposomal Bupivacaine,0.9332
+391,Liver Biopsy,Liver Biopsy,99,Hepatitis B Vaccine,0.8912,Hepatoprotective Agent,0.8896,Soluble Liver Antigen,0.8854,Liver Kidney Microsomal Antigens,0.8832,Hepatitis A Vaccine,0.8827
+392,Liver Resection,Hepatectomy,99,Recombinant Hepatocyte Growth Factor,0.8788,Hepatoprotective Agent,0.8769,AFP Gene Hepatocellular Carcinoma Vaccine,0.8723,Resatorvid,0.8714,Soluble Liver Antigen,0.8701
+393,Lobectomy,Lobectomy,99,Lobenzarit,0.9144,Lobeline,0.9129,Lobeglitazone,0.9043,Lobendazole,0.9026,Alectinib,0.8895
+394,Lomustine,Lomustine,1,Lomustine,1.0000,Carmustine,0.9492,Elmustine,0.9453,Bofumustine,0.9276,Ecomustine,0.9269
+395,Lumpectomy,Lumpectomy,99,Lumretuzumab,0.9120,Lumateperone,0.9039,Lumasiran,0.9032,Venetoclax,0.8974,Lumicitabine,0.8943
+396,Lupron,Leuprolide,99,Luprostiol,0.9541,Lupitidine,0.9445,Lupartumab,0.9429,Lupitidine Hydrochloride,0.9305,Lupartumab Amadotin,0.9187
+397,MASTECTOMY,Mastectomy,99,Tamoxifen,0.9023,Trastuzumab,0.8995,Myralact,0.8990,Metformin,0.8989,Methomyl,0.8985
+398,MBG453 (TIM-3 inhibitor),Sabatolimab,99,Anti-TIM-3 Antibody BMS-986258,0.9376,Anti-TIM-3 Monoclonal Antibody TQB2618,0.9246,Anti-TIM-3 Monoclonal Antibody BC3402,0.9224,Anti-TIM-3 Monoclonal Antibody,0.9220,CDK4/6 Inhibitor TQB3303,0.9182
+399,MEK,Mitogen-Activated Protein Kinase Kinase Inhibitor,99,MEK Inhibitor AZD8330,0.9188,MEK Inhibitor PD-98059,0.9163,MEK Inhibitor IMM-1-104,0.9147,MEK Inhibitor REC-4881,0.9122,MEK Inhibitor RO4987655,0.9108
+400,MEK162,Binimetinib,99,MEK1/2 Inhibitor ABM-168,0.9122,MEK Inhibitor AZD8330,0.9119,MEK Inhibitor REC-4881,0.9115,JNK1 Inhibitor BMS-986360,0.9064,MEK 1/2 Inhibitor AS703988/MSC2015103B,0.9017
+401,MET inhibitor,c-Met Inhibitor,1,c-Met Inhibitor,0.9516,MET Tyrosine Kinase Inhibitor BMS-777607,0.9312,MET Tyrosine Kinase Inhibitor SAR125844,0.9288,METTL-3 Inhibitor STC-15,0.9280,c-Met Inhibitor DO-2,0.9269
+402,METASTASECTOMY,Metastasectomy,99,Metoprolol,0.9007,Metoprine,0.8988,Amfetaminil,0.8872,Virulizin,0.8860,Resocortol,0.8833
+403,MGA271 anti B7H3 infusion,Enoblituzumab,99,Anti-B7H7 Monoclonal Antibody HBM1020,0.9353,Anti-B7-H4 Monoclonal Antibody,0.9286,Anti-B7-H3 Antibody-drug Conjugate MHB088C,0.9242,Anti-B7-H4 Antibody-drug Conjugate SGN-B7H4V,0.9213,Monoclonal Antibody B72.3F(ab),0.9205
+404,MGB453,Sabatolimab,99,MGV Vaccine,0.9164,HMB-45,0.9011,Anti-gpA33/CD3 Monoclonal Antibody MGD007,0.8994,Arabinoxylan Compound MGN3,0.8993,EGb761,0.8970
+405,MITOTANE,Mitotane,1,Mitotane,1.0000,Mitoflaxone,0.9243,Mitogillin,0.9222,Mitotenamine,0.9220,Mitoquidone,0.9173
+406,MK 3475,Pembrolizumab,99,MKC-1,0.9024,Anti-ILT4 Monoclonal Antibody MK-4830,0.8943,Immunotherapy Regimen MKC-1106-MT,0.8918,MK0731,0.8904,STING Agonist MK-2118,0.8842
+407,MK-2206,Akt Inhibitor MK2206,3,MKC-1,0.9228,MK2 Inhibitor ATI-2231,0.9177,Akt Inhibitor MK2206,0.9149,MK0731,0.9114,Anti-GITR Monoclonal Antibody MK-4166,0.9028
+408,MK-8242,HDM2 Inhibitor MK-8242,1,HDM2 Inhibitor MK-8242,0.9424,MKC-1,0.9205,ERK Inhibitor MK-8353,0.9196,CHK1 Inhibitor MK-8776,0.9117,MK2 Inhibitor ATI-2231,0.9107
+409,MK3475,Pembrolizumab,99,MK0731,0.9190,MKC-1,0.9117,c-Met Inhibitor MK8033,0.9069,MKNK1 Inhibitor BAY 1143269,0.9068,mTOR Kinase Inhibitor AZD8055,0.8992
+410,MLN0128 (mTORi),Sapanisertib,99,mTOR Inhibitor,0.9474,mTORC 1/2 Inhibitor LXI-15029,0.9367,mTOR Kinase Inhibitor AZD8055,0.9324,mTOR Inhibitor GDC-0349,0.9302,mTOR1/2 Kinase Inhibitor ME-344,0.9233
+411,MLN4924,Pevonedistat,99,Aurora Kinase Inhibitor MLN8054,0.9166,Anti-PSMA Monoclonal Antibody MLN591-DM1 Immunoconjugate MLN2704,0.9052,Anti-ILT4 Monoclonal Antibody MK-4830,0.9029,SU4984,0.9028,BMS-184476,0.9017
+412,MLN8237,Alisertib,99,Aurora Kinase Inhibitor MLN8054,0.9174,Anti-PSMA Monoclonal Antibody MLN591-DM1 Immunoconjugate MLN2704,0.9135,Anti-CD40 Agonist Monoclonal Antibody MIL97,0.9035,Anti-ILT4 Monoclonal Antibody MK-4830,0.9015,Anti-OX40 Antibody BMS 986178,0.8997
+413,MM-141,Istiratumab,99,MS-247,0.8956,Anti-EGFR Monoclonal Antibody Mixture MM-151,0.8928,I 131 Monoclonal Antibody CC49,0.8886,In 111 Monoclonal Antibody MN-14,0.8840,Anti-CD70 Monoclonal Antibody MDX-1411,0.8838
+414,MMC,Mitomycin,1,Mitomycin,0.9321,Mitomycin B,0.9170,Metacetamol,0.9158,Mitomycin A,0.9138,Methomyl,0.9120
+415,MTOR inhibitor,mTOR Inhibitor,1,mTOR Inhibitor,1.0000,mTOR Kinase Inhibitor AZD8055,0.9510,mTOR Kinase Inhibitor PP242,0.9501,mTOR Inhibitor GDC-0349,0.9406,mTOR1/2 Kinase Inhibitor ME-344,0.9391
+416,MTOR/VEGF inhibitor,mTOR Inhibitor;Immunotherapeutic Agent,99,mTOR Inhibitor,0.9610,PI3K/mTOR Kinase Inhibitor PF-04691502,0.9292,PI3K/mTOR Kinase Inhibitor DS-7423,0.9290,mTOR Kinase Inhibitor PP242,0.9282,PI3K/mTOR Kinase Inhibitor VS-5584,0.9281
+417,MTX,Methotrexate,1,Methotrexate,0.9436,Methazolamide,0.9210,Pemetrexed,0.9186,Minocycline,0.9175,Methotrexate Sodium,0.9174
+418,MUD,Matched Unrelated Donor;Allogeneic Hematopoietic Stem Cell Transplantation,99,Mesna,0.9045,Methadone,0.8937,Morphine,0.8936,Metoclopramide,0.8909,Metopon,0.8883
+419,Macitentan,Macitentan,1,Macitentan,1.0000,Namitecan,0.9169,Alentemol,0.9017,Mitoxantrone,0.9006,Trempamotide,0.9000
+420,Margin resection,Surgical Margin;Resection,99,Rimegepant,0.8620,Metoprine,0.8602,Serrapeptase,0.8596,Mavrilimumab,0.8517,Metibride,0.8507
+421,Mastectomy,Mastectomy,99,Tamoxifen,0.9023,Trastuzumab,0.8995,Myralact,0.8990,Metformin,0.8989,Methomyl,0.8985
+422,Mastectomy NOS,Mastectomy,99,Minoxidil,0.8854,Methomyl,0.8828,Myralact,0.8813,Nemorubicin,0.8802,Tamoxifen,0.8775
+423,Mefloquine,Mefloquine,1,Mefloquine,1.0000,Mefloquine Hydrochloride,0.9669,Mefexamide,0.9528,Mefenorex,0.9497,Mefeclorazine,0.9455
+424,Melphalan,Melphalan,1,Melphalan,1.0000,Melphalan Hydrochloride,0.9674,Melphalan Flufenamide,0.9550,Melphalan Flufenamide Hydrochloride,0.9473,Melogliptin,0.9302
+425,Memantine,Memantine,1,Memantine,1.0000,Memantine Hydrochloride,0.9657,Memotine,0.9197,Alemtuzumab,0.9151,Memotine Hydrochloride,0.9095
+426,Mercaptopurine,Mercaptopurine,1,Mercaptopurine,1.0000,Mercaptopurine Anhydrous,0.9537,Mercaptopurine Oral Suspension,0.9511,Mercaptomerin,0.9435,9-Ethyl 6-Mercaptopurine,0.9349
+427,Methotrexate,Methotrexate,1,Methotrexate,1.0000,Methotrexate Sodium,0.9552,Methotrexate-E Therapeutic Implant,0.9326,Methotrexate-Encapsulating Autologous Tumor-Derived Microparticles,0.9255,IGF-methotrexate Conjugate,0.9171
+428,Midostaurin,Midostaurin,1,Midostaurin,1.0000,Midodrine,0.9192,Enzastaurin,0.9150,Doxaprost,0.9102,Mideplanin,0.9097
+429,Mito,Mitoxantrone,2,Mitoflaxone,0.9417,Mitoxantrone,0.9396,Mitosper,0.9383,Mitonafide,0.9352,Mitotane,0.9349
+430,Mitomycin,Mitomycin,1,Mitomycin,1.0000,Mitomycin A,0.9747,Mitomycin B,0.9718,Mitomycin Antineoplastic Antibiotic,0.9390,Methomyl,0.9198
+431,Mitoxantrone,Mitoxantrone,1,Mitoxantrone,1.0000,Mitoxantrone Hydrochloride,0.9661,Liposomal Mitoxantrone Hydrochloride,0.9439,Mitozolomide,0.9427,Mitopodozide,0.9423
+432,Mk-3475,Pembrolizumab,99,MKC-1,0.9181,Anti-ILT4 Monoclonal Antibody MK-4830,0.9108,Immunotherapy Regimen MKC-1106-MT,0.9063,ERK Inhibitor MK-8353,0.9023,Aurora A Kinase Inhibitor MK5108,0.9003
+433,Modified Radical Masectomy,Modified Radical Hysterectomy,99,Masoprocol,0.9035,Masitinib,0.8978,Masavibart,0.8921,Masitinib Mesylate,0.8895,Metoprine,0.8854
+434,Modified Radical Mastectomy,Modified Radical Mastectomy,99,Methomyl,0.8895,Minoxidil,0.8872,Metoprine,0.8824,Metoclopramide,0.8815,Metronidazole,0.8773
+435,Modified radical mastectomy,Modified Radical Mastectomy,99,Methomyl,0.8895,Minoxidil,0.8872,Metoprine,0.8824,Metoclopramide,0.8815,Metronidazole,0.8773
+436,Mogamulizumab,Mogamulizumab,1,Mogamulizumab,1.0000,Daclizumab,0.9179,Samalizumab,0.9165,Monalizumab,0.9159,Eculizumab,0.9153
+437,Momelotinib,Momelotinib,1,Momelotinib,1.0000,Momelotinib Dihydrochloride,0.9512,Momelotinib Dihydrochloride Monohydrate,0.9399,Larotinib Mesylate,0.9122,Mometasone,0.9032
+438,Monalizumab,Monalizumab,1,Monalizumab,1.0000,Omalizumab,0.9397,Bemarituzumab,0.9320,Efalizumab,0.9247,Lampalizumab,0.9183
+439,Mto,Mitoxantrone,99,Metronidazole,0.9033,Mesna,0.9021,Metacetamol,0.9020,Methomyl,0.9020,Mitratapide,0.8999
+440,Mtx,Methotrexate,1,Methotrexate,0.9436,Methazolamide,0.9210,Pemetrexed,0.9186,Minocycline,0.9175,Methotrexate Sodium,0.9174
+441,Mylotarg,Gemtuzumab Ozogamicin,99,Lometrexol,0.9030,Sembragiline,0.9023,Semuloparin,0.9006,Alflutinib,0.8984,Adelmidrol,0.8968
+442,NK cell infusion,NK Cell-enriched Donor Lymphocytes,99,Therapeutic Natural Killer Cells Preparation,0.9272,Allogeneic Anti-CD33 CAR NK Cells,0.9161,Allogeneic Natural Killer Cell Line NK-92,0.9129,Allogeneic CD19-OX40-CD3zeta-CAR-mbIL-15-expressing Natural Killer Cells NKX019,0.9114,Allogeneic Anti-CD33 CAR-NK Cells QN-023a,0.9108
+443,NOM,Have Not Had Cancer Surgery,99,Nomifensine,0.9458,Nomelidine,0.9334,Nomegestrol,0.9276,Nomacopan,0.9247,Nomifensine Maleate,0.9242
+444,NOREPINEPHRINE,l-Norepinephrine,99,Norepinephrine Reuptake Inhibitor,0.9407,Norepinephrine Bitartrate,0.9333,Neamine,0.9236,Clonidine,0.9133,Vasopressor,0.9129
+445,NOVO-TTF,NovoTTF-100A Device,99,Novobiocin,0.9090,Tamibarotene,0.8843,Novobiocin Sodium,0.8839,Thymotrinan,0.8803,Trestolone,0.8801
+446,NPT,Platinum Acetylacetonate-Titanium Dioxide Nanoparticles,99,HPPH,0.9072,PCNU,0.9061,Nab-paclitaxel,0.9031,Nepaprazole,0.9016,Nateplase,0.9012
+447,NSC750854,Purine Analogue NSC 750854,1,Purine Analogue NSC 750854,0.9129,CDC7 Kinase Inhibitor NMS-1116354,0.8929,FLT3/KIT/CSF1R Inhibitor NMS-03592088,0.8833,CP-547632,0.8832,SNX 5422,0.8830
+448,NY eso vaccine,NY-ESO-1 Peptide Vaccine,1,NY-ESO-1 Peptide Vaccine,0.9616,Recombinant Vaccinia-NY-ESO-1 Vaccine,0.9532,Fowlpox-NY-ESO-1 Vaccine,0.9527,ALVAC-ESO-1 Vaccine,0.9508,NY-ESO-1b Peptide Vaccine,0.9500
+449,Nelarabine,Nelarabine,1,Nelarabine,1.0000,Nelonemdaz,0.9296,Neamine,0.9285,Nenocorilant,0.9271,Nelonicline,0.9247
+450,Nephrectomy,Nephrectomy,99,Sunitinib,0.9003,Naltrexone,0.8977,Rolapitant,0.8904,Canrenone,0.8895,Sorafenib,0.8894
+451,Nephro-ureterectomy,Nephroureterectomy,99,Nephroprotective Agent,0.8969,Oxendolone,0.8772,Dinitrophenyl-Modified Autologous Renal Cell Carcinoma Tumor cell Vaccine,0.8771,Renanolone,0.8769,Neoantigen-based Renal Cell Carcinoma-Poly-ICLC Vaccine,0.8768
+452,Nephroureterectomy with endoscopic bladder cuff resection,Nephroureterectomy with Cuff of Bladder;Endoscopic Resection,99,Retezorogant,0.8773,Cystemustine,0.8770,Personalized Neoantigen Upper Gastrointestinal Tract Cancer Vaccine,0.8730,Urinary Bladder Tumor Antigen,0.8728,Coleneuramide,0.8718
+453,Nintedanib,Nintedanib,1,Nintedanib,1.0000,Nintedanib Esylate,0.9509,Trabectedin,0.9187,Tenivastatin,0.9068,Ningetinib Tosylate,0.9017
+454,Nipple Sparing Total Mastectomy,Subcutaneous Mastectomy,99,Amitriptyline,0.8765,Tamoxifen,0.8732,Niraparib Tosylate Monohydrate,0.8725,Nortriptyline,0.8719,Tianeptine,0.8715
+455,Nivo,Nivolumab,99,Nivasorexant,0.9484,Nivatrotamab,0.9351,Nivazol,0.9351,Nivadstrocel,0.9351,Nivocasan,0.9235
+456,Nivolumab,Nivolumab,1,Nivolumab,1.0000,Nivolumab/Relatlimab-rmbw,0.9194,Sunitinib,0.9080,Liraglutide,0.9068,Adalimumab,0.9040
+457,Nivolumab (P1T986205),Nivolumab,1,Nivolumab,0.9435,PD-L1 Inhibitor BPI-371153,0.9225,Nivolumab/Relatlimab-rmbw,0.9222,Anti-PD-L1/Anti-CD47 Bispecific Antibody BAT7104,0.9177,MEK 1/2 Inhibitor AS703988/MSC2015103B,0.9158
+458,No (radiation),Radiation Therapy Not Received,99,Radicicol,0.8939,Tumor Necrosis Factor (GEN),0.8780,Radiprodil,0.8778,Radioprotective Agent,0.8751,Radioconjugate,0.8740
+459,"ODSH (2 O, 3-O Desulfated Heparin)",Dociparstat sodium,99,Heparin,0.9101,N-(4-Chloro-3-((3-Methyl-2-Butenyl)Oxy)Phenyl)-2-Methyl-3-Furancarbothioamide,0.9003,Dacuronium,0.8983,2-Ethylhexyl 4-Phenylbenzophenone-2'-Carboxylate,0.8949,2-O-Octadecyl-L-Ascorbic Acid,0.8934
+460,OSI-774,Erlotinib Hydrochloride,99,773U82,0.9211,TPO Receptor Agonist ONO-7746,0.9059,Liposome-encapsulated OSI-7904,0.9024,Anti-PD-1 Monoclonal Antibody OSE-279,0.8971,Osilodrostat,0.8954
+461,OX,Oxaliplatin,99,Oxitropium,0.9446,Oxetorone,0.9403,Oxilorphan,0.9383,Oxiramide,0.9367,Oxendolone,0.9351
+462,OX40 agonist MOXR0916,Vonlerolizumab,99,Anti-OX40 Agonist Monoclonal Antibody HFB301001,0.9226,Anti-OX40 Agonist Monoclonal Antibody YH-002,0.9219,Anti-OX40 Agonist Monoclonal Antibody BAT6026,0.9210,Anti-OX40 Monoclonal Antibody,0.9202,Anti-OX40 Agonist Monoclonal Antibody BGB-A445,0.9188
+463,OXALIPLATIN,Oxaliplatin,1,Oxaliplatin,1.0000,Liposomal Oxaliplatin,0.9424,Oxaliplatin Eluting Beads,0.9273,Carbon C 14 Oxaliplatin,0.9202,Osimertinib,0.9058
+464,OXi4503,Combretastatin A1 Diphosphate,99,Oxitropium,0.9327,Oxilorphan,0.9183,Oxilofrine,0.9145,Oxdralazine,0.9144,Oxetorone,0.9138
+465,Observation,Clinical Observation,99,Osemozotan,0.8662,Decoglurant,0.8610,Figopitant,0.8598,Sulmazole,0.8592,Enomimeran,0.8591
+466,Olaparib,Olaparib,1,Olaparib,1.0000,Niraparib,0.9388,Olaratumab,0.9265,Pocapavir,0.9232,Enoxaparin,0.9209
+467,Optune device,NovoTTF-100A Device,99,Otilimab,0.8755,Odapipam,0.8754,Ornoprostil,0.8732,Mosunetuzumab,0.8725,Oprozomib,0.8687
+468,Orchiectomy,Orchiectomy,99,Spironolactone,0.8862,Testosterone Enanthate,0.8848,Etoperidone,0.8838,Doxecitine,0.8837,Oxeclosporin,0.8829
+469,Other,Other,99,Nonaperone,0.8802,Non-insulin Hypoglycemic,0.8711,Butaverine,0.8674,Non-Steroidal Estrogen,0.8658,Samelisant,0.8646
+470,Other regimens,Other;Treatment Regimen,99,Non-Statin Antilipidemic Agent,0.8885,Combination Anti-Infective Agent,0.8865,Vornorexant,0.8829,Combretastatin A-4,0.8820,Camphor/Menthol-based Formulation,0.8818
+471,Other surgery (specify),Other;Surgery,99,Samelisant,0.8621,Non-Steroidal Estrogen,0.8615,Non-Steroidal Aromatase Inhibitor,0.8613,Autologous Muscle-derived Cells for Gastrointestinal Repair,0.8610,Non-insulin Hypoglycemic,0.8597
+472,Oxaliplatin,Oxaliplatin,1,Oxaliplatin,1.0000,Liposomal Oxaliplatin,0.9424,Oxaliplatin Eluting Beads,0.9273,Carbon C 14 Oxaliplatin,0.9202,Osimertinib,0.9058
+473,PACLITAXEL,Paclitaxel,1,Paclitaxel,1.0000,Paclitaxel Preparation,0.9633,Paclitaxel Trevatide,0.9552,Paclitaxel Liposome,0.9539,Nab-paclitaxel,0.9494
+474,PARTIAL_MASTECTOMY,Segmental Mastectomy,99,Meprednisone,0.8789,Metoxepin,0.8743,Maroxepin,0.8693,Mepitiostane,0.8683,Mepivacaine,0.8679
+475,PCI-32765,Ibrutinib,99,Factor VIIa Inhibitor PCI-27483,0.9086,PIM Kinase Inhibitor TP-3654,0.8970,Saprisartan,0.8939,pan-RAF Kinase Inhibitor CCT3833,0.8929,PERK Inhibitor NMS-03597812,0.8900
+476,PE,Pelvic Exenteration,99,Pezadeftide,0.9271,Pevonedistat,0.9256,Phenesterin,0.9153,Pesampator,0.9131,Epelsiban,0.9120
+477,PEITC,Phenethyl Isothiocyanate,1,Phenethyl Isothiocyanate,0.9049,Icapamespib,0.8915,Certepetide,0.8908,Poly IC,0.8898,Picumast,0.8882
+478,PEMBRO,Pembrolizumab,1,Pembrolizumab,0.9617,Pemoline,0.9409,Pempidine,0.9349,Pemetrexed,0.9343,Pemedolac,0.9250
+479,PEMBROLIZUMAB,Pembrolizumab,1,Pembrolizumab,1.0000,Favezelimab/Pembrolizumab Formulation,0.9361,Pempidine,0.9329,Pemetrexed,0.9325,Atezolizumab,0.9259
+480,PF-03084014,Nirogacestat,99,Anti-CXCR4 Monoclonal Antibody PF-06747143,0.9406,Antibody-drug Conjugate PF-06664178,0.9370,IDO1 Inhibitor PF-06840003,0.9362,Antibody-drug Conjugate PF-06647263,0.9353,BRAF Inhibitor PF-07799933,0.9348
+481,PF-04449913 (Hedgehog Inhibitor),Glasdegib,99,Hedgehog Pathway Inhibitor,0.9451,EZH2 Inhibitor PF-06821497,0.9422,Hedgehog Inhibitor NLM-001,0.9379,PI3K/mTOR Kinase Inhibitor PF-04691502,0.9308,HIF-1alpha Inhibitor PX-478,0.9299
+482,PIM kinase inhibitor,Serine/Threonine Kinase Inhibitor,99,PIM Kinase Inhibitor TP-3654,0.9481,PIM Kinase Inhibitor LGH447,0.9479,pan-PIM Kinase Inhibitor AZD1208,0.9411,PIM Kinase Inhibitor SGI-1776,0.9392,Pimetine,0.9330
+483,PIXANTRONE,Pixantrone,1,Pixantrone,1.0000,Pixantrone Dimaleate,0.9689,Pixofisiran,0.9178,Pixatimod,0.9073,Prucalopride,0.8969
+484,PLAT CAR-T cell infusion,Chimeric Antigen Receptor T-Cell Therapy,99,Allogeneic CAR-T Cells,0.9151,Anti-EGFRvIII CAR-transduced Allogeneic T-lymphocytes,0.9145,EGFRvIII-specific CAR-transduced Autologous T Lymphocytes,0.9115,Anti-EGFR CAR T Cells Preparation,0.9115,Autologous Anti-ALPP CAR Retroviral Vector-transduced T Cells,0.9102
+485,PLATINUM,Platinum,99,Platinum Compound,0.9632,Cisplatin,0.9389,Iproplatin,0.9232,Picoplatin,0.9175,Carboplatin,0.9131
+486,PLX3397,Pexidartinib,99,CSF1R Inhibitor PLX73086,0.9141,Plixorafenib,0.9128,Pegylated SN-38 Conjugate PLX038,0.9096,BRD4 Inhibitor PLX51107,0.9073,Axelopran,0.9065
+487,PR-104,Nitrogen Mustard Prodrug PR-104,1,Nitrogen Mustard Prodrug PR-104,0.9144,PR-54 (ras-13 Asp) Peptide,0.9137,Anti-DDR1 Monoclonal Antibody PRTH-101,0.9118,PR18 (ras-13 Cys) Peptide,0.9065,PR18 (ras-12CYS) Peptide,0.9042
+488,PROSTATECTOMY,Prostatectomy,99,PSA Prostate Cancer Vaccine,0.9017,Dutasteride,0.8997,Rolapitant,0.8940,Raloxifene,0.8926,Crizotinib,0.8917
+489,PRS-343,Cinrebafusp Alfa,99,PR-54 (ras-13 Asp) Peptide,0.9043,Argipressin,0.8965,PR18 (ras-13 Cys) Peptide,0.8959,PR-151 Peptide,0.8946,Ilepatril,0.8943
+490,PSC,Valspodar,99,PCNU,0.9084,Anti-PSCA Monoclonal Antibody AGS-1C4D4,0.9016,PSA/PSMA/PSCA-encoding DNA Plasmid Vaccine PF-06755990,0.8983,Prazepam,0.8972,Autologous Anti-PSCA-CAR-4-1BB/TCRzeta-CD19t-expressing T-lymphocytes,0.8929
+491,PSMA ADC,PSMA-targeting Agent;Antineoplastic Antibody-Drug Conjugate,99,PSMA Peptide,0.9321,Anti-PSMA Antibody-drug Conjugate,0.9304,Anti-PSMA Monoclonal Antibody-MMAE Conjugate,0.9281,Anti-PSMA/PBD ADC MEDI3726,0.9275,Anti-PSMA Monoclonal Antibody,0.9274
+492,PSMA-ADC,PSMA-targeting Agent;Antineoplastic Antibody-Drug Conjugate,99,Anti-PSMA Antibody-drug Conjugate,0.9405,Anti-PSMA Monoclonal Antibody-MMAE Conjugate,0.9368,Anti-PSMA Monoclonal Antibody,0.9367,PSMA Peptide,0.9362,Anti-PSMA/PBD ADC MEDI3726,0.9349
+493,PUNCH,Punch Biopsy,99,Mozavaptan,0.8797,Vinburnine,0.8763,Pinacidil,0.8734,Vinformide,0.8713,Valproate Sodium,0.8707
+494,Paclitaxel,Paclitaxel,1,Paclitaxel,1.0000,Paclitaxel Preparation,0.9633,Paclitaxel Trevatide,0.9552,Paclitaxel Liposome,0.9539,Nab-paclitaxel,0.9494
+495,Palbociclib,Palbociclib,1,Palbociclib,1.0000,Palbociclib Isethionate,0.9503,Palinavir,0.9294,Briciclib,0.9204,Palifosfamide,0.9091
+496,Pancreaticoduodenectomy (Whipple Resection),Whipple Procedure,99,Pancopride,0.8850,Serrapeptase,0.8809,HPPH,0.8787,Sargramostim Plasmid DNA Pancreatic Tumor Cell Vaccine,0.8785,Pentigetide,0.8784
+497,Partial Cystectomy,Partial Cystectomy,99,Cysteamine,0.9062,Cystemustine,0.8919,Cysteamine Bitartrate,0.8855,Cysteamine Hydrochloride,0.8827,Coleneuramide,0.8728
+498,Partial Mastectomy,Segmental Mastectomy,99,Meprednisone,0.8790,Metoxepin,0.8749,Mepivacaine,0.8717,Masoprocol,0.8700,Maroxepin,0.8700
+499,Partial Salpingectomy,Partial Salpingectomy,99,Salprotoside,0.8800,Salsalate,0.8769,Salantel,0.8762,Hydrocortisone Hemisuccinate,0.8689,Salacetamide,0.8685
+500,Partial Vaginectomy,Partial;Vaginectomy,99,Vulinacimab,0.8694,Pavinetant,0.8691,Palovarotene,0.8659,Voxeralgagene Autotemcel,0.8642,Personalized Polyepitope Plasmid DNA Breast Cancer Vaccine,0.8639
+501,Partial hepatectomy,Partial Hepatectomy,99,Hepatoprotective Agent,0.8865,Phenobarbital,0.8825,Methylprednisolone Hemisuccinate,0.8793,Hydrocortisone Hemisuccinate,0.8753,HPPH,0.8752
+502,Partial mastectomy,Segmental Mastectomy,99,Meprednisone,0.8790,Metoxepin,0.8749,Mepivacaine,0.8717,Masoprocol,0.8700,Maroxepin,0.8700
+503,Patey's Surgery,Modified Radical Mastectomy,99,Patamostat,0.8823,Patecibart,0.8707,Patupilone,0.8691,Pateclizumab,0.8674,Patritumab,0.8645
+504,Pateys surgery,Modified Radical Mastectomy,99,Patamostat,0.8886,Patecibart,0.8802,Patupilone,0.8772,Prasugrel,0.8713,Patritumab,0.8712
+505,Peg interferon alfa-2a,Peginterferon Alfa-2a,1,Peginterferon Alfa-2a,0.9747,Recombinant Interferon Alfa-2a,0.9676,Pegylated Interferon Alfa,0.9674,Peginterferon Alfa-2b,0.9662,Recombinant Interferon Alfa-2b,0.9596
+506,Pembro,Pembrolizumab,1,Pembrolizumab,0.9617,Pemoline,0.9409,Pempidine,0.9349,Pemetrexed,0.9343,Pemedolac,0.9250
+507,Pembrolizumab,Pembrolizumab,1,Pembrolizumab,1.0000,Favezelimab/Pembrolizumab Formulation,0.9361,Pempidine,0.9329,Pemetrexed,0.9325,Atezolizumab,0.9259
+508,Pembrolizumab (Arizona),Pembrolizumab,1,Pembrolizumab,0.9559,Atezolizumab,0.9194,Daclizumab,0.9147,Pemrametostat,0.9139,Zirconium Zr 89 Pembrolizumab,0.9127
+509,Pemetrexed,Pemetrexed,1,Pemetrexed,1.0000,Pemetrexed Disodium,0.9594,Pemetrexed Tromethamine,0.9556,Pempidine,0.9388,Pemoline,0.9375
+510,Pentamadine,Pentamidine,99,Pentorex,0.9324,Pentiapine,0.9324,Pentopril,0.9321,Pentalamide,0.9304,Pentamorphone,0.9291
+511,Pericardial Effusion,Pericardial Effusion,99,Periciazine,0.8992,Azimexon,0.8817,Promecarb,0.8788,Omeprazole,0.8785,Ethonam,0.8783
+512,Pertuzumab,Pertuzumab,1,Pertuzumab,1.0000,Pertuzumab Zuvotolimod,0.9424,Vandortuzumab,0.9216,Xentuzumab,0.9192,Cetuximab,0.9165
+513,Pexidartinib,Pexidartinib,1,Pexidartinib,1.0000,Pexidartinib Hydrochloride,0.9682,Pexmetinib,0.9338,Pexopiprant,0.9295,Pexantel,0.9294
+514,PiBr,Pipobroman,99,Piberaline,0.9591,Pibecarb,0.9529,Piboserod,0.9472,Pibaxizine,0.9437,Pibenzimol,0.9436
+515,Plaque,Plaque Radiotherapy,99,Aclantate,0.8844,Prodipine,0.8812,Metaproterenol,0.8811,Cliprofen,0.8797,Aptazapine,0.8781
+516,Platinum,Platinum,99,Platinum Compound,0.9632,Cisplatin,0.9389,Iproplatin,0.9232,Picoplatin,0.9175,Carboplatin,0.9131
+517,Pleural Effusion,Pleural Effusion,99,Pleuromulin,0.8838,Plecanatide,0.8813,Promethazine Hydrobromide,0.8803,Pimelautide,0.8794,Pimetremide,0.8792
+518,Ponatinib,Ponatinib,1,Ponatinib,1.0000,Ponatinib Hydrochloride,0.9659,Neratinib,0.9254,Ponfibrate,0.9251,Telatinib,0.9244
+519,Pracinostat,Pracinostat,1,Pracinostat,1.0000,Praconase,0.9368,Purinostat,0.9288,Practolol,0.9250,Vorinostat,0.9165
+520,Pravastatin,Pravastatin,1,Pravastatin,1.0000,Pravastatin Sodium,0.9592,Pralatrexate,0.9383,Pradefovir,0.9352,Pranoprofen,0.9323
+521,Pred,Prednisone,99,Prednazate,0.9604,Prednival,0.9491,Prednicarbate,0.9333,Prednimustine,0.9306,Prednylidene,0.9285
+522,Prednisolone,Prednisolone,1,Prednisolone,1.0000,Prednisolone Acetate,0.9611,Prednisolone Sodium Phosphate,0.9590,Prednisolone Sodium Succinate,0.9509,Prednisone,0.9495
+523,Prednisone,Prednisone,1,Prednisone,1.0000,Prednisolone,0.9495,Methylprednisolone,0.9395,Dexamethasone,0.9238,Dexamethasone Phosphate,0.9234
+524,Primary Debulking,Primary Debulking Surgery,99,Debamestrocel,0.8819,Prosulpride,0.8756,Deboxamet,0.8685,Pomulmeran,0.8658,Besulpamide,0.8622
+525,Procarbazine,Procarbazine,1,Procarbazine,1.0000,Procarbazine Hydrochloride,0.9738,Dacarbazine,0.9450,Procodazole,0.9405,Procaine,0.9372
+526,Proton 3d conformal,Proton Beam Radiation Therapy;3-Dimensional Conformal Radiation Therapy,99,Propazolamide,0.8607,Piquindone,0.8571,Phenylbutazone,0.8567,Zolpidem,0.8554,Epipropidine,0.8546
+527,Proton beam,Proton Beam Radiation Therapy,99,Proton Pump Inhibitor,0.8763,Bortezomib,0.8738,HPPH,0.8737,Puromycin,0.8721,Nab-paclitaxel,0.8720
+528,Provenge,Sipuleucel-T,99,Semuloparin,0.8743,Ancarolol,0.8714,Figopitant,0.8703,Alogliptin,0.8699,Prusogliptin,0.8687
+529,Pylorus preserving pancreatoduodenectomy,Pylorus-sparing pancreaticoduodenectomy (procedure),99,Pancopride,0.8834,Pradusinstobart,0.8730,Pancrelipase,0.8726,Pentigetide,0.8707,Pancrelipase Amylase,0.8659
+530,Quizartinib,Quizartinib,1,Quizartinib,1.0000,Quizartinib Dihydrochloride,0.9370,Quisultazine,0.9251,Quifenadine,0.9188,Quilostigmine,0.9148
+531,RAM,Ramucirumab,99,Ramelteon,0.9376,Ramipril,0.9356,Ramciclane,0.9281,Ramatercept,0.9256,Ramiprilat,0.9255
+532,RAPAMYCIN,Sirolimus,2,Encapsulated Rapamycin,0.9408,Sirolimus,0.9344,Synthetic Vaccine Particles-Rapamycin,0.9186,Rituximab,0.9151,Everolimus,0.9118
+533,REGN1400,Anti-ErbB3 Monoclonal Antibody REGN1400,1,Anti-ErbB3 Monoclonal Antibody REGN1400,0.9403,Anti-EGFR/CD28 Bispecific Antibody REGN7075,0.9081,Regorafenib,0.9080,Anti-CTLA-4 Monoclonal Antibody REGN4659,0.9072,Regavirumab,0.9070
+534,REN1400,Anti-ErbB3 Monoclonal Antibody REGN1400,99,Renanolone,0.8981,Renzapride,0.8910,Anti-PD-L1 Monoclonal Antibody GR1405,0.8766,Pheneturide,0.8714,Anti-CD30 Monoclonal Antibody MDX-1401,0.8699
+535,RG7112,MDM2 Inhibitor,99,RG 13022,0.9154,Anti-TWEAK Monoclonal Antibody RG7212,0.9115,RG 14620,0.9091,HPV16 RG1 VLP Vaccine,0.9073,RG 12915,0.9031
+536,RO4929097,Gamma-Secretase Inhibitor RO4929097,1,Gamma-Secretase Inhibitor RO4929097,0.9319,TLR7 Agonist RO7119929,0.9136,Anti-CD44 Monoclonal Antibody RO5429083,0.9109,Ro 31-8220,0.9075,MEK Inhibitor RO4987655,0.9038
+537,ROVA-T,Rovalpituzumab Tesirine,4,Rovazolac,0.9506,Rovatirelin,0.9376,Rovalpituzumab,0.9373,Rovalpituzumab Tesirine,0.9265,Rovadicitinib,0.9242
+538,RUXOLITINB,Ruxolitinib,1,Ruxolitinib,0.9805,Ruxolitinib Phosphate,0.9542,Ruxotemitide,0.9423,Ruxolitinib Phosphate Cream,0.9364,Rufloxacin,0.9344
+539,Rabbit ATG,Lapine T-Lymphocyte Immune Globulin,99,ATR Inhibitor ATG-018,0.8884,Anti-PD-L1/4-1BB Bispecific Antibody ATG-101,0.8879,Xentuzumab,0.8751,Antiserum,0.8707,Ubrogepant,0.8692
+540,Rad001,Everolimus,99,Radotinib,0.9417,Radavirsen,0.9366,Radafaxine,0.9230,Radequinil,0.9175,Radretumab,0.9153
+541,"Radiation Therapy, Unspecified",Radiation Therapy,99,Radiosensitizing Agent,0.8768,Radioprotective Agent,0.8765,Ribavirin/Recombinant Interferon alpha-2b,0.8688,Oncolytic RNA Virus IVX037,0.8678,Allogeneic Irradiated Melanoma Cell Vaccine CSF470,0.8664
+542,Radiation to right breast,Radiation Therapy;Right Breast,99,Medorubicin,0.8823,Doxorubicin,0.8818,Rodorubicin,0.8792,Detorubicin,0.8791,Rifamycin,0.8768
+543,Radical Cystectomy,Radical Cystectomy,99,Cysteamine,0.9167,Cystemustine,0.9026,Cysteamine Hydrochloride,0.9017,Cysteamine Bitartrate,0.8949,Coleneuramide,0.8820
+544,Radical Cystoprostatectomy,Radical Cystoprostatectomy,99,Carboprost,0.9034,Misoprostol,0.8856,Cystamine,0.8851,Carboprost Tromethamine,0.8804,Carboprost Methyl,0.8794
+545,Radical Hysterectomy,Radical Hysterectomy,99,Raloxifene,0.8829,Steroidal Estrogen,0.8746,Trastuzumab,0.8729,Dutasteride,0.8721,Rituximab,0.8716
+546,Radical Prostatectomy,Radical Prostatectomy,99,Raloxifene,0.9013,PSA Prostate Cancer Vaccine,0.8959,Rolapitant,0.8945,Dutasteride,0.8939,Raluridine,0.8929
+547,Radical anterior exenteration,Radical;Anterior Pelvic Exenteration,99,Exalamide,0.8907,Exarafenib,0.8850,Oxendolone,0.8814,Exicorilant,0.8807,Exaluren,0.8800
+548,Radical cystectomy,Radical Cystectomy,99,Cysteamine,0.9167,Cystemustine,0.9026,Cysteamine Hydrochloride,0.9017,Cysteamine Bitartrate,0.8949,Coleneuramide,0.8820
+549,Radical cystoprostatectomy,Radical Cystoprostatectomy,99,Carboprost,0.9034,Misoprostol,0.8856,Cystamine,0.8851,Carboprost Tromethamine,0.8804,Carboprost Methyl,0.8794
+550,Radical trachelectomy,Radical Trachelectomy,99,Ritlecitinib,0.8783,Etiracetam,0.8751,Etoperidone,0.8740,Teopranitol,0.8738,Trospectomycin,0.8726
+551,Radium-223 (Xofigo),Radium Ra 223 Dichloride,1,Radium Ra 223 Dichloride,0.9181,Radicicol,0.9011,Pixofisiran,0.8954,Lasofoxifene,0.8914,Anti-RANKL Monoclonal Antibody GB-223,0.8908
+552,Ram,Ramucirumab,99,Ramelteon,0.9376,Ramipril,0.9356,Ramciclane,0.9281,Ramatercept,0.9256,Ramiprilat,0.9255
+553,Ramucirumab,Ramucirumab,1,Ramucirumab,1.0000,Rinucumab,0.9442,Icrucumab,0.9383,Ramiprilat,0.9349,Sevirumab,0.9320
+554,Re-Excision of Superior Margin,Re-Excision;Superior;Margin,99,Rezivertinib,0.8747,Serclutamab,0.8722,Serclutamab Talirine,0.8682,Etanterol,0.8682,Romlusevimab,0.8658
+555,Re-excision of original lumpectomy site,Re-Excision;Original;Lumpectomy;Surgical Site,99,Lumretuzumab,0.8755,Raloxifene,0.8720,Regrelor,0.8696,Vemtoberant,0.8694,Rezivertinib,0.8693
+556,Re-excision of the inferior margin,Re-Excision;Inferior;Margin,99,Romlusevimab,0.8750,Resatorvid,0.8737,Rezivertinib,0.8721,Rindopepimut,0.8703,Iladatuzumab Vedotin,0.8695
+557,Reexc of biopsy site,Re-Excision;Biopsy Site,99,Reproterol,0.8656,Endobenzyline,0.8632,Keliximab,0.8601,Mepitiostane,0.8592,Tolufazepam,0.8588
+558,Reexcision,Re-Excision,99,Rescimetol,0.8949,Reproterol,0.8889,Rescinnamine,0.8852,Rezivertinib,0.8832,Levosimendan,0.8802
+559,Reexcision of segmental mastectomy,Re-Excision;Segmental Mastectomy,99,Trastuzumab Rezetecan,0.8667,Mepitiostane,0.8642,Somatosalm,0.8639,Tirzepatide,0.8637,Somatropin,0.8605
+560,Regeneron,Cemiplimab,99,Rosterolone,0.9161,Androsterone,0.9120,Carperone,0.9104,Rebamipide,0.9091,Revamilast,0.9046
+561,Regorafenib,Regorafenib,1,Regorafenib,1.0000,Regorafenib Hydrate,0.9459,Naporafenib,0.9407,Regavirumab,0.9334,Encorafenib,0.9240
+562,Resection,Resection,99,Serrapeptase,0.8833,Resatorvid,0.8802,Regrelor,0.8775,Resminostat,0.8748,Resocortol,0.8717
+563,Resection of Pelvic tumor,Resection;Pelvis;Tumor Mass,99,Primary Prostate Cancer Tissue/hTERT/Survivin mRNA-loaded Autologous Dendritic Cell Vaccine,0.8757,Pancopride,0.8732,Oprelvekin,0.8703,Tumor Specific Peptide,0.8691,Autologous Pancreatic Adenocarcinoma Lysate and mRNA-loaded Dendritic Cell Vaccine,0.8669
+564,Resection of pulmonary Mets,Resection;Pulmonary;Metastasis,99,Metoprine,0.8808,Metiprenaline,0.8744,Metoprolol,0.8739,Metipranolol,0.8735,Metioprim,0.8726
+565,Revlimid,Lenalidomide,99,Revumenib,0.9313,Revosimeline,0.9310,Revaprazan,0.9236,Revizinone,0.9235,Revusiran,0.9167
+566,Revlmd,Lenalidomide,99,Revamilast,0.9319,Revospirone,0.9273,Revosimeline,0.9241,Revumenib,0.9235,Revatropate,0.9179
+567,Right Breast Reexcision,Right Breast;Re-Excision,99,Rezivertinib,0.8804,Pramiracetam,0.8776,Relacorilant,0.8767,Doxepin,0.8752,Barucainide,0.8752
+568,Right Breast reexcision,Right Breast;Re-Excision,99,Rezivertinib,0.8804,Pramiracetam,0.8776,Relacorilant,0.8767,Doxepin,0.8752,Barucainide,0.8752
+569,Right Mediastinal Mass Excision,Right;Mediastinal Mass;Excision,99,Medorubicin,0.8707,Mepramidil,0.8702,M A Radiolabeled Anti-Carcinoma,0.8672,Propranolol,0.8668,Mitomycin,0.8660
+570,Right Partial Nephrectomy,Right;Partial Nephrectomy,99,Meprednisone,0.8748,Allogeneic Renal Cell Carcinoma Vaccine MGN1601,0.8747,Propranolol,0.8732,Prazitone,0.8715,Dextran 70,0.8715
+571,Right Rnu,Right;Radical;Nephroureterectomy;Right;Nephroureterectomy,99,Rodorubicin,0.8800,Nemorubicin,0.8796,Norcodeine,0.8786,Ribozyme RPI.4610,0.8752,RNR Inhibitor COH29,0.8747
+572,Right Rnu / Rc,Right;Radical;Nephroureterectomy;Radical Cystectomy;Right;Nephroureterectomy;Radical Cystectomy,99,Norcodeine,0.8826,Antibody-drug Conjugate RC118,0.8824,Ribozyme RPI.4610,0.8808,Anti-PD-L1 Monoclonal Antibody RC98,0.8798,PCNU,0.8795
+573,Right Total Mastectomy,Right;Total Mastectomy,99,Medorubicin,0.8833,Tamoxifen,0.8731,rMVA-PSA/PSMA/TRICOM,0.8693,Detorubicin,0.8685,Tamibarotene,0.8646
+574,Right eye enucleation,Right Eye;Enucleation,99,Enoxolone,0.9025,Repirinast,0.9010,Enflurane,0.8995,Enrofloxacin,0.8995,Enristomig,0.8992
+575,Right hemihepatectomy,Right Hemihepatectomy,99,Methylprednisolone Hemisuccinate,0.8801,Hydrocortisone Hemisuccinate,0.8799,Pranlukast Hemihydrate,0.8761,Therapeutic Hemin,0.8747,Redipultide,0.8736
+576,Right mediastinal mass excision,Right;Mediastinal Mass;Excision,99,Medorubicin,0.8707,Mepramidil,0.8702,M A Radiolabeled Anti-Carcinoma,0.8672,Propranolol,0.8668,Mitomycin,0.8660
+577,Right segmental mastectomy,Right;Segmental Mastectomy,99,Somatosalm,0.8726,Mepivacaine,0.8716,Rolistobart,0.8673,Medorubicin,0.8647,Mepivacaine Hydrochloride,0.8641
+578,Right total mastectomy,Right;Total Mastectomy,99,Medorubicin,0.8833,Tamoxifen,0.8731,rMVA-PSA/PSMA/TRICOM,0.8693,Detorubicin,0.8685,Tamibarotene,0.8646
+579,Right uterectomy,Right;Ureterectomy,99,Prazepam,0.8780,Prazepine,0.8758,Ladirubicin,0.8752,Rolapitant,0.8685,Edifolone,0.8679
+580,Rigosertib,Rigosertib,1,Rigosertib,1.0000,Rigosertib Sodium,0.9771,Peposertib,0.9464,Uprosertib,0.9349,Plogosertib,0.9313
+581,Rituxan,Rituximab,2,Vorapaxar,0.9146,Rituximab,0.9144,Traxanox,0.9141,Benexate,0.9140,Reproxalap,0.9129
+582,Rituximab,Rituximab,1,Rituximab,1.0000,Rituximab and Hyaluronidase Human,0.9304,Anti-CD20 Monoclonal Antibody,0.9262,Ritipenem,0.9231,Iodine I 131 Rituximab,0.9189
+583,Robotic assisted laparoscopic nephroureterectomy,Robot-Assisted Surgery;Laparoscopy;Nephroureterectomy,99,Abiraterone Acetate/Niraparib,0.8787,Nephroprotective Agent,0.8759,Dinitrophenyl-Modified Autologous Renal Cell Carcinoma Tumor cell Vaccine,0.8737,Beta-lapachone Prodrug ARQ 761,0.8713,Darolutamide,0.8710
+584,Robotic assisted laparoscopic radical cystoprostatectomy,Robot-Assisted Surgery;Laparoscopy;Radical Cystoprostatectomy,99,Beta-lapachone Prodrug ARQ 761,0.8752,Carboprost,0.8732,Darolutamide,0.8710,Raltitrexed,0.8700,Carboprost Tromethamine,0.8671
+585,Robotic radical cystoprostatectomy,Robot-Assisted Surgery;Radical Cystoprostatectomy,99,Carboprost,0.8879,Carboprost Tromethamine,0.8737,Raltitrexed,0.8732,Ralzapastotug,0.8732,Carbutamide,0.8713
+586,Robotic-Assisted Laparoscopic Radical Prostatectomy,Laparoscopic Radical Prostatectomy with Robotics,99,Darolutamide,0.8914,Raloxifene,0.8843,Beta-lapachone Prodrug ARQ 761,0.8826,Raltitrexed,0.8815,Rolodine,0.8796
+587,Ruxolitinib,Ruxolitinib,1,Ruxolitinib,1.0000,Ruxolitinib Phosphate,0.9664,Ruxolitinib Phosphate Cream,0.9480,Ruxotemitide,0.9457,Rufloxacin,0.9431
+588,SAHA,Vorinostat,1,Vorinostat,0.9316,Dacinostat,0.9278,Belinostat,0.9119,Hydroxindasate,0.9066,Valpromide,0.9058
+589,SAR3419,Coltuximab Ravtansine,99,Saracatinib,0.9028,Sarilumab,0.9025,Saralasin,0.9007,Saredutant,0.8994,Sarecycline,0.8991
+590,SB-715992,Ispinesib,99,KSP Inhibitor SB-743921,0.9202,BMS-214662,0.9130,SB AS-2,0.9080,BMS-188797,0.9052,PD-L1 Inhibitor BPI-371153,0.9020
+591,SCH 727965,Dinaciclib,99,Monoclonal Antibody SHR-8068,0.8948,GnRH Antagonist SHR7280,0.8899,AL721,0.8889,CRTH2 Antagonist ACT-774312,0.8888,CXCR1/2 Inhibitor SX-682,0.8886
+592,SGI-1776,PIM Kinase Inhibitor SGI-1776,2,SGN-17/19,0.9299,PIM Kinase Inhibitor SGI-1776,0.9269,Anti-STn Antibody-drug Conjugate SGN-STNV,0.8869,Anti-PD-L1 Antibody-drug Conjugate SGN-PDL1V,0.8869,Oncolytic VSV-GP BI 1821736,0.8839
+593,SGN-CD19A,Denintuzumab Mafodotin,99,Anti-CD19 Antibody-drug Conjugate SGN-CD19B,0.9571,Anti-CD228/4-1BB Bispecific Agent SGN-BB228,0.9109,Anti-CD352 Antibody-drug Conjugate SGN-CD352A,0.9093,Anti-CD70 Antibody-drug Conjugate SGN-CD70A,0.9084,Autologous CD19-targeted CAR-T Cells GC007F,0.9061
+594,SGN-CD33A,Vadastuximab Talirine,99,Anti-CD352 Antibody-drug Conjugate SGN-CD352A,0.9335,Monoclonal Antibody SGN-14,0.9171,Anti-TIGIT Monoclonal Antibody SGN-TGT,0.9109,Anti-gpA33/CD3 Monoclonal Antibody MGD007,0.9032,Anti-CD70 Antibody-drug Conjugate SGN-CD70A,0.9013
+595,SKIN LESION BIOPSY,Skin Biopsy,99,Skin Care Product,0.8865,Lanoteplase,0.8742,Topical Sirolimus,0.8710,Pelabresib,0.8708,Desmoteplase,0.8707
+596,SKIN SPARING RADICAL MASTECTOMY,Skin-Sparing Mastectomy;Radical Mastectomy,99,Skin Care Product,0.8757,Stanolone,0.8742,Steroid Cream,0.8730,Serclutamab,0.8726,Stanozolol,0.8718
+597,SLND,Sentinel Lymph Node;Lymphadenectomy,99,Sirolimus,0.9099,Nandrolone,0.9077,TMPRSS6 RNAi SLN124,0.9044,Everolimus,0.9036,Saralasin,0.9021
+598,SMAC,Apoptotic Pathway-targeting Antineoplastic Agent,99,SMAC Mimetic BI 891065,0.9198,Malotilate,0.9018,Smac Mimetic GDC-0917,0.9003,Smac Mimetic BGB-24714,0.9002,Mafenide,0.8989
+599,SORAFENIB,Sorafenib,1,Sorafenib,1.0000,Sorafenib Tosylate,0.9478,Savolitinib,0.9227,Sunitinib,0.9167,Imatinib,0.9116
+600,STA9090 (GANETESPIB),Ganetespib,1,Ganetespib,0.9346,Gancotamab,0.9125,Ganefromycin,0.9056,Ganulameran,0.9015,Ganitumab,0.8997
+601,STF-118804,NAMPT Inhibitor STF-118804,1,NAMPT Inhibitor STF-118804,0.9300,Anti-TGF-beta 1/Anti-COX-2 siRNAs STP707,0.8994,ALK Inhibitor TAE684,0.8966,ALK/TRK Inhibitor TSR-011,0.8927,RET/SRC Inhibitor TPX-0046,0.8916
+602,SU11248,Sunitinib Malate,99,SU4984,0.9410,Sufosfamide,0.9049,Sufotidine,0.8982,Sufentanil,0.8955,Tyrosine Kinase Inhibitor SU5402,0.8949
+603,SVV-001,Seneca Valley Virus-001,1,Seneca Valley Virus-001,0.8978,Seviteronel,0.8941,Oncolytic Vaccinia Virus OVV-01,0.8930,Oncolytic Adenovirus AdAPT-001,0.8911,VEGFR3 Inhibitor EVT801,0.8895
+604,SY-1425 (Tamibarotene),Tamibarotene,1,Tamibarotene,0.9421,TAM/c-Met Inhibitor RXDX-106,0.9114,RET Inhibitor SY-5007,0.9049,ALK Inhibitor SY-3505,0.9039,Anti-TGF-beta Monoclonal Antibody SAR-439459,0.8943
+605,Sacrococcygeal Resection,Sacrococcygeal Teratoma;Resection,99,Sacrosidase,0.8837,Savoxepin,0.8789,Hemorrhoidal Preparation,0.8660,Savolitinib,0.8635,Seviteronel,0.8609
+606,Samalizumab,Samalizumab,1,Samalizumab,1.0000,Efalizumab,0.9263,Omalizumab,0.9224,Mogamulizumab,0.9165,Aselizumab,0.9149
+607,Sapacitabine (CYC682-06),Sapacitabine,1,Sapacitabine,0.9642,Fiacitabine,0.9121,Gusacitinib,0.8986,Phytocannabinoid,0.8985,Cycrimine,0.8979
+608,Secondary Debulking,Secondary;Tumor Debulking,99,Debamestrocel,0.8671,Besulpamide,0.8641,Deboxamet,0.8599,Semuloparin,0.8595,Durcabtagene Autoleucel,0.8534
+609,Segmental Mastectomy,Segmental Mastectomy,99,Somatosalm,0.8918,Somatorelin,0.8821,Dibusadol,0.8727,Somatropin,0.8699,Salicin,0.8689
+610,Segmental mastectomy,Segmental Mastectomy,99,Somatosalm,0.8918,Somatorelin,0.8821,Dibusadol,0.8727,Somatropin,0.8699,Salicin,0.8689
+611,Segmental ureterectomy,Ureterectomy,99,Stenbolone,0.8789,Traxoprodil,0.8701,Floxuridine,0.8694,Eurestobart,0.8682,Suclofenide,0.8668
+612,"Segmentectomy, Multiple",Segmentectomy;Multiple,99,Multiple Mixed Antigens,0.8821,Multitargeted Tyrosine Kinase Inhibitor JNJ-26483327,0.8737,Bismuth Subgallate,0.8735,Subasumstat,0.8713,Multiple Weed Mix Pollen Antigens,0.8713
+613,"Segmentectomy, Single",Segmentectomy;Single,99,Segesterone,0.8794,Bismuth Subgallate,0.8749,Subathizone,0.8738,Serrapeptase,0.8738,Seglitide,0.8728
+614,Selinexor,Selinexor,1,Selinexor,1.0000,Seltorexant,0.9399,Selexipag,0.9319,Selepressin,0.9261,Selegiline,0.9219
+615,Sentinel Node Biopsy,Sentinel Lymph Node Biopsy,99,Nandrolone,0.8850,Stanolone,0.8712,Nandrolone Sodium Sulfate,0.8703,Nab-paclitaxel,0.8698,Naphthonone,0.8680
+616,Simple Hysterectomy,Total Hysterectomy,99,Niraparib Tosylate Monohydrate,0.8711,Dutasteride,0.8684,Trastuzumab,0.8681,Non-Steroidal Estrogen,0.8675,Topilutamide,0.8663
+617,Simple Mastectomy,Total Mastectomy,99,Minoxidil,0.8787,Methomyl,0.8772,Minamestane,0.8753,Myrtecaine,0.8745,Myralact,0.8744
+618,Sirolimus,Sirolimus,1,Sirolimus,1.0000,Topical Sirolimus,0.9570,Siramesine,0.9329,Siremadlin,0.9296,Sirolimus Topical Gel PTX-022,0.9277
+619,Skin excision,Skin Excision,99,Skin Care Product,0.8846,Escitalopram,0.8729,Segesterone,0.8719,Ethion,0.8712,Etoposide,0.8656
+620,Sorafenib,Sorafenib,1,Sorafenib,1.0000,Sorafenib Tosylate,0.9478,Savolitinib,0.9227,Sunitinib,0.9167,Imatinib,0.9116
+621,Stereotactic,Stereotactic Radiosurgery,99,Seviteronel,0.8813,Suvizumab,0.8758,Glatiramer,0.8749,Gefitinib,0.8727,Somatosalm,0.8721
+622,Steroids,Steroid Therapy,99,Steroid Cream,0.9388,Steroidal Estrogen,0.9310,Prednisone,0.9275,Prednisolone,0.9267,Anabolic Steroid,0.9248
+623,Sunitinib,Sunitinib,1,Sunitinib,1.0000,Sunitinib Malate,0.9604,Sorafenib,0.9167,Sildenafil,0.9167,Lanreotide,0.9143
+624,Surgical,Surgical Procedure,99,99mTc-based PSMA Imaging and Surgery Agent,0.8801,Savoxepin,0.8788,Salicin,0.8769,Rolofylline,0.8731,Squalamine,0.8718
+625,Surgical Resection,Resection,99,Serrapeptase,0.8772,Resocortol,0.8755,Resatorvid,0.8703,Resminostat,0.8699,Rolofylline,0.8689
+626,Surgical resection,Resection,99,Serrapeptase,0.8772,Resocortol,0.8755,Resatorvid,0.8703,Resminostat,0.8699,Rolofylline,0.8689
+627,Systemic,Systemic Therapy,99,Somatosalm,0.8775,Sildenafil,0.8769,Salsalate,0.8765,Thiosalan,0.8740,Sodium Thiosulfate,0.8734
+628,T cell apheresis,Chimeric Antigen Receptor T-Cell Therapy;Therapeutic Apheresis,99,Autologous Peripheral Blood Mononuclear Cells,0.9037,Allogeneic TCR alpha/beta-positive T-lymphocyte-depleted Peripheral Blood Stem Cells,0.9014,CD3+/CD19+ Cell-depleted Autologous Hematopoietic Stem Cells,0.9009,Anti-mesothelin CIR mRNA-electroporated Autologous T Cells,0.9000,Autologous TCRm-expressing T-cells ET140203,0.8984
+629,TACE,Transarterial Chemoembolization,99,Tacedinaline,0.9406,Erlotinib,0.9086,Trastuzumab,0.9085,Dotarizine,0.9014,Trypsin,0.8992
+630,TACEb,Transarterial Chemoembolization,99,Tacedinaline,0.9380,Trastuzumab,0.8996,Ertiprotafib,0.8976,Bevacizumab,0.8974,Talizumab,0.8934
+631,TAE,Transanal Excision,99,TAEK-VAC-HerBy Vaccine,0.9048,Tasosartan,0.9025,Tasuldine,0.9012,Tenoxicam,0.8956,TAS-103,0.8942
+632,TAK-701,Anti-HGF Monoclonal Antibody TAK-701,1,Anti-HGF Monoclonal Antibody TAK-701,0.9325,Aurora B Serine/Threonine Kinase Inhibitor TAK-901,0.9050,ALK/FAK/Pyk2 Inhibitor CT-707,0.9040,Dextran 70,0.9001,Anti-TGF-beta Monoclonal Antibody SAR-439459,0.8990
+633,TAMIS,Transanal Excision;Minimally Invasive Surgery,99,Tamtuvetmab,0.9425,Taminadenant,0.9403,Tameridone,0.9326,Tamibarotene,0.9287,Tamitinol,0.9261
+634,TAMOXIFEN,Tamoxifen,1,Tamoxifen,1.0000,Tamoxifen Citrate,0.9405,Crizotinib,0.9188,Anastrozole,0.9182,Trastuzumab,0.9169
+635,TB-403,Anti-PLGF Monoclonal Antibody TB-403,1,Anti-PLGF Monoclonal Antibody TB-403,0.9345,Autologous TBX-4000-treated Peripheral Blood Mononuclear Cells TBX-3400,0.8912,Tazolol,0.8886,ALK/c-Met Inhibitor TQ-B3139,0.8885,Tolbutamide,0.8836
+636,TBI,Total-Body Irradiation,99,Ibacitabine,0.9022,Rebastinib,0.8988,Gabapentin,0.8973,Bleomycin,0.8943,Barbiturate,0.8941
+637,TDM-1,Trastuzumab Emtansine,99,IDO/TDO Inhibitor LY-01013,0.9021,Drozitumab,0.9021,IDO/TDO Inhibitor HTI-1090,0.9012,Telotristat,0.8915,IDO1/TDO2 Inhibitor M4112,0.8914
+638,TEMODAR,Temozolomide,99,Temodox,0.9185,Temanogrel,0.9133,Temelastine,0.9059,Temafloxacin,0.9017,Temelimab,0.8996
+639,TIL infusion,Tumor Infiltrating Lymphocyte Therapy,99,TNF Transduced TIL,0.9255,Tilidine Hydrochloride,0.9145,Tilidine,0.9131,Tilavonemab,0.9101,Tilmacoxib,0.9086
+640,TKI,Tyrosine Kinase Inhibitor,3,Erlotinib,0.9366,Imatinib,0.9338,Tyrosine Kinase Inhibitor,0.9322,Crizotinib,0.9223,Gefitinib,0.9214
+641,TL32711,Birinapant,99,Ruthenium-based Photosensitizer TLD1411,0.9030,Antiangiogenic Drug Combination TL-118,0.8932,AL721,0.8928,PI3K Inhibitor TL117,0.8928,Photodynamic Compound TLD-1433,0.8912
+642,TLI,Total Lymphoid Irradiation,99,Thallous Chloride Tl-201,0.9055,Elobixibat,0.9044,Levosimendan,0.9043,Liotrix,0.9041,Tyrosine Kinase Inhibitor TL-895,0.9041
+643,TM,Trametinib,99,Terazosin,0.9045,Timolumab,0.9042,Trimazosin,0.9037,Timolol Maleate,0.9033,Timolol,0.9015
+644,TMZ,Temozolomide,1,Temozolomide,0.9426,Methazolamide,0.9230,Metformin,0.9214,Metioxate,0.9177,Minocycline,0.9155
+645,TOPO_II_INH,Topoisomerase-II Inhibitor,2,Isoniazid,0.9103,Topoisomerase-II Inhibitor,0.9038,Topoisomerase I/II Inhibitor NEV-801,0.8986,Topoisomerase-I Inhibitor,0.8916,Topotecan,0.8891
+646,TOPO_I_INH,Topoisomerase-I Inhibitor,2,Isoniazid,0.9117,Topoisomerase-I Inhibitor,0.9017,Topoisomerase I/II Inhibitor NEV-801,0.9009,Topotecan,0.8973,Topoisomerase-II Inhibitor,0.8952
+647,TOPTECAN,Topotecan,1,Topotecan,0.9365,Topterone,0.9303,Topsalysin,0.9290,Topixantrone,0.9234,Topilutamide,0.9191
+648,TOTAL MASTECTOMY,Total Mastectomy,99,Tamoxifen,0.8846,Trastuzumab,0.8734,Amitriptyline,0.8672,Metronidazole,0.8645,Totrombopag,0.8644
+649,TRAMP,TRAM Flap Procedure,99,Tramadol,0.9608,Trametinib,0.9448,Tramazoline,0.9438,Tramiprosate,0.9334,Tramadol Hydrochloride,0.9256
+650,TRAS,Trastuzumab,99,Tralonide,0.9506,Traxanox,0.9440,Trazodone,0.9434,Tracazolate,0.9351,Trazolopride,0.9327
+651,TRASTUZUMAB,Trastuzumab,1,Trastuzumab,1.0000,Trastuzumab Emtansine,0.9481,Trastuzumab Vedotin,0.9423,Trastuzumab Corixetan,0.9347,Trastuzumab Botidotin,0.9346
+652,TRISENOX(ATO),Arsenic Trioxide,99,Atopaxar,0.9082,Zoledronate Trisodium,0.9068,Atilmotin,0.9066,Atopaxar Hydrobromide,0.9044,Trispecific Antibody JNJ-79635322,0.9043
+653,TUR,Transurethral Resection,99,Turosteride,0.9313,Citalopram,0.8935,Turofexorate Isopropyl,0.8932,Tolmetin,0.8900,Tibalosin,0.8893
+654,TURBT,Transurethral Resection of Bladder Tumor,99,Tylosin,0.8987,Terbucromil,0.8968,Trimoprostil,0.8962,Tolnaftate,0.8955,Terazosin,0.8940
+655,TURBT (transurethral resection of bladder tumor),Transurethral Resection of Bladder Tumor,99,Tuvusertib,0.8997,Ublituximab,0.8948,Thymocartin,0.8928,Tobevibart,0.8927,Trimoprostil,0.8915
+656,TVRC-biopsy,Biopsy,99,Tavokinogene Telseplasmid,0.8947,Tivirapine,0.8910,CT-RCC-1 Antigen,0.8858,Trestolone,0.8851,Tumor Necrosis Factor (CET),0.8850
+657,Tandutinib,Tandutinib,1,Tandutinib,1.0000,Tasurgratinib,0.9224,Taniplon,0.9107,Tanexaban,0.9089,Tanaproget,0.9081
+658,Tasadenoturev,Tasadenoturev,1,Tasadenoturev,1.0000,Tasadenoturev-infected Allogeneic Bone Marrow-derived Mesenchymal Stem Cells,0.9146,Tasidotin,0.9145,Tasisulam,0.9037,Tasonermin,0.9020
+659,Tasadeoturev,Tasadenoturev,1,Tasadenoturev,0.9551,Tasonermin,0.9228,Tasidotin,0.9186,Tasisulam,0.9154,Tasuldine,0.9101
+660,Taxol,Paclitaxel,1,Paclitaxel,0.9339,Docetaxel,0.9309,Docetaxel Polymeric Micelles,0.9101,Pegylated Paclitaxel,0.9094,Oral Docetaxel,0.9088
+661,Taxotere,Docetaxel,1,Docetaxel,0.9211,Formoterol,0.9101,Oral Docetaxel,0.9055,Paclitaxel Trevatide,0.9038,Nebotermin,0.9036
+662,Temodar,Temozolomide,99,Temodox,0.9185,Temanogrel,0.9133,Temelastine,0.9059,Temafloxacin,0.9017,Temelimab,0.8996
+663,Temozolamide,Temozolomide,1,Temozolomide,0.9386,Acetohexamide,0.9133,Acetazolamide,0.9133,Trimethobenzamide Hydrochloride,0.9132,Trimethobenzamide,0.9113
+664,Temozolomide,Temozolomide,1,Temozolomide,1.0000,Carbon C11 Temozolomide,0.9241,Ipilimumab,0.9090,Locally-acting Temozolomide Formulation SI-053,0.9088,Demethylating Agent,0.9082
+665,Temsirolimus,Temsirolimus,1,Temsirolimus,1.0000,Temazepam,0.9279,Temafloxacin,0.9170,Topotecan,0.9169,Levosimendan,0.9166
+666,Thalidomide,Thalidomide,1,Thalidomide,1.0000,Itraconazole,0.9180,Tibolone,0.9083,Lenalidomide,0.9074,Phenytoin,0.9063
+667,Thioguanine,Thioguanine,1,Thioguanine,1.0000,Thioguanine Anhydrous,0.9493,Thiouracil,0.9426,Beta-Thioguanine Deoxyriboside,0.9423,Alpha-Thioguanine Deoxyriboside,0.9332
+668,Thiotepa,Thiotepa,1,Thiotepa,1.0000,Thiopental,0.9381,Thiothixene,0.9366,Thiosalan,0.9337,Sodium Thiosulfate,0.9323
+669,Thymoglobulin,Lapine T-Lymphocyte Immune Globulin,99,Thymol,0.9245,Thymocartin,0.9226,Thymopentin,0.9171,Thymalfasin,0.9150,Anti-Thymocyte Globulin,0.9133
+670,Thymoglobulin (Bu/Flu/ATG),Lapine T-Lymphocyte Immune Globulin,99,Tuberculin,0.9102,Anti-Thymocyte Globulin,0.9095,Bufuralol,0.9054,Equine Thymocyte Immune Globulin,0.9053,Otlertuzumab,0.9017
+671,Thymoglobulin (Bu/Flu/Cy/ATG),Lapine T-Lymphocyte Immune Globulin,99,Anti-Thymocyte Globulin,0.9087,Autologous CD4+/CD8+ 4-1BB-CD3zeta-EGFR806-CAR-EGFRt/4-1BB-CD3zeta-CD19-CAR-HER2tG-expressing CARs T Cells,0.9071,Bufuralol,0.9058,Autologous Human Anti-CD19CAR-4-1BB-CD3zeta-EGFRt-expressing CD4+/CD8+ T-lymphocytes,0.9055,4H11-28z/fIL-12/EGFRt-expressing Autologous T-lymphocytes,0.9036
+672,Topotecan,Topotecan,1,Topotecan,1.0000,Topotecan Hydrochloride,0.9582,11C Topotecan,0.9489,Topotecan Hydrochloride (1:1.25),0.9439,Oral Topotecan Hydrochloride,0.9431
+673,Total Abdominal,Total Abdominal Hysterectomy,99,Amphotalide,0.8654,Ludaterone,0.8517,Partricin,0.8516,Anorexiant,0.8485,Actarit,0.8476
+674,Total Abdominal Hysterectomy,Total Abdominal Hysterectomy,99,Tamoxifen,0.8620,Hydrobentizide,0.8553,Histrelin,0.8552,Turosteride,0.8547,Histapyrrodine,0.8538
+675,Total Body Irradiation,Total-Body Irradiation,99,Total Tumor RNA-loaded Dendritic Cell Vaccine,0.8849,Risarestat,0.8670,Autologous Tumor Infiltrating Lymphocytes TBio-4101,0.8667,Yttrium Y-90 Ibritumomab Tiuxetan,0.8667,Radicicol,0.8659
+676,Total Hepatectomy,Total Hepatectomy,99,Hepatoprotective Agent,0.8664,Tamoxifen,0.8638,Etirinotecan Pegol Tetratriflutate,0.8635,Sorafenib,0.8620,Therapeutic Hemin,0.8614
+677,Total Mastectomy,Total Mastectomy,99,Tamoxifen,0.8846,Trastuzumab,0.8734,Amitriptyline,0.8672,Metronidazole,0.8645,Totrombopag,0.8644
+678,Total mastectomy,Total Mastectomy,99,Tamoxifen,0.8846,Trastuzumab,0.8734,Amitriptyline,0.8672,Metronidazole,0.8645,Totrombopag,0.8644
+679,Total pancreatectomy,Total Pancreatectomy,99,Pancrelipase,0.8916,Pancrelipase Amylase,0.8762,Pancrelipase Lipase,0.8746,Pancopride,0.8743,Pentigetide,0.8708
+680,Trametinib,Trametinib,1,Trametinib,1.0000,Tramadol,0.9454,Trametinib Dimethyl Sulfoxide,0.9411,Tramadol Hydrochloride,0.9345,Tramazoline,0.9248
+681,Transplant,Graft,99,Immunosuppressant,0.8838,Isatuximab,0.8824,Amatuximab,0.8821,Tacrolimus,0.8798,Tolnaftate,0.8787
+682,Transurethral resection,Transurethral Resection,99,Recombinant Transforming Growth Factor-Alpha,0.8809,Turosteride,0.8801,Recombinant Transforming Growth Factor,0.8766,Travoprost,0.8759,Recombinant Transforming Growth Factor-Beta 1,0.8755
+683,Trastuzumab,Trastuzumab,1,Trastuzumab,1.0000,Trastuzumab Emtansine,0.9481,Trastuzumab Vedotin,0.9423,Trastuzumab Corixetan,0.9347,Trastuzumab Botidotin,0.9346
+684,Tremelimumab,Tremelimumab,1,Tremelimumab,1.0000,Trempamotide,0.9227,Nerelimomab,0.9222,Tremacamra,0.9124,Etimumotide,0.9107
+685,Treosulfan,Treosulfan,1,Treosulfan,1.0000,Thiazosulfone,0.9424,Treloxinate,0.9251,Trepipam,0.9219,Mannosulfan,0.9218
+686,Tretinoin,Tretinoin,1,Tretinoin,1.0000,Tretinoin Liposome,0.9577,Tretinoin Tocoferil,0.9521,Trestolone,0.9271,Treloxinate,0.9268
+687,UNK,Unknown,99,Unoprostone,0.9370,Naphthalimide Analogue UNBS5162,0.8969,Unoprostone Isopropyl,0.8964,Unesbulin,0.8929,Unasnemab,0.8925
+688,Uncinate process resection,Uncinate Process of Pancreas;Resection,99,Prodeconium,0.8587,Pumecitinib,0.8562,Coleneuramide,0.8550,Curcuminoid,0.8520,CAP-2 (CEA Peptide 9-mer),0.8512
+689,Unilateral Oophorectomy,Unilateral Oophorectomy,99,2-Hydroxyestradiol,0.8742,Oxaceprol,0.8705,2-Hydroxyestrone,0.8691,Aloxistatin,0.8687,Trastuzumab/Hyaluronidase-oysk,0.8684
+690,Unilateral Salpingo- Oophorectomy,Unilateral Salpingo-oophorectomy,99,Salantel,0.8765,2-Hydroxyestradiol,0.8736,Trastuzumab/Hyaluronidase-oysk,0.8725,Salmeterol,0.8717,2-Hydroxyestrone,0.8709
+691,Unilateral Salpingo-Oophorectomy,Unilateral Salpingo-oophorectomy,99,Salantel,0.8765,2-Hydroxyestradiol,0.8736,Trastuzumab/Hyaluronidase-oysk,0.8725,Salmeterol,0.8717,2-Hydroxyestrone,0.8709
+692,Ureteral Biopsy,Ureter;Biopsy,99,Urinary Bladder Tumor Antigen,0.8850,Bremelanotide,0.8788,Benfluorex,0.8778,Bexarotene,0.8764,Netazepide,0.8752
+693,Ureterectomy,Ureterectomy,99,Utidelone,0.8924,Prazitone,0.8849,Floxuridine,0.8841,Zofenoprilat,0.8838,Zofenopril,0.8837
+694,Urethrectomy,Urethrectomy,99,Ubrogepant,0.9069,Menogaril,0.9010,Uprosertib,0.8980,Ciprostene,0.8964,Azathioprine,0.8948
+695,V212,Heat-Treated Varicella-Zoster Virus Vaccine V212,2,VHL2 (Y12M) Peptide,0.8976,Heat-Treated Varicella-Zoster Virus Vaccine V212,0.8963,HPV16-E6-T27,0.8865,Monoclonal Antibody RAV12,0.8803,pNGVL3-hIL12,0.8791
+696,VB,Vinblastine,99,Vinburnine,0.9181,Vabicaserin,0.9163,Topical VBP-926 Solution,0.9159,Bevacizumab,0.9133,Valbenazine,0.9059
+697,VCR,Vincristine,99,Cyclovalone,0.9138,VCL-CB01 Vaccine,0.9112,Valategrast,0.9090,Vinformide,0.9086,ALVAC-CEA (VCP248),0.9069
+698,VINCRISTINE,Vincristine,1,Vincristine,1.0000,Vincristine Liposomal,0.9518,Vincristine Sulfate,0.9493,Vincristine Sulfate Liposome,0.9268,Vinblastine,0.9237
+699,VP-16,Etoposide,99,HPV 16 L1-VLP,0.9319,A-16l,0.9226,HPV 16 E6 (18-26) Peptide,0.9197,HPV 18 L1-VLP,0.9185,VHL16 Peptide,0.9154
+700,VS-4718,FAK Inhibitor VS-4718,1,FAK Inhibitor VS-4718,0.9241,FGFR4 Inhibitor SY-4798,0.8997,MS-247,0.8990,Fluorine F 18-VM4-037,0.8979,HPV16-E7-T512,0.8935
+701,VT-464,Seviteronel,99,CP-547632,0.8996,Peptide 946,0.8932,Anti-CD46 Antibody-drug Conjugate FOR46,0.8923,VT30 Topical Gel,0.8913,FGFR4 Inhibitor SY-4798,0.8883
+702,Valproic Acid,Valproic Acid,1,Valproic Acid,1.0000,Valproate Sodium,0.9611,Valpromide,0.9394,Valproate Pivoxil,0.9355,Valiloxibic Acid,0.9319
+703,Velcade,Bortezomib,99,Velsecorat,0.9144,Abacavir,0.9144,Tetracaine,0.9143,Ipravacaine,0.9113,Flecainide,0.9109
+704,Vem,Vemurafenib,2,Vemtoberant,0.9433,Vemurafenib,0.9422,Vemircopan,0.9298,Vancomycin,0.9168,Vorinostat,0.9160
+705,Vemurafenib,Vemurafenib,1,Vemurafenib,1.0000,Vemtoberant,0.9373,Plixorafenib,0.9234,Dabrafenib,0.9210,Vemircopan,0.9180
+706,Venetoclax,Venetoclax,1,Venetoclax,1.0000,Pelcitoclax,0.9263,Navitoclax,0.9203,Vemtoberant,0.9169,Vedaclidine,0.9135
+707,Venetoclax (ABT-199),Venetoclax,1,Venetoclax,0.9622,BH3 Mimetic ABT-737,0.9200,Aplaviroc,0.9154,EGFR/HER2 Inhibitor ABT-101,0.9132,PARP-1/2 Inhibitor ABT-767,0.9114
+708,Vidaza,Azacitidine Regimen,99,Vidarabine,0.9598,Vidofludimus,0.9381,Viomycin,0.9375,Vidupiprant,0.9345,Vidarabine Phosphate,0.9322
+709,Vinblastine,Vinblastine,1,Vinblastine,1.0000,Vinorelbine,0.9458,Vinblastine Sulfate,0.9445,Vinflunine,0.9425,Vinburnine,0.9417
+710,Vincristine,Vincristine,1,Vincristine,1.0000,Vincristine Liposomal,0.9518,Vincristine Sulfate,0.9493,Vincristine Sulfate Liposome,0.9268,Vinblastine,0.9237
+711,Vincristine Sulfate,Vincristine Sulfate,1,Vincristine Sulfate,1.0000,Vincristine Sulfate Liposome,0.9705,Vinblastine Sulfate,0.9525,Vincristine,0.9493,Vinrosidine Sulfate,0.9422
+712,Vinorelbine,Vinorelbine,1,Vinorelbine,1.0000,Liposomal Vinorelbine,0.9518,Avorelin,0.9478,Vinorelbine Tartrate,0.9470,Vinblastine,0.9458
+713,Vinorelbrine,Vinorelbine,1,Vinorelbine,0.9733,Vinblastine,0.9437,Avorelin,0.9415,Liposomal Vinorelbine,0.9365,Vinorelbine Tartrate,0.9348
+714,Vorinostat,Vorinostat,1,Vorinostat,1.0000,Vorozole,0.9501,Belinostat,0.9443,Dacinostat,0.9416,Voriconazole,0.9411
+715,Vulvar resecetion,Vulva;Resection,99,Resatorvid,0.9105,Veverimer,0.9001,Vedroprevir,0.8916,Vulinacimab,0.8904,Resocortol,0.8895
+716,Wertheim Meiggs,Wertheim operation (procedure),99,Olmutinib,0.8813,Zegruvirimat,0.8793,Merestinib,0.8770,Mebolazine,0.8765,Befotertinib,0.8762
+717,Wide Excision,Wide Skin Excision,99,Erythromycin Topical Cream,0.8537,Eblasakimab,0.8534,Ezetimibe,0.8528,Eprinomectin,0.8526,Disulergine,0.8525
+718,Wide Local Excision,Wide Local Excision,99,Lidocaine Topical,0.8729,Eblasakimab,0.8638,Lidocaine,0.8637,Lidocaine Patch,0.8632,Erythromycin Topical Cream,0.8617
+719,Wide local excision,Wide Local Excision,99,Lidocaine Topical,0.8729,Eblasakimab,0.8638,Lidocaine,0.8637,Lidocaine Patch,0.8632,Erythromycin Topical Cream,0.8617
+720,Wide re-excisional biopsy,Wide;Re-Excision;Biopsy,99,Rezatomidine,0.8653,Extended Release Bupivacaine Hydrochloride Resorbable Matrix Formulation,0.8633,Rezivertinib,0.8630,Reozalimab,0.8622,Rezafungin,0.8569
+721,XL147,Pilaralisib,99,Tyrosine Kinase Inhibitor XL228,0.9211,JAK2 Inhibitor XL019,0.9188,RAF Kinase Inhibitor XL281,0.9144,CDK7 Inhibitor XL102,0.9136,Hsp90 Inhibitor XL888,0.9132
+722,Yes vaccine,Vaccine,1,Vaccine,0.9494,Vaccine Antigen,0.9228,HIV Vaccine,0.9175,Bacterial Vaccine,0.9140,BCG Vaccine,0.9092
+723,abiraterone,Abiraterone,1,Abiraterone,1.0000,Abiraterone Acetate,0.9832,Abiraterone Decanoate,0.9695,Abiraterone Decanoate Depot,0.9472,Abivertinib,0.9455
+724,abiraterone acetate,Abiraterone Acetate,1,Abiraterone Acetate,1.0000,Abiraterone,0.9832,Abiraterone Decanoate,0.9654,Abiraterone Decanoate Depot,0.9522,Abiraterone Acetate/Niraparib,0.9409
+725,abraxane,Nab-paclitaxel,99,Oraxol,0.9408,Benaxibine,0.9216,Abrineurin,0.9148,Ribaxamase,0.9147,Letaxaban,0.9129
+726,added ipilimumab),Ipilimumab,1,Ipilimumab,0.9392,Infliximab,0.8855,Anti-CTLA-4 Monoclonal Antibody IBI310,0.8845,CD40L-augmented Autologous Tumor Infiltrating Lymphocytes,0.8815,Anti-CTLA-4 Monoclonal Antibody,0.8797
+727,adriamycin,Doxorubicin Hydrochloride,99,Doxorubicin,0.9535,Apramycin,0.9375,Rifamycin,0.9368,Adrixetinib,0.9364,Ansamycin Antineoplastic Antibiotic,0.9351
+728,amifostine,Amifostine,1,Amifostine,1.0000,Amifostine Anhydrous,0.9542,Amifloxacin,0.9313,Amiodarone,0.9263,Zepastine,0.9248
+729,anterior exenteration,Anterior Pelvic Exenteration,99,Exalamide,0.9186,Exenatide,0.9126,Exatecan,0.9089,Ex-Lax,0.9073,Exaluren,0.9068
+730,anthracycline,Anthracycline Antineoplastic Antibiotic,1,Anthracycline Antineoplastic Antibiotic,0.9571,Doxorubicin,0.9427,Anthramycin,0.9256,Amifloxacin,0.9243,Amiterol,0.9196
+731,anti-CD123,Immunotherapeutic Agent,99,Anti-CD123 Monoclonal Antibody,0.9866,Anti-CD123 Monoclonal Antibody KHK2823,0.9604,Anti-CD137 Monoclonal Antibody,0.9591,Autologous Anti-CD123 CAR-T Cells,0.9580,Anti-CD123 Monoclonal Antibody CSL360,0.9556
+732,anti-CD33,Immunotherapeutic Agent,99,Anti-CD33 Monoclonal Antibody,0.9882,Anti-CD3 Monoclonal Antibody,0.9817,Anti-CD30 Monoclonal Antibody,0.9747,Anti-CD39 Monoclonal Antibody AB598,0.9655,Anti-CD33 Antibody-drug Conjugate,0.9644
+733,anti-LAG3,Anti-LAG-3 Monoclonal Antibody,1,Anti-LAG-3 Monoclonal Antibody,0.9610,Anti-LAG-3 Monoclonal Antibody HLX26,0.9404,Anti-LAG-3 Monoclonal Antibody Sym022,0.9378,Anti-LAG-3 Monoclonal Antibody LBL-007,0.9376,Anti-LAG-3 Monoclonal Antibody IBI-110,0.9368
+734,anti-TIM3,Anti-TIM-3 Monoclonal Antibody,1,Anti-TIM-3 Monoclonal Antibody,0.9648,Anti-TIM3 Monoclonal Antibody LY3321367,0.9474,Anti-TIM-3 Monoclonal Antibody Sym023,0.9410,Anti-TIM-3 Antibody BMS-986258,0.9378,Anti-TIM-3 Monoclonal Antibody TQB2618,0.9368
+735,appendectomy,Appendectomy,99,Parecoxib,0.8910,Amoxicillin,0.8891,Amoxecaine,0.8886,Dexivacaine,0.8876,Virulizin,0.8869
+736,autologous stem cell transplant,Autologous Hematopoietic Stem Cell Transplantation,99,Autologous Spermatogonial Stem Cells,0.9464,Autologous Tumor Cell Vaccine,0.9351,Autologous Mesenchymal Stem Cells Apceth_101,0.9337,Autologous-Cell Leukemia Vaccine,0.9304,Autologous-Cell Melanoma Vaccine,0.9271
+737,autologout SCT,Autologous Hematopoietic Stem Cell Transplantation,99,Autologous Spermatogonial Stem Cells,0.8935,Ciltacabtagene Autoleucel,0.8897,Tinocabtagene Autoleucel,0.8897,Autologous Anti-CD19/CD22 CAR T-cells AUTO3,0.8895,Allogeneic Human T Cell Progenitors SMART 101,0.8886
+738,axillary dissection,Axillary Lymph Node Dissection,99,Amylocaine,0.8715,Erbulozole,0.8631,Amphetamine Adipate,0.8625,Adrenalone,0.8604,Vadocaine,0.8601
+739,axillary lymph node biopsy,Axillary Lymph Node Biopsy,99,Ex Vivo-activated Autologous Lymph Node Lymphocytes,0.8782,Paclitaxel Obaluronate,0.8686,Nandrolone,0.8639,Avobenzone,0.8639,Endobenzyline,0.8624
+740,axillary lymph node dissection,Axillary Lymph Node Dissection,99,Erbulozole,0.8718,Ex Vivo-activated Autologous Lymph Node Lymphocytes,0.8717,Endobenzyline,0.8621,Amylocaine,0.8616,Vaccine-Sensitized Draining Lymph Node Cells,0.8582
+741,axillary node dissection,Axillary Lymph Node Dissection,99,Erbulozole,0.8662,Ex Vivo-activated Autologous Lymph Node Lymphocytes,0.8644,Amylocaine,0.8644,Avorelin,0.8607,Nandrolone,0.8600
+742,axillary sentinel lymph node biopsy,Axillary Lymph Node;Sentinel Lymph Node Biopsy,99,Nandrolone,0.8780,Ex Vivo-activated Autologous Lymph Node Lymphocytes,0.8697,Stanolone,0.8664,Avobenzone,0.8662,Nab-paclitaxel,0.8657
+743,azacitidine,Azacitidine,1,Azacitidine,1.0000,Oral Azacitidine,0.9700,Azacyclonol,0.9355,Azatadine,0.9329,Azaribine,0.9292
+744,bevacizumab,Bevacizumab,1,Bevacizumab,1.0000,Rebastinib,0.9297,Brivanib,0.9271,Bevacizumab-IRDye 800CW,0.9268,Bortezomib,0.9227
+745,bicalutamide,Bicalutamide,1,Bicalutamide,1.0000,Enzalutamide,0.9358,Biclofibrate,0.9307,Bictegravir,0.9292,Biclodil,0.9275
+746,bilateral pelvic lymph node dissection,Bilateral Pelvic Lymph Node Dissection,99,Niraparib Tosylate Monohydrate,0.8661,Pidobenzone,0.8644,Benidipine,0.8617,Pelitrexol,0.8603,Anti-PD-L1/Anti-OX40 Bispecific Antibody EMB-09,0.8596
+747,bilateral pelvic lymphadenectomy,Bilateral;Pelvic Lymphadenectomy,99,Niraparib Tosylate Monohydrate,0.8781,Propranolol,0.8728,Pelitrexol,0.8703,Bupivacaine,0.8696,Pelubiprofen,0.8693
+748,bilateral total mastectomies,Bilateral;Total Mastectomy,99,Benztropine Mesylate,0.8743,Etosalamide,0.8708,Trebenzomine,0.8695,Trastuzumab Botidotin,0.8694,Tamoxifen,0.8694
+749,biopsy,Biopsy,99,Bleomycin,0.8951,Abciximab,0.8947,Baclofen,0.8906,Carbamazepine,0.8890,Belimumab,0.8888
+750,bleomycin,Bleomycin,1,Bleomycin,1.0000,Bleomycin Antibiotic,0.9611,Bleomycin B2,0.9555,Bleomycin A2,0.9479,Bleomycin Sulfate,0.9424
+751,breast conserving therapy,Breast Conservation Treatment,99,Tamoxifen,0.8869,Letrozole,0.8837,Trastuzumab Botidotin,0.8821,Lapatinib,0.8781,Fadrozole,0.8760
+752,brentuximab vedotin,Brentuximab Vedotin,1,Brentuximab Vedotin,1.0000,Brentuximab,0.9715,Trastuzumab Vedotin,0.9374,Vedolizumab,0.9353,Zolbetuximab,0.9336
+753,cape,Capecitabine,99,Capeserod,0.9473,Ancitabine,0.9027,Censavudine,0.8941,Candicidin,0.8930,Chloramphenicol,0.8921
+754,capecitabine,Capecitabine,1,Capecitabine,1.0000,Capecitabine Rapidly Disintegrating Tablet,0.9394,Gemcitabine,0.9101,Dasatinib,0.9066,Temozolomide,0.9053
+755,carbo,Carboplatin,99,Carboquone,0.9568,Carbenzide,0.9437,Carbogen,0.9414,Carbocloral,0.9405,Carbaril,0.9385
+756,carboplatin,Carboplatin,1,Carboplatin,1.0000,Cisplatin,0.9259,Cetuximab,0.9212,Carbon C14-labeled Carboplatin,0.9148,Dicycloplatin,0.9125
+757,carmustine,Carmustine,1,Carmustine,1.0000,Carmustine in Ethanol,0.9524,Lomustine,0.9492,Elmustine,0.9486,Carmustine Implant,0.9445
+758,carvo,Carboplatin,99,Carvotroline,0.9495,Carzenide,0.9393,Carafiban,0.9294,Carmofur,0.9230,Carfimate,0.9207
+759,cd47mAb,Anti-CD47 Monoclonal Antibody,1,Anti-CD47 Monoclonal Antibody,0.9467,CD47-targeting Agent,0.9399,Anti-CD47 Monoclonal Antibody HMPL-A83,0.9336,Anti-CD47 Monoclonal Antibody IMC-002,0.9298,Anti-CD47 Monoclonal Antibody AO-176,0.9248
+760,cetuximab,Cetuximab,1,Cetuximab,1.0000,Cetuximab-IRDye 800CW,0.9342,Cetuximab Sarotalocan,0.9282,Colistin,0.9217,Carboplatin,0.9212
+761,cis,Cisplatin,99,Cisapride,0.9515,Cisconazole,0.9389,Cismadinone,0.9250,Cistinexine,0.9247,Cisatracurium,0.9181
+762,cisplatin,Cisplatin,1,Cisplatin,1.0000,Cisplatin Liposomal,0.9523,Carboplatin,0.9259,Cisplatin-E Therapeutic Implant,0.9255,Platinum Compound,0.9232
+763,clofarabine,Clofarabine,1,Clofarabine,1.0000,Clofurac,0.9472,Cloranolol,0.9367,Clofezone,0.9352,Clofoctol,0.9342
+764,cob,Cobimetinib,4,Cobicistat,0.9539,Cobiprostone,0.9461,Cobolimab,0.9455,Cobimetinib,0.9361,Cobomarsen,0.9295
+765,cobimetinib,Cobimetinib,1,Cobimetinib,1.0000,Cobimetinib Fumarate,0.9678,Binimetinib,0.9429,Ralimetinib,0.9415,Cobicistat,0.9371
+766,combo resection,Combination;Resection,99,Combretastatin,0.8825,Combretastatin A-1,0.8666,Combretastatin A-4,0.8634,Pemetrexed,0.8609,Cavrotolimod,0.8589
+767,cos,Cisplatin,99,Cosdosiran,0.9408,Cositecan,0.9375,Cosfroviximab,0.9176,Cosibelimab,0.9153,Creosol,0.8860
+768,creation of ileal conduit,Urinary Diversion,99,Autologous Muscle-derived Cells for Gastrointestinal Repair,0.8685,Infliximab,0.8595,Ileal Bile Acid Transport Inhibitor,0.8534,Nebicapone,0.8532,Loviride,0.8523
+769,creation of neobladder,Neobladder,99,Neoantigen Peptide,0.8816,Neostigmine,0.8806,Neoantigen Peptide Vaccine,0.8776,Monoclonal Antibody NEO-201,0.8700,Neoantigen DNA-Based Pancreatic Cancer Vaccine,0.8698
+770,creation of orthotopic neobladder,Orthotopic;Neobladder,99,Neoantigen Peptide,0.8701,Neoantigen Peptide Vaccine,0.8697,Ornoprostil,0.8694,Neoantigen-based Glioblastoma Vaccine,0.8680,Niridazole,0.8664
+771,cvt,Regadenoson,99,Cyclovalone,0.9134,Ciheptolane,0.9115,Cioteronel,0.9089,Vancomycin,0.9084,Siccanin,0.9081
+772,cyclophosphamide,Cyclophosphamide,1,Cyclophosphamide,1.0000,Cyclophosphamide Anhydrous,0.9458,Carbamazepine,0.9199,Chloroprednisone,0.9132,Theophylline,0.9123
+773,cystoprostatectomy,Radical Cystoprostatectomy,99,Carboprost,0.9137,Cystamine,0.9047,Misoprostol,0.8990,Dinoprostone,0.8903,Carboprost Methyl,0.8889
+774,cytarabine,Cytarabine,1,Cytarabine,1.0000,Cytarabine Hydrochloride,0.9596,Liposomal Cytarabine,0.9526,Thiarabine,0.9371,Cytembena,0.9361
+775,dacarbazine,Dacarbazine,1,Dacarbazine,1.0000,Procarbazine,0.9450,Dacinostat,0.9368,Dactinomycin,0.9363,Dicarbine,0.9333
+776,dauna,Daunorubicin,99,Dazadrol,0.9211,Dazoquinast,0.9159,Dazadrol Maleate,0.9133,Dazoxiben,0.9099,Darunavir,0.9096
+777,dauno,Daunorubicin,1,Daunorubicin,0.9331,Abunidazole,0.9024,Daunorubicin Hydrochloride,0.8997,Dazoquinast,0.8888,Dazopride,0.8874
+778,dcVax,Dendritic Cell Vaccine,4,DC-OVA Vaccine,0.9278,Vancomycin,0.9168,Darvadstrocel,0.9152,Dendritic Cell Vaccine,0.9142,Doconazole,0.9127
+779,desatinib,Dasatinib,99,Drinidene,0.9117,Decernotinib,0.9013,Sorbinil,0.9004,Depulfavirine,0.8966,Indecainide,0.8961
+780,dex,Dexamethasone,5,Dexivacaine,0.9581,Dexetimide,0.9556,Dexecadotril,0.9540,Dexoxadrol,0.9534,Dexamethasone,0.9499
+781,dexamethasone,Dexamethasone,1,Dexamethasone,1.0000,Dexamethasone Phosphate,0.9679,Dexamethasone Acetate,0.9616,Dexamethasone Acetate,0.9616,Dexamethasone Sodium Sulfate,0.9597
+782,docetaxel,Docetaxel,1,Docetaxel,1.0000,Oral Docetaxel,0.9712,Docetaxel-PNP,0.9531,Docetaxel Anhydrous,0.9528,Liposomal Docetaxel,0.9485
+783,doxorubicin,Doxorubicin,1,Doxorubicin,1.0000,Doxorubicin Hydrochloride,0.9678,Doxorubicin Preparation,0.9641,Rutamycin,0.9341,Doxorubicin-Eluting Beads,0.9323
+784,doxorubicin hydrochloride,Doxorubicin Hydrochloride,1,Doxorubicin Hydrochloride,1.0000,Doxorubicin,0.9678,Pegylated Liposomal Doxorubicin Hydrochloride,0.9563,Doxorubicin Preparation,0.9549,Doxycycline Hydrochloride,0.9503
+785,enucleation,Enucleation,99,Enoxolone,0.9339,Enrofloxacin,0.9320,Enoxacin,0.9287,Enrasentan,0.9229,Enflurane,0.9220
+786,enucleation in the pancretic tail,Enucleation;Tail of the Pancreas,99,Enadoline,0.8805,Pentigetide,0.8803,Enalaprilat,0.8798,Enuvaptan,0.8797,Nebotermin,0.8796
+787,enzalutamide,Enzalutamide,1,Enzalutamide,1.0000,Bicalutamide,0.9358,Enzacamene,0.9297,Enzastaurin,0.9242,Proxalutamide,0.9228
+788,epirubicin,Epirubicin,1,Epirubicin,1.0000,Epirubicin Hydrochloride,0.9776,Idarubicin,0.9436,Micellar Nanoparticle-encapsulated Epirubicin,0.9335,Leurubicin,0.9286
+789,erlotinib,Erlotinib,1,Erlotinib,1.0000,Erlotinib Hydrochloride,0.9519,Everolimus,0.9130,Gefitinib,0.9119,Radotinib,0.9099
+790,etoposide,Etoposide,1,Etoposide,1.0000,Etoposide Phosphate,0.9552,Etoposide Toniribate,0.9436,Etoprindole,0.9310,Etoprine,0.9301
+791,etoposide phosphate,Etoposide Phosphate,1,Etoposide Phosphate,1.0000,Etoposide,0.9552,Doxycycline Phosphate,0.9353,Erythromycin Phosphate,0.9230,Chloroquine Phosphate,0.9184
+792,everolimus,Everolimus,1,Everolimus,1.0000,Everolimus Tablets for Oral Suspension,0.9358,Axitinib,0.9222,Sirolimus,0.9205,Erlotinib,0.9130
+793,excision of mass on chest wall,Excision;Chest Wall Mass,99,Autologous Sarcoma Cell Lysate,0.8642,Volagidemab,0.8621,Eblasakimab,0.8613,Enlimomab,0.8594,Levemopamil,0.8592
+794,excisional biopsy,Excisional Biopsy,99,Endobenzyline,0.8820,Abiraterone Decanoate Depot,0.8762,Abiraterone Decanoate,0.8753,Abciximab,0.8736,Tenofovir Exalidex,0.8735
+795,extended pelvic lymph node dissection,Extend;Pelvic Lymphadenectomy,99,Extended Spectrum Penicillin Antibiotic,0.8695,Epipropidine,0.8636,Extended-release Granisetron Polymer Formulation,0.8567,Ethylestrenol,0.8565,Teprotide,0.8562
+796,fluorouracil,Fluorouracil,1,Fluorouracil,1.0000,Topical Fluorouracil,0.9630,Fluorouracil Implant,0.9499,5-[18F]Fluorouracil,0.9410,Fuprazole,0.9400
+797,folinic acid,Leucovorin,99,Aminolevulinic Acid,0.9361,Foliglurax,0.9254,Clavulanic Acid,0.9245,Folitixorin,0.9231,Ascorbic Acid,0.9201
+798,gem,Gemcitabine,99,Gemtuzumab,0.9548,Gemigliptin,0.9475,Gemazocine,0.9474,Gemeprost,0.9438,Gemlapodect,0.9399
+799,gemcitabine,Gemcitabine,1,Gemcitabine,1.0000,Gemcitabine Hydrochloride,0.9592,Aerosol Gemcitabine,0.9455,Topical Gemcitabine Hydrochloride,0.9412,Gemcitabine Elaidate,0.9365
+800,gleevec,Imatinib Regimen,99,Glecaprevir,0.9183,Glepaglutide,0.9142,Glenvastatin,0.9142,Glesatinib,0.9117,Glembatumumab Vedotin,0.9077
+801,hydrea,Hydroxyurea,99,Halquinols,0.9068,Halazepam,0.9054,Halazone,0.9031,Vortioxetine Hemihydrobromide,0.9028,Halcinonide,0.9017
+802,hysterectomy,Hysterectomy,99,Trastuzumab,0.9008,Tamoxifen,0.8931,Histapyrrodine,0.8882,Dutasteride,0.8851,Trastuzumab Botidotin,0.8841
+803,ifosfamide,Ifosfamide,1,Ifosfamide,1.0000,Ifoxetine,0.9417,Perfosfamide,0.9382,Flutamide,0.9370,Mafosfamide,0.9367
+804,ileal conduit,Urinary Diversion,99,Ileal Bile Acid Transport Inhibitor,0.8802,Infliximab,0.8711,Ilepatril,0.8706,Epicillin,0.8706,Gutolactone,0.8704
+805,ileal conduit urinary diversion,Urinary Diversion,99,Utidelone,0.8701,Ileal Bile Acid Transport Inhibitor,0.8679,Sildenafil,0.8613,Ilepatril,0.8600,Loop Diuretic,0.8595
+806,inner-upper margin re-excision,Inner;Upper;Surgical Margin;Re-Excision,99,Rezivertinib,0.8548,Ingenol Mebutate,0.8529,Encoberminogene Rezmadenovec,0.8526,EGFR Exon 20 Insertion Inhibitor BLU-451,0.8512,Upinitatug Rilsodotin,0.8503
+807,ipi,Ipilimumab,99,Ipecac,0.9581,Ipivivint,0.9411,Ipenoxazone,0.9367,Ipidacrine,0.9308,Ipexidine,0.9257
+808,ipilimumab,Ipilimumab,1,Ipilimumab,1.0000,Melanoma Vaccine,0.9250,Infliximab,0.9247,Anti-CTLA-4 Monoclonal Antibody IBI310,0.9162,Everolimus,0.9126
+809,irinotecan,Irinotecan,1,Irinotecan,1.0000,Irinotecan Hydrochloride,0.9719,Irinotecan Sucrosofate,0.9480,Oral Irinotecan Hydrochloride Formulation VAL-413,0.9417,Pegylated Liposomal Irinotecan,0.9366
+810,isotretinoin,Isotretinoin,1,Isotretinoin,1.0000,Isotretinoin Anisatil,0.9464,Isotiquimide,0.9313,Motretinide,0.9254,Etretinate,0.9219
+811,left axillary lymph node dissection,Left;Axillary Lymph Node Dissection,99,Ex Vivo-activated Autologous Lymph Node Lymphocytes,0.8796,Endobenzyline,0.8667,Lidocaine,0.8666,Erbulozole,0.8653,Levoxadrol,0.8634
+812,left breast biopsy,Left;Biopsy of Breast,99,Testolactone,0.8844,Libenzapril,0.8844,Lapatinib,0.8797,Berubicin,0.8750,Estradiol Benzoate,0.8739
+813,left segmental mastectomy,Left;Segmental Mastectomy,99,Somatosalm,0.8790,Lidocaine Topical,0.8789,Liposomal Bupivacaine,0.8752,Lidocaine,0.8747,Dibusadol,0.8686
+814,left sentinel lymph node biospy,Left;Sentinel Lymph Node Biopsy,99,Ex Vivo-activated Autologous Lymph Node Lymphocytes,0.8777,Vaccine-Sensitized Draining Lymph Node Cells,0.8766,Tolpyrramide,0.8691,Autologous Tumor Infiltrating Lymphocytes LN-145-S1,0.8685,Lidocaine,0.8671
+815,lenalidomide,Lenalidomide,1,Lenalidomide,1.0000,Riluzole,0.9155,Lenalidomide Analog KPG-121,0.9150,Alepride,0.9143,Imidoline,0.9136
+816,lenaloidomide,Lenalidomide,1,Lenalidomide,0.9235,Sulfaclomide,0.9078,Oxiperomide,0.8994,Losoxantrone,0.8993,Tisocromide,0.8978
+817,leucovorin,Leucovorin,1,Leucovorin,1.0000,Leucovorin Sodium,0.9655,Leucovorin Calcium,0.9534,Levoleucovorin,0.9408,Olorinab,0.9121
+818,level 1 and level 2 axillary dissection,Axillary Lymph Node Level I;Axillary Lymph Node Level II;Lymphadenectomy,99,A and D Ointment,0.8532,A-232,0.8516,Monoclonal Antibody BL-3,0.8513,ALVAC-CEA (6D)-B7.1 Vaccine,0.8506,Bupivacaine,0.8502
+819,limb infusion,Isolated Chemotherapeutic Limb Perfusion,99,Ilginatinib,0.8801,Infigratinib,0.8771,Infliximab,0.8755,Levoleucovorin,0.8747,Matricaria recutita Topical Infusion,0.8721
+820,localized segmental mastectomy,Localized;Segmental Mastectomy,99,Liposomal Bupivacaine,0.8862,Lidocaine Topical,0.8820,Somatosalm,0.8753,Lidocaine,0.8682,Mepivacaine,0.8676
+821,lomustine,Lomustine,1,Lomustine,1.0000,Carmustine,0.9492,Elmustine,0.9453,Bofumustine,0.9276,Ecomustine,0.9269
+822,lumpectomy right breast (breast cancer),Lumpectomy;Right Breast,99,Lumretuzumab,0.9010,Laromustine,0.8846,Ruplizumab,0.8839,Antigen-targeted Personalized Breast Cancer Vaccine,0.8838,Tamoxifen,0.8821
+823,lung resection,Lung;Resection,99,NSCLC-specific Marrow Infiltrating Lymphocytes,0.8785,Dendritic Cell-Autologous Lung Tumor Vaccine,0.8751,Lung-targeted Immunomodulator QBKPN,0.8731,Lung Tumor Associated Antigen,0.8682,mRNA-derived Lung Cancer Vaccine BI 1361849,0.8671
+824,lymph node dissection,Lymphadenectomy,99,Vaccine-Sensitized Draining Lymph Node Cells,0.8796,Ex Vivo-activated Autologous Lymph Node Lymphocytes,0.8754,Lymphodepleted Autologous CD4-directed CAR T Cells,0.8722,Endobenzyline,0.8677,Naldemedine Tosylate,0.8662
+825,lymph node left axillary lymph node excision,Left;Axillary Lymph Node Dissection,99,Ex Vivo-activated Autologous Lymph Node Lymphocytes,0.8884,Lidocaine,0.8665,Erbulozole,0.8626,Endobenzyline,0.8624,Acloproxalap,0.8604
+826,lymphadenectomy,Lymphadenectomy,99,Lidocaine,0.8938,Salantel,0.8905,Losartan,0.8896,Ludaterone,0.8883,Liraglutide,0.8878
+827,mEK162,Binimetinib,99,MEK1/2 Inhibitor ABM-168,0.9122,MEK Inhibitor AZD8330,0.9119,MEK Inhibitor REC-4881,0.9115,JNK1 Inhibitor BMS-986360,0.9064,MEK 1/2 Inhibitor AS703988/MSC2015103B,0.9017
+828,mek162,Binimetinib,99,MEK1/2 Inhibitor ABM-168,0.9122,MEK Inhibitor AZD8330,0.9119,MEK Inhibitor REC-4881,0.9115,JNK1 Inhibitor BMS-986360,0.9064,MEK 1/2 Inhibitor AS703988/MSC2015103B,0.9017
+829,melphalan,Melphalan,1,Melphalan,1.0000,Melphalan Hydrochloride,0.9674,Melphalan Flufenamide,0.9550,Melphalan Flufenamide Hydrochloride,0.9473,Melogliptin,0.9302
+830,methotrexate,Methotrexate,1,Methotrexate,1.0000,Methotrexate Sodium,0.9552,Methotrexate-E Therapeutic Implant,0.9326,Methotrexate-Encapsulating Autologous Tumor-Derived Microparticles,0.9255,IGF-methotrexate Conjugate,0.9171
+831,mitotane,Mitotane,1,Mitotane,1.0000,Mitoflaxone,0.9243,Mitogillin,0.9222,Mitotenamine,0.9220,Mitoquidone,0.9173
+832,mitoxantrone,Mitoxantrone,1,Mitoxantrone,1.0000,Mitoxantrone Hydrochloride,0.9661,Liposomal Mitoxantrone Hydrochloride,0.9439,Mitozolomide,0.9427,Mitopodozide,0.9423
+833,needle directed right breast biopsy,Wire-Guided Localization;Right Breast;Biopsy;Wire-Guided Localization;Right Breast,99,Detorubicin,0.8717,Antigen-targeted Personalized Breast Cancer Vaccine,0.8717,Medorubicin,0.8681,Anti-HER2 Antibody-drug Conjugate DB-1303,0.8668,Dobutamine,0.8641
+834,needle localized segmental mastectomy,Wire-Guided Localization;Segmental Mastectomy,99,Liposomal Bupivacaine,0.8772,Somatosalm,0.8756,Lidocaine Topical,0.8714,Somatorelin,0.8688,Bupivacaine,0.8672
+835,nivo,Nivolumab,99,Nivasorexant,0.9484,Nivatrotamab,0.9351,Nivazol,0.9351,Nivadstrocel,0.9351,Nivocasan,0.9235
+836,nivolumab,Nivolumab,1,Nivolumab,1.0000,Nivolumab/Relatlimab-rmbw,0.9194,Sunitinib,0.9080,Liraglutide,0.9068,Adalimumab,0.9040
+837,novel agent,Pharmacologic Substance,99,Antineoplastic Agent,0.9128,Neuroprotective Agent,0.9113,Protective Agent,0.9081,Antitussive Agent,0.9054,Antineoplastic Biological Agent,0.9031
+838,oncovex,Talimogene Laherparepvec,99,Cefovecin,0.9257,Cefovecin Sodium,0.9068,Avalotcagene Ontaparvovec,0.9037,Oxaliplatin,0.8997,Oncolytic Virus,0.8994
+839,orthotopic neobladder,Orthotopic;Neobladder,99,Neoantigen Peptide,0.8899,Neoantigen Peptide Vaccine,0.8852,Niridazole,0.8818,Ornidazole,0.8811,Ornoprostil,0.8800
+840,ovoids,Mini Ovoid Brachytherapy,99,Ovemotide,0.9259,Oncolytic Vaccinia Virus OVV-01,0.9142,Monoclonal Antibody OVB3-PE,0.9047,Vofopitant,0.8964,Oncolytic Virus,0.8957
+841,ox,Oxaliplatin,99,Oxitropium,0.9446,Oxetorone,0.9403,Oxilorphan,0.9383,Oxiramide,0.9367,Oxendolone,0.9351
+842,oxali,Oxaliplatin,2,Oxalinast,0.9379,Oxaliplatin,0.9326,Suloxifen Oxalate,0.9111,Naloxegol Oxalate,0.9061,Potassium Oxalate,0.9022
+843,oxaliplatin,Oxaliplatin,1,Oxaliplatin,1.0000,Liposomal Oxaliplatin,0.9424,Oxaliplatin Eluting Beads,0.9273,Carbon C 14 Oxaliplatin,0.9202,Osimertinib,0.9058
+844,paclitaxel,Paclitaxel,1,Paclitaxel,1.0000,Paclitaxel Preparation,0.9633,Paclitaxel Trevatide,0.9552,Paclitaxel Liposome,0.9539,Nab-paclitaxel,0.9494
+845,pancreatoduodenectomy,Pancreaticoduodenectomy,99,Pradusinstobart,0.8961,Pancrelipase,0.8959,Pancrelipase Lipase,0.8909,Pancrelipase Amylase,0.8904,Pentigetide,0.8885
+846,partial left mastectomy,Left;Lumpectomy,99,Meprednisone,0.8766,Mepenzolate,0.8700,Levemopamil,0.8681,Mepivacaine,0.8679,Metoxepin,0.8670
+847,partial mastectomy,Segmental Mastectomy,99,Meprednisone,0.8790,Metoxepin,0.8749,Mepivacaine,0.8717,Masoprocol,0.8700,Maroxepin,0.8700
+848,pelvic lymphadenectomy,Pelvic Lymphadenectomy,99,Pancopride,0.8914,Pyrantel,0.8894,Oprelvekin,0.8886,Leuprolide,0.8875,Prazarelix,0.8868
+849,pembrolizumab,Pembrolizumab,1,Pembrolizumab,1.0000,Favezelimab/Pembrolizumab Formulation,0.9361,Pempidine,0.9329,Pemetrexed,0.9325,Atezolizumab,0.9259
+850,pemetrexed treatment,Pemetrexed,1,Pemetrexed,0.9704,Pemetrexed Tromethamine,0.9444,Pemetrexed Disodium,0.9405,Pembrolizumab,0.9228,Pemrametostat,0.9225
+851,pertuzumab,Pertuzumab,1,Pertuzumab,1.0000,Pertuzumab Zuvotolimod,0.9424,Vandortuzumab,0.9216,Xentuzumab,0.9192,Cetuximab,0.9165
+852,plexifor,Plerixafor,99,Pirifibrate,0.9328,Picafibrate,0.9115,Imifoplatin,0.9097,Seliforant,0.9089,Lotifazole,0.9075
+853,pouch res.,J-Pouch Coloanal Anastomosis,99,Resatorvid,0.8877,Rolipram,0.8844,Resiquimod,0.8780,Remoxipride,0.8754,Rolipoltide,0.8754
+854,pred,Prednisone,99,Prednazate,0.9604,Prednival,0.9491,Prednicarbate,0.9333,Prednimustine,0.9306,Prednylidene,0.9285
+855,prednisone,Prednisone,1,Prednisone,1.0000,Prednisolone,0.9495,Methylprednisolone,0.9395,Dexamethasone,0.9238,Dexamethasone Phosphate,0.9234
+856,procarbazine,Procarbazine,1,Procarbazine,1.0000,Procarbazine Hydrochloride,0.9738,Dacarbazine,0.9450,Procodazole,0.9405,Procaine,0.9372
+857,pulse dose rate,Pulsed-Dose Rate Brachytherapy,99,Doxepin,0.8868,Prazepam,0.8822,Prazepine,0.8812,Dosergoside,0.8765,Daprodustat,0.8764
+858,quizartinib,Quizartinib,1,Quizartinib,1.0000,Quizartinib Dihydrochloride,0.9370,Quisultazine,0.9251,Quifenadine,0.9188,Quilostigmine,0.9148
+859,radical cystoprostatectomy,Radical Cystoprostatectomy,99,Carboprost,0.9034,Misoprostol,0.8856,Cystamine,0.8851,Carboprost Tromethamine,0.8804,Carboprost Methyl,0.8794
+860,radical cystoprotatectomy,Radical Cystoprostatectomy,99,Cystamine,0.8908,Carbutamide,0.8847,Carboprost,0.8837,Piroxicam,0.8825,Piroxantrone,0.8810
+861,radical cytoprostatectomy,Radical Cystoprostatectomy,99,Chloroprednisone,0.8892,Cytochlor,0.8876,Chloroprocaine,0.8854,Paclitaxel,0.8843,Carboprost,0.8837
+862,ram,Ramucirumab,99,Ramelteon,0.9376,Ramipril,0.9356,Ramciclane,0.9281,Ramatercept,0.9256,Ramiprilat,0.9255
+863,ramucirumab,Ramucirumab,1,Ramucirumab,1.0000,Rinucumab,0.9442,Icrucumab,0.9383,Ramiprilat,0.9349,Sevirumab,0.9320
+864,regorafenib,Regorafenib,1,Regorafenib,1.0000,Regorafenib Hydrate,0.9459,Naporafenib,0.9407,Regavirumab,0.9334,Encorafenib,0.9240
+865,removal of pelvic,Tumor Resection;Pelvis,99,Oprelvekin,0.8787,Pancopride,0.8778,Trimoprostil,0.8750,Promestriene,0.8723,Niraparib,0.8701
+866,resection,Resection,99,Serrapeptase,0.8833,Resatorvid,0.8802,Regrelor,0.8775,Resminostat,0.8748,Resocortol,0.8717
+867,retromammary lymph node excision,Retromammary space (body structure);Lymphadenectomy,99,Remtolumab,0.8777,Ex Vivo-activated Autologous Lymph Node Lymphocytes,0.8742,Encelimab,0.8629,Ralmitaront,0.8613,Raluridine,0.8612
+868,right nephroureterectomy,Right;Nephroureterectomy,99,Coleneuramide,0.8806,Radretumab,0.8779,Retezorogant,0.8743,Nephroprotective Agent,0.8733,Theodrenaline,0.8692
+869,right segmental mastectomy,Right;Segmental Mastectomy,99,Somatosalm,0.8726,Mepivacaine,0.8716,Rolistobart,0.8673,Medorubicin,0.8647,Mepivacaine Hydrochloride,0.8641
+870,right sentinel lymph node biopsy,Right;Sentinel Lymph Node Biopsy,99,Risocaine,0.8691,Detorubicin,0.8681,Nandrolone,0.8658,M A Radiolabeled Anti-BRST Cancer,0.8658,Dinitrophenyl-Modified Autologous Renal Cell Carcinoma Tumor cell Vaccine,0.8652
+871,right sentinel node biopsy,Right;Sentinel Lymph Node Biopsy,99,M A Radiolabeled Anti-BRST Cancer,0.8692,Risocaine,0.8691,PSMA-targeting T-cell Redirecting Agent JNJ-80038114,0.8683,Nandrolone,0.8664,Monoclonal Antibody N901-bR,0.8657
+872,right total mastectomy,Right;Total Mastectomy,99,Medorubicin,0.8833,Tamoxifen,0.8731,rMVA-PSA/PSMA/TRICOM,0.8693,Detorubicin,0.8685,Tamibarotene,0.8646
+873,rigth axillary lymph node,Axillary Lymph Node;Right,99,Avorelin,0.8698,Gallium Ga 68 F(ab')2-Trastuzumab,0.8672,Relutrigine,0.8669,Rigosertib,0.8664,Attapulgite,0.8650
+874,rituximab,Rituximab,1,Rituximab,1.0000,Rituximab and Hyaluronidase Human,0.9304,Anti-CD20 Monoclonal Antibody,0.9262,Ritipenem,0.9231,Iodine I 131 Rituximab,0.9189
+875,robotic cystectomy,Robot-Assisted Surgery;Cystectomy,99,Cysteamine,0.9020,Cystemustine,0.8946,Cysteamine Hydrochloride,0.8900,Coleneuramide,0.8794,Raltitrexed,0.8766
+876,robotic_HYSTERECTOMY,Robotic Hysterectomy,99,Histapyrrodine,0.8786,Raloxifene,0.8717,Rolodine,0.8708,Trastuzumab Botidotin,0.8706,Trastuzumab,0.8696
+877,segmental mastectomy,Segmental Mastectomy,99,Somatosalm,0.8918,Somatorelin,0.8821,Dibusadol,0.8727,Somatropin,0.8699,Salicin,0.8689
+878,sentinel axillary lymph node biopsy,Sentinel Lymph Node Biopsy Followed by Axillary Lymph Node Biopsy,99,Nandrolone,0.8773,Ex Vivo-activated Autologous Lymph Node Lymphocytes,0.8688,Nab-paclitaxel,0.8682,Stanolone,0.8667,Avobenzone,0.8656
+879,sentinel lymoh node biopsy,Sentinel Lymph Node Biopsy,99,Monoclonal Antibody Lym-2,0.8862,Monoclonal Antibody Lym-1,0.8861,I 131 Monoclonal Antibody Lym-1,0.8826,In 111 Monoclonal Antibody Lym-1,0.8752,Y 90 Monoclonal Antibody Lym-1,0.8735
+880,sentinel lymph node,Sentinel Lymph Node Biopsy,99,Vaccine-Sensitized Draining Lymph Node Cells,0.8781,Tolafentrine,0.8770,Nandrolone,0.8753,Benafentrine,0.8738,Naphthonone,0.8720
+881,sentinel lymph node biopsy,Sentinel Lymph Node Biopsy,99,Nandrolone,0.8818,Nab-paclitaxel,0.8690,Stanolone,0.8686,Naphthonone,0.8675,Ex Vivo-activated Autologous Lymph Node Lymphocytes,0.8673
+882,sentinel lymph node dissection,Sentinel Lymph Node;Lymphadenectomy,99,Vaccine-Sensitized Draining Lymph Node Cells,0.8743,Nandrolone,0.8683,Stanozolol,0.8644,Sulconazole Nitrate,0.8639,Sulverapride,0.8624
+883,sentinel lymph node dissection right reconstruction,Sentinel Lymph Node;Lymphadenectomy;Right;Mammoplasty,99,Detorubicin,0.8738,Risocaine,0.8690,Raluridine,0.8678,Regavirumab,0.8634,Rolapitant,0.8632
+884,sentinel lymph node excision,Sentinel Lymph Node;Lymphadenectomy,99,Ex Vivo-activated Autologous Lymph Node Lymphocytes,0.8649,Nandrolone,0.8645,Sulverapride,0.8613,Tolafentrine,0.8599,Sulfisomidine,0.8594
+885,sentinel node biopsy,Sentinel Lymph Node Biopsy,99,Nandrolone,0.8850,Stanolone,0.8712,Nandrolone Sodium Sulfate,0.8703,Nab-paclitaxel,0.8698,Naphthonone,0.8680
+886,sentinel node dissection,Sentinel Lymph Node;Lymphadenectomy,99,Nandrolone,0.8706,Vaccine-Sensitized Draining Lymph Node Cells,0.8699,Nitrendipine,0.8669,Sulconazole Nitrate,0.8650,Sulverapride,0.8640
+887,sib Allo,Sibling;Allogeneic Hematopoietic Stem Cell Transplantation,99,Anti-HER3 Monoclonal Antibody SIBP-03,0.9068,Sibrotuzumab,0.9063,Sibenadet,0.8938,Sibutramine,0.8935,Sibeprenlimab,0.8931
+888,simple mastectomy,Total Mastectomy,99,Minoxidil,0.8787,Methomyl,0.8772,Minamestane,0.8753,Myrtecaine,0.8745,Myralact,0.8744
+889,sorafenib,Sorafenib,1,Sorafenib,1.0000,Sorafenib Tosylate,0.9478,Savolitinib,0.9227,Sunitinib,0.9167,Imatinib,0.9116
+890,splenectomy,Splenectomy,99,Somatosalm,0.9057,Rituximab,0.8958,Pituxate,0.8923,Prazosin,0.8901,Somatropin,0.8901
+891,stem cell transplant,Hematopoietic Cell Transplantation,99,Therapeutic Hematopoietic Stem Cells,0.9309,Recombinant Human Stem Cell Factor,0.9248,Therapeutic Mesenchymal Stem Cells,0.9126,Therapeutic Peripheral Blood Stem Cells,0.9079,Allogeneic Adipose-derived Mesenchymal Stem Cells,0.9054
+892,steroids,Steroid Therapy,99,Steroid Cream,0.9388,Steroidal Estrogen,0.9310,Prednisone,0.9275,Prednisolone,0.9267,Anabolic Steroid,0.9248
+893,study drug,Pharmacologic Substance,99,Antihypertensive Agent,0.8936,Anti-diabetic Agent,0.8926,IDO1 Inhibitor PF-06840003,0.8911,Nonsteroidal Antiinflammatory Drug,0.8896,Anticonvulsant Agent,0.8892
+894,surgical resection,Resection,99,Serrapeptase,0.8772,Resocortol,0.8755,Resatorvid,0.8703,Resminostat,0.8699,Rolofylline,0.8689
+895,tamoxifen,Tamoxifen,1,Tamoxifen,1.0000,Tamoxifen Citrate,0.9405,Crizotinib,0.9188,Anastrozole,0.9182,Trastuzumab,0.9169
+896,taxol,Paclitaxel,1,Paclitaxel,0.9339,Docetaxel,0.9309,Docetaxel Polymeric Micelles,0.9101,Pegylated Paclitaxel,0.9094,Oral Docetaxel,0.9088
+897,tem,Temozolomide,99,Temazepam,0.9279,Temanogrel,0.9258,Temelimab,0.9233,Temelastine,0.9204,Temoporfin,0.9182
+898,temodar,Temozolomide,99,Temodox,0.9185,Temanogrel,0.9133,Temelastine,0.9059,Temafloxacin,0.9017,Temelimab,0.8996
+899,temozolomide,Temozolomide,1,Temozolomide,1.0000,Carbon C11 Temozolomide,0.9241,Ipilimumab,0.9090,Locally-acting Temozolomide Formulation SI-053,0.9088,Demethylating Agent,0.9082
+900,tissue reconstruction,Tissue Flap Breast Reconstruction,99,Regrelor,0.8819,Autologous Muscle-derived Cells for Gastrointestinal Repair,0.8804,Rebamipide,0.8775,Adipose-Derived Regenerative Cells,0.8775,Reproxalap,0.8761
+901,topotecan,Topotecan,1,Topotecan,1.0000,Topotecan Hydrochloride,0.9582,11C Topotecan,0.9489,Topotecan Hydrochloride (1:1.25),0.9439,Oral Topotecan Hydrochloride,0.9431
+902,total hip arthroplasty,Total;Hip Replacement;Total,99,Etoricoxib,0.8797,Therapeutic Hemin,0.8777,Trotabresib,0.8767,Etiroxate,0.8725,Toxoid Vaccine,0.8720
+903,total mastectomy,Total Mastectomy,99,Tamoxifen,0.8846,Trastuzumab,0.8734,Amitriptyline,0.8672,Metronidazole,0.8645,Totrombopag,0.8644
+904,transplant,Graft,99,Immunosuppressant,0.8838,Isatuximab,0.8824,Amatuximab,0.8821,Tacrolimus,0.8798,Tolnaftate,0.8787
+905,tras,Trastuzumab,99,Tralonide,0.9506,Traxanox,0.9440,Trazodone,0.9434,Tracazolate,0.9351,Trazolopride,0.9327
+906,trastuzumab,Trastuzumab,1,Trastuzumab,1.0000,Trastuzumab Emtansine,0.9481,Trastuzumab Vedotin,0.9423,Trastuzumab Corixetan,0.9347,Trastuzumab Botidotin,0.9346
+907,vaccine,Vaccine,1,Vaccine,1.0000,Vaccine Antigen,0.9594,Viral Vaccine,0.9540,Vaccinia Vaccine,0.9538,Influenza Vaccine,0.9466
+908,vaginal implant,Vagina;Implant,99,Progesterone Vaginal Insert,0.9245,Estradiol Vaginal Ring,0.9155,Vaginal Lubricant,0.9033,Estriol Vaginal Gel,0.9010,Estradiol Valerate,0.8976
+909,vem,Vemurafenib,2,Vemtoberant,0.9433,Vemurafenib,0.9422,Vemircopan,0.9298,Vancomycin,0.9168,Vorinostat,0.9160
+910,vemurafenib,Vemurafenib,1,Vemurafenib,1.0000,Vemtoberant,0.9373,Plixorafenib,0.9234,Dabrafenib,0.9210,Vemircopan,0.9180
+911,vinblastine,Vinblastine,1,Vinblastine,1.0000,Vinorelbine,0.9458,Vinblastine Sulfate,0.9445,Vinflunine,0.9425,Vinburnine,0.9417
+912,vincrisinte,Vincristine,1,Vincristine,0.9180,Vincristine Liposomal,0.8979,Vincristine Sulfate,0.8977,Vorozole,0.8966,Vipadenant,0.8959
+913,vincristine,Vincristine,1,Vincristine,1.0000,Vincristine Liposomal,0.9518,Vincristine Sulfate,0.9493,Vincristine Sulfate Liposome,0.9268,Vinblastine,0.9237
+914,vincristine sulfate,Vincristine Sulfate,1,Vincristine Sulfate,1.0000,Vincristine Sulfate Liposome,0.9705,Vinblastine Sulfate,0.9525,Vincristine,0.9493,Vinrosidine Sulfate,0.9422
+915,wide local excision,Wide Local Excision,99,Lidocaine Topical,0.8729,Eblasakimab,0.8638,Lidocaine,0.8637,Lidocaine Patch,0.8632,Erythromycin Topical Cream,0.8617
+916,wire localization,Wire-Guided Localization,99,Lorapride,0.8663,Lorlatinib,0.8552,Laflunimus,0.8547,Nebotermin,0.8537,Dulofibrate,0.8536
+917,xeloda,Capecitabine,99,Xenygloxal,0.9448,Xemilofiban,0.9441,Xeligekimab,0.9432,Xelaglifam,0.9404,Xevinapant,0.9295
