@@ -1,12 +1,12 @@
 from src.models import ontology_mapper_st as oms
 from src.models import ontology_mapper_lm as oml
 from src.models import ontology_mapper_rag as ollm
-import src.CustomLogger.custom_logger
 import pandas as pd
 import numpy as np
 from thefuzz import fuzz
+from src.CustomLogger.custom_logger import CustomLogger
 
-logger = src.CustomLogger.custom_logger.CustomLogger()
+logger = CustomLogger()
 
 class OntoMapEngine:
     """

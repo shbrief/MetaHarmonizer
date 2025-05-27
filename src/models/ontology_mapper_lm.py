@@ -3,10 +3,10 @@ from sentence_transformers import SentenceTransformer  # type: ignore
 from transformers import AutoTokenizer, AutoModel # type: ignore
 import torch  # type: ignore 
 import src.models.ontology_models as otm
-import src.CustomLogger.custom_logger
 from pathos.multiprocessing import ProcessingPool as Pool
+from src.CustomLogger.custom_logger import CustomLogger
 
-logger = src.CustomLogger.custom_logger.CustomLogger()
+logger = CustomLogger()
 
 class OntoMapLM(otm.OntoModelsBase):
     """
