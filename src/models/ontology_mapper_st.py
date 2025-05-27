@@ -4,9 +4,9 @@ from sentence_transformers import SentenceTransformer
 from transformers import AutoTokenizer, AutoModel
 import torch
 import src.models.ontology_models as otm
-import src.CustomLogger.custom_logger
+from src.CustomLogger.custom_logger import CustomLogger
 
-logger = src.CustomLogger.custom_logger.CustomLogger()
+logger = CustomLogger()
 
 class OntoMapST(otm.OntoModelsBase):
     """
