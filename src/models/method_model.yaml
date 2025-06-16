@@ -5,4 +5,8 @@ longformer: yikuan8/Clinical-Longformer
 big-bird: yikuan8/Clinical-BigBird
 clinical-bert: emilyalsentzer/Bio_ClinicalBERT
 sap-bert: cambridgeltl/SapBERT-from-PubmedBERT-fulltext
+mt-sap-bert: cambridgeltl/SapBERT-from-PubMedBERT-fulltext-mean-token
 openai: openai
+msr-biomed-bert: microsoft/BiomedNLP-BiomedBERT-base-uncased-abstract-fulltext
+biolink-large: michiyasunaga/BioLinkBERT-large
+biolink-base: michiyasunaga/BioLinkBERT-base
