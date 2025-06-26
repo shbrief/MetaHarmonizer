@@ -2,18 +2,25 @@ from sentence_transformers import util
 import pandas as pd
 import torch
 import yaml
+from src.KnowledgeDb.faiss_sqlite_pipeline import FAISSSQLiteSearch
+from src.utils.model_loader import load_method_model_dict
+from src.CustomLogger.custom_logger import CustomLogger
 
 
 class OntoModelsBase:
+
     def __init__(
         self,
         method: str,
+        category: str,
+        om_strategy: str,
         topk: int,
         query: list,
         corpus: list,
-        yaml_path: str = "method_model.yaml",
     ) -> None:
         self.method = method
+        self.category = category
+        self.om_strategy = om_strategy
         self.query = query
         self.corpus = corpus
         if self.method is None:
@@ -25,10 +32,11 @@ class OntoModelsBase:
             raise ValueError("Corpus list cannot be empty")
 
         # Load method_model_dict from a YAML file
-        self.method_model_dict = self.load_method_model_dict(yaml_path)
+        self.method_model_dict = load_method_model_dict()
         self.list_of_methods = list(self.method_model_dict.keys())
         if self.method not in self.list_of_methods:
-            raise ValueError(f"Method name should be one of {self.list_of_methods}")
+            raise ValueError(
+                f"Method name should be one of {self.list_of_methods}")
         self.matches_tmp = {
             "original_value": [],
             "curated_ontology": [],
@@ -46,22 +54,23 @@ class OntoModelsBase:
         }
 
         self.topk = topk
+        self.logger = CustomLogger().custlogger(loglevel='INFO')
 
-    #### Helper Functions Common to all OntoMap Methods####
-    def load_method_model_dict(self, file_path):
-        """
-        This method is responsible for loading the method_model_dict from a YAML file.
+    @property
+    def vector_store(self):
+        if not hasattr(self, "_vs") or self._vs is None:
+            store = FAISSSQLiteSearch(method=self.method,
+                                      category=self.category,
+                                      om_strategy=self.om_strategy)
 
-        Args:
-            file_path (str): The path to the YAML file.
+            if store.index is None:
+                if self.om_strategy == "rag":
+                    store.fetch_and_store_terms(self.corpus)
+                else:
+                    store.build_corpus_vector_db(self.corpus)
 
-        Returns:
-            dict: The dictionary containing the method names and their corresponding model names.
-        """
-        with open(file_path, "r") as file:
-            # Load the dictionary from YAML file
-            method_model_dict = yaml.safe_load(file)
-        return method_model_dict
+            self._vs = store
+        return self._vs
 
     # Mean Pooling - Take attention mask into account for correct averaging
     def mean_pooling(self, model_output, attention_mask):
@@ -77,14 +86,11 @@ class OntoModelsBase:
 
         """
         token_embeddings = model_output[
-            0
-        ]  # First element of model_output contains all token embeddings
-        input_mask_expanded = (
-            attention_mask.unsqueeze(-1).expand(token_embeddings.size()).float()
-        )
-        return torch.sum(token_embeddings * input_mask_expanded, 1) / torch.clamp(
-            input_mask_expanded.sum(1), min=1e-9
-        )
+            0]  # First element of model_output contains all token embeddings
+        input_mask_expanded = (attention_mask.unsqueeze(-1).expand(
+            token_embeddings.size()).float())
+        return torch.sum(token_embeddings * input_mask_expanded,
+                         1) / torch.clamp(input_mask_expanded.sum(1), min=1e-9)
 
     def calc_similarity(self, query_emb, corpus_emb):
         """
@@ -108,8 +114,7 @@ class OntoModelsBase:
         It will be implemented in the child class.
         """
         raise NotImplementedError(
-            "create_params will be implemented in the child class"
-        )
+            "create_params will be implemented in the child class")
 
     def create_embeddings(self):
         """
@@ -117,8 +122,7 @@ class OntoModelsBase:
         It will be implemented in the child class.
         """
         raise NotImplementedError(
-            "create_embeddings will be implemented in the child class"
-        )
+            "create_embeddings will be implemented in the child class")
 
     def get_match_results(self):
         """
@@ -126,8 +130,7 @@ class OntoModelsBase:
         It will be implemented in the child class.
         """
         raise NotImplementedError(
-            "get_match_results will be implemented in the child class"
-        )
+            "get_match_results will be implemented in the child class")
 
     def calc_consolidated_stats(self):
         """
@@ -135,5 +138,4 @@ class OntoModelsBase:
         It will be implemented in the child class.
         """
         raise NotImplementedError(
-            "calc_consolidated_stats will be implemented in the child class"
-        )
+            "calc_consolidated_stats will be implemented in the child class")

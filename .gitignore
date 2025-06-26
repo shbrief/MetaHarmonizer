@@ -79,3 +79,6 @@ dist/
 __pycache__/
 *.py[cod]
 .eggs/
+
+# model cache
+model_cache/

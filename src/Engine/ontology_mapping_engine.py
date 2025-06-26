@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 from thefuzz import fuzz
 from src.CustomLogger.custom_logger import CustomLogger
+from src.utils.model_loader import load_method_model_dict
 
 logger = CustomLogger()
 
@@ -28,11 +29,11 @@ class OntoMapEngine:
 
     def __init__(self,
                  method: str,
+                 category: str,
                  query: list[str],
                  corpus: list[str],
                  cura_map: dict,
                  topk: int = 5,
-                 yaml_path: str = 'method_model.yaml',
                  om_strategy: str = 'lm',
                  **other_params: dict) -> None:
         """
@@ -44,16 +45,16 @@ class OntoMapEngine:
             corpus (list[str]): The list of corpus.
             cura_map (dict): The dictionary containing the mapping of queries to curated values.
             topk (int, optional): The number of top matches to return. Defaults to 5.
-            yaml_path (str, optional): The path to the YAML file. Defaults to 'method_model.yaml'.
             om_strategy (str, optional): The strategy to use for OntoMap. Defaults to 'lm'.
             **other_params (dict): Other parameters to pass to the engine.
         """
         self.method = method
         self.query = query
-        self.corpus = corpus
+        self.category = category
+        self.corpus = list(
+            dict.fromkeys(corpus))  # Remove duplicates while preserving order
         self.topk = topk
         self.om_strategy = om_strategy
-        self.yaml_path = yaml_path
         self.cura_map = cura_map
         self.other_params = other_params
         if 'test_or_prod' not in self.other_params.keys():
@@ -101,25 +102,28 @@ class OntoMapEngine:
         """
         if self.om_strategy == 'lm':
             return oml.OntoMapLM(method=self.method,
+                                 category=self.category,
+                                 om_strategy=self.om_strategy,
                                  query=non_exact_query_list,
                                  corpus=self.corpus,
                                  topk=self.topk,
-                                 from_tokenizer=True,
-                                 yaml_path=self.yaml_path)
+                                 from_tokenizer=True)
 
         elif self.om_strategy == 'st':
             return oms.OntoMapST(method=self.method,
+                                 category=self.category,
+                                 om_strategy=self.om_strategy,
                                  query=non_exact_query_list,
                                  corpus=self.corpus,
                                  topk=self.topk,
-                                 from_tokenizer=False,
-                                 yaml_path=self.yaml_path)
+                                 from_tokenizer=False)
         elif self.om_strategy == 'rag':
             return omr.OntoMapRAG(method=self.method,
+                                  category=self.category,
+                                  om_strategy=self.om_strategy,
                                   query=non_exact_query_list,
                                   corpus=self.corpus,
-                                  topk=self.topk,
-                                  yaml_path=self.yaml_path)
+                                  topk=self.topk)
         else:
             raise ValueError(
                 "om_strategy should be either 'st', 'lm' or 'rag'")
