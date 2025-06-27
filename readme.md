@@ -24,6 +24,10 @@
 │   │   ├── schema_mapping_engine.py
 │   ├── CustomLogger   
 │   ├── KnowledgeDb
+│   │   ├── faiss_sqlite_pipeline.py
+│   │   └── db_clients
+│   │       ├── nci_db.py
+│   │       └── umls_db.py
 │   ├── Plotter
 ├── setup.py   
 └── readme.md
@@ -76,11 +80,15 @@ reload(om_lm)
 
 ## Now you must initialize the engine
 other_params = {"test_or_prod": "test"}
-onto_engine_large = ome.OntoMapEngine(method='sap-bert', topk=5,
-query=query_list,corpus=small_corpus_list,
-cura_map=cura_map_lcs, 
-yaml_path='./src/models/method_model.yaml', 
-om_strategy='lm', **other_params)
+onto_engine_large = ome.OntoMapEngine(
+  category='disease',
+  method='sap-bert', 
+  topk=5,
+  query=query_list,
+  corpus=small_corpus_list,
+  cura_map=cura_map_lcs, 
+  om_strategy='lm', 
+  **other_params)
 
 ## Run the ontology mapping
 results_engine_testing = onto_engine_large.run()
@@ -91,13 +99,12 @@ results_engine_testing = onto_engine_large.run()
   - **om_strategy(str):** 2 types of strategy are available 
   - strategy **lm**: This is the default strategy that uses [CLS] tokens for capturing the embedding representation. CLS is calculated in a much more intricate way, taking into account both its own embeddings (token/pos) as well as the context.
   - strategy **st**: sentence transformer based strategy calculates non- [CLS] based embeddings. 
-  - **method(str):** All available models are `bert-base, pubmed-bert, bio-bert, longformer
-big-bird, clinical-bert, sap-bert`. These are string keys that fetch the different transformer models found in the mapping method_model.yaml file.
+  - **method(str):** These are string keys that fetch the different transformer models found in the mapping method_model.yaml file.
   - **topk(int):** Number of top matches to return for each query term in the query list
   - **other_params(dict):** This is like a kwargs dictionary that currently only takes a value for the key **test_or_prod**. In the future if more parameters are added to the model, then it will be updated in this dictionary.
   - **cura_map(dict):** Is a dictionary of paired query and ontology terms for evaluating or testing in the 'test' environment. 
 
-- Output: CSV file containing top 5 matches for each query term and their scores.
+- Output: Dataframe containing top 5 matches for each query term and their scores.
 
 #### 2.5. Demo Notebooks For Schema and Ontology Mapping
 
