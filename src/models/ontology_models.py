@@ -1,7 +1,6 @@
 from sentence_transformers import util
 import pandas as pd
 import torch
-import yaml
 from src.KnowledgeDb.faiss_sqlite_pipeline import FAISSSQLiteSearch
 from src.utils.model_loader import load_method_model_dict
 from src.CustomLogger.custom_logger import CustomLogger
@@ -58,7 +57,8 @@ class OntoModelsBase:
 
     @property
     def vector_store(self):
-        if not hasattr(self, "_vs") or self._vs is None:
+        if not hasattr(self,
+                       "_vs") or self._vs is None or self._vs.index is None:
             store = FAISSSQLiteSearch(method=self.method,
                                       category=self.category,
                                       om_strategy=self.om_strategy)
@@ -70,6 +70,9 @@ class OntoModelsBase:
                     store.build_corpus_vector_db(self.corpus)
 
             self._vs = store
+            self.logger.info(
+                f"{self._vs.index is not None} - Vector store initialized for method={self.method}, category={self.category}, om_strategy={self.om_strategy}"
+            )
         return self._vs
 
     # Mean Pooling - Take attention mask into account for correct averaging

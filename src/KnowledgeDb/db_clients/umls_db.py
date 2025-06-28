@@ -9,6 +9,7 @@ UMLS_PERIOD = 1
 
 
 class UMLSDb:
+    """A class to interact with the UMLS API for fetching NCI codes by term."""
 
     def __init__(self, api_key):
         self.api_key = api_key
@@ -22,6 +23,16 @@ class UMLSDb:
            retry=retry_if_exception_type(
                (httpx.HTTPStatusError, httpx.RequestError)))
     async def get_nci_code_by_term(self, term: str, client: httpx.AsyncClient):
+        """Fetch NCI code by term using the UMLS API.
+        Args:
+            term (str): The term to search for in the NCI database.
+            client (httpx.AsyncClient): The HTTP client to use for the request.
+        Returns:
+            List[str]: A list of NCI codes corresponding to the term.
+        Raises:
+            httpx.HTTPStatusError: If the request fails with a status code other than 200.
+            httpx.RequestError: If there is a network-related error.
+        """
         async with self.semaphore:
             async with self.rate_limiter:
                 uri = f"{self._base_url}/search/current"

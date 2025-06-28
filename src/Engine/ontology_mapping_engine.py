@@ -5,7 +5,6 @@ import pandas as pd
 import numpy as np
 from thefuzz import fuzz
 from src.CustomLogger.custom_logger import CustomLogger
-from src.utils.model_loader import load_method_model_dict
 
 logger = CustomLogger()
 

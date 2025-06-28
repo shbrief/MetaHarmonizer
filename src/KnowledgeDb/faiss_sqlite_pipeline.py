@@ -14,12 +14,16 @@ from src.CustomLogger.custom_logger import CustomLogger
 import torch
 from src.KnowledgeDb.db_clients.nci_db import NCIDb
 
+# Load environment variables for paths and API key
 BASE_DB = os.getenv("VECTOR_DB_PATH")
 BASE_IDX_DIR = os.getenv("FAISS_INDEX_DIR")
 UMLS_API_KEY = os.getenv("UMLS_API_KEY")
 
+TERM_BATCH_SIZE = 60  # Default batch size for term processing
+
 
 class Document:
+    """A simple Document class to hold page content and metadata."""
 
     def __init__(self, page_content: str, metadata: dict):
         self.page_content = page_content
@@ -27,6 +31,11 @@ class Document:
 
 
 class FAISSSQLiteSearch:
+    """
+    This class provides a hybrid FAISS + SQLite backend for storing and retrieving
+    embedded vectors and associated metadata for ontology mapping.
+    It supports both RAG (Retrieval-Augmented Generation) and LM/ST strategies.
+    """
 
     def __init__(
         self,
@@ -43,6 +52,7 @@ class FAISSSQLiteSearch:
         raw_model = get_embedding_model_cached(method)
         self.embedder = EmbeddingAdapter(raw_model)
         self.logger = CustomLogger().custlogger(loglevel='INFO')
+        self.term_batch_size = TERM_BATCH_SIZE
 
         self.conn = sqlite3.connect(self.db_path)
         self.cursor = self.conn.cursor()
@@ -76,6 +86,9 @@ class FAISSSQLiteSearch:
 
     @lru_cache(maxsize=1)
     def _get_existing_terms(self):
+        """Return a set of terms already in the database.
+        Used to avoid duplicate API calls.
+        """
         self.cursor.execute(f"SELECT term FROM {self.table_name}")
         return set(row[0] for row in self.cursor.fetchall())
 
@@ -89,6 +102,7 @@ class FAISSSQLiteSearch:
         return v / (norms + 1e-12)
 
     def _insert_to_sqlite(self, records: List[tuple]) -> List[int]:
+        """Insert records to SQLite and return their corresponding DB ids."""
         self.cursor.executemany(
             f"INSERT OR IGNORE INTO {self.table_name} (term, code, context) VALUES (?, ?, ?)",
             records)
@@ -106,6 +120,7 @@ class FAISSSQLiteSearch:
         return inserted_ids
 
     def _insert_to_faiss(self, vectors):
+        """Add vector embeddings to FAISS index."""
         if not vectors:
             return
         vec_array = np.array(vectors, dtype=np.float32)
@@ -124,6 +139,7 @@ class FAISSSQLiteSearch:
         faiss.write_index(self.index, self.index_path)
 
     async def _get_term_code_pair(self, term: str, client: httpx.AsyncClient):
+        """Fetch NCI codes for a single term."""
         try:
             codes = await self.db._umls_db.get_nci_code_by_term(term, client)
             return (term, codes) if codes else None
@@ -131,10 +147,14 @@ class FAISSSQLiteSearch:
             self.logger.warning(f"Failed to get code for '{term}': {e}")
             return None
 
-    async def fetch_term_code_pairs_async(self,
-                                          terms,
-                                          api_key,
-                                          term_batch_size=60):
+    async def fetch_term_code_pairs_async(self, terms, api_key):
+        """Fetch NCI codes for a list of terms asynchronously.
+        Args:
+            terms (List[str]): List of terms to fetch NCI codes for.
+            api_key (str): API key for UMLS API.
+        Returns:
+            List[tuple]: List of tuples containing term and its associated NCI codes.
+        """
         self.db = NCIDb(api_key)
         existing_terms = self._get_existing_terms()
         new_terms = [term for term in terms if term not in existing_terms]
@@ -147,14 +167,14 @@ class FAISSSQLiteSearch:
         all_term_code_pairs = []
         async with httpx.AsyncClient(limits=httpx.Limits(
                 max_connections=15)) as client:
-            if len(new_terms) <= 50:
+            if len(new_terms) <= self.term_batch_size:
                 for term in new_terms:
                     result = await self._get_term_code_pair(term, client)
                     if result:
                         all_term_code_pairs.append(result)
             else:
-                for i in range(0, len(new_terms), term_batch_size):
-                    batch_terms = new_terms[i:i + term_batch_size]
+                for i in range(0, len(new_terms), self.term_batch_size):
+                    batch_terms = new_terms[i:i + self.term_batch_size]
                     tasks = [
                         self._get_term_code_pair(term, client)
                         for term in batch_terms
@@ -165,17 +185,19 @@ class FAISSSQLiteSearch:
                         if result and not isinstance(result, Exception):
                             all_term_code_pairs.append(result)
                     self.logger.info(
-                        f"Processed UMLS batch {i//term_batch_size + 1} of {(len(new_terms) + term_batch_size - 1)//term_batch_size}"
+                        f"Processed UMLS batch {i//self.term_batch_size + 1} of {(len(new_terms) + self.term_batch_size - 1)//self.term_batch_size}"
                     )
 
         return all_term_code_pairs
 
-    async def fetch_and_store_terms_async(self,
-                                          terms,
-                                          api_key,
-                                          term_batch_size=60):
+    async def fetch_and_store_terms_async(self, terms, api_key):
+        """Fetch, embed, and store term-code pairs and their vector representations.
+        Args:
+            terms (List[str]): List of terms to fetch NCI codes for.
+            api_key (str): API key for UMLS API.
+        """
         all_term_code_pairs = await self.fetch_term_code_pairs_async(
-            terms, api_key, term_batch_size)
+            terms, api_key)
 
         if not all_term_code_pairs:
             self.logger.info("No new terms found with NCI codes.")
@@ -193,8 +215,7 @@ class FAISSSQLiteSearch:
                 limits=httpx.Limits(max_connections=self.db.concurrency *
                                     self.db.batch_size)) as client:
             concept_data_map = await self.db.get_custom_concepts_by_codes(
-                all_codes,
-                ["synonyms", "children", "roles", "definitions", "parents"])
+                all_codes, client)
 
         self.logger.info(
             f"Retrieved {len(concept_data_map)} concept data entries")
@@ -255,21 +276,25 @@ class FAISSSQLiteSearch:
 
         self.logger.info("Finished fetching and storing all terms.")
 
-    def fetch_and_store_terms(self,
-                              terms,
-                              api_key=UMLS_API_KEY,
-                              term_batch_size=60):
+    def fetch_and_store_terms(self, terms, api_key=UMLS_API_KEY):
+        """Sync wrapper to run the async fetch and store method."""
         loop = asyncio.new_event_loop()
         try:
             result = loop.run_until_complete(
-                self.fetch_and_store_terms_async(terms, api_key,
-                                                 term_batch_size))
+                self.fetch_and_store_terms_async(terms, api_key))
         finally:
             loop.close()
             self._get_existing_terms.cache_clear()
         return result
 
     def build_corpus_vector_db(self, corpus: List[str]):
+        """Build a vector database from a corpus (curated ontology) list.
+        This method is designed to work with the ST/LM strategy.
+        Args:
+            corpus (List[str]): List of documents to embed and store.
+        Raises:
+            ValueError: If the corpus is empty.
+        """
         if not corpus:
             raise ValueError("Corpus cannot be empty.")
 
@@ -324,7 +349,18 @@ class FAISSSQLiteSearch:
                           query: str,
                           k: int = 5,
                           as_documents: bool = False):
-
+        """Perform similarity search over FAISS index and return top-k matches.
+        Only works with RAG strategy.
+        Args:
+            query (str): The query string to search for.
+            k (int): Number of top matches to return.
+            as_documents (bool): If True, return results as Document objects.
+        Returns:
+            List[dict] or List[Document]: A list of dictionaries or Document objects containing the
+            term, context, code, and score for each match.
+        Raises:
+            NotImplementedError: If the strategy is not RAG.
+        """
         if self.om_strategy != "rag":
             raise NotImplementedError(
                 "LM/ST strategy should use get_match_results method.")

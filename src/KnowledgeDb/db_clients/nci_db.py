@@ -3,7 +3,6 @@ from typing import Dict, List
 import asyncio
 import httpx
 import json
-import os
 from tenacity import retry, stop_after_attempt, wait_fixed, retry_if_exception_type
 import json
 from src.CustomLogger.custom_logger import CustomLogger
@@ -13,9 +12,27 @@ from src.KnowledgeDb.db_clients.umls_db import UMLSDb
 
 NCI_CALLS = 18
 NCI_PERIOD = 1
+LIST_OF_CONCEPTS = [
+    "synonyms",
+    "definitions",
+    "parents",
+    "children",
+    "roles",
+]
 
 
 class NCIDb:
+    """A class to interact with the NCI (National Cancer Institute) API for fetching concept data.
+    This class provides methods to fetch concepts by their codes, create context strings from the fetched data,
+    and manage rate limiting for API calls.
+    Attributes:
+        _base_url (str): The base URL for the NCI API.
+        _umls_db (UMLSDb): An instance of the UMLSDb class for interacting with the UMLS database.
+        logger (CustomLogger): An instance of CustomLogger for logging messages.
+        rate_limiter (AsyncLimiter): An instance of AsyncLimiter to manage rate limiting for API calls.
+        batch_size (int): The number of codes to fetch in a single batch.
+        concurrency (int): The number of concurrent requests allowed.
+    """
 
     def __init__(self, umls_api_key):
         self._base_url = "https://api-evsrest.nci.nih.gov/api/v1"
@@ -24,8 +41,17 @@ class NCIDb:
         self.rate_limiter = AsyncLimiter(NCI_CALLS, time_period=NCI_PERIOD)
         self.batch_size = 50
         self.concurrency = 4
+        self.list_of_concepts = LIST_OF_CONCEPTS
 
     async def fetch_one(self, client, url):
+        """Fetch a single URL with rate limiting and error handling.
+        Args:
+            client (httpx.AsyncClient): The HTTP client to use for the request.
+            url (str): The URL to fetch.
+        Returns:
+            httpx.Response: The response object if the request is successful.
+            None: If the request fails or if the response status is not 200.
+        """
         async with self.rate_limiter:
             try:
                 r = await client.get(url, timeout=10.0)
@@ -50,10 +76,23 @@ class NCIDb:
            retry=retry_if_exception_type(
                (httpx.HTTPStatusError, httpx.RequestError)))
     async def fetch_batch(self, client, urls):
+        """Fetch a batch of URLs concurrently with error handling.
+        Args:
+            client (httpx.AsyncClient): The HTTP client to use for the requests.
+            urls (List[str]): A list of URLs to fetch.
+        Returns:
+            List[httpx.Response]: A list of response objects for the fetched URLs.
+        """
         tasks = [self.fetch_one(client, url) for url in urls]
         return await asyncio.gather(*tasks)
 
-    async def get_custom_concepts_by_codes(self, codes, list_of_concepts):
+    async def get_custom_concepts_by_codes(self, codes, client=None):
+        """Fetch concept data for a list of codes from the NCI API.
+        Args:
+            codes (List[str]): A list of NCI codes to fetch concept data for.
+        Returns:
+            Dict[str, dict]: A dictionary mapping each code to its corresponding concept data.
+        """
         if not codes:
             self.logger.info("No codes provided for fetching concepts.")
             return {}
@@ -64,69 +103,66 @@ class NCIDb:
         result = {}
         semaphore = asyncio.Semaphore(self.concurrency)
 
-        async with httpx.AsyncClient(limits=httpx.Limits(
-                max_connections=self.concurrency * self.batch_size)) as client:
-
-            async def fetch_and_parse(batch_codes, batch_idx):
-                async with semaphore:
-                    urls = [
-                        f"{self._base_url}/concept/ncit/{code}?include={','.join(list_of_concepts)}"
-                        for code in batch_codes
-                    ]
-                    responses = await self.fetch_batch(client, urls)
-                    batch_result = {}
-                    for code, response in zip(batch_codes, responses):
-                        if response and response.status_code == 200:
-                            try:
-                                batch_result[code] = response.json()
-                            except json.JSONDecodeError as e:
-                                self.logger.warning(
-                                    f"Failed to parse JSON for code {code}: {e}"
-                                )
-                        else:
+        async def fetch_and_parse(batch_codes, batch_idx, http_client):
+            async with semaphore:
+                urls = [
+                    f"{self._base_url}/concept/ncit/{code}?include={','.join(self.list_of_concepts)}"
+                    for code in batch_codes
+                ]
+                responses = await self.fetch_batch(http_client, urls)
+                batch_result = {}
+                for code, response in zip(batch_codes, responses):
+                    if response and response.status_code == 200:
+                        try:
+                            batch_result[code] = response.json()
+                        except json.JSONDecodeError as e:
                             self.logger.warning(
-                                f"Failed to fetch code {code}: "
-                                f"{response.status_code if response else 'No response'}"
-                            )
-                    self.logger.info(
-                        f"Processed batch {batch_idx + 1} of {len(batches)}")
-                    return batch_result
+                                f"Failed to parse JSON for code {code}: {e}")
+                    else:
+                        self.logger.warning(
+                            f"Failed to fetch code {code}: "
+                            f"{response.status_code if response else 'No response'}"
+                        )
+                self.logger.info(
+                    f"Processed batch {batch_idx + 1} of {len(batches)}")
+                return batch_result
 
-            batches = [
-                codes[i:i + self.batch_size]
-                for i in range(0, len(codes), self.batch_size)
-            ]
+        batches = [
+            codes[i:i + self.batch_size]
+            for i in range(0, len(codes), self.batch_size)
+        ]
+
+        if client is None:
+            async with httpx.AsyncClient(
+                    limits=httpx.Limits(max_connections=self.concurrency *
+                                        self.batch_size)) as owned_client:
+                tasks = [
+                    fetch_and_parse(batch, i, owned_client)
+                    for i, batch in enumerate(batches)
+                ]
+                all_results = await asyncio.gather(*tasks,
+                                                   return_exceptions=True)
+        else:
             tasks = [
-                fetch_and_parse(batch_codes, i)
-                for i, batch_codes in enumerate(batches)
+                fetch_and_parse(batch, i, client)
+                for i, batch in enumerate(batches)
             ]
             all_results = await asyncio.gather(*tasks, return_exceptions=True)
 
-            for i, r in enumerate(all_results):
-                if isinstance(r, dict):
-                    result.update(r)
-                else:
-                    self.logger.warning(f"Batch {i + 1} failed: {r}")
+        for i, r in enumerate(all_results):
+            if isinstance(r, dict):
+                result.update(r)
+            else:
+                self.logger.warning(f"Batch {i + 1} failed: {r}")
 
         self.logger.info(f"Retrieved {len(result)} concept data entries")
         return result
 
-    def create_context_list(
-        self,
-        concept_data: dict,
-        list_of_concepts: List[str] = [
-            "synonyms",
-            "definitions",
-            "parents",
-            "children",
-            "roles",
-        ],
-    ) -> str:
+    def create_context_list(self, concept_data: dict) -> str:
         """
         Convert a concept dictionary into a structured context string.
         Args:
             concept_data (dict): The concept data fetched from the NCI API.
-            list_of_concepts (list): List of concepts to include in the context. Defaults to ["synonyms", "children", "roles", "definitions", "parents"].
         Returns:
             str: A string representation of the context, formatted as "concept: item1, item2, ...".
         """
@@ -138,7 +174,7 @@ class NCIDb:
             "Biological_Process_"
         ])
 
-        for concept in list_of_concepts:
+        for concept in self.list_of_concepts:
             if concept not in concept_data:
                 continue
             parts = []
@@ -194,10 +230,17 @@ class NCIDb:
                 context.append(f"{concept}: {'; '.join(parts)}")
         return ". ".join(context)
 
-    async def get_context_map_by_codes(self, codes: List[str],
-                                       fields: List[str]) -> Dict[str, str]:
-        concept_map = await self.get_custom_concepts_by_codes(codes, fields)
+    async def get_context_map_by_codes(self,
+                                       codes: List[str]) -> Dict[str, str]:
+        """
+        Fetch context data for a list of NCI codes and create a mapping of codes to context strings.
+        Args:
+            codes (List[str]): A list of NCI codes to fetch context data for.
+        Returns:
+            Dict[str, str]: A dictionary mapping each code to its corresponding context string.
+        """
+        concept_map = await self.get_custom_concepts_by_codes(codes)
         return {
-            code: self.create_context_list(data, fields)
+            code: self.create_context_list(data)
             for code, data in concept_map.items()
         }
