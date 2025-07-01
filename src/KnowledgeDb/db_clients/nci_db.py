@@ -244,3 +244,19 @@ class NCIDb:
             code: self.create_context_list(data)
             for code, data in concept_map.items()
         }
+
+    async def get_labels_by_codes(self, codes: List[str]) -> Dict[str, str]:
+        """
+        Fetch labels for a list of NCI codes and create a mapping of codes to their preferred names.
+        Args:
+            codes (List[str]): A list of NCI codes to fetch labels for.
+        Returns:
+            Dict[str, str]: A dictionary mapping each code to its corresponding preferred name.
+        """
+        concept_data = await self.get_custom_concepts_by_codes(codes)
+        code_to_label = {}
+        for code, data in concept_data.items():
+            label = data.get("name")
+            if label:
+                code_to_label[code] = label.strip()
+        return code_to_label

@@ -168,22 +168,6 @@ class OntoMapEngine:
                                           topk=topk,
                                           test_or_prod=self._test_or_prod)
 
-    # def run(self):
-    #     """
-    #     Runs the OntoMap Engine module.
-
-    #     Returns:
-    #         tuple: A tuple containing the exact matches and the ontology mapping results.
-    #     """
-    #     self._logger.info("Running Ontology Mapping")
-    #     self._logger.info("Separating exact and non-exact matches")
-    #     exact_matches = self._exact_matching()
-    #     non_exact_matches_ls = self._separate_matches(matching_type='exact')
-
-    #     self._logger.info("Running OntoMap model for non-exact matches")
-    #     onto_map_res = self.get_results_for_non_exact(non_exact_query_list=non_exact_matches_ls, topk=self.topk)
-    #     return exact_matches, onto_map_res
-
     def run(self):
         """
         Runs the OntoMap Engine module.

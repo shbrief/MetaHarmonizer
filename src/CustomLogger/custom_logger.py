@@ -5,30 +5,36 @@ import sys
 
 ## have flexibility to pass log level
 class CustomLogger:
+
     def custlogger(self, loglevel=logging.DEBUG):
-        ## Set class or method name from where logger is called
+        # Set class name from where logger is called
         stack = inspect.stack()
-        the_class = stack[1][0].f_locals["self"].__class__.__name__
-        the_method = stack[1][0].f_code.co_name
-        logger_name = f"{the_class}"
-        # print(inspect.stack())
-        ## create logger
+        the_class = stack[1][0].f_locals.get("self", None)
+        logger_name = the_class.__class__.__name__ if the_class else "DefaultLogger"
+
+        # Create or get logger
         logger = logging.getLogger(logger_name)
         logger.setLevel(loglevel)
 
-        ## create a console handler or file handler and set the log level
-        fh = logging.FileHandler("out.log")
-        stdout = logging.StreamHandler(stream=sys.stdout)
-        ## create formatter - how you want your logs to be formatted
-        formatter = logging.Formatter(
-            "%(asctime)s - %(levelname)s - %(name)s: %(message)s",
-            datefmt="%d/%m//%Y %I:%M:%s %p",
-        )
+        # Add handlers only if they are not already added
+        if not logger.handlers:
+            # File handler
+            fh = logging.FileHandler("out.log")
+            # Stream handler
+            stdout = logging.StreamHandler(stream=sys.stdout)
 
-        fh.setFormatter(formatter)
-        stdout.setFormatter(formatter)
-        logger.addHandler(fh)
-        logger.addHandler(stdout)
+            # Formatter
+            formatter = logging.Formatter(
+                "%(asctime)s - %(levelname)s - %(name)s: %(message)s",
+                datefmt="%d/%m/%Y %I:%M:%S %p",
+            )
+
+            fh.setFormatter(formatter)
+            stdout.setFormatter(formatter)
+
+            logger.addHandler(fh)
+            logger.addHandler(stdout)
+
         return logger
 
     # Create a base class
@@ -48,5 +54,6 @@ class CustomLogger:
 ## Does not work with my setup currently
 ## Might want to figure out the exact handling in logger module
 class LoggingHandler:
+
     def __init__(self, *args, **kwargs):
         self.log = logging.getLogger(self.__class__.__name__)
