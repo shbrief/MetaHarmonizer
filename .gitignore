@@ -71,3 +71,14 @@ notes
 =======
 *app.py
 >>>>>>> parent of 742544a (Merge commit 'e73751844beddc38c705c558f40cc490b0f9f107' into abhi_devv)
+
+# Python build artifacts
+build/
+dist/
+*.egg-info/
+__pycache__/
+*.py[cod]
+.eggs/
+
+# model cache
+model_cache/
