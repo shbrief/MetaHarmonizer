@@ -1,5 +1,7 @@
 ## MetaHarmonizer Mapping Engines Architecture
 
+<img src="https://github.com/shbrief/MetaHarmonizer/blob/main/Figures/MetaHarmonizer%20-%20Architecture.png" width="90%" height="90%"/>
+
 ### Legend:
 - 🔵 **Blue** - Main Engine Classes (Top-level orchestrators)
 - 🟣 **Purple** - Ontology Mapper Classes (Specific mapping strategies)
