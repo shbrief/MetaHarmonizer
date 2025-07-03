@@ -1,6 +1,6 @@
 ## MetaHarmonizer Mapping Engines Architecture
 
-<img src="https://github.com/shbrief/MetaHarmonizer/blob/diagrams/Figures/MetaHarmonizer_All%20_%20Mermaid%20Chart-2025-07-03-210436.png" width="100%" height="100%"/>
+<img src="https://github.com/shbrief/MetaHarmonizer/blob/main/Figures/MetaHarmonizer_All%20_%20Mermaid%20Chart-2025-07-03-210436.png" width="100%" height="100%"/>
 
 ### Legend:
 - 🔵 **Blue** - Main Engine Classes (Top-level orchestrators)
