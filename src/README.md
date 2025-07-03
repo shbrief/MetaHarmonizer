@@ -1,6 +1,6 @@
 ## MetaHarmonizer Mapping Engines Architecture
 
-<img src="https://github.com/shbrief/MetaHarmonizer/blob/main/Figures/MetaHarmonizer%20-%20Architecture.png" width="90%" height="90%"/>
+<img src="https://github.com/shbrief/MetaHarmonizer/blob/diagrams/Figures/MetaHarmonizer_All%20_%20Mermaid%20Chart-2025-07-03-210436.png" width="100%" height="100%"/>
 
 ### Legend:
 - 🔵 **Blue** - Main Engine Classes (Top-level orchestrators)
@@ -91,6 +91,8 @@
 - `get_nci_code_by_term()`
   - Retrieves the NCIt code for a given term, using local or remote knowledge base (e.g., UMLS, NCIt, FAISS index).
   - Supports synonym and hierarchical lookups to resolve biomedical terms.
+
+<img src="https://github.com/shbrief/MetaHarmonizer/blob/main/Figures/MetaHarmonizer%20-%20Architecture.png" width="100%" height="100%"/>
 
 ---
 
