@@ -1,6 +1,7 @@
 from src.models import ontology_mapper_st as oms
 from src.models import ontology_mapper_lm as oml
 from src.models import ontology_mapper_rag_faiss as omr
+from src.models import ontology_mapper_bi_encoder as ombe
 import pandas as pd
 import numpy as np
 from thefuzz import fuzz
@@ -89,6 +90,25 @@ class OntoMapEngine:
             if fuzz.partial_ratio(q, self.corpus) > fuzz_ratio
         ]
 
+    def _map_shortname_to_fullname(self, non_exact_list: list[str]) -> dict:
+        """
+        Return a dict: original_value -> updated_value
+        (shortName → full name if exists, otherwise keep original)
+        """
+        mapping_df = pd.read_csv("data/corpus/cancer_type_mapping.csv")
+        short_to_name = dict(
+            zip(mapping_df["shortName"].str.strip(),
+                mapping_df["name"].str.strip()))
+
+        replaced = {}
+        for q in non_exact_list:
+            q_strip = q.strip()
+            replaced[q] = short_to_name.get(q_strip, q_strip)
+            if q_strip in short_to_name:
+                self._logger.info(
+                    f"Replaced: {q_strip} → {short_to_name[q_strip]}")
+        return replaced
+
     def _om_model_from_strategy(self, non_exact_query_list: list[str]):
         """
         Returns the OntoMap model based on the strategy.
@@ -123,9 +143,16 @@ class OntoMapEngine:
                                   query=non_exact_query_list,
                                   corpus=self.corpus,
                                   topk=self.topk)
+        elif self.om_strategy == 'bie':
+            return ombe.OntoMapBIE(method=self.method,
+                                   category=self.category,
+                                   om_strategy=self.om_strategy,
+                                   query=non_exact_query_list,
+                                   corpus=self.corpus,
+                                   topk=self.topk)
         else:
             raise ValueError(
-                "om_strategy should be either 'st', 'lm' or 'rag'")
+                "om_strategy should be either 'st', 'lm', 'rag', or 'bie'")
 
     def _separate_matches(self, matching_type: str = 'exact'):
         """
@@ -180,9 +207,42 @@ class OntoMapEngine:
         exact_matches = self._exact_matching()
         non_exact_matches_ls = self._separate_matches(matching_type='exact')
 
-        self._logger.info("Running OntoMap model for non-exact matches")
-        onto_map_res = self.get_results_for_non_exact(
-            non_exact_query_list=non_exact_matches_ls, topk=self.topk)
+        # self._logger.info("Running OntoMap model for non-exact matches")
+        # onto_map_res = self.get_results_for_non_exact(
+        #     non_exact_query_list=non_exact_matches_ls, topk=self.topk)
+
+        self._logger.info("Replacing shortNames using rule-based name mapping")
+        mapping_dict = self._map_shortname_to_fullname(non_exact_matches_ls)
+        updated_queries = [mapping_dict[q] for q in non_exact_matches_ls]
+
+        if updated_queries:
+            replace_df = pd.DataFrame({
+                "original_value": non_exact_matches_ls,
+                "updated_value": updated_queries
+            })
+
+            updated_cura_map = {
+                mapping_dict[k]: v
+                for k, v in self.cura_map.items() if k in mapping_dict
+            }
+
+            onto_map = self._om_model_from_strategy(updated_queries)
+            onto_map_res = onto_map.get_match_results(
+                cura_map=updated_cura_map,
+                topk=self.topk,
+                test_or_prod=self._test_or_prod)
+
+            onto_map_res.rename(columns={"original_value": "updated_value"},
+                                inplace=True)
+            onto_map_res = pd.merge(replace_df,
+                                    onto_map_res,
+                                    on="updated_value",
+                                    how="left")
+            onto_map_res["curated_ontology"] = onto_map_res[
+                "original_value"].map(self.cura_map).fillna("Not Found")
+        else:
+            onto_map_res = self.get_results_for_non_exact(
+                non_exact_query_list=non_exact_matches_ls, topk=self.topk)
 
         # Create DataFrame for exact matches
         exact_df = pd.DataFrame({'original_value': exact_matches})

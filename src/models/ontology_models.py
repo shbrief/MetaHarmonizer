@@ -70,6 +70,9 @@ class OntoModelsBase:
                     store.build_corpus_vector_db(self.corpus)
 
             self._vs = store
+            if self.corpus:
+                self._vs.ensure_corpus_integrity(self.corpus)
+
             self.logger.info(
                 f"{self._vs.index is not None} - Vector store initialized for method={self.method}, category={self.category}, om_strategy={self.om_strategy}"
             )
