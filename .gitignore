@@ -1,84 +1,35 @@
+# User/project-specific patterns
 *nih*
 *DS_Store*
-
-*__pycache__*
 *thumbnails*
 *scratch*
 *log
-
-.Rproj.user
-.Rhistory
-.RData
-.Ruserdata
 notes
-
-*png
-*scratch*
-.Pyuserdata
 *DbConn*
-<<<<<<< HEAD
-<<<<<<< HEAD
 *authorized*
 *all_orig_metadata*
-<<<<<<< HEAD
-<<<<<<< HEAD
 *.processed_corpus_context
-=======
-.processed_corpus_context
->>>>>>> 11a0b3b (Final updates to schema mapper with schema_map  demo)
-=======
-*.processed_corpus_context
->>>>>>> 6968d4b (Pushing ReadMe updates as well as the schema_mapping components)
 *personal*
 *create_corpus_context*
 *schema_mapping.ipynb
 *.json*
-<<<<<<< HEAD
-<<<<<<< HEAD
-*app_*
-<<<<<<< HEAD
-<<<<<<< HEAD
-*app.py
-=======
-<<<<<<< HEAD
-*authorized*
->>>>>>> 5c7ccb3 (v0.1.6 updates: 5 patches made to ontology mapping)
-=======
-*authorized*
-*all_orig_metadata*
-.processed_corpus_context
->>>>>>> a1c1b02 (v0.2.0 updates:)
-=======
-*app*
->>>>>>> 11a0b3b (Final updates to schema mapper with schema_map  demo)
-=======
 *app_*
 *app.py
->>>>>>> 6968d4b (Pushing ReadMe updates as well as the schema_mapping components)
-=======
-<<<<<<< HEAD
-*app.py
-=======
-*app.py
 *docs*
->>>>>>> fd1285a (comitting unstaged changes for merging)
->>>>>>> 1c20785 (comitting unstaged changes for merging)
-=======
-*app.py
-*docs*
->>>>>>> fd1285a (comitting unstaged changes for merging)
->>>>>>> 742544ac2f6635755f8ac6401976785606a7eb27
-=======
-*app.py
->>>>>>> parent of 742544a (Merge commit 'e73751844beddc38c705c558f40cc490b0f9f107' into abhi_devv)
 
-# Python build artifacts
+# RStudio files
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+# Python cache and build artifacts
+__pycache__/
+*.py[cod]
 build/
 dist/
 *.egg-info/
-__pycache__/
-*.py[cod]
 .eggs/
 
-# model cache
+# Model cache
 model_cache/
