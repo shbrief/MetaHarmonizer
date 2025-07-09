@@ -73,6 +73,9 @@ class OntoMapEngine:
         Returns:
             list: The list of exact matches from the query.
         """
+        # corpus_lower = {c.lower() for c in self.corpus}
+        # return [q for q in self.query if q.lower() in corpus_lower]
+
         return [q for q in self.query if q in self.corpus]
 
     def _fuzzy_matching(self, fuzz_ratio: int = 80):
@@ -93,11 +96,11 @@ class OntoMapEngine:
     def _map_shortname_to_fullname(self, non_exact_list: list[str]) -> dict:
         """
         Return a dict: original_value -> updated_value
-        (shortName → full name if exists, otherwise keep original)
+        (short name (code) → full name if exists, otherwise keep original)
         """
-        mapping_df = pd.read_csv("data/corpus/cancer_type_mapping.csv")
+        mapping_df = pd.read_csv("data/corpus/oncotree_code_to_name.csv")
         short_to_name = dict(
-            zip(mapping_df["shortName"].str.strip(),
+            zip(mapping_df["code"].str.strip(),
                 mapping_df["name"].str.strip()))
 
         replaced = {}
@@ -119,6 +122,9 @@ class OntoMapEngine:
         Returns:
             object: The OntoMap model instance.
         """
+        query_df = self.other_params.get('query_df', None)
+        corpus_df = self.other_params.get('corpus_df', None)
+
         if self.om_strategy == 'lm':
             return oml.OntoMapLM(method=self.method,
                                  category=self.category,
@@ -142,14 +148,17 @@ class OntoMapEngine:
                                   om_strategy=self.om_strategy,
                                   query=non_exact_query_list,
                                   corpus=self.corpus,
-                                  topk=self.topk)
+                                  topk=self.topk,
+                                  corpus_df=corpus_df)
         elif self.om_strategy == 'bie':
             return ombe.OntoMapBIE(method=self.method,
                                    category=self.category,
                                    om_strategy=self.om_strategy,
                                    query=non_exact_query_list,
                                    corpus=self.corpus,
-                                   topk=self.topk)
+                                   topk=self.topk,
+                                   query_df=query_df,
+                                   corpus_df=corpus_df)
         else:
             raise ValueError(
                 "om_strategy should be either 'st', 'lm', 'rag', or 'bie'")
