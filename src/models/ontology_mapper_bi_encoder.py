@@ -18,7 +18,7 @@ class OntoMapBIE(OntoModelsBase):
         query_df: pd.DataFrame,
         corpus_df: pd.DataFrame,
         topk: int = 5,
-        om_strategy: str = 'bie',
+        om_strategy: str = 'rag_bie',
     ):
         super().__init__(method,
                          category,
@@ -53,6 +53,7 @@ class OntoMapBIE(OntoModelsBase):
     def add_context_to_query(self, query_df: pd.DataFrame) -> pd.DataFrame:
         """
         Return a new DataFrame with one extra column: enriched_query
+        TODO: Simplify context
         """
         enriched_queries = []
 

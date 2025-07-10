@@ -58,7 +58,7 @@ class FAISSSQLiteSearch:
 
         self.conn = sqlite3.connect(self.db_path)
         self.cursor = self.conn.cursor()
-        if self.om_strategy in ("rag", "bie"):
+        if self.om_strategy in ("rag", "rag_bie"):
             create_sql = f"""
               CREATE TABLE IF NOT EXISTS {self.table_name} (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -108,7 +108,7 @@ class FAISSSQLiteSearch:
             missing_terms)
         self.logger.info(f"{total_missing} new terms to add to the index.")
 
-        if self.om_strategy in ("rag", "bie"):
+        if self.om_strategy in ("rag", "rag_bie"):
             if corpus_df is not None:
                 self.logger.info(
                     "Using provided DataFrame to update term-code pairs.")
@@ -378,9 +378,10 @@ class FAISSSQLiteSearch:
         if not corpus:
             raise ValueError("Corpus cannot be empty.")
 
-        if self.om_strategy in ("rag", "bie"):
+        if self.om_strategy in ("rag", "rag_bie"):
             raise NotImplementedError(
-                "RAG/BIE strategy should use fetch_and_store_terms method.")
+                "RAG/RAG_BIE strategy should use fetch_and_store_terms method."
+            )
 
         # Initialize the embedder and dimensions with the first batch
         first_batch = corpus[:256]
@@ -441,7 +442,7 @@ class FAISSSQLiteSearch:
         Raises:
             NotImplementedError: If the strategy is not RAG.
         """
-        if self.om_strategy not in ("rag", "bie"):
+        if self.om_strategy not in ("rag", "rag_bie"):
             raise NotImplementedError(
                 "LM/ST strategy should use get_match_results method.")
 

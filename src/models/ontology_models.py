@@ -28,13 +28,13 @@ class OntoModelsBase:
         if self.method is None:
             raise ValueError("Method name cannot be None")
 
-        if om_strategy in ["bie", "rag"] and corpus_df is None:
+        if om_strategy in ["rag_bie", "rag"] and corpus_df is None:
             raise ValueError(
-                "corpus_df must be provided when om_strategy is 'bie' or 'rag'"
+                "corpus_df must be provided when om_strategy is 'rag_bie' or 'rag'"
             )
-        if om_strategy == "bie" and query_df is None:
+        if om_strategy == "rag_bie" and query_df is None:
             raise ValueError(
-                "query_df must be provided when om_strategy is 'bie'")
+                "query_df must be provided when om_strategy is 'rag_bie'")
 
         if len(self.query) == 0:
             raise ValueError("Query list cannot be empty")

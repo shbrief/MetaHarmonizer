@@ -8,6 +8,7 @@ from thefuzz import fuzz
 from src.CustomLogger.custom_logger import CustomLogger
 
 logger = CustomLogger()
+ABBR_DICT_PATH = "data/corpus/oncotree_code_to_name.csv"
 
 
 class OntoMapEngine:
@@ -98,10 +99,16 @@ class OntoMapEngine:
         Return a dict: original_value -> updated_value
         (short name (code) → full name if exists, otherwise keep original)
         """
-        mapping_df = pd.read_csv("data/corpus/oncotree_code_to_name.csv")
-        short_to_name = dict(
-            zip(mapping_df["code"].str.strip(),
-                mapping_df["name"].str.strip()))
+        try:
+            mapping_df = pd.read_csv(ABBR_DICT_PATH)
+            short_to_name = dict(
+                zip(mapping_df["code"].str.strip(),
+                    mapping_df["name"].str.strip()))
+        except FileNotFoundError:
+            self._logger.warning(
+                "Abbreviation mapping file not found. Skipping abbreviation replacement."
+            )
+            short_to_name = {}
 
         replaced = {}
         for q in non_exact_list:
@@ -150,7 +157,7 @@ class OntoMapEngine:
                                   corpus=self.corpus,
                                   topk=self.topk,
                                   corpus_df=corpus_df)
-        elif self.om_strategy == 'bie':
+        elif self.om_strategy == 'rag_bie':
             return ombe.OntoMapBIE(method=self.method,
                                    category=self.category,
                                    om_strategy=self.om_strategy,
@@ -161,7 +168,7 @@ class OntoMapEngine:
                                    corpus_df=corpus_df)
         else:
             raise ValueError(
-                "om_strategy should be either 'st', 'lm', 'rag', or 'bie'")
+                "om_strategy should be either 'st', 'lm', 'rag', or 'rag_bie'")
 
     def _separate_matches(self, matching_type: str = 'exact'):
         """
