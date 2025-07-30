@@ -8,22 +8,33 @@ from src.CustomLogger.custom_logger import CustomLogger
 
 class OntoModelsBase:
 
-    def __init__(
-        self,
-        method: str,
-        category: str,
-        om_strategy: str,
-        topk: int,
-        query: list,
-        corpus: list,
-    ) -> None:
+    def __init__(self,
+                 method: str,
+                 category: str,
+                 om_strategy: str,
+                 topk: int,
+                 query: list,
+                 corpus: list,
+                 query_df: pd.DataFrame = None,
+                 corpus_df: pd.DataFrame = None) -> None:
         self.method = method
         self.category = category
         self.om_strategy = om_strategy
         self.query = query
         self.corpus = corpus
+        self.query_df = query_df
+        self.corpus_df = corpus_df
+
         if self.method is None:
             raise ValueError("Method name cannot be None")
+
+        if om_strategy in ["rag_bie", "rag"] and corpus_df is None:
+            raise ValueError(
+                "corpus_df must be provided when om_strategy is 'rag_bie' or 'rag'"
+            )
+        if om_strategy == "rag_bie" and query_df is None:
+            raise ValueError(
+                "query_df must be provided when om_strategy is 'rag_bie'")
 
         if len(self.query) == 0:
             raise ValueError("Query list cannot be empty")
@@ -63,13 +74,10 @@ class OntoModelsBase:
                                       category=self.category,
                                       om_strategy=self.om_strategy)
 
-            if store.index is None:
-                if self.om_strategy == "rag":
-                    store.fetch_and_store_terms(self.corpus)
-                else:
-                    store.build_corpus_vector_db(self.corpus)
-
+            if self.corpus or self.corpus_df:
+                store.ensure_corpus_integrity(self.corpus, self.corpus_df)
             self._vs = store
+
             self.logger.info(
                 f"{self._vs.index is not None} - Vector store initialized for method={self.method}, category={self.category}, om_strategy={self.om_strategy}"
             )

@@ -1,8 +1,8 @@
 import sqlite3
 import os
+from dotenv import load_dotenv
 
-BASE_DB = os.getenv("VECTOR_DB_PATH")
-BASE_IDX_DIR = os.getenv("FAISS_INDEX_DIR")
+load_dotenv()
 
 
 def cleanup_vector_store(om_strategy, method, category) -> None:
@@ -14,6 +14,10 @@ def cleanup_vector_store(om_strategy, method, category) -> None:
         method (str): The method name.
         category (str): The category name.
     """
+
+    BASE_DB = os.getenv("VECTOR_DB_PATH")
+    BASE_IDX_DIR = os.getenv("FAISS_INDEX_DIR")
+
     if BASE_DB is None or BASE_IDX_DIR is None:
         raise ValueError(
             "Missing required environment variables: VECTOR_DB_PATH or FAISS_INDEX_DIR"

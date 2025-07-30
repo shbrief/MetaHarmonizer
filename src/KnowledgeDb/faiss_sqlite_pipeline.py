@@ -3,6 +3,7 @@ from typing import List
 import asyncio
 import httpx
 import numpy as np
+import pandas as pd
 import sqlite3
 import faiss
 import os
@@ -44,6 +45,7 @@ class FAISSSQLiteSearch:
         om_strategy: str = "rag",
     ):
         self.db_path = BASE_DB
+        self.db = NCIDb(UMLS_API_KEY)
         idx_name = f"{om_strategy}_{method}_{category}.index"
         self.index_path = os.path.join(BASE_IDX_DIR, idx_name)
         self.table_name = f"{om_strategy}_{method.replace('-', '_')}_{category}"
@@ -56,7 +58,7 @@ class FAISSSQLiteSearch:
 
         self.conn = sqlite3.connect(self.db_path)
         self.cursor = self.conn.cursor()
-        if self.om_strategy == "rag":
+        if self.om_strategy in ("rag", "rag_bie"):
             create_sql = f"""
               CREATE TABLE IF NOT EXISTS {self.table_name} (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -83,6 +85,42 @@ class FAISSSQLiteSearch:
         else:
             self.index = None
             self._ids = []
+
+    def ensure_corpus_integrity(self,
+                                corpus: List[str],
+                                corpus_df: pd.DataFrame = None):
+        """
+        Ensure all terms in the provided corpus are embedded and stored in FAISS and SQLite.
+        Strategy-dependent.
+        """
+        existing_terms = self._get_existing_terms()
+        missing_terms = [term for term in corpus if term not in existing_terms]
+        df_missing = pd.DataFrame()
+        if corpus_df is not None:
+            df_missing = corpus_df[~corpus_df["official_label"].
+                                   isin(existing_terms)].copy()
+
+        if not missing_terms and (corpus_df is None or df_missing.empty):
+            self.logger.info("All corpus terms already processed.")
+            return
+
+        total_missing = len(df_missing) if corpus_df is not None else len(
+            missing_terms)
+        self.logger.info(f"{total_missing} new terms to add to the index.")
+
+        if self.om_strategy in ("rag", "rag_bie"):
+            if corpus_df is not None:
+                self.logger.info(
+                    "Using provided DataFrame to update term-code pairs.")
+                self.fetch_and_store_terms(terms=missing_terms,
+                                           corpus_df=df_missing)
+            else:
+                self.fetch_and_store_terms(missing_terms)
+
+        else:
+            self.build_corpus_vector_db(missing_terms)
+
+        self._get_existing_terms.cache_clear()
 
     @lru_cache(maxsize=1)
     def _get_existing_terms(self):
@@ -155,7 +193,7 @@ class FAISSSQLiteSearch:
         Returns:
             List[tuple]: List of tuples containing term and its associated NCI codes.
         """
-        self.db = NCIDb(api_key)
+
         existing_terms = self._get_existing_terms()
         new_terms = [term for term in terms if term not in existing_terms]
         if not new_terms:
@@ -190,14 +228,51 @@ class FAISSSQLiteSearch:
 
         return all_term_code_pairs
 
-    async def fetch_and_store_terms_async(self, terms, api_key):
+    def fetch_term_code_pairs_from_df(
+            self, df: pd.DataFrame) -> list[tuple[str, list[str]]]:
+        """
+        Return list of (term, [code]) pairs from a pre-defined DataFrame.
+        The format matches fetch_term_code_pairs_async output.
+        This function is an alternative to fetch_term_code_pairs_async
+        for cases where terms and codes are already available in a DataFrame.
+
+        Expected df columns:
+            - official_label: term
+            - clean_code: standard code (e.g. NCIT)
+        """
+        if not {"official_label", "clean_code"}.issubset(df.columns):
+            raise ValueError(
+                "corpus_df must contain 'official_label' and 'clean_code' columns."
+            )
+
+        df = df.dropna(subset=["official_label", "clean_code"])
+        df = df.drop_duplicates(subset=["official_label", "clean_code"])
+
+        term_code_map = {}
+        for _, row in df.iterrows():
+            term = row["official_label"]
+            code = row["clean_code"]
+            term_code_map.setdefault(term, set()).add(code)
+
+        return [(term, list(codes)) for term, codes in term_code_map.items()]
+
+    async def fetch_and_store_terms_async(self,
+                                          terms,
+                                          api_key,
+                                          corpus_df=None):
         """Fetch, embed, and store term-code pairs and their vector representations.
         Args:
             terms (List[str]): List of terms to fetch NCI codes for.
             api_key (str): API key for UMLS API.
         """
-        all_term_code_pairs = await self.fetch_term_code_pairs_async(
-            terms, api_key)
+
+        if corpus_df is not None:
+            self.logger.info(
+                "Using provided DataFrame to fetch term-code pairs.")
+            all_term_code_pairs = self.fetch_term_code_pairs_from_df(corpus_df)
+        else:
+            all_term_code_pairs = await self.fetch_term_code_pairs_async(
+                terms, api_key)
 
         if not all_term_code_pairs:
             self.logger.info("No new terms found with NCI codes.")
@@ -276,12 +351,17 @@ class FAISSSQLiteSearch:
 
         self.logger.info("Finished fetching and storing all terms.")
 
-    def fetch_and_store_terms(self, terms, api_key=UMLS_API_KEY):
+    def fetch_and_store_terms(self,
+                              terms,
+                              api_key=UMLS_API_KEY,
+                              corpus_df=None):
         """Sync wrapper to run the async fetch and store method."""
         loop = asyncio.new_event_loop()
         try:
             result = loop.run_until_complete(
-                self.fetch_and_store_terms_async(terms, api_key))
+                self.fetch_and_store_terms_async(terms,
+                                                 api_key,
+                                                 corpus_df=corpus_df))
         finally:
             loop.close()
             self._get_existing_terms.cache_clear()
@@ -298,9 +378,10 @@ class FAISSSQLiteSearch:
         if not corpus:
             raise ValueError("Corpus cannot be empty.")
 
-        if self.om_strategy == "rag":
+        if self.om_strategy in ("rag", "rag_bie"):
             raise NotImplementedError(
-                "RAG strategy should use fetch_and_store_terms method.")
+                "RAG/RAG_BIE strategy should use fetch_and_store_terms method."
+            )
 
         # Initialize the embedder and dimensions with the first batch
         first_batch = corpus[:256]
@@ -361,7 +442,7 @@ class FAISSSQLiteSearch:
         Raises:
             NotImplementedError: If the strategy is not RAG.
         """
-        if self.om_strategy != "rag":
+        if self.om_strategy not in ("rag", "rag_bie"):
             raise NotImplementedError(
                 "LM/ST strategy should use get_match_results method.")
 
