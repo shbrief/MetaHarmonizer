@@ -7,8 +7,9 @@ from sentence_transformers import SentenceTransformer, util
 import torch
 from collections import defaultdict
 import src.models.schema_mapper_bert as sm_bert
-import src.models.schema_mapper_models as sm_models
+import src.models.schema_mapper_freq as sm_freq
 from src.CustomLogger.custom_logger import CustomLogger
+from src.utils.schema_mapper_utils import normalize, is_numeric_column
 
 # === Configuration ===
 logger = CustomLogger().custlogger(loglevel='INFO')
@@ -18,42 +19,7 @@ SCHEMA_MAP_PATH = "data/schema_map_less_nested_dict.pkl"
 DICT_MODEL = "all-MiniLM-L6-v2"
 STAGE1_FUZZY_THRESH = 90
 STAGE2_NUMERIC_THRESH = 0.6
-STAGE2_ALIAS_THRESH = 0.8
-
-
-# === Helpers ===
-def normalize(text: str) -> str:
-    return re.sub(r"\s+", " ", re.sub(r"[^a-zA-Z0-9]", " ",
-                                      str(text))).lower().strip()
-
-
-def extract_valid_numbers(cell: str) -> List[str]:
-    """
-    Split a cell on ; <;> :: and keep non-empty, non-'NA' parts.
-    """
-    parts = re.split(r";|<;>|::", str(cell))
-    return [
-        p.strip() for p in parts if p.strip().upper() != 'NA' and p.strip()
-    ]
-
-
-def is_numeric_column(df: pd.DataFrame,
-                      col: str,
-                      min_ratio: float = 0.9,
-                      sample_size: int = 1000) -> bool:
-    """
-    Sample up to sample_size non-null cells, extract sub-values,
-    convert to numeric, and require at least min_ratio valid numbers.
-    """
-    vals = df[col].dropna().astype(str)
-    if vals.empty:
-        return False
-    sample = vals.sample(min(len(vals), sample_size), random_state=0)
-    all_vals = [v for cell in sample for v in extract_valid_numbers(cell)]
-    if not all_vals:
-        return False
-    converted = pd.to_numeric(pd.Series(all_vals), errors='coerce')
-    return converted.notna().sum() / len(converted) >= min_ratio
+STAGE2_ALIAS_THRESH = 0.5
 
 
 class SchemaMapEngine:
@@ -76,7 +42,7 @@ class SchemaMapEngine:
 
     def __init__(self,
                  clinical_data_path: str,
-                 matcher_type: str = None,
+                 matcher_type: str = "Freq",
                  mode: str = "auto",
                  top_k: int = 5):
         self.df = pd.read_csv(clinical_data_path, sep='\t')
@@ -93,28 +59,23 @@ class SchemaMapEngine:
 
         # Load alias dictionary
         self.df_dict = pd.read_csv(DICT_PATH)
-        self.alias_to_std = defaultdict(set)
-        for _, row in self.df_dict.iterrows():
-            key = normalize(row['source'])
-            self.alias_to_std[key].add(row['field_name'])
-        self.alias_keys = list(self.alias_to_std.keys())
 
         # Normalize alias to fields mapping
-        self._alias_to_fields = defaultdict(list)
-        for _, row in self.df_dict.iterrows():
-            norm_alias = normalize(row['source'])
-            self._alias_to_fields[norm_alias].append(row['field_name'])
+        self.sources_to_fields = (self.df_dict.groupby(
+            self.df_dict['source'].map(normalize))['field_name'].apply(
+                lambda s: sorted(set(s))).to_dict())
 
-        source_to_fields = self.df_dict.groupby('source')['field_name'].apply(
-            list).to_dict()
-        self._normalized_source_to_fields = {
-            normalize(k): v
-            for k, v in source_to_fields.items()
-        }
+        self.sources_keys = list(self.sources_to_fields.keys())
+
+        self.normed_source_to_source = {}
+        for _, row in self.df_dict.dropna(subset=['source']).iterrows():
+            norm_src = normalize(row['source'])
+            if norm_src not in self.normed_source_to_source:
+                self.normed_source_to_source[norm_src] = row['source']
 
         # Load SentenceTransformer models
         self.dict_model = SentenceTransformer(DICT_MODEL)
-        self.alias_embs = self.dict_model.encode(self.alias_keys,
+        self.alias_embs = self.dict_model.encode(self.sources_keys,
                                                  convert_to_tensor=True)
 
         # Prepare numeric sources
@@ -135,29 +96,35 @@ class SchemaMapEngine:
         matches = []
         detail = None
 
-        dict_match_fields = self._alias_to_fields.get(norm, [])
+        dict_match_fields = self.sources_to_fields.get(norm, [])
         if dict_match_fields:
             # Exact match (after normalization)
             detail = "dict"
             for f in dict_match_fields:
-                src = self.df_dict[self.df_dict['field_name'] ==
-                                   f]['source'].iloc[0]
-                matches.append((f, 1.0, src))
+                if normalize(f) == norm:
+                    matches = [(f, 1.0, f)]
+                    break
+                else:
+                    src = self.normed_source_to_source.get(norm, f)
+                    matches.append((f, 1.0, src))
         else:
             # Fuzzy match (also on normalized terms)
             detail = "fuzzy"
-            fuzzy_candidates = process.extract(
-                norm,
-                list(self._normalized_source_to_fields.keys()),
-                scorer=fuzz.token_sort_ratio,
-                limit=self.top_k)
+            fuzzy_candidates = process.extract(norm,
+                                               self.sources_keys,
+                                               scorer=fuzz.token_sort_ratio,
+                                               limit=self.top_k)
 
+            best = {}
             for cand, score, _ in fuzzy_candidates:
                 if score >= fuzzy_thresh:
-                    for std_field in self._normalized_source_to_fields[cand]:
-                        src = self.df_dict[self.df_dict['field_name'] ==
-                                           std_field]['source'].iloc[0]
-                        matches.append((std_field, score / 100.0, src))
+                    for std_field in self.sources_to_fields[cand]:
+                        src = self.normed_source_to_source.get(cand, std_field)
+                        s = score / 100.0
+                        if (std_field not in best) or (best[std_field][0] < s):
+                            best[std_field] = (s, src)
+
+            matches = [(f, sc, src) for f, (sc, src) in best.items()]
 
         matches = sorted(matches, key=lambda x: x[1],
                          reverse=True)[:self.top_k]
@@ -221,8 +188,8 @@ class SchemaMapEngine:
 
                 alias_scores = []
                 for score, idx in zip(top2[0], top2[1]):
-                    alias = self.alias_keys[int(idx)]
-                    for f in self.alias_to_std[alias]:
+                    alias = self.sources_keys[int(idx)]
+                    for f in self.sources_to_fields[alias]:
                         alias_scores.append((f, float(score), alias))
 
                 candidates = sorted(alias_scores,
@@ -235,8 +202,8 @@ class SchemaMapEngine:
             sims2 = util.pytorch_cos_sim(emb2, self.alias_embs)[0]
             top2 = torch.topk(sims2, k=min(self.top_k, len(sims2)))
             for score, idx in zip(top2[0], top2[1]):
-                alias = self.alias_keys[int(idx)]
-                for f in self.alias_to_std[alias]:
+                alias = self.sources_keys[int(idx)]
+                for f in self.sources_to_fields[alias]:
                     candidates.append((f, float(score), alias))
             detail = "alias"
 
@@ -267,31 +234,33 @@ class SchemaMapEngine:
         if not hasattr(self, "fallback"):
             if self.matcher_type == 'Bert':
                 self.fallback = sm_bert.ClinicalDataMatcherBert(
-                    self.df, self.schema_map_path)
+                    self.df, self.top_k)
                 detail = 'bert'
             else:
-                self.fallback = sm_models.ClinicalDataMatcher(
-                    self.df, self.schema_map_path)
+                self.fallback = sm_freq.ClinicalDataMatcherFreq(
+                    self.df, self.top_k)
                 detail = 'freq'
             self._fallback_detail = detail
         else:
             detail = self._fallback_detail
 
         if detail == 'bert':
-            res = self.fallback.bert_match(col, top_k=self.top_k)
+            res = self.fallback.bert_match(col)
         else:
-            res = self.fallback.freq_match(col, top_k=self.top_k)
-
-        if not res:
-            logger.error(
-                f"[Stage3] No results for column '{col}' using {detail}")
-            res = []
+            res = self.fallback.freq_match(col)
 
         row = {
             "original_column": col,
             "matched_stage": "stage3",
             "matched_stage_detail": detail,
         }
+
+        if not res:
+            logger.error(
+                f"[Stage3] No results for column '{col}' using {detail}")
+            res = []
+            row["matched_stage"] = ""
+            row["matched_stage_detail"] = ""
 
         formatted_res = []
         for item in res[:self.top_k]:
@@ -314,33 +283,42 @@ class SchemaMapEngine:
         results = []
 
         for col in self.df.columns:
+            # TODO: Add a check to skip id columns, such as if they were all unique and not null. Need to be careful with this check.
+
             # Stage1
             row = self.dict_fuzzy_match(col)
             if row.get("match1_score"):
-                row["matched_stage"] = "stage1"
                 results.append(row)
                 continue
 
             # Stage2
             row = self.field_match(col)
             if self.mode == "auto":
+                if self.col_is_numeric.get(col, False):
+                    results.append(row)
+                    continue
+
                 top_score = row.get("match1_score")
                 if top_score is None:
                     logger.error(
                         f"[SchemaMapEngine] No match1_score produced for column '{col}'. "
                     )
+                    # Stage3 fallback if no score from stage 2
+                    row = self.field_value_match(col)
+                    results.append(row)
                     continue
-                if top_score and ((row["matched_stage_detail"] == "numeric"
-                                   and top_score >= STAGE2_NUMERIC_THRESH) or
-                                  (row["matched_stage_detail"] == "alias"
-                                   and top_score >= STAGE2_ALIAS_THRESH)):
-                    row["matched_stage"] = "stage2"
+
+                is_numeric_match = row["matched_stage_detail"] == "numeric"
+                is_alias_match = row["matched_stage_detail"] == "alias"
+
+                if (is_numeric_match and top_score >= STAGE2_NUMERIC_THRESH) or \
+                   (is_alias_match and top_score >= STAGE2_ALIAS_THRESH):
                     results.append(row)
                 else:
                     # Stage3 fallback
                     row = self.field_value_match(col)
-                    row["matched_stage"] = "stage3"
                     results.append(row)
+
             elif self.mode == "manual":
                 # Output Stage2 results for manual review
                 row["matched_stage"] = "stage2_pending"
@@ -357,13 +335,25 @@ class SchemaMapEngine:
         Load manual Stage2 results, run Stage3 on unmatched/pending columns.
         """
         df_manual = pd.read_csv(manual_csv)
-        pending_cols = df_manual[df_manual["matched_stage"] ==
-                                 "stage2_pending"]["original_column"].tolist()
+        if "matched_stage" in df_manual.columns and "original_column" in df_manual.columns:
+            mask = ((df_manual["matched_stage"] == "stage2_pending")
+                    | df_manual["matched_stage"].isna()
+                    |
+                    (df_manual["matched_stage"].astype(str).str.strip() == ""))
+            pending_cols = df_manual.loc[mask, "original_column"]
+        elif "original_column" in df_manual.columns:
+            logger.warning(
+                "[Stage3] 'matched_stage' not found; assuming all 'original_column' need Stage3."
+            )
+            pending_cols = (df_manual["original_column"].dropna().astype(
+                str).unique().tolist())
+        else:
+            raise ValueError(
+                "Expected columns 'matched_stage' and/or 'original_column'. ")
 
         results = []
         for col in pending_cols:
             row = self.field_value_match(col)
-            row["matched_stage"] = "stage3"
             results.append(row)
 
         df_out = pd.DataFrame(results)

@@ -1,9 +1,8 @@
 import faiss
 import numpy as np
-import pandas as pd  # type: ignore
-from sentence_transformers import SentenceTransformer  # type: ignore
-from transformers import AutoTokenizer, AutoModel  # type: ignore
-import torch  # type: ignore
+import pandas as pd
+from transformers import AutoTokenizer
+import torch
 import src.models.ontology_models as otm
 
 

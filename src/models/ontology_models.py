@@ -47,21 +47,6 @@ class OntoModelsBase:
         if self.method not in self.list_of_methods:
             raise ValueError(
                 f"Method name should be one of {self.list_of_methods}")
-        self.matches_tmp = {
-            "original_value": [],
-            "curated_ontology": [],
-            "match_level": [],
-            "top1_match": [],
-            "top1_score": [],
-            "top2_match": [],
-            "top2_score": [],
-            "top3_match": [],
-            "top3_score": [],
-            "top4_match": [],
-            "top4_score": [],
-            "top5_match": [],
-            "top5_score": [],
-        }
 
         self.topk = topk
         self.logger = CustomLogger().custlogger(loglevel='INFO')
@@ -83,26 +68,6 @@ class OntoModelsBase:
             )
         return self._vs
 
-    # Mean Pooling - Take attention mask into account for correct averaging
-    def mean_pooling(self, model_output, attention_mask):
-        """
-        Performs mean pooling on the token embeddings.
-
-        Args:
-            model_output (tuple): The output of the model, where the first element contains all token embeddings.
-            attention_mask (torch.Tensor): The attention mask for the input tokens.
-
-        Returns:
-            torch.Tensor: The mean-pooled token embeddings.
-
-        """
-        token_embeddings = model_output[
-            0]  # First element of model_output contains all token embeddings
-        input_mask_expanded = (attention_mask.unsqueeze(-1).expand(
-            token_embeddings.size()).float())
-        return torch.sum(token_embeddings * input_mask_expanded,
-                         1) / torch.clamp(input_mask_expanded.sum(1), min=1e-9)
-
     def calc_similarity(self, query_emb, corpus_emb):
         """
         Function to create embeddings for sentence transformer model
@@ -119,14 +84,6 @@ class OntoModelsBase:
         return cosine_sim_df
 
     ##### To be implemented in the child class #####
-    def create_params(self):
-        """
-        This method is responsible for creating parameters for the OntoMap Method Used.
-        It will be implemented in the child class.
-        """
-        raise NotImplementedError(
-            "create_params will be implemented in the child class")
-
     def create_embeddings(self):
         """
         This method is responsible for creating embeddings using sentence transformers, LM's or LLM's for the cBioPortal's queries or corpus.
@@ -142,11 +99,3 @@ class OntoModelsBase:
         """
         raise NotImplementedError(
             "get_match_results will be implemented in the child class")
-
-    def calc_consolidated_stats(self):
-        """
-        This method is responsible for calculating consolidated statistics for the given queries and corpus.
-        It will be implemented in the child class.
-        """
-        raise NotImplementedError(
-            "calc_consolidated_stats will be implemented in the child class")

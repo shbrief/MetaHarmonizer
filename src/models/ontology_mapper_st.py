@@ -3,11 +3,9 @@ import numpy as np
 import faiss
 from sentence_transformers import SentenceTransformer
 import torch
-from tqdm import tqdm
-from transformers import AutoTokenizer, AutoModel
+from transformers import AutoTokenizer
 import src.models.ontology_models as otm
 from src.KnowledgeDb.faiss_sqlite_pipeline import FAISSSQLiteSearch
-from sentence_transformers import util
 
 
 class OntoMapST(otm.OntoModelsBase):
