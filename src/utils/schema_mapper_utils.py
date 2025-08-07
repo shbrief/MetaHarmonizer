@@ -21,15 +21,23 @@ def extract_valid_value(cell: str) -> List[str]:
 def is_numeric_column(df: pd.DataFrame,
                       col: str,
                       min_ratio: float = 0.9,
-                      sample_size: int = 1000) -> bool:
+                      sample_size: int = 1000,
+                      random_state: int = None) -> bool:
     """
     Sample up to sample_size non-null cells, extract sub-values,
     convert to numeric, and require at least min_ratio valid numbers.
+
+    Args:
+        df: The DataFrame containing the column.
+        col: The column name to check.
+        min_ratio: Minimum ratio of valid numbers required.
+        sample_size: Maximum number of cells to sample.
+        random_state: Seed for random sampling (default None for true randomness).
     """
     vals = df[col].dropna().astype(str)
     if vals.empty:
         return False
-    sample = vals.sample(min(len(vals), sample_size), random_state=0)
+    sample = vals.sample(min(len(vals), sample_size), random_state=random_state)
     all_vals = [v for cell in sample for v in extract_valid_value(cell)]
     if not all_vals:
         return False
