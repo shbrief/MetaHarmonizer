@@ -51,7 +51,6 @@ class SchemaMapEngine:
         self.top_k = top_k
         self.mode = mode
 
-        # Need Change
         os.makedirs(OUTPUT_DIR, exist_ok=True)
         base = os.path.basename(clinical_data_path)
         self.output_file = os.path.join(
