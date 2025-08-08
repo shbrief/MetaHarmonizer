@@ -1,14 +1,37 @@
-langchain
-langchain_openai
-matplotlib
-numpy
+# Core data and ML
 pandas
-pathos
-pymongo
-PyYAML
-Requests
-seaborn
-sentence_transformers
-thefuzz
+numpy
 torch
 transformers
+sentence-transformers
+scikit-learn
+faiss-cpu
+# faiss-gpu   # Uncomment if running on GPU with compatible CUDA
+
+# Fuzzy matching
+rapidfuzz
+thefuzz
+
+# Notebook and utils (optional, required for Jupyter/Notebook environments)
+jupyter
+ipython
+ipywidgets
+nest-asyncio
+tqdm
+graphviz
+matplotlib
+seaborn
+openpyxl
+nltk
+
+# Langchain and DB
+langchain
+PyYAML
+requests
+python-dotenv
+huggingface_hub
+
+# Async HTTP and retry
+httpx
+tenacity
+aiolimiter

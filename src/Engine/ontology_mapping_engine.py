@@ -1,6 +1,6 @@
 from src.models import ontology_mapper_st as oms
 from src.models import ontology_mapper_lm as oml
-from src.models import ontology_mapper_rag_faiss as omr
+from src.models import ontology_mapper_rag as omr
 from src.models import ontology_mapper_bi_encoder as ombe
 import pandas as pd
 import numpy as np
@@ -74,14 +74,15 @@ class OntoMapEngine:
         Returns:
             list: The list of exact matches from the query.
         """
-        # corpus_lower = {c.lower() for c in self.corpus}
-        # return [q for q in self.query if q.lower() in corpus_lower]
+        corpus_normalized = {c.strip().lower() for c in self.corpus}
+        return [
+            q for q in self.query if q.strip().lower() in corpus_normalized
+        ]
 
-        return [q for q in self.query if q in self.corpus]
-
-    def _fuzzy_matching(self, fuzz_ratio: int = 80):
+    def _fuzzy_matching(self, fuzz_ratio: int = 90):
         """
-        Performs fuzzy matching of queries to the corpus.
+        Performs fuzzy matching of queries to the corpus with normalization.
+        Currently we do not apply this in production, since transformer-based models already handle fuzzy and semantic matching.
 
         Args:
             fuzz_ratio (int, optional): The fuzz ratio threshold for matching. Defaults to 80.
@@ -89,10 +90,18 @@ class OntoMapEngine:
         Returns:
             list[str]: The list of fuzzy matches from the query.
         """
-        return [
-            q for q in self.query
-            if fuzz.partial_ratio(q, self.corpus) > fuzz_ratio
-        ]
+        # Normalize corpus
+        normalized_corpus = [c.strip().lower() for c in self.corpus]
+
+        matches = []
+        for q in self.query:
+            q_norm = q.strip().lower()
+            best_score = max(
+                fuzz.partial_ratio(q_norm, c)
+                for c in normalized_corpus) if normalized_corpus else 0
+            if best_score > fuzz_ratio:
+                matches.append(q)
+        return matches
 
     def _map_shortname_to_fullname(self, non_exact_list: list[str]) -> dict:
         """
@@ -222,10 +231,6 @@ class OntoMapEngine:
         self._logger.info("Separating exact and non-exact matches")
         exact_matches = self._exact_matching()
         non_exact_matches_ls = self._separate_matches(matching_type='exact')
-
-        # self._logger.info("Running OntoMap model for non-exact matches")
-        # onto_map_res = self.get_results_for_non_exact(
-        #     non_exact_query_list=non_exact_matches_ls, topk=self.topk)
 
         self._logger.info("Replacing shortNames using rule-based name mapping")
         mapping_dict = self._map_shortname_to_fullname(non_exact_matches_ls)
