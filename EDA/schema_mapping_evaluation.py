@@ -103,7 +103,9 @@ def sm_evaluate(
         cols.remove("curated_field")
         cols.insert(oc_idx + 1, "curated_field")
         merged = merged[cols]
-    merged.insert(loc=merged.columns.get_loc("original_column") + 2,
+    # Insert matched_rank after both original_column and curated_field
+    MATCHED_RANK_INSERT_OFFSET = 2  # Insert after original_column and curated_field
+    merged.insert(loc=merged.columns.get_loc("original_column") + MATCHED_RANK_INSERT_OFFSET,
                   column="matched_rank",
                   value=matched_ranks)
 
