@@ -83,7 +83,6 @@ class ClinicalDataMatcherFreq(ClinicalDataMatcher):
 
             union = len(col_vals_norm) + len(topic_vals) - intersection
             score = intersection / union if union else 0.0
-            # score = intersection / len(col_vals_norm)
 
             if score > 0.0:
                 matches.append((topic, score, "freq"))
