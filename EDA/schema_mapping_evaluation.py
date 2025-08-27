@@ -107,7 +107,7 @@ def sm_evaluate(
                   column="matched_rank",
                   value=matched_ranks)
 
-    # ---- Compute Acc@k (denominator = all rows, per你的口径) ----
+    # ---- Compute Acc@k (denominator = all rows, as per your criteria) ----
     n_total = len(merged)
     results: Dict[str, float] = {}
     for k in k_list:
