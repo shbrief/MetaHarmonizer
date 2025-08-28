@@ -1,4 +1,5 @@
-import csv, re
+import csv
+import re
 from pathlib import Path
 from collections import defaultdict, Counter
 from typing import List, Dict
