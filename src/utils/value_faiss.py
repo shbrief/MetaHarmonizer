@@ -1,3 +1,4 @@
+from collections import OrderedDict
 import os, json, re, sqlite3, numpy as np, pandas as pd
 from typing import List, Dict, Iterable, Tuple, Optional
 from pathlib import Path
@@ -40,7 +41,22 @@ class ValueFAISSStore:
         if os.path.exists(self.index_path):
             self.load_index()
 
+        self._qcache = OrderedDict()
+        self._qcache_cap = 200000
+
         self._sync_with_vocab(JSON_VOCAB)
+
+    def _cache_get(self, key):
+        v = self._qcache.get(key)
+        if v is not None:
+            self._qcache.move_to_end(key)
+        return v
+
+    def _cache_put(self, key, value):
+        self._qcache[key] = value
+        self._qcache.move_to_end(key)
+        if len(self._qcache) > self._qcache_cap:
+            self._qcache.popitem(last=False)
 
     # ---------------- SQLite ----------------
     def _ensure_db(self):
@@ -173,21 +189,97 @@ class ValueFAISSStore:
         self.save_index()
 
     # ---------------- Query ----------------
+    def _pack_hits(self, ids: List[int], sims: List[float]) -> List[Dict]:
+        metas = self.get_meta_by_ids(ids)
+        for m, s in zip(metas, sims):
+            m["score"] = s
+        return metas
+
     def search(self, query_text: str, top_k: int = 10) -> List[Dict]:
         if self.index is None or self.index.ntotal == 0:
             return []
         q = (query_text or "").strip()
         if not q:
             return []
-        q_emb = self._encode([q])
         k = min(top_k, self.index.ntotal)
+
+        cache_key = (normalize(q), k)
+        cached = self._cache_get(cache_key)
+        if cached is not None:
+            return [{
+                "id": c[0],
+                "value": c[1],
+                "fields": list(c[3]),
+                "score": c[2]
+            } for c in cached]
+
+        q_emb = self._encode([q])
         D, I = self.index.search(q_emb, k)
         ids = [int(i) for i in I[0] if i != -1]
         sims = [float(d) for d in D[0][:len(ids)]]
-        metas = self.get_meta_by_ids(ids)
-        for m, s in zip(metas, sims):
-            m["score"] = s
+        metas = self._pack_hits(ids, sims)
+
+        frozen = tuple((m["id"], m["value"], float(m.get("score", 0.0)),
+                        tuple(m["fields"])) for m in metas)
+        self._cache_put(cache_key, frozen)
         return metas
+
+    def search_many(self,
+                    queries: List[str],
+                    top_k: int = 10) -> List[List[Dict]]:
+        """
+        Batch search for multiple queries.
+        """
+        results: List[List[Dict]] = []
+        if self.index is None or self.index.ntotal == 0:
+            return [[] for _ in range(len(queries))]
+
+        Q = []
+        needed_idx = []
+        k = min(top_k, self.index.ntotal)
+        cache_keys = []
+        for i, q in enumerate(queries):
+            q = (q or "").strip()
+            if not q:
+                results.append([])
+                cache_keys.append(None)
+                continue
+            ck = (normalize(q), k)
+            cache_keys.append(ck)
+            cached = self._cache_get(ck)
+            if cached is not None:
+                metas = [{
+                    "id": c[0],
+                    "value": c[1],
+                    "fields": list(c[3]),
+                    "score": c[2]
+                } for c in cached]
+                results.append(metas)
+            else:
+                results.append(None)  # type: ignore
+                needed_idx.append(i)
+                Q.append(q)
+
+        if not Q:
+            return results
+
+        embs = self._encode(Q)  # shape = [len(Q), dim]
+        D, I = self.index.search(embs, k)  # batched search
+
+        for j, i_query in enumerate(needed_idx):
+            row_I = I[j]
+            row_D = D[j]
+            ids = [int(i) for i in row_I if i != -1]
+            sims = [float(d) for d in row_D[:len(ids)]]
+            metas = self._pack_hits(ids, sims)
+            results[i_query] = metas  # type: ignore
+
+            ck = cache_keys[i_query]
+            frozen = tuple((m["id"], m["value"], float(m.get("score", 0.0)),
+                            tuple(m["fields"])) for m in metas)
+            self._cache_put(ck, frozen)
+
+        return results
 
     # ---------------- Bootstrap / Sync ----------------
     def _load_vocab_pairs(self,
