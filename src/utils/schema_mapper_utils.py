@@ -1,10 +1,6 @@
 import re
-from typing import Dict, List, Set, Iterable, Tuple, Any
+from typing import List
 import pandas as pd
-import json
-import requests
-from collections import Counter
-import time
 
 BASE_URL = "https://api-evsrest.nci.nih.gov/api/v1"
 ncit_dict = {
@@ -49,7 +45,8 @@ def is_numeric_column(df: pd.DataFrame,
     vals = df[col].dropna().astype(str)
     if vals.empty:
         return False
-    sample = vals.sample(min(len(vals), sample_size), random_state=random_state)
+    sample = vals.sample(min(len(vals), sample_size),
+                         random_state=random_state)
     all_vals = [v for cell in sample for v in extract_valid_value(cell)]
     if not all_vals:
         return False
@@ -57,71 +54,56 @@ def is_numeric_column(df: pd.DataFrame,
     return converted.notna().sum() / len(converted) >= min_ratio
 
 
-# --- NCIt API Functions ---
-def _search_ncit_code(term: str) -> Tuple[str | None, str | None]:
-    if term in api_cache: return api_cache[term]
-    params = {'term': term, 'type': 'match', 'limit': 1, 'terminology': 'ncit'}
-    url = f"{BASE_URL}/concept/search"
-    try:
-        time.sleep(0.05)
-        response = requests.get(url, params=params)
-        response.raise_for_status()
-        data = response.json()
-        if data.get('concepts'):
-            res = data['concepts'][0].get('code'), data['concepts'][0].get(
-                'name')
-            api_cache[term] = res
-            return res
-        api_cache[term] = (None, None)
-        return None, None
-    except requests.exceptions.RequestException:
-        api_cache[term] = (None, None)
-        return None, None
+def is_stage_column(df: pd.DataFrame, col: str) -> bool:
+    """
+    Determine if a column is likely to contain cancer staging (AJCC/TNM) information.
+    Compatible with: 'Stage IIIC', 'IIIA', 'III', '0', 'pT2b', 'cN1', 'M0', 'TX/NX/MX', etc.
+    """
+    # Exclude any other grading possibilities: grade, who, nyha, asa, clavien, trial, phase, class, type, factor, complex, hla, mhc, collagen, version, section
+    sample_size = 200
 
+    # 1) Name contains 'disease stage'
+    name = str(col)
+    name_has_stage = re.search(
+        r'\b(ajcc|pathologic|clinical|cstage|pstage)?\s*stage\b',
+        name,
+        flags=re.I) is not None
 
-def _get_parents(ncit_code: str) -> List[Dict[str, str]]:
-    if ncit_code in api_cache: return api_cache[ncit_code]
-    if not ncit_code: return []
-    params = {'include': 'parents'}
-    url = f"{BASE_URL}/concept/ncit/{ncit_code}"
-    try:
-        time.sleep(0.05)
-        response = requests.get(url, params=params)
-        response.raise_for_status()
-        data = response.json()
-        parents = data.get('parents', [])
-        api_cache[ncit_code] = parents
-        return parents
-    except requests.exceptions.RequestException:
-        api_cache[ncit_code] = []
-        return []
+    # 2) 'Stage ...' + Roman/Numeric + optional a/b/c
+    stage_group_re = re.compile(
+        r'\bstage\s*(?:group\s*)?[:\-]?\s*(?:0|[1-4]|i{1,3}v?)\s*[abc]?\b',
+        re.I)
 
+    # 3) TNM fragments (supporting c/p prefixes; includes Tis, TX/NX/MX, T0-4[a-e], N0-3[a-c], M0/1[a-c])
+    tnm_re = re.compile(
+        r'^(?:[cp])?(?:t(?:is|x|[0-4][a-e]?)|n(?:x|[0-3][abc]?)|m(?:x|[01][abc]?))$',
+        re.I)
 
-def _check_lineage(start_code: str,
-                   target_codes: Set[str]) -> Tuple[bool, str | None]:
-    visited_codes = set()
+    vals = df[col].dropna().astype(str)
+    if vals.empty:
+        return None
+    if len(vals) > sample_size:
+        vals = vals.sample(n=sample_size, random_state=0)
 
-    def recursive_check(code: str) -> Tuple[bool, str | None]:
-        if code in visited_codes: return False, None
-        visited_codes.add(code)
-        parents = _get_parents(code)
-        if not parents: return False, None
-        for parent in parents:
-            parent_code = parent.get('code')
-            if parent_code in target_codes: return True, parent_code
-            found, matched_code = recursive_check(parent_code)
-            if found: return True, matched_code
-        return False, None
+    stage_group_hits = 0
+    tnm_hits = 0
+    n = len(vals)
+    for v in vals:
+        s = v.strip()
+        s_compact = re.sub(r'\s+', '', s)
+        if stage_group_re.search(s):
+            stage_group_hits += 1
+        if name_has_stage and tnm_re.match(s_compact):
+            tnm_hits += 1
 
-    return recursive_check(start_code)
+    stage_group_ratio = stage_group_hits / n
+    tnm_ratio = tnm_hits / n
 
+    if name_has_stage:
+        return 'header_stage'
+    if name_has_stage and tnm_ratio >= 0.8:
+        return 'stage+tnm'
+    if stage_group_ratio >= 0.8:
+        return 'stage_group'
 
-def map_value_to_schema(value: str) -> str:
-    if not value or not isinstance(value, str): return "Unclassified"
-    target_codes = set(ncit_dict.keys())
-    start_code, _ = _search_ncit_code(value)
-    if not start_code: return "Unclassified"
-    if start_code in target_codes: return ncit_dict[start_code]
-    found, matched_ancestor_code = _check_lineage(start_code, target_codes)
-    if found: return ncit_dict[matched_ancestor_code]
-    else: return "Unclassified"
+    return None
