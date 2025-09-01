@@ -39,9 +39,9 @@ class SchemaMapEngine:
       match1_field | match1_score | match1_source |
       match2_field | match2_score | match2_source |
       match3_field | match3_score | match3_source | ...
-    - Stage1: Fuzzy match against dictionary using alias names.
-    - Stage2: Numeric field matching based on header names and value types.
-    - Stage3: Alias match using SentenceTransformer embeddings.
+    - Stage1: Dict/fuzzy match against dictionary using alias names.
+    - Stage2: Numeric/alias field matching based on header names and value types using SentenceTransformer embeddings.
+    - Stage3: Value match using standard value dictionary and ncit.
     - Stage4: LLM matching (under development).
     - Mode: 'auto' runs Stage4 automatically if previous stages' scores are low,
             'manual' outputs Stage4 results for manual review, does not run Stage4.
