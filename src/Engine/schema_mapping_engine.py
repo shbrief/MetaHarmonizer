@@ -24,7 +24,6 @@ NUMERIC_THRESH = 0.6
 FIELD_ALIAS_THRESH = 0.5
 VALUE_DICT_THRESH = 0.85
 VALUE_PERCENTAGE_THRESH = 0.5
-DATA_DICT_PATH = 'data/cBioPortalData_data_dictionary.xlsx'
 NOISE_VALUES = {
     "yes", "no", "true", "false", "unknown", "not reported", "not available",
     "na", "n/a", "none", "other", "missing", "not evaluated", "uninformative",
