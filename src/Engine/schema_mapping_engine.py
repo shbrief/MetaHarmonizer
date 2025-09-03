@@ -17,7 +17,7 @@ from concurrent.futures import ThreadPoolExecutor
 # === Configuration ===
 logger = CustomLogger().custlogger(loglevel='WARNING')
 OUTPUT_DIR = "data/schema_mapping_eval"
-DICT_PATH = "data/curated_fields_source_latest_with_flags.csv"
+DICT_PATH = "data/schema/curated_fields_source_latest_with_flags.csv"
 FIELD_MODEL = "all-MiniLM-L6-v2"
 FUZZY_THRESH = 90
 NUMERIC_THRESH = 0.6
@@ -503,7 +503,7 @@ class SchemaMapEngine:
         results = []
 
         for col in self.df.columns:
-            # Add a check to skip id columns, such as if they were all unique and not null. Need to be careful with this check.
+            # Add a check to skip id columns
             if " ID" in col or " id" in col or " Id" in col:
                 results.append({
                     "original_column": col,
@@ -522,10 +522,10 @@ class SchemaMapEngine:
                 continue
 
             # Stage1
-            # row = self.dict_fuzzy_match(col)
-            # if row.get("match1_score"):
-            #     results.append(row)
-            #     continue
+            row = self.dict_fuzzy_match(col)
+            if row.get("match1_score"):
+                results.append(row)
+                continue
 
             # Stage2a
             row = self.numeric_field_match(col)

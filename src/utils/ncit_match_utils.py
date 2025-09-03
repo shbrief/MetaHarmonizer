@@ -19,7 +19,7 @@ NCIT_DICT = {
     "C1909": "treatment_name",
     "C3262": "disease",
 }
-NCIT_DESC_PATH = "data/ncit_descendants.json"
+NCIT_DESC_PATH = "data/schema/ncit_descendants.json"
 
 
 class NCIClientSync:

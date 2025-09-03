@@ -77,7 +77,7 @@ df_expanded['is_numeric_field'] = df_expanded['field_name'].apply(
     lambda x: 'yes' if x in numeric_fields else 'no')
 
 # Save final result
-df_expanded.to_csv('data/curated_fields_source_latest_with_flags.csv',
+df_expanded.to_csv('data/schema/curated_fields_source_latest_with_flags.csv',
                    index=False)
 print("✅ Done. Final shape:", df_expanded.shape)
 print(df_expanded.head())
