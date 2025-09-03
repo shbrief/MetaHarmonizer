@@ -7,17 +7,14 @@
 ├── demo_nb
 ├── scripts
 ├── EDA
+├── evaluation
 ├── src
 │   ├── models
 │   │   ├── init.py
-│   │   └── calc_stats.py
 │   │   ├── ontology_models.py
 │   │   ├── ontology_mapper_rag.py
 │   │   ├── ontology_mapper_lm.py
 │   │   ├── ontology_mapper_st.py
-│   │   ├── schema_mapper_models.py
-│   │   ├── schema_mapper_bert.py
-│   │   ├── schema_mapper_lda.py
 │   │   ├── method_model.yaml
 │   ├── Engine
 │   │   ├── ontology_mapping_engine.py
@@ -130,30 +127,23 @@ from src.Engine.schema_mapping_engine import SchemaMapEngine
 
 # Initialize the engine
 engine = SchemaMapEngine(
-    clinical_data_path="data/schema/mixed_impact_subset_2022_clinical_data.tsv",
-    matcher_type="Freq",   # Options: "Freq" or "Bert"
-    mode="auto",           # Options: "auto" or "manual"
-    top_k=5
+    clinical_data_path=YOUR_QUERY_FILE,
+    mode="manual",   # Options: "auto" or "manual"
+    top_k=5,
 )
 
-# Run Stage 1 & 2 (and 3 if mode="auto")
+# Run Stage 1, 2 & 3 (and 4 if mode="auto")
 engine.run_schema_mapping()
 
-# (Optional) Run Stage 3 after manual review
-engine.run_stage3_from_manual("path_to_stage2_results.csv")
+# (Optional) Run Stage 4 after manual review
+engine.run_stage3_from_manual("path_to_stage3_results.csv")
 ```
 - Parameters that can be changed in the model:
-  - clinical_data_path (str): Path to clinical dataset (TSV).
-  - matcher_type (str):
-    - "Freq" → frequency-based fallback
-    - "Bert" → BERT-based fallback
+  - clinical_data_path (str): Path to clinical dataset (TSV or CSV).
   - mode (str):
-    - "auto" → automatically proceed to Stage 3 if Stage 2 confidence is low
-    - "manual" → output Stage 2 results for review; Stage 3 must be triggered manually
+    - "auto" → automatically proceed to Stage 4 if Stage 3 confidence is low
+    - "manual" → output Stage 3 results for review; Stage 4 must be triggered manually
   - top_k (int): Number of top matches returned for each column.
-  - STAGE1_FUZZY_THRESH (int): Fuzzy match threshold (default: 90).
-  - STAGE2_NUMERIC_THRESH (float): Minimum score for numeric match acceptance (default: 0.6).
-  - STAGE2_ALIAS_THRESH (float): Minimum score for alias match acceptance (default: 0.5).
 
 - Output  
   - CSV File: Results saved to data/schema_mapping_eval/ with suffix:  
