@@ -25,7 +25,7 @@ def _pred_cols(df: pd.DataFrame, top_k: int) -> List[str]:
     ]
 
 
-# --------------------- 1) build eval DataFrame (no filtering) ----------------------
+# --------------------- 1) build eval DataFrame ----------------------
 
 
 def build_eval_df(

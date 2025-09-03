@@ -1,0 +1,1 @@
+run_schema_mapping.py: This script provides a minimal command-line interface (CLI) to run SchemaMapEngine.

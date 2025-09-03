@@ -17,14 +17,13 @@ from concurrent.futures import ThreadPoolExecutor
 # === Configuration ===
 logger = CustomLogger().custlogger(loglevel='WARNING')
 OUTPUT_DIR = "data/schema_mapping_eval"
-DICT_PATH = "data/curated_fields_source_latest_with_flags.csv"
+DICT_PATH = "data/schema/curated_fields_source_latest_with_flags.csv"
 FIELD_MODEL = "all-MiniLM-L6-v2"
 FUZZY_THRESH = 90
 NUMERIC_THRESH = 0.6
 FIELD_ALIAS_THRESH = 0.5
 VALUE_DICT_THRESH = 0.85
 VALUE_PERCENTAGE_THRESH = 0.5
-DATA_DICT_PATH = 'data/cBioPortalData_data_dictionary.xlsx'
 NOISE_VALUES = {
     "yes", "no", "true", "false", "unknown", "not reported", "not available",
     "na", "n/a", "none", "other", "missing", "not evaluated", "uninformative",
@@ -39,9 +38,9 @@ class SchemaMapEngine:
       match1_field | match1_score | match1_source |
       match2_field | match2_score | match2_source |
       match3_field | match3_score | match3_source | ...
-    - Stage1: Fuzzy match against dictionary using alias names.
-    - Stage2: Numeric field matching based on header names and value types.
-    - Stage3: Alias match using SentenceTransformer embeddings.
+    - Stage1: Dict/fuzzy match against dictionary using alias names.
+    - Stage2: Numeric/alias field matching based on header names and value types using SentenceTransformer embeddings.
+    - Stage3: Value match using standard value dictionary and ncit.
     - Stage4: LLM matching (under development).
     - Mode: 'auto' runs Stage4 automatically if previous stages' scores are low,
             'manual' outputs Stage4 results for manual review, does not run Stage4.
@@ -504,7 +503,7 @@ class SchemaMapEngine:
         results = []
 
         for col in self.df.columns:
-            # Add a check to skip id columns, such as if they were all unique and not null. Need to be careful with this check.
+            # Add a check to skip id columns
             if " ID" in col or " id" in col or " Id" in col:
                 results.append({
                     "original_column": col,
@@ -523,10 +522,10 @@ class SchemaMapEngine:
                 continue
 
             # Stage1
-            # row = self.dict_fuzzy_match(col)
-            # if row.get("match1_score"):
-            #     results.append(row)
-            #     continue
+            row = self.dict_fuzzy_match(col)
+            if row.get("match1_score"):
+                results.append(row)
+                continue
 
             # Stage2a
             row = self.numeric_field_match(col)

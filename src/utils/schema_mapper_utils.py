@@ -2,14 +2,6 @@ import re
 from typing import List
 import pandas as pd
 
-BASE_URL = "https://api-evsrest.nci.nih.gov/api/v1"
-ncit_dict = {
-    "C12219": "body_site",
-    "C1909": "treatment_name",
-    "C3262": "disease"
-}
-api_cache = {}
-
 
 def normalize(text: str) -> str:
     return re.sub(r"\s+", " ", re.sub(r"[^a-zA-Z0-9]", " ",
