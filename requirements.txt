@@ -35,3 +35,6 @@ huggingface_hub
 httpx
 tenacity
 aiolimiter
+
+# Streamlit app
+streamlit>=1.28.0
