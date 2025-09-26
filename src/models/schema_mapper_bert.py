@@ -2,6 +2,7 @@ import pandas as pd
 from transformers import AutoTokenizer, AutoModel
 from sentence_transformers import util
 import torch
+from typing import Union
 
 from src.models.schema_mapper import ClinicalDataMatcher
 from src.utils.schema_mapper_utils import normalize
@@ -38,7 +39,7 @@ class ClinicalDataMatcherBert(ClinicalDataMatcher):
             model_output = self.model(**encoded_input)
         return model_output[0][:, 0, :]
 
-    def _create_topic_embeddings(self) -> dict[str, dict[str, torch.Tensor | str]]:
+    def _create_topic_embeddings(self) -> dict[str, dict[str, Union[torch.Tensor, str]]]:
         """Pre-computes embeddings and sources for all topics in the schema map."""
         topic_embeddings = {}
         for topic, content in self.schema_map.items():
