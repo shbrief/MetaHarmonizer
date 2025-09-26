@@ -9,9 +9,102 @@ import sys
 try:
     from src.Engine import SchemaMapEngine
     METAHARMONIZER_AVAILABLE = True
+    import_error = None
 except ImportError as e:
     METAHARMONIZER_AVAILABLE = False
     import_error = str(e)
+
+def show_setup_instructions():
+    """Display comprehensive setup instructions"""
+    st.error(f"""
+    ❌ **MetaHarmonizer not found!**
+    
+    Error: {import_error}
+    """)
+    
+    st.markdown("""
+    ## 🔧 Setup Instructions
+    
+    ### Option 1: Quick Fix (if you have the repository)
+    If you already have MetaHarmonizer cloned, the issue might be a missing dependency:
+    
+    ```bash
+    pip install faiss-cpu
+    # OR for GPU support:
+    pip install faiss-gpu
+    ```
+    
+    ### Option 2: Full Setup
+    """)
+    
+    with st.expander("📋 Complete Setup Steps", expanded=True):
+        st.markdown("""
+        **Step 1: Clone the repository**
+        ```bash
+        git clone https://github.com/shbrief/MetaHarmonizer
+        cd MetaHarmonizer
+        ```
+        
+        **Step 2: Install dependencies**
+        ```bash
+        pip install -r requirements.txt
+        ```
+        
+        **Step 3: Install FAISS (if not in requirements.txt)**
+        ```bash
+        pip install faiss-cpu
+        ```
+        
+        **Step 4: Run the app from MetaHarmonizer directory**
+        ```bash
+        streamlit run path/to/your/app.py
+        ```
+        """)
+    
+    with st.expander("🐛 Troubleshooting Common Issues"):
+        st.markdown("""
+        **Issue: "No module named 'faiss'"**
+        - Solution: `pip install faiss-cpu`
+        - For GPU: `pip install faiss-gpu`
+        
+        **Issue: "No module named 'src'"**
+        - Make sure you're running the app from within the MetaHarmonizer directory
+        - Or add the MetaHarmonizer directory to your Python path
+        
+        **Issue: FAISS installation fails**
+        - Try: `pip install faiss-cpu --no-cache-dir`
+        - Make sure you're using Python 3.7-3.11
+        - Consider using conda: `conda install -c conda-forge faiss-cpu`
+        
+        **Issue: Other missing dependencies**
+        - Run: `pip install -r requirements.txt` from the MetaHarmonizer directory
+        
+        **For Streamlit Cloud deployment:**
+        - Ensure your `requirements.txt` includes all dependencies:
+          ```
+          faiss-cpu
+          pandas
+          streamlit
+          # ... other dependencies
+          ```
+        """)
+    
+    with st.expander("📁 Directory Structure Check"):
+        st.markdown("""
+        Your directory structure should look like:
+        ```
+        MetaHarmonizer/
+        ├── src/
+        │   ├── Engine.py
+        │   └── ...
+        ├── data/
+        │   └── demo_data/
+        │       └── clinical_metadata_demo.tsv
+        ├── requirements.txt
+        ├── your_app.py  # This Streamlit app
+        └── ...
+        ```
+        """)
 
 def main():
     st.set_page_config(
@@ -25,19 +118,16 @@ def main():
     
     # Check if MetaHarmonizer is available
     if not METAHARMONIZER_AVAILABLE:
-        st.error(f"""
-        ❌ **MetaHarmonizer not found!**
+        show_setup_instructions()
         
-        Error: {import_error}
+        # Add a refresh button
+        if st.button("🔄 Refresh App", help="Click after installing dependencies"):
+            st.rerun()
         
-        **Setup Instructions:**
-        1. Clone the repository: `git clone https://github.com/shbrief/MetaHarmonizer`
-        2. Install dependencies: `pip install -r requirements.txt`
-        3. Make sure the `src` folder is in your Python path
-        
-        Or run this app from within the MetaHarmonizer directory.
-        """)
         return
+    
+    # Show success message when everything is working
+    st.success("✅ MetaHarmonizer is ready!")
     
     # Sidebar configuration
     st.sidebar.header("⚙️ Configuration")
@@ -93,6 +183,7 @@ def main():
                 selected_file = None
         else:
             st.error(f"Demo file not found at: `{demo_file_path}`")
+            st.info("💡 Make sure you're running this app from the MetaHarmonizer directory")
             file_available = False
             selected_file = None
     
@@ -205,19 +296,6 @@ def main():
                         mime="text/csv"
                     )
                     
-                    # # Display summary statistics
-                    # with st.expander("📈 Summary Statistics"):
-                    #     st.write(f"**Total mappings found:** {len(results)}")
-                    #     if 'confidence_score' in results.columns:
-                    #         st.write(f"**Average confidence score:** {results['confidence_score'].mean():.3f}")
-                    #     if 'original_column' in results.columns:
-                    #         st.write(f"**Unique columns mapped:** {results['original_column'].nunique()}")
-                    #     
-                    #     # Display column info
-                    #     st.write("**Result columns:**")
-                    #     for col in results.columns:
-                    #         st.write(f"- {col}")
-                    
                 except Exception as e:
                     st.error(f"❌ Error during schema mapping: {str(e)}")
                     
@@ -229,6 +307,7 @@ def main():
                         st.write("- Ensure the file contains valid clinical data")
                         st.write("- Try a different mode (manual/auto)")
                         st.write("- Check if all MetaHarmonizer dependencies are installed")
+                        st.write("- Make sure FAISS is installed: `pip install faiss-cpu`")
     
     else:
         # Show message when no file is selected
