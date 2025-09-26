@@ -1,0 +1,101 @@
+PatientID	Patient_Age_Years	SEX	Patient_Race_Ethnicity	Primary_Tumor_Location	Disease_Stage_TNM	Histologic_Grade	Treatment_Drug_Name	Therapy_Type	Treatment_Response	Overall_Survival_Months	Progression_Free_Survival_Days	Vital_Status_Last_Contact	EGFR_mutation_status	HER2_IHC_Score	ER_Status
+PATIENT_001	69	M	Asian	Pancreas	Stage II	Grade 1	Atezolizumab	Chemotherapy	CR	97	107	Deceased	Positive	2+	Neg
+PATIENT_002	32	F	White	Bladder	Stage I	Undifferentiated	Paclitaxel	Immunotherapy	Stable Disease	88	1269	Living	Unknown	Positive	Neg
+PATIENT_003	78	Male	American Indian	Bladder	T4N3M1	Well differentiated	Carboplatin	Immunotherapy	PR	79	1439	Deceased	Unknown	1+	+
+PATIENT_004	38	Male	White	Colon	T1N0M0	Well differentiated	Paclitaxel	Hormone therapy	PD	30	394	Alive	Mutant	3+	+
+PATIENT_005	41	F	Unknown	Colon	Stage IV	Grade 1	Gemcitabine	Chemotherapy	SD	119	695	Living	Positive	1+	Positive
+PATIENT_006	20	Male	White	Colon	Stage II	Undifferentiated	Cisplatin	Radiation therapy	CR	106	555	Alive	Wild-type	Negative	Negative
+PATIENT_007	39	Male	Asian	Prostate	T3N2M0	Well differentiated	5-Fluorouracil	Surgery	SD	51	728	Dead	Negative	0	+
+PATIENT_008	70	M	White	Kidney	Stage I	Poorly differentiated	Bevacizumab	Combination therapy	Not Evaluable	81	1365	Living	Negative	0	Neg
+PATIENT_009	19	Male	Black or African American	Liver	Stage IV	Undifferentiated	Atezolizumab	Surgery	SD	5	912	Dead	Unknown	3+	Pos
+PATIENT_010	47	Male	Black or African American	Kidney	T1N0M0	Poorly differentiated	5-Fluorouracil	Radiation therapy	Progressive Disease	29	1060	Living	Mutant	0	Neg
+PATIENT_011	55	F	Hispanic or Latino	Lung	Stage IV	Well differentiated	5-Fluorouracil	Immunotherapy	SD	4	1056	Unknown	Negative	0	Negative
+PATIENT_012	19	F	Pacific Islander	Kidney	Stage I	Moderately differentiated	5-Fluorouracil	Chemotherapy	Partial Response	10	1676	Deceased	Positive	3+	Neg
+PATIENT_013	81	Female	Other	Prostate	T4N3M1	Well differentiated	Carboplatin	Immunotherapy	Not Evaluable	56	948	Unknown	Unknown	Positive	Positive
+PATIENT_014	77	M	American Indian	Lung	T4N3M1	Poorly differentiated	Paclitaxel	Targeted therapy	PD	17	779	Dead	Wild-type	Positive	Negative
+PATIENT_015	38	Male	Unknown	Kidney	T2N1M0	Grade 3	Trastuzumab	Immunotherapy	Progressive Disease	74	392	Deceased	Unknown	3+	Pos
+PATIENT_016	50	Male	White	Prostate	T4N3M1	Grade 4	Gemcitabine	Immunotherapy	CR	17	1804	Living	Wild-type	Negative	Positive
+PATIENT_017	75	Female	White	Liver	T2N1M0	Grade 2	Docetaxel	Radiation therapy	Complete Response	84	1561	Deceased	Unknown	0	Negative
+PATIENT_018	39	Male	Asian	Kidney	Stage IV	Undifferentiated	5-Fluorouracil	Radiation therapy	PD	88	1327	Alive	Unknown	0	Pos
+PATIENT_019	66	M	Pacific Islander	Prostate	Stage III	Grade 3	Doxorubicin	Radiation therapy	Complete Response	69	1559	Deceased	Unknown	Negative	Positive
+PATIENT_020	76	Female	Black or African American	Colon	T3N2M0	Well differentiated	Carboplatin	Surgery	Not Evaluable	34	835	Alive	Wild-type	Positive	Positive
+PATIENT_021	59	M	American Indian	Bladder	T3N2M0	Moderately differentiated	Atezolizumab	Targeted therapy	Progressive Disease	6	768	Deceased	Wild-type	2+	Negative
+PATIENT_022	77	Female	Hispanic or Latino	Colon	Stage IV	Grade 1	Pembrolizumab	Radiation therapy	Stable Disease	53	1936	Alive	Unknown	2+	+
+PATIENT_023	32	Female	Black or African American	Bladder	Stage II	Well differentiated	Atezolizumab	Chemotherapy	CR	66	1068	Dead	Negative	2+	Positive
+PATIENT_024	79	F	Unknown	Breast	Stage II	Moderately differentiated	Bevacizumab	Surgery	Partial Response	77	1245	Unknown	Mutant	Positive	Positive
+PATIENT_025	79	M	Pacific Islander	Breast	T4N3M1	Grade 4	Docetaxel	Hormone therapy	Stable Disease	107	1684	Living	Mutant	Positive	Pos
+PATIENT_026	64	Male	Unknown	Breast	T3N2M0	Well differentiated	Trastuzumab	Chemotherapy	Not Evaluable	43	514	Deceased	Mutant	Negative	Neg
+PATIENT_027	79	Male	Other	Liver	T3N2M0	Poorly differentiated	Doxorubicin	Combination therapy	PD	112	57	Unknown	Wild-type	0	Negative
+PATIENT_028	68	M	Hispanic or Latino	Colon	T2N1M0	Grade 1	Atezolizumab	Combination therapy	Partial Response	75	743	Living	Wild-type	Negative	Negative
+PATIENT_029	72	Male	Other	Bladder	Stage III	Moderately differentiated	Trastuzumab	Chemotherapy	SD	115	1092	Living	Negative	Negative	+
+PATIENT_030	81	Male	Asian	Prostate	Stage I	Moderately differentiated	Docetaxel	Radiation therapy	Partial Response	111	1326	Alive	Mutant	Positive	+
+PATIENT_031	20	M	Unknown	Lung	Stage II	Moderately differentiated	5-Fluorouracil	Hormone therapy	Not Evaluable	23	1284	Dead	Mutant	2+	Negative
+PATIENT_032	68	Female	Asian	Prostate	T3N2M0	Grade 4	Doxorubicin	Hormone therapy	PR	55	115	Dead	Unknown	1+	+
+PATIENT_033	24	M	White	Lung	T2N1M0	Well differentiated	Trastuzumab	Surgery	SD	80	1527	Unknown	Wild-type	0	Pos
+PATIENT_034	38	Female	Other	Brain	T1N0M0	Grade 4	Bevacizumab	Hormone therapy	Complete Response	95	155	Dead	Mutant	Positive	Negative
+PATIENT_035	56	Male	Pacific Islander	Prostate	T2N1M0	Undifferentiated	Paclitaxel	Combination therapy	CR	75	841	Deceased	Negative	2+	+
+PATIENT_036	35	Male	Unknown	Kidney	Stage II	Grade 2	Cisplatin	Targeted therapy	Complete Response	118	566	Dead	Negative	1+	Negative
+PATIENT_037	21	Male	American Indian	Kidney	Stage II	Grade 2	Paclitaxel	Radiation therapy	Partial Response	16	174	Unknown	Mutant	1+	Neg
+PATIENT_038	77	F	Hispanic or Latino	Pancreas	T2N1M0	Undifferentiated	Docetaxel	Hormone therapy	Complete Response	8	1578	Dead	Wild-type	Positive	Positive
+PATIENT_039	31	Female	Black or African American	Colon	Stage I	Well differentiated	Carboplatin	Surgery	Not Evaluable	4	1265	Deceased	Negative	3+	Negative
+PATIENT_040	26	F	Pacific Islander	Lung	Stage IV	Poorly differentiated	Cisplatin	Combination therapy	PD	104	54	Alive	Unknown	0	Positive
+PATIENT_041	70	F	Pacific Islander	Lung	Stage II	Grade 4	Gemcitabine	Targeted therapy	CR	4	1633	Unknown	Negative	1+	+
+PATIENT_042	19	M	Asian	Colon	T2N1M0	Grade 1	Bevacizumab	Immunotherapy	Complete Response	56	1447	Alive	Positive	Positive	Positive
+PATIENT_043	77	F	Other	Liver	T3N2M0	Moderately differentiated	Gemcitabine	Immunotherapy	Complete Response	25	96	Alive	Positive	Positive	Negative
+PATIENT_044	61	M	Unknown	Pancreas	T2N1M0	Moderately differentiated	Doxorubicin	Targeted therapy	Partial Response	67	262	Alive	Wild-type	2+	Neg
+PATIENT_045	25	M	Unknown	Liver	Stage III	Well differentiated	Nivolumab	Combination therapy	PD	96	138	Living	Mutant	3+	+
+PATIENT_046	64	F	White	Liver	Stage IV	Poorly differentiated	Cisplatin	Surgery	Stable Disease	67	1199	Living	Wild-type	0	Negative
+PATIENT_047	52	Female	White	Liver	T1N0M0	Grade 2	Gemcitabine	Targeted therapy	Complete Response	27	140	Alive	Wild-type	Negative	+
+PATIENT_048	53	Female	Hispanic or Latino	Colon	Stage I	Grade 2	Atezolizumab	Radiation therapy	Not Evaluable	93	257	Unknown	Wild-type	2+	Pos
+PATIENT_049	67	Female	Asian	Liver	T4N3M1	Moderately differentiated	Gemcitabine	Radiation therapy	PR	32	140	Deceased	Wild-type	1+	Positive
+PATIENT_050	21	Female	Pacific Islander	Kidney	T1N0M0	Well differentiated	Trastuzumab	Immunotherapy	CR	50	1523	Deceased	Unknown	1+	Pos
+PATIENT_051	19	Female	Unknown	Breast	Stage IV	Grade 4	Paclitaxel	Hormone therapy	Complete Response	61	63	Dead	Unknown	2+	Negative
+PATIENT_052	23	F	American Indian	Brain	Stage IV	Grade 2	Trastuzumab	Surgery	Not Evaluable	51	652	Unknown	Negative	Positive	Neg
+PATIENT_053	71	F	Asian	Lung	Stage IV	Grade 4	Cisplatin	Immunotherapy	Not Evaluable	19	1829	Living	Positive	1+	+
+PATIENT_054	21	Male	Hispanic or Latino	Lung	T1N0M0	Poorly differentiated	Cisplatin	Hormone therapy	CR	21	1989	Alive	Wild-type	3+	Positive
+PATIENT_055	71	Female	Hispanic or Latino	Brain	T3N2M0	Grade 2	Docetaxel	Hormone therapy	Stable Disease	5	1422	Dead	Negative	0	+
+PATIENT_056	80	F	Asian	Colon	Stage IV	Grade 2	Trastuzumab	Radiation therapy	Not Evaluable	82	777	Deceased	Positive	3+	Negative
+PATIENT_057	35	Male	Hispanic or Latino	Prostate	T2N1M0	Grade 3	Cyclophosphamide	Combination therapy	PR	92	624	Living	Mutant	1+	+
+PATIENT_058	61	Female	Asian	Colon	T1N0M0	Grade 2	Atezolizumab	Chemotherapy	Not Evaluable	42	1607	Living	Unknown	Negative	Positive
+PATIENT_059	51	M	Black or African American	Lung	T4N3M1	Undifferentiated	Pembrolizumab	Combination therapy	Not Evaluable	61	454	Alive	Positive	0	Negative
+PATIENT_060	79	Male	Asian	Lung	Stage IV	Grade 1	Paclitaxel	Chemotherapy	Not Evaluable	22	642	Deceased	Mutant	0	+
+PATIENT_061	31	F	Other	Brain	T2N1M0	Undifferentiated	Cisplatin	Targeted therapy	Stable Disease	21	1571	Unknown	Positive	2+	Neg
+PATIENT_062	65	M	Asian	Liver	T3N2M0	Well differentiated	Docetaxel	Radiation therapy	Complete Response	70	721	Living	Unknown	2+	Negative
+PATIENT_063	32	M	Hispanic or Latino	Colon	Stage III	Well differentiated	Nivolumab	Hormone therapy	Not Evaluable	1	1335	Alive	Unknown	Negative	Negative
+PATIENT_064	79	M	Unknown	Bladder	T3N2M0	Grade 4	Atezolizumab	Surgery	PD	5	1373	Unknown	Negative	Positive	Neg
+PATIENT_065	57	Male	Other	Brain	T4N3M1	Undifferentiated	Trastuzumab	Chemotherapy	Complete Response	105	1791	Deceased	Wild-type	0	Pos
+PATIENT_066	70	F	Hispanic or Latino	Kidney	Stage IV	Undifferentiated	Paclitaxel	Combination therapy	Stable Disease	12	1496	Living	Positive	Negative	Positive
+PATIENT_067	41	M	White	Lung	T4N3M1	Undifferentiated	Nivolumab	Hormone therapy	Progressive Disease	90	344	Unknown	Positive	2+	Pos
+PATIENT_068	43	Female	White	Brain	T1N0M0	Poorly differentiated	Trastuzumab	Chemotherapy	Complete Response	46	906	Unknown	Mutant	2+	+
+PATIENT_069	77	M	Unknown	Colon	Stage II	Grade 2	Gemcitabine	Chemotherapy	Complete Response	34	1794	Unknown	Unknown	0	Neg
+PATIENT_070	58	M	Unknown	Lung	Stage IV	Grade 1	Nivolumab	Chemotherapy	SD	49	1430	Living	Positive	3+	Pos
+PATIENT_071	46	Male	Other	Prostate	Stage II	Grade 4	Docetaxel	Surgery	Partial Response	78	1342	Living	Unknown	1+	Negative
+PATIENT_072	32	Male	Black or African American	Brain	T2N1M0	Undifferentiated	Paclitaxel	Radiation therapy	SD	90	1490	Dead	Positive	2+	+
+PATIENT_073	62	F	Unknown	Pancreas	Stage III	Undifferentiated	5-Fluorouracil	Surgery	PR	45	691	Deceased	Negative	Positive	+
+PATIENT_074	82	Female	White	Lung	Stage I	Grade 3	Doxorubicin	Immunotherapy	Partial Response	27	306	Alive	Wild-type	Positive	Pos
+PATIENT_075	26	Male	Asian	Colon	T4N3M1	Grade 4	Doxorubicin	Hormone therapy	CR	73	1763	Unknown	Positive	2+	Pos
+PATIENT_076	18	M	Hispanic or Latino	Breast	T3N2M0	Undifferentiated	Paclitaxel	Radiation therapy	CR	26	1635	Dead	Unknown	3+	Neg
+PATIENT_077	25	F	White	Bladder	Stage III	Grade 4	Nivolumab	Radiation therapy	Stable Disease	47	1556	Alive	Negative	3+	Positive
+PATIENT_078	80	M	White	Stomach	Stage IV	Grade 2	Trastuzumab	Radiation therapy	Partial Response	86	653	Dead	Positive	Negative	Pos
+PATIENT_079	28	M	Black or African American	Liver	Stage II	Grade 3	Docetaxel	Combination therapy	Complete Response	111	545	Living	Mutant	Positive	Pos
+PATIENT_080	25	Male	Other	Stomach	T3N2M0	Grade 4	Pembrolizumab	Radiation therapy	CR	56	1403	Unknown	Wild-type	Negative	Negative
+PATIENT_081	52	F	Other	Colon	Stage II	Grade 1	Doxorubicin	Surgery	Not Evaluable	94	872	Alive	Positive	Positive	+
+PATIENT_082	52	Female	Pacific Islander	Kidney	T1N0M0	Grade 1	Docetaxel	Radiation therapy	PD	107	1499	Alive	Negative	1+	Positive
+PATIENT_083	50	Female	Black or African American	Kidney	Stage II	Well differentiated	Doxorubicin	Targeted therapy	Complete Response	63	1883	Alive	Mutant	1+	Negative
+PATIENT_084	22	Male	Asian	Breast	T1N0M0	Grade 3	Gemcitabine	Hormone therapy	PR	48	379	Alive	Negative	0	Neg
+PATIENT_085	58	Male	Other	Liver	T2N1M0	Grade 3	Trastuzumab	Radiation therapy	Not Evaluable	61	1660	Alive	Negative	Negative	Neg
+PATIENT_086	45	F	Hispanic or Latino	Pancreas	T3N2M0	Well differentiated	Gemcitabine	Hormone therapy	Not Evaluable	81	1717	Dead	Mutant	2+	Pos
+PATIENT_087	24	Female	Unknown	Breast	T3N2M0	Grade 4	Atezolizumab	Targeted therapy	Partial Response	26	852	Unknown	Negative	Negative	Pos
+PATIENT_088	29	Female	Black or African American	Stomach	Stage I	Grade 3	Doxorubicin	Targeted therapy	Stable Disease	36	1190	Living	Mutant	2+	Neg
+PATIENT_089	51	Female	Unknown	Breast	Stage IV	Grade 1	5-Fluorouracil	Hormone therapy	PR	1	788	Living	Positive	3+	Pos
+PATIENT_090	50	M	White	Stomach	T1N0M0	Grade 1	5-Fluorouracil	Chemotherapy	CR	8	928	Living	Mutant	Negative	Positive
+PATIENT_091	65	Female	Hispanic or Latino	Lung	Stage I	Undifferentiated	Gemcitabine	Immunotherapy	Partial Response	113	272	Living	Mutant	3+	Pos
+PATIENT_092	40	M	Hispanic or Latino	Kidney	Stage II	Grade 2	5-Fluorouracil	Combination therapy	CR	99	572	Dead	Wild-type	1+	+
+PATIENT_093	79	F	White	Lung	Stage II	Grade 3	Doxorubicin	Chemotherapy	Partial Response	52	1093	Deceased	Mutant	1+	Pos
+PATIENT_094	54	M	Black or African American	Bladder	Stage I	Grade 4	Paclitaxel	Chemotherapy	Partial Response	79	258	Unknown	Mutant	0	Negative
+PATIENT_095	61	F	White	Liver	T3N2M0	Well differentiated	Gemcitabine	Surgery	Partial Response	47	577	Alive	Positive	Negative	Positive
+PATIENT_096	52	Female	Unknown	Pancreas	Stage II	Well differentiated	Atezolizumab	Combination therapy	Stable Disease	56	949	Deceased	Wild-type	3+	Negative
+PATIENT_097	82	Female	Pacific Islander	Stomach	T4N3M1	Grade 4	Pembrolizumab	Combination therapy	Partial Response	86	1276	Living	Unknown	2+	Negative
+PATIENT_098	64	F	Hispanic or Latino	Pancreas	T2N1M0	Poorly differentiated	Pembrolizumab	Chemotherapy	Progressive Disease	14	35	Deceased	Positive	1+	+
+PATIENT_099	20	Male	American Indian	Stomach	T2N1M0	Moderately differentiated	Carboplatin	Radiation therapy	PD	90	1375	Unknown	Positive	1+	Positive
+PATIENT_100	18	F	American Indian	Colon	T4N3M1	Grade 2	Nivolumab	Surgery	CR	28	497	Alive	Unknown	2+	Positive
