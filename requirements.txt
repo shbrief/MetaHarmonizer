@@ -5,7 +5,7 @@ torch
 transformers
 sentence-transformers
 scikit-learn
-faiss-cpu
+faiss-cpu==1.11.0
 # faiss-gpu   # Uncomment if running on GPU with compatible CUDA
 
 # Fuzzy matching
