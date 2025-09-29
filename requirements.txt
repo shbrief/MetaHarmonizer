@@ -23,6 +23,7 @@ matplotlib
 seaborn
 openpyxl
 nltk
+plotly
 
 # Langchain and DB
 langchain
