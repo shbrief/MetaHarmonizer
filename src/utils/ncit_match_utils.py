@@ -17,7 +17,7 @@ BASE_URL = "https://api-evsrest.nci.nih.gov/api/v1"
 NCIT_DICT = {
     "C12219": "body_site",
     "C1909": "treatment_name",
-    "C3262": "disease",
+    "C2991": "disease",
 }
 NCIT_DESC_PATH = "data/schema/ncit_descendants.json"
 
