@@ -12,8 +12,6 @@ from src.utils.invalid_column_utils import check_invalid
 from src.utils.numeric_match_utils import strip_units_and_tags, detect_numeric_semantic, family_boost
 from src.utils.ncit_match_utils import NCIClientSync
 from src.utils.value_faiss import ValueFAISSStore
-from concurrent.futures import ThreadPoolExecutor
-from typing import Optional
 
 # === Configuration ===
 logger = CustomLogger().custlogger(loglevel='WARNING')
