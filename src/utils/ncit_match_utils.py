@@ -1,7 +1,6 @@
 # - Uses NCIt concept search (keeps synonym/pref-name matching on the API side)
-# - Classifies by prebuilt descendants sets (O(1) membership)
-# - Fetches synonyms ONLY when category conflicts or all candidates are unclassified
-# - Optional on-disk cache for re-use across runs
+# - Classifies by prebuilt descendants sets (O(1) membership) + BFS up to 5 hops via parents
+from collections import defaultdict
 from concurrent.futures import wait
 import os
 import re
@@ -12,12 +11,14 @@ import requests
 from typing import Dict, List, Optional, Tuple, Set
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 BASE_URL = "https://api-evsrest.nci.nih.gov/api/v1"
 NCIT_DICT = {
     "C12219": "body_site",
     "C1909": "treatment_name",
     "C2991": "disease",
+    "C3262": "cancer_type"
 }
 NCIT_DESC_PATH = "data/schema/ncit_descendants.json"
 
@@ -44,30 +45,22 @@ class NCIClientSync:
                               pool_maxsize=pool_size)
         self.session.mount("https://", adapter)
         self.session.headers.update({"User-Agent": "ncit-sync-client/1.3"})
-        descendants_json_path = NCIT_DESC_PATH
-        cache_path = os.getenv("NCIT_CACHE_PATH", "data/ncit_cache.json")
 
         # Caches
         self.term2code: Dict[str, Optional[str]] = {
         }  # normalized term -> chosen code (or None)
-        self.code2synonyms: Dict[str, Set[str]] = {
-        }  # code -> set of synonyms (lowercased), includes pref name
-        self.code2category: Dict[str, Optional[str]] = {
-        }  # code -> category string or None
+        self.code2category: Dict[str, Optional[List[str]]] = {
+        }  # code -> category list or None
 
         # Load descendants sets (include roots themselves for convenience)
-        with open(descendants_json_path, "r", encoding="utf-8") as f:
+        with open(NCIT_DESC_PATH, "r", encoding="utf-8") as f:
             raw = json.load(f)
         self.desc_sets = {
             "C12219": set(raw.get("C12219", [])) | {"C12219"},
             "C1909": set(raw.get("C1909", [])) | {"C1909"},
+            "C2991": set(raw.get("C2991", [])) | {"C2991"},
             "C3262": set(raw.get("C3262", [])) | {"C3262"},
         }
-
-        # Optional: load persisted cache
-        self.cache_path = cache_path
-        if cache_path:
-            self.load_cache(cache_path)
 
         # ---- lightweight adaptive rate limiter (no config needed) ----
         base_rps = 8
@@ -153,7 +146,7 @@ class NCIClientSync:
 
     def search_candidates(self,
                           term: str,
-                          limit: int = 3) -> Optional[List[Tuple[str, str]]]:
+                          limit: int = 1) -> Optional[List[Tuple[str, str]]]:
         """
          Search NCIt concepts by term (covers synonyms/pref-name/code).
          Returns: list of (code, preferred_name)
@@ -169,154 +162,142 @@ class NCIClientSync:
             return None
         if not data.get("concepts"):
             return []
-        return [(c.get("code"), c.get("name", "")) for c in data["concepts"]
-                if c.get("code")]
 
-    def get_synonyms(self, code: str) -> Set[str]:
-        """
-        Fetch synonyms for a code (also includes preferred name).
-        Lowercased, deduplicated, cached.
-        """
-        if code in self.code2synonyms:
-            return self.code2synonyms[code]
-        data = self._get_json(f"{BASE_URL}/concept/ncit/{code}",
-                              {"include": "synonyms"})
-        names: Set[str] = set()
-        if data:
-            pref = (data.get("name") or "").strip()
-            if pref:
-                names.add(pref.lower())
-            for s in data.get("synonyms", []) or []:
-                nm = (s.get("name") or "").strip()
-                if nm:
-                    names.add(nm.lower())
-        self.code2synonyms[code] = names
-        return names
+        return [(c.get("code"), c.get("name", "")) for c in data["concepts"]
+                if c.get("code")][:limit]
 
     # ----------------------------- classification ------------------------
+    def _classify_local(self, code: str) -> Optional[str]:
+        if code in self.desc_sets["C12219"]:
+            return NCIT_DICT["C12219"]  # body_site
+        if code in self.desc_sets["C1909"]:
+            return NCIT_DICT["C1909"]  # treatment_name
+        if code in self.desc_sets["C2991"]:
+            return NCIT_DICT["C2991"]  # disease
+        if code in self.desc_sets["C3262"]:
+            return NCIT_DICT["C3262"]  # cancer_type
+        return None
 
-    def classify_code(self, code: str) -> Optional[str]:
-        """
-        Map a code to a top category (body_site / treatment_name / disease) using descendants sets.
-        Cached per code.
-        """
+    def _fetch_parents(self, code: str) -> Optional[List[str]]:
+        data = self._get_json(f"{BASE_URL}/concept/ncit/{code}",
+                              {"include": "parents"})
+        if not data:
+            return None
+        parents = data.get("parents") or []
+        out = []
+        for p in parents:
+            c = p.get("code")
+            if c:
+                out.append(c)
+        return out
+
+    def _classify_via_api(self,
+                          code: str,
+                          max_hops: int = 5) -> Tuple[List[str], bool]:
+        # ok=True means no network failure, False means network failure (None result)
+        hits: List[str] = []
+
+        # Direct hit
+        if code in NCIT_DICT:
+            return [NCIT_DICT[code]], True
+
+        seen = {code}
+        frontier = [code]
+        hops = 0
+        while frontier and hops < max_hops:
+            nxt = []
+            for c in frontier:
+                parents = self._fetch_parents(c)
+                if parents is None:
+                    return [], False  # network failure
+                if not parents:
+                    continue
+                for p in parents:
+                    if p in seen:
+                        continue
+                    seen.add(p)
+                    # 命中根
+                    if p in NCIT_DICT:
+                        hits.append(NCIT_DICT[p])
+                    else:
+                        local_cat = self._classify_local(p)
+                        if local_cat:
+                            hits.append(local_cat)
+                        else:
+                            nxt.append(p)
+            frontier = nxt
+            hops += 1
+
+        return hits, True
+
+    def classify_code(self, code: str) -> List[str]:
         if code in self.code2category:
             return self.code2category[code]
-        cat = None
-        if code in self.desc_sets["C12219"]:
-            cat = NCIT_DICT["C12219"]
-        elif code in self.desc_sets["C1909"]:
-            cat = NCIT_DICT["C1909"]
-        elif code in self.desc_sets["C3262"]:
-            cat = NCIT_DICT["C3262"]
-        self.code2category[code] = cat
-        return cat
 
-    def map_value_to_schema(self, value: str) -> str:
+        hits = []
+        for root, catname in NCIT_DICT.items():
+            if code in self.desc_sets[root]:
+                hits.append(catname)
+
+        if hits:
+            self.code2category[code] = hits
+            return hits
+
+        cats, ok = self._classify_via_api(code)
+        if cats:
+            self.code2category[code] = cats
+            return cats
+
+        if ok:
+            self.code2category[code] = []  # negative cache
+
+        return []
+
+    def map_value_to_schema(self, values: List[str]) -> Dict[str, int]:
         """
-        Value -> category, tuned for speed:
-          1) Search Top-K candidates (keeps synonym/pref-name matching on API side).
-          2) First try to classify by descendants sets WITHOUT fetching synonyms.
-             - If exactly one category matches -> pick it immediately.
-             - If multiple candidates but all in the same category -> pick that.
-             - If multiple candidates across different categories -> then fetch synonyms to disambiguate.
-          3) If no candidate falls into any target category, try exact synonym/pref-name match once.
+        Value(s) -> category counts
         """
-        if not value or not isinstance(value, str):
-            return "Unclassified"
+        if isinstance(values, str):
+            values = [values]
 
-        term_norm = self.normalize(value)
+        counts: Dict[str, int] = defaultdict(int)
+        to_lookup = {}  # term_norm -> raw value
 
-        # Cached decision for this normalized term
-        if term_norm in self.term2code:
-            code = self.term2code[term_norm]
-            if not code:
-                return "Unclassified"
-            cat = self.classify_code(code)
-            return cat if cat else "Unclassified"
+        # 1. Lookup cache
+        for value in values:
+            if not value or not isinstance(value, str):
+                continue
 
-        # 1) NCIt search (Top-K)
-        cands = self.search_candidates(value, limit=5)
-        if cands is None:
-            return "Unclassified"
-        if not cands:
-            self.term2code[term_norm] = None
-            return "Unclassified"
+            term_norm = self.normalize(value)
+            if term_norm in self.term2code:
+                code = self.term2code[term_norm]
+                if code:
+                    cats = self.classify_code(code)
+                    for cat in cats:
+                        counts[cat] += 1
+            else:
+                to_lookup[term_norm] = value
 
-        # 2) Try fast classification by descendants (no synonyms yet)
-        classified: List[Tuple[str, str, str]] = []  # (code, pref, category)
-        for code, pref in cands:
-            cat = self.classify_code(code)
-            if cat:
-                classified.append((code, pref, cat))
+        # 2. Parallel lookup for the remaining
+        def lookup(term_norm, raw_value):
+            cands = self.search_candidates(raw_value)
+            if cands is None:
+                return term_norm, None  # Network failure, do not cache
+            return term_norm, cands[0][0] if cands else None
 
-        if len(classified) == 1:
-            code, _, cat = classified[0]
-            self.term2code[term_norm] = code
-            return cat
-
-        if classified:
-            uniq_cats = {c for _, _, c in classified}
-            if len(uniq_cats) == 1:
-                code, _, cat = classified[0]
-                self.term2code[term_norm] = code
-                return cat
-            # Conflict: candidates span multiple categories -> disambiguate by exact synonym/pref-name
-            term_l = term_norm
-            for code, pref, cat in classified:
-                syns = self.get_synonyms(code)  # only now we pay the cost
-                if term_l == (pref or "").strip().lower() or term_l in syns:
+        if to_lookup:
+            with ThreadPoolExecutor(max_workers=16) as ex:
+                futures = [
+                    ex.submit(lookup, tn, rv) for tn, rv in to_lookup.items()
+                ]
+                for f in as_completed(futures):
+                    term_norm, code = f.result()
+                    # Cache
                     self.term2code[term_norm] = code
-                    return cat
-            # No exact synonym hit -> pick the first classified candidate (or define your own priority)
-            code, _, cat = classified[0]
-            self.term2code[term_norm] = code
-            return cat
+                    # Classify if code found
+                    if code:
+                        cats = self.classify_code(code)
+                        for cat in cats:
+                            counts[cat] += 1
 
-        # 3) None of the Top-K candidates are in target categories:
-        #    Try a single pass of exact synonym/pref-name match; if that code maps to a category, accept.
-        term_l = term_norm
-        for code, pref in cands:
-            syns = self.get_synonyms(code)
-            if term_l == (pref or "").strip().lower() or term_l in syns:
-                cat = self.classify_code(code)
-                if cat:
-                    self.term2code[term_norm] = code
-                    return cat
-
-        # 4) Still unclassified
-        self.term2code[term_norm] = None
-        return "Unclassified"
-
-    # ----------------------------- persistence (optional) ----------------
-
-    def save_cache(self, path: Optional[str] = None) -> None:
-        """Persist caches to disk (so future runs reuse prior lookups)."""
-        if path is None:
-            path = self.cache_path
-        if not path:
-            return
-        data = {
-            "term2code": self.term2code,
-            "code2synonyms": {
-                k: sorted(list(v))
-                for k, v in self.code2synonyms.items()
-            },
-            "code2category": self.code2category,
-        }
-        with open(path, "w", encoding="utf-8") as f:
-            json.dump(data, f)
-
-    def load_cache(self, path: str) -> None:
-        """Load caches from disk if available."""
-        try:
-            with open(path, "r", encoding="utf-8") as f:
-                data = json.load(f)
-            self.term2code = data.get("term2code", {})
-            self.code2synonyms = {
-                k: set(v)
-                for k, v in data.get("code2synonyms", {}).items()
-            }
-            self.code2category = data.get("code2category", {})
-        except FileNotFoundError:
-            pass
+        return dict(counts)
