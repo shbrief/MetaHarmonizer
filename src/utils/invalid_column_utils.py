@@ -85,7 +85,7 @@ def check_invalid(df: pd.DataFrame, col: str) -> bool:
 
     Args:
         df: The DataFrame to check.
-        invalid_cols: A list of invalid column names to look for.
+        col: The column name to check.
     """
     if is_id_column(col):
         return "id_column"
