@@ -15,7 +15,14 @@ def _norm(text: Optional[str], do_normalize: bool) -> str:
 def _safe_split_pipe(s) -> List[str]:
     if s is None:
         return []
-    return [t for t in str(s).split("|") if t]
+    if pd.isna(s):
+        return []
+    s_str = str(s).strip()
+    if not s_str or s_str.lower() == "nan":
+        return []
+    return [
+        t for t in s_str.split("|") if t and t.strip() and t.lower() != "nan"
+    ]
 
 
 def _pred_cols(df: pd.DataFrame, top_k: int) -> List[str]:
@@ -41,7 +48,7 @@ def build_eval_df(
       - curated_field: all valid truths (pipe-joined) for the source
       - matched_rank : 1..top_k if any truth appears in top-k predictions; 99 otherwise
 
-    NOTE: This function NEVER filters rows by matched_stage_detail.
+    NOTE: This function NEVER filters rows by matched_stage_method.
     The saved *_eval.csv contains ALL prediction rows.
     """
     pred = pd.read_csv(pred_file)
@@ -91,8 +98,9 @@ def build_eval_df(
     for _, row in merged.iterrows():
         src = str(row.get("original_column"))
         truths_norm = truth_map_norm.get(src, set())
-        curated_lists.append("|".join(
-            sorted(_safe_split_pipe(row.get("curated_field")))))
+        raw = row.get("curated_field")
+        parts = _safe_split_pipe(raw)
+        curated_lists.append("|".join(sorted(parts)) if parts else "")
 
         rank = 99
         if truths_norm:
@@ -137,9 +145,11 @@ def compute_accuracy_from_eval(
 ) -> Dict[str, float]:
     """
     Compute Top-k accuracy FROM an existing *_eval.csv.
-    include/exclude (by matched_stage_detail) are applied ONLY for metric computation.
+    include/exclude (by matched_stage_method) are applied ONLY for metric computation.
     """
     df = pd.read_csv(eval_csv)
+    df = df[df["curated_field"].notna() &
+            (df["curated_field"] != "")]  # only rows with truth
 
     if "matched_rank" not in df.columns:
         raise ValueError("Eval table is missing 'matched_rank'.")
@@ -149,19 +159,19 @@ def compute_accuracy_from_eval(
 
     # Apply include/exclude ONLY for metrics (does not touch the CSV on disk)
     if include_details:
-        if "matched_stage_detail" not in df.columns:
+        if "matched_stage_method" not in df.columns:
             raise ValueError(
-                "include_details was specified but 'matched_stage_detail' is missing in eval CSV."
+                "include_details was specified but 'matched_stage_method' is missing in eval CSV."
             )
         keep = {str(x) for x in include_details}
-        df = df[df["matched_stage_detail"].astype(str).isin(keep)].copy()
+        df = df[df["matched_stage_method"].astype(str).isin(keep)].copy()
     if exclude_details:
-        if "matched_stage_detail" not in df.columns:
+        if "matched_stage_method" not in df.columns:
             raise ValueError(
-                "exclude_details was specified but 'matched_stage_detail' is missing in eval CSV."
+                "exclude_details was specified but 'matched_stage_method' is missing in eval CSV."
             )
         drop = {str(x) for x in exclude_details}
-        df = df[~df["matched_stage_detail"].astype(str).isin(drop)].copy()
+        df = df[~df["matched_stage_method"].astype(str).isin(drop)].copy()
 
     k_list: Sequence[int] = (1, 3,
                              5) if top_k == 5 else list(range(1, top_k + 1))
@@ -180,7 +190,7 @@ def compute_accuracy_from_eval(
     return results
 
 
-# ------------------ 3) wrapper: your old one-step API ------------------
+# ------------------ 3) wrapper ------------------
 
 
 def compute_accuracy(
@@ -196,7 +206,7 @@ def compute_accuracy(
     out_dir: Optional[str] = "data/schema_mapping_eval",
 ) -> Dict[str, float]:
     """
-    One-step API compatible with your previous call style.
+    Compute Top-k accuracy for schema mapping predictions.
 
     You can EITHER:
       - pass (pred_file, truth_file) and it will build eval (optionally save) then compute metrics, OR
@@ -216,26 +226,28 @@ def compute_accuracy(
             save_eval=save_eval,
             out_dir=out_dir,
         )
-        # compute on the just-built df in-memory (no need to re-read unless you want)
+        # compute on the just-built df in-memory
         # But to reuse the metric code, write a tiny in-memory branch:
         df = eval_df.copy()
+        mask = df["curated_field"].notna() & (df["curated_field"] != "")
+        df = df[mask]  # only rows with truth
         if include_details and exclude_details:
             raise ValueError(
                 "include_details and exclude_details are mutually exclusive.")
         if include_details:
-            if "matched_stage_detail" not in df.columns:
+            if "matched_stage_method" not in df.columns:
                 raise ValueError(
-                    "include_details was specified but 'matched_stage_detail' is missing in eval DF."
+                    "include_details was specified but 'matched_stage_method' is missing in eval DF."
                 )
             keep = {str(x) for x in include_details}
-            df = df[df["matched_stage_detail"].astype(str).isin(keep)].copy()
+            df = df[df["matched_stage_method"].astype(str).isin(keep)].copy()
         if exclude_details:
-            if "matched_stage_detail" not in df.columns:
+            if "matched_stage_method" not in df.columns:
                 raise ValueError(
-                    "exclude_details was specified but 'matched_stage_detail' is missing in eval DF."
+                    "exclude_details was specified but 'matched_stage_method' is missing in eval DF."
                 )
             drop = {str(x) for x in exclude_details}
-            df = df[~df["matched_stage_detail"].astype(str).isin(drop)].copy()
+            df = df[~df["matched_stage_method"].astype(str).isin(drop)].copy()
 
         k_list: Sequence[int] = (1, 3, 5) if top_k == 5 else list(
             range(1, top_k + 1))
