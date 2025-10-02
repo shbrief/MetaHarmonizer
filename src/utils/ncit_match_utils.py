@@ -216,7 +216,7 @@ class NCIClientSync:
                     if p in seen:
                         continue
                     seen.add(p)
-                    # 命中根
+                    # Hit root
                     if p in NCIT_DICT:
                         hits.append(NCIT_DICT[p])
                     else:
