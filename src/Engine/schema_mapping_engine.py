@@ -12,8 +12,6 @@ from src.utils.invalid_column_utils import check_invalid
 from src.utils.numeric_match_utils import strip_units_and_tags, detect_numeric_semantic, family_boost
 from src.utils.ncit_match_utils import NCIClientSync
 from src.utils.value_faiss import ValueFAISSStore
-from concurrent.futures import ThreadPoolExecutor
-from typing import Optional
 
 # === Configuration ===
 logger = CustomLogger().custlogger(loglevel='WARNING')
@@ -122,7 +120,7 @@ class SchemaMapEngine:
     def _enc(self, text: str):
         return self.dict_model.encode(text, convert_to_tensor=True)
 
-    def unique_values(self, col: str, cap: Optional[int] = None) -> list[str]:
+    def unique_values(self, col: str, cap: int | None = None) -> list[str]:
         if not hasattr(self, "_col_values_cache"):
             self._col_values_cache = {}
 
