@@ -148,7 +148,10 @@
   "vital_status": [
     "Alive",
     "Dead",
-    "Unknown"
+    "DEAD WITH TUMOR",
+    "DEAD OF MELANOMA",
+    "ALIVE OR DEAD TUMOR FREE",
+    "ALIVE OR SENSORED"
   ],
   "treatment_type": [
     "Alkylating Agent",

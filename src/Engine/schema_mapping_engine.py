@@ -1,6 +1,5 @@
 import os
 import time
-from collections import Counter
 from typing import Dict, List, Tuple, Any
 import pandas as pd
 from rapidfuzz import process, fuzz
@@ -8,7 +7,8 @@ from sentence_transformers import SentenceTransformer, util
 import torch
 from functools import lru_cache
 from src.CustomLogger.custom_logger import CustomLogger
-from src.utils.schema_mapper_utils import normalize, is_numeric_column, is_stage_column, extract_valid_value
+from src.utils.schema_mapper_utils import normalize, is_numeric_column, extract_valid_value
+from src.utils.invalid_column_utils import check_invalid
 from src.utils.numeric_match_utils import strip_units_and_tags, detect_numeric_semantic, family_boost
 from src.utils.ncit_match_utils import NCIClientSync
 from src.utils.value_faiss import ValueFAISSStore
@@ -35,7 +35,7 @@ NOISE_VALUES = {
 class SchemaMapEngine:
     """
     Performs schema mapping in three stages and outputs a CSV with columns:
-      original_column | matched_stage | matched_stage_detail |
+      original_column | matched_stage | matched_stage_method |
       match1_field | match1_score | match1_source |
       match2_field | match2_score | match2_source |
       match3_field | match3_score | match3_source | ...
@@ -55,22 +55,22 @@ class SchemaMapEngine:
                  clinical_data_path: str,
                  mode: str = "auto",
                  top_k: int = 5):
-        self.df = pd.read_csv(clinical_data_path, sep=None, engine='python')
+        if clinical_data_path.endswith(".tsv"):
+            self.df = pd.read_csv(clinical_data_path, sep="\t", dtype=str)
+        else:
+            self.df = pd.read_csv(clinical_data_path, sep=",", dtype=str)
+
         logger.info(
             f"[Load] df_shape={self.df.shape} first_cols={list(self.df.columns[:5])}"
         )
-        if self.df.shape[1] == 1 and isinstance(
-                self.df.columns[0], str) and (',' in self.df.columns[0]):
-            self.df = pd.read_csv(clinical_data_path)
-            logger.info(f"[Reload as CSV] df_shape={self.df.shape}")
 
         self.top_k = top_k
         self.mode = mode
 
         os.makedirs(OUTPUT_DIR, exist_ok=True)
         base = os.path.basename(clinical_data_path)
-        self.output_file = os.path.join(
-            OUTPUT_DIR, base.replace('_clinical_data.tsv', '_schema_map.csv'))
+        root, _ = os.path.splitext(base)
+        self.output_file = os.path.join(OUTPUT_DIR, f"{root}.csv")
 
         # Load alias dictionary
         self.df_dict = pd.read_csv(DICT_PATH)
@@ -115,34 +115,6 @@ class SchemaMapEngine:
             if not self.col_is_numeric.get(c, False)
         ]
 
-        # ---- Preheat Budget (overridable by environment variables) ----
-        PREWARM_ON = False  # Whether to preheat common values
-        PREWARM_MAX = 300  # Global max number of values to preheat
-        PER_COL_CAP = 80  # Max number of unique values per column
-        PREWARM_WORKERS = 4  # Conservative number of threads
-
-        if PREWARM_ON and PREWARM_MAX > 0:
-            freq = Counter()
-            norm2orig = {}
-            # 1) Skip "disease stage" columns to avoid preheating values like M0/Stage II
-            cols = [
-                c for c in self.cat_cols if is_stage_column(self.df, c) is None
-            ]
-            # 2) Count the frequency of each value (deduplicated by normalize)
-            for c in cols:
-                for v in self.unique_values(c, cap=PER_COL_CAP):
-                    nv = normalize(v)
-                    if nv not in norm2orig:
-                        norm2orig[nv] = v
-                    freq[nv] += 1
-            # 3) Only preheat global Top-K high-frequency values
-            selected = [
-                norm2orig[nv] for nv, _ in freq.most_common(PREWARM_MAX)
-            ]
-            if selected:
-                with ThreadPoolExecutor(max_workers=PREWARM_WORKERS) as ex:
-                    list(ex.map(self.nci_client.map_value_to_schema, selected))
-
     def _to_01(self, x: float) -> float:
         return max(0.0, min(1.0, (x + 1.0) / 2.0))
 
@@ -182,7 +154,7 @@ class SchemaMapEngine:
         Args:
             col (str): The original column name.
             stage (str): The stage of matching (e.g., "stage1", "stage2", "stage3").
-            detail (str): Details about the matching stage.
+            detail (str): Method about the matching stage.
             matches (List[Tuple[str, float, str]]): List of matches as tuples of (field, score, source).
 
         Returns:
@@ -191,7 +163,7 @@ class SchemaMapEngine:
         row: Dict[str, Any] = {
             "original_column": col,
             "matched_stage": stage,
-            "matched_stage_detail": detail
+            "matched_stage_method": detail
         }
 
         for i, (field, score, source) in enumerate(matches[:self.top_k],
@@ -473,25 +445,34 @@ class SchemaMapEngine:
                                           matches=trimmed)
 
     def ncit_match(self, col: str) -> Dict[str, Any]:
-        unique_values = set(self.unique_values(col, cap=100))
+        unique_values = set(self.unique_values(col, cap=20))
 
         if not unique_values:
             return {}
 
-        cats = [self.nci_client.map_value_to_schema(v) for v in unique_values]
-        valid = [c for c in cats if c != "Unclassified"]
-        if not valid:
+        cats = self.nci_client.map_value_to_schema(unique_values)
+        if not cats:
             return {}
 
-        vote = Counter(valid)
-        den = len(valid)
-        candidates = [(k, v / den, col) for k, v in vote.items()]
+        den = sum(cats.values())
+        if den == 0:
+            return {}
+        candidates = [(k, v / den, col) for k, v in cats.items()]
         matches = [m for m in candidates if m[1] > VALUE_PERCENTAGE_THRESH]
         matches.sort(key=lambda x: x[1], reverse=True)
         matches = matches[:self.top_k]
+
+        has_cancer = any(m[0] == "cancer_type" for m in matches)
+        has_disease = any(m[0] == "disease" for m in matches)
+        if has_cancer and not has_disease and len(matches) < self.top_k:
+            matches.append(("disease", cats["cancer_type"] / den, col))
+        if has_cancer and len(matches) < self.top_k:
+            matches.append(
+                ("cancer_type_details", cats["cancer_type"] / den, col))
+
         return self.format_matches_to_row(col=col,
                                           stage="stage3",
-                                          detail=("ncit" if matches else None),
+                                          detail="ontology",
                                           matches=matches)
 
     def run_schema_mapping(self) -> pd.DataFrame:
@@ -504,21 +485,13 @@ class SchemaMapEngine:
         results = []
 
         for col in self.df.columns:
-            # Add a check to skip id columns
-            if " ID" in col or " id" in col or " Id" in col:
+            # Check invalid columns first
+            is_invalid = check_invalid(self.df, col)
+            if is_invalid:
                 results.append({
                     "original_column": col,
                     "matched_stage": "invalid",
-                    "matched_stage_detail": "id_column",
-                })
-                continue
-
-            is_stage_detail = is_stage_column(self.df, col)
-            if is_stage_detail is not None:
-                results.append({
-                    "original_column": col,
-                    "matched_stage": "invalid",
-                    "matched_stage_detail": is_stage_detail
+                    "matched_stage_method": is_invalid
                 })
                 continue
 
