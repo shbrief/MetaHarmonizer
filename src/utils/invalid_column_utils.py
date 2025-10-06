@@ -61,7 +61,7 @@ def is_id_column(col: str) -> bool:
     Heuristic: if >90% of sampled non-null values are alphanumeric strings
     of length 5-20 without spaces or special characters.
     """
-    if " ID" in col or " id" in col or "Id" in col or " Id" in col:
+    if "ID" in col or " id" in col or "Id" in col:
         return True
     return False
 

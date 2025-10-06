@@ -104,10 +104,7 @@ class NCIClientSync:
         if retry_after_sec and retry_after_sec > 0:
             time.sleep(min(retry_after_sec, 10.0))
 
-    def _get_json(self,
-                  url: str,
-                  params: dict,
-                  retries: int = 0) -> Optional[dict]:
+    def _get_json(self, url: str, params: dict) -> Optional[dict]:
         """GET JSON with adapter-level retries + local smoothing + 429 handling."""
         self._throttle()
         try:

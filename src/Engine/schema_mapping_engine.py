@@ -120,7 +120,7 @@ class SchemaMapEngine:
     def _enc(self, text: str):
         return self.dict_model.encode(text, convert_to_tensor=True)
 
-    def unique_values(self, col: str, cap: Optional[int] = None) -> list[str]:
+    def unique_values(self, col: str, cap: int | None = None) -> list[str]:
         if not hasattr(self, "_col_values_cache"):
             self._col_values_cache = {}
 
