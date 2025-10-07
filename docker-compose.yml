@@ -1,0 +1,23 @@
+version: "3.8"
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: metaharmonizer-sm:dev
+    ports:
+      - "8501:8501"
+    environment:
+      # If you have a FIELD_VALUE_JSON file, you can mount it and set this variable
+      # FIELD_VALUE_JSON: /app/data/schema/field_value_dict.json
+      STREAMLIT_SERVER_PORT: "8501"
+      STREAMLIT_BROWSER_GATHER_USAGE_STATS: "false"
+    volumes:
+      - ./data:/app/data           
+      - ./src:/app/src             
+      - ./app:/app/app
+    command: >
+      streamlit run streamlit_app_sm.py
+      --server.port=8501
+      --server.address=0.0.0.0
+    restart: unless-stopped

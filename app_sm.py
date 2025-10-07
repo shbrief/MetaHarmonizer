@@ -3,11 +3,11 @@ import pandas as pd
 import tempfile
 import os
 from io import StringIO
-import sys
 
 # Add error handling for the import
 try:
-    from src.Engine import SchemaMapEngine
+    from src.Engine import get_schema_engine
+    SchemaMapEngine = get_schema_engine()
     METAHARMONIZER_AVAILABLE = True
 except ImportError as e:
     METAHARMONIZER_AVAILABLE = False
@@ -33,7 +33,7 @@ def main():
         
         **Setup Instructions:**
         1. Clone the repository: `git clone https://github.com/shbrief/MetaHarmonizer`
-        2. Install dependencies: `pip install -r requirements.txt`
+        2. Install dependencies: `pip install -r requirements_sm.txt`
         3. Make sure the `src` folder is in your Python path
         
         Or run this app from within the MetaHarmonizer directory.
@@ -104,8 +104,8 @@ def main():
 
         uploaded_file = st.file_uploader(
             "Choose a clinical data file",
-            type=['csv', 'tsv', 'txt'],
-            help="Upload a CSV, TSV, or TXT file containing clinical data")
+            type=['csv', 'tsv'],
+            help="Upload a CSV or TSV file containing clinical data")
 
         if uploaded_file is not None:
             st.success(f"✅ File uploaded: {uploaded_file.name}")
@@ -261,7 +261,7 @@ def main():
         **Features:**
         - Automatic and manual schema mapping modes
         - Configurable number of top matches
-        - Support for various file formats (CSV, TSV, TXT)
+        - Support for various file formats (CSV, TSV)
         
         **Parameters:**
         - **Mode**: 

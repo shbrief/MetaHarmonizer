@@ -1,0 +1,22 @@
+# Core data and ML
+pandas
+numpy
+torch
+sentence-transformers
+scikit-learn
+
+# Fuzzy matching
+rapidfuzz
+
+# Notebook and utils (optional, required for Jupyter/Notebook environments)
+jupyter
+ipython
+ipywidgets
+tqdm
+
+# Web and IO
+requests
+openpyxl
+
+# Streamlit app
+streamlit>=1.28.0
