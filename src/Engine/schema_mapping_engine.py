@@ -140,6 +140,15 @@ class SchemaMapEngine:
                 self.value_texts.append(v)
                 self.value_fields_list.append([field])
 
+        if not self.value_texts:
+            self.value_embs = None
+            return
+
+        with torch.no_grad():
+            embs = self.dict_model.encode(self.value_texts,
+                                          convert_to_tensor=True)
+            self.value_embs = torch.nn.functional.normalize(embs, p=2, dim=1)
+
         logger.info(
             f"[Init] Loaded {len(self.value_texts)} value entries from {json_path}"
         )
@@ -366,7 +375,8 @@ class SchemaMapEngine:
 
         detail = "value"
 
-        if not self.value_texts:
+        if not getattr(self, "value_texts", None) or getattr(
+                self, "value_embs", None) is None:
             return {}
 
         # Configure sampling limits
@@ -376,15 +386,15 @@ class SchemaMapEngine:
         unique_values = self.unique_values(col, cap=max_values)
         if not unique_values:
             return {}
-        value_embs = torch.stack([self._enc(v)
-                                  for v in unique_values])  # [M, D]
-        dict_embs = torch.stack([self._enc(v)
-                                 for v in self.value_texts])  # [N, D]
-        device = value_embs.device
-        dict_embs = dict_embs.to(device)
-
         with torch.no_grad():
-            sims = util.pytorch_cos_sim(value_embs, dict_embs)  # [M, N]
+            v_embs = self.dict_model.encode(unique_values,
+                                            convert_to_tensor=True)
+            v_embs = torch.nn.functional.normalize(v_embs, p=2, dim=1)
+
+            device = self.value_embs.device
+            v_embs = v_embs.to(device)
+
+            sims = v_embs @ self.value_embs.T  # [M, N]
 
         # 2) Aggregation of value→field matches
         field_count: Dict[str, int] = {
