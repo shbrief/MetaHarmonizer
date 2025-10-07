@@ -1,3 +1,4 @@
+from pathlib import Path
 import streamlit as st
 import pandas as pd
 import tempfile
@@ -161,16 +162,21 @@ def main():
                         cleanup_needed = False
                         info_ph.info("Processing demo file...")
                     else:
-                        # Create temporary file for uploaded file
+                        # Create temporary file for uploaded file, preserve original suffix
+                        suffix = Path(selected_file.name).suffix.lower(
+                        )  # e.g. '.csv' or '.tsv'
+
                         with tempfile.NamedTemporaryFile(
                                 mode='w+', delete=False,
-                                suffix='.tsv') as tmp_file:
-                            # Write uploaded content to temporary file
+                                suffix=suffix) as tmp_file:
                             content = selected_file.read()
                             if isinstance(content, bytes):
-                                content = content.decode('utf-8')
+                                # Decode text files safely, ignore bad characters
+                                content = content.decode('utf-8',
+                                                         errors='ignore')
                             tmp_file.write(content)
                             tmp_file_path = tmp_file.name
+
                         cleanup_needed = True
                         info_ph.info("Processing uploaded file...")
 
