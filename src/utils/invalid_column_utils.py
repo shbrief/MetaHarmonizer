@@ -71,7 +71,12 @@ def is_count_column(col: str) -> bool:
     Determine if a column is likely to contain count data, e.g. sample count, mutation count.
     """
     name = str(col).lower()
-    candidates = ["sample count", "mutation count"]
+    candidates = [
+        "sample count", "mutation count", "sample_count", "mutation_count",
+        "num_samples", "num_mutations", "n_samples", "n_mutations",
+        "samplecnt", "mutationcnt", "sample cnt", "mutation cnt",
+        "number of samples", "number of mutations"
+    ]
 
     for cand in candidates:
         if fuzz.partial_ratio(name, cand) >= 95:
