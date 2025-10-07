@@ -1,0 +1,10 @@
+.git
+__pycache__/
+*.pyc
+*.pyo
+*.log
+*.ipynb_checkpoints
+.venv/
+.env
+
+data/schema_mapping_eval/*.csv
