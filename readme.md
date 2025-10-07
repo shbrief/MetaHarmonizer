@@ -71,7 +71,7 @@ from importlib import reload
 nest_asyncio.apply()
 
 ## Import the models/engine for ontology mapping
-from src.Engine import ontology_mapping_engine as ome
+from src.Engine import get_ontology_engine
 from src.models import ontology_mapper_st as om_st
 from src.models import ontology_mapper_lm as om_lm
 from src.models import ontology_mapper_rag as om_rag
@@ -82,7 +82,8 @@ reload(om_st)
 reload(om_lm)
 reload(om_rag)
 reload(om_bi)
-reload(ome)
+
+OntoMapEngine = get_ontology_engine()
 
 ## Import useful utilities 
 from src.models.calc_stats import CalcStats # for calculating accuracy (testing) 
@@ -90,7 +91,7 @@ from src.utils.cleanup_vector_store import cleanup_vector_store # for cleaning u
 
 ## Now you must initialize the engine
 other_params = {"test_or_prod": "test"}
-onto_engine_large = ome.OntoMapEngine(method='sap-bert',
+onto_engine_large = OntoMapEngine(method='sap-bert',
                                       category='disease',
                                       topk=5,
                                       query=query_list,
@@ -123,7 +124,9 @@ results_engine_testing = onto_engine_large.run()
 
 2. Schema mapping
 ```python
-from src.Engine.schema_mapping_engine import SchemaMapEngine
+from src.Engine import get_schema_engine
+
+SchemaMapEngine = get_schema_engine()
 
 # Initialize the engine
 engine = SchemaMapEngine(
