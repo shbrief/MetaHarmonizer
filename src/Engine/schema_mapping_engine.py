@@ -1,3 +1,4 @@
+import json
 import os
 import time
 from typing import Dict, List, Tuple, Any
@@ -11,12 +12,13 @@ from src.utils.schema_mapper_utils import normalize, is_numeric_column, extract_
 from src.utils.invalid_column_utils import check_invalid
 from src.utils.numeric_match_utils import strip_units_and_tags, detect_numeric_semantic, family_boost
 from src.utils.ncit_match_utils import NCIClientSync
-from src.utils.value_faiss import ValueFAISSStore
 
 # === Configuration ===
 logger = CustomLogger().custlogger(loglevel='WARNING')
 OUTPUT_DIR = "data/schema_mapping_eval"
 DICT_PATH = "data/schema/curated_fields_source_latest_with_flags.csv"
+VALUE_DICT_PATH = os.getenv(
+    "FIELD_VALUE_JSON") or "data/schema/field_value_dict.json"
 FIELD_MODEL = "all-MiniLM-L6-v2"
 FUZZY_THRESH = 90
 NUMERIC_THRESH = 0.6
@@ -92,29 +94,60 @@ class SchemaMapEngine:
                                                  convert_to_tensor=True)
 
         # Prepare numeric sources
-        df_num = self.df_dict[self.df_dict['is_numeric_field'] == 'yes']
-        self.df_num = df_num
-        self.numeric_sources = df_num['source'].dropna().unique().tolist()
-        self.norm_numeric = [normalize(s) for s in self.numeric_sources]
-        self.numeric_embs = self.dict_model.encode(self.norm_numeric,
-                                                   convert_to_tensor=True)
-        self.col_is_numeric = {
-            col: is_numeric_column(self.df, col)
-            for col in self.df.columns
-        }
+        self.df_num = self.df_dict[self.df_dict['is_numeric_field'] == 'yes']
+        self.numeric_sources = self.df_num['source'].dropna().unique().tolist()
+        self._numeric_embs = None  # lazy: set on first use
 
-        # Load FS VDB for value embeddings
-        self.value_store = ValueFAISSStore()
+        # Load value dictionary
+        self._load_value_dict()
 
         # Initialize NCI client
         self.nci_client = NCIClientSync()
-        self.cat_cols = [
-            c for c in self.df.columns
-            if not self.col_is_numeric.get(c, False)
-        ]
 
-    def _to_01(self, x: float) -> float:
-        return max(0.0, min(1.0, (x + 1.0) / 2.0))
+    def _ensure_numeric_index(self):
+        """Lazy-build numeric embedding index on first use."""
+        if self._numeric_embs is not None:
+            return
+        self.norm_numeric = [normalize(s) for s in self.numeric_sources]
+        if not self.norm_numeric:
+            self._numeric_embs = torch.empty(0)
+            return
+        self._numeric_embs = self.dict_model.encode(self.norm_numeric,
+                                                    convert_to_tensor=True)
+
+    def _load_value_dict(self, json_path: str = VALUE_DICT_PATH):
+        """
+        Support { field: [value1, value2, ...], ... } format.
+        Generate in-memory lists:
+        - self.value_texts: List[str]               raw values (filtered)
+        - self.value_fields_list: List[List[str]]   aligned field list per value
+        """
+        self.value_texts = []
+        self.value_fields_list = []
+
+        if not os.path.exists(json_path):
+            logger.warning(f"[Init] Missing value dictionary: {json_path}")
+            return
+
+        with open(json_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+
+        for field, values in data.items():
+            for v in values:
+                v = str(v).strip()
+                if not v or v.lower() in NOISE_VALUES:
+                    continue
+                self.value_texts.append(v)
+                self.value_fields_list.append([field])
+
+        logger.info(
+            f"[Init] Loaded {len(self.value_texts)} value entries from {json_path}"
+        )
+
+    @lru_cache(maxsize=None)
+    def is_col_numeric(self, col: str) -> bool:
+        """Cached wrapper around is_numeric_column(df, col)."""
+        return is_numeric_column(self.df, col)
 
     @lru_cache(maxsize=None)
     def _enc(self, text: str):
@@ -229,7 +262,11 @@ class SchemaMapEngine:
         candidates = []
         detail = None
 
-        if not self.col_is_numeric.get(col, False):
+        if not self.is_col_numeric(col):
+            return {}
+
+        self._ensure_numeric_index()
+        if self._numeric_embs is None or len(self.numeric_sources) == 0:
             return {}
 
         key_clean, unit_tags = strip_units_and_tags(key_raw)
@@ -237,7 +274,7 @@ class SchemaMapEngine:
 
         emb = self._enc(key_clean or key_raw)
         with torch.no_grad():
-            sims = util.pytorch_cos_sim(emb, self.numeric_embs)[0]
+            sims = util.pytorch_cos_sim(emb, self._numeric_embs)[0]
         top = torch.topk(sims, k=min(self.top_k, len(sims)))
 
         numeric_scores = []
@@ -246,9 +283,8 @@ class SchemaMapEngine:
             for f in self.df_num[self.df_num['source'] ==
                                  src_name]['field_name']:
                 base = float(score)
-                base01 = self._to_01(base)  # [-1,1] -> [0,1]
                 bonus = family_boost(f, family)  # 0 ~ 0.15
-                final = base01 + bonus
+                final = base + bonus
                 numeric_scores.append((f, final, src_name))
 
         numeric_scores_sorted = sorted(numeric_scores,
@@ -304,7 +340,7 @@ class SchemaMapEngine:
             return {}
 
         alias_scores.sort(key=lambda x: x[1], reverse=True)
-        if self._to_01(alias_scores[0][1]) >= FIELD_ALIAS_THRESH:
+        if alias_scores[0][1] >= FIELD_ALIAS_THRESH:
             detail = "alias"
             candidates = sorted(alias_scores, key=lambda x: x[1], reverse=True)
 
@@ -327,32 +363,30 @@ class SchemaMapEngine:
         Stage3: Value→Field aggregation matching (batched + robust scoring)
         """
         logger.info(f"[Stage3] Running value-field match for column '{col}'")
-        t0 = time.perf_counter()
+
         detail = "value"
 
-        if (self.value_store.index is None) or (self.value_store.index.ntotal
-                                                == 0):
+        if not self.value_texts:
             return {}
 
         # Configure sampling limits
         max_values = 100
-        per_value_fetch_k = min(10, self.value_store.index.ntotal)
 
         # 1) Unique value sampling
         unique_values = self.unique_values(col, cap=max_values)
         if not unique_values:
             return {}
+        value_embs = torch.stack([self._enc(v)
+                                  for v in unique_values])  # [M, D]
+        dict_embs = torch.stack([self._enc(v)
+                                 for v in self.value_texts])  # [N, D]
+        device = value_embs.device
+        dict_embs = dict_embs.to(device)
 
-        # 2) Batch retrieval (one-time encoding + FAISS batched)
-        batch_hits = self.value_store.search_many(unique_values,
-                                                  top_k=per_value_fetch_k)
-        if len(batch_hits) != len(unique_values):
-            # Defense: If lengths are inconsistent (due to upstream changes or padding), fall back to zip the shortest
-            n = min(len(batch_hits), len(unique_values))
-            unique_values = unique_values[:n]
-            batch_hits = batch_hits[:n]
+        with torch.no_grad():
+            sims = util.pytorch_cos_sim(value_embs, dict_embs)  # [M, N]
 
-        # Aggregation container
+        # 2) Aggregation of value→field matches
         field_count: Dict[str, int] = {
         }  # Count of "hit unique values" for each field
         field_sum_score: Dict[str, float] = {
@@ -362,36 +396,32 @@ class SchemaMapEngine:
         hit_unique_count = 0  # Denominator: Count of hit unique values
 
         # Early stopping thresholds
-        TARGET_PROP = VALUE_PERCENTAGE_THRESH
         EARLY_STOP_MIN = 40  # At least this many samples must be processed before considering early stopping
         EARLY_STOP_MARGIN = 0.10  # Leading safety margin
 
-        for idx, (v, hits) in enumerate(zip(unique_values, batch_hits),
-                                        start=1):
-            # Filter out low-confidence hits
-            hits = [
-                h for h in (hits or [])
-                if float(h.get("score", 0.0)) >= VALUE_DICT_THRESH
-            ]
-            if not hits:
-                # This unique value has no hits, do not count towards denominator
+        for i, v in enumerate(unique_values):
+            row = sims[i]
+            k = min(10, len(row))
+            top_scores, top_idx = torch.topk(row, k=k)
+
+            filtered = [(float(s), int(j))
+                        for s, j in zip(top_scores, top_idx)
+                        if float(s) >= VALUE_DICT_THRESH]
+            if not filtered:
                 continue
 
             hit_unique_count += 1
 
             # Avoid duplicate counting of the same value for the same field: keep the highest score for each field
             per_value_best_for_field: Dict[str, float] = {}
-            for h in hits:
-                score = float(h.get("score", 0.0))
-                src_val = h.get("value", v)
-                f_list = h.get("fields", []) or []
-                for f in f_list:
-                    if score > per_value_best_for_field.get(f, 0.0):
-                        per_value_best_for_field[f] = score
-                        # Update field representative example
-                        cur = field_example.get(f)
-                        if (cur is None) or (score > cur[1]):
-                            field_example[f] = (src_val, score)
+            for s, j in filtered:
+                fields = self.value_fields_list[j] or []
+                for f in fields:
+                    if s > per_value_best_for_field.get(f, 0.0):
+                        per_value_best_for_field[f] = s
+                        if (f not in field_example) or (s
+                                                        > field_example[f][1]):
+                            field_example[f] = (v, s)
 
             # Count and score accumulation
             for f, s in per_value_best_for_field.items():
@@ -404,7 +434,7 @@ class SchemaMapEngine:
                 if hit_unique_count > 0:
                     best_prop = max(cnt / hit_unique_count
                                     for cnt in field_count.values())
-                if best_prop >= (TARGET_PROP + EARLY_STOP_MARGIN):
+                if best_prop >= (VALUE_PERCENTAGE_THRESH + EARLY_STOP_MARGIN):
                     # Early stopping
                     break
 
@@ -416,7 +446,7 @@ class SchemaMapEngine:
         ]  # (field, score, example_val, avg_score, count)
         for f, cnt in field_count.items():
             proportion = cnt / hit_unique_count
-            if proportion < TARGET_PROP:
+            if proportion < VALUE_PERCENTAGE_THRESH:
                 continue
             example_val = field_example.get(f, ("", 0.0))[0]
             avg_score = field_sum_score.get(f, 0.0) / max(1, cnt)
@@ -434,9 +464,6 @@ class SchemaMapEngine:
         # Only return (field, main score, source/example)
         trimmed = [(f, sc, ex) for (f, sc, ex, _avg, _cnt) in results]
 
-        logger.info(
-            f"[Stage3 timing] col='{col}' hit_unique={hit_unique_count} elapsed={time.perf_counter()-t0:.3f}s"
-        )
         return self.format_matches_to_row(col=col,
                                           stage="stage3",
                                           detail=detail,
@@ -505,7 +532,8 @@ class SchemaMapEngine:
                 results.append(row)
                 continue
 
-            if not self.col_is_numeric.get(col, False):
+            t0 = time.perf_counter()
+            if not self.is_col_numeric(col):
                 # Stage3a
                 row = self.field_value_match(col)
                 if row.get("match1_score"):
@@ -517,6 +545,10 @@ class SchemaMapEngine:
                 if row.get("match1_score"):
                     results.append(row)
                     continue
+            t1 = time.perf_counter()
+            logger.info(
+                f"[Timing] Stage3 for column '{col}' took {t1 - t0:.2f} seconds."
+            )
 
             # Stage2b
             row = self.alias_field_match(col)

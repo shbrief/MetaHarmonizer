@@ -1,14 +1,13 @@
 # - Uses NCIt concept search (keeps synonym/pref-name matching on the API side)
 # - Classifies by prebuilt descendants sets (O(1) membership) + BFS up to 5 hops via parents
 from collections import defaultdict
-from concurrent.futures import wait
 import os
 import re
 import json
 import threading
 import time
 import requests
-from typing import Dict, List, Optional, Tuple, Set
+from typing import Dict, List, Optional, Tuple
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 from concurrent.futures import ThreadPoolExecutor, as_completed
