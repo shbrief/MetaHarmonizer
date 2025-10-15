@@ -15,7 +15,6 @@ RUN pip install --no-cache-dir -r requirements_sm.txt
 COPY src/ ./src/
 COPY demo_nb/ ./demo_nb/
 COPY readme.md ./readme.md
-# COPY app_sm.py ./app_sm.py
 
 ENV PYTHONPATH=/app
 EXPOSE 8501
