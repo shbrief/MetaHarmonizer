@@ -15,6 +15,16 @@ except ImportError as e:
     import_error = str(e)
 
 
+def clear_session_state():
+    """Clear mapping-related session state"""
+    keys_to_clear = ['mapping_results', 'selected_columns', 'current_file']
+    for key in keys_to_clear:
+        if key in st.session_state:
+            del st.session_state[key]
+    if 'upload_counter' in st.session_state:
+        st.session_state['upload_counter'] += 1
+
+
 def main():
     st.set_page_config(page_title="MetaHarmonizer Schema Mapping",
                        page_icon="🔗",
@@ -65,6 +75,11 @@ def main():
         help="Choose whether to upload your own data or test with the demo file"
     )
 
+    if 'last_data_source' not in st.session_state or st.session_state[
+            'last_data_source'] != data_source:
+        st.session_state['last_data_source'] = data_source
+        clear_session_state()
+
     demo_file_path = "data/demo_data/clinical_metadata_demo.tsv"
 
     if data_source == "Use demo file":
@@ -79,7 +94,7 @@ def main():
                     f"**Shape:** {demo_df.shape[0]} rows × {demo_df.shape[1]} columns"
                 )
 
-                with st.expander("👀 Preview demo data"):
+                with st.expander("Preview demo data"):
                     st.dataframe(demo_df.head(10))
                     if len(demo_df) > 10:
                         st.info(
@@ -89,16 +104,25 @@ def main():
                 # Set variables for processing
                 selected_file = demo_file_path
                 file_available = True
-
+                all_columns = demo_df.columns.tolist()
+                if 'current_file' not in st.session_state or st.session_state[
+                        'current_file'] != demo_file_path:
+                    st.session_state['selected_columns'] = all_columns
+                    st.session_state['current_file'] = demo_file_path
+                    if 'mapping_results' in st.session_state:
+                        del st.session_state['mapping_results']
             except Exception as e:
                 st.error(f"Could not load demo file: {e}")
                 file_available = False
                 selected_file = None
+                all_columns = []
+                clear_session_state()
         else:
             st.error(f"Demo file not found at: `{demo_file_path}`")
             file_available = False
             selected_file = None
-
+            all_columns = []
+            clear_session_state()
     else:
         # File upload section
         st.subheader("📤 Upload Your File")
@@ -131,10 +155,20 @@ def main():
 
                     # Reset file pointer for processing
                     uploaded_file.seek(0)
+
+                    # Get all columns
+                    all_columns = df_preview.columns.tolist()
+                    if 'current_file' not in st.session_state or st.session_state[
+                            'current_file'] != uploaded_file.name:
+                        st.session_state['selected_columns'] = all_columns
+                        st.session_state['current_file'] = uploaded_file.name
+                        if 'mapping_results' in st.session_state:
+                            del st.session_state['mapping_results']
                 except Exception as e:
                     st.error(f"Error reading file: {e}")
                     file_available = False
                     selected_file = None
+                    all_columns = []
                     return
 
             # Set variables for processing
@@ -143,6 +177,75 @@ def main():
         else:
             file_available = False
             selected_file = None
+            all_columns = []
+            clear_session_state()
+
+    # Column selection section (only show if file is available)
+    if file_available and len(all_columns) > 0:
+        st.header("📋 Select Columns for Mapping")
+
+        with st.expander("Click to select columns", expanded=True):
+            col1, col2 = st.columns(2)
+            with col1:
+                if st.button("Select All", key="select_all"):
+                    st.session_state['selected_columns'] = all_columns
+                    st.rerun()
+            with col2:
+                if st.button("Deselect All", key="deselect_all"):
+                    st.session_state['selected_columns'] = []
+                    st.rerun()
+
+            st.markdown("""
+                <style>
+                .stMultiSelect [data-baseweb="tag"] {
+                    font-size: 0.85rem;
+                    height: auto;
+                    padding: 2px 4px;
+                    color: black;
+                    background-color: lightgrey;
+                }
+                .stMultiSelect [data-baseweb="select"] {
+                    font-size: 0.85rem;
+                    margin-top: -1.5rem;
+                }
+                button[kind="secondary"] {
+                    font-size: 0.85rem !important;
+                    padding: 0.1rem 0.4rem !important;
+                    height: auto !important;
+                    min-height: 1rem !important;
+                }
+                button[kind="secondary"] > div > p {
+                    font-size: 0.85rem !important;
+                }
+                </style>
+            """,
+                        unsafe_allow_html=True)
+
+            if 'selected_columns' not in st.session_state:
+                st.session_state['selected_columns'] = all_columns
+            else:
+                kept = [
+                    c for c in st.session_state['selected_columns']
+                    if c in all_columns
+                ]
+                if kept != st.session_state['selected_columns']:
+                    st.session_state['selected_columns'] = kept or all_columns
+
+            selected_columns = st.multiselect(
+                "Choose columns to map:",
+                options=all_columns,
+                help=
+                "Select which columns you want to perform schema mapping on",
+                label_visibility="collapsed",
+                key="selected_columns",
+            )
+
+        if len(selected_columns) == 0:
+            st.warning("⚠️ Please select at least one column to continue")
+            file_available = False
+        else:
+            st.success(
+                f"✅ {len(selected_columns)} column(s) selected for mapping")
 
     # Processing section (only show if file is available)
     if file_available:
@@ -163,15 +266,13 @@ def main():
                         info_ph.info("Processing demo file...")
                     else:
                         # Create temporary file for uploaded file, preserve original suffix
-                        suffix = Path(selected_file.name).suffix.lower(
-                        )  # e.g. '.csv' or '.tsv'
+                        suffix = Path(selected_file.name).suffix.lower()
 
                         with tempfile.NamedTemporaryFile(
                                 mode='w+', delete=False,
                                 suffix=suffix) as tmp_file:
                             content = selected_file.read()
                             if isinstance(content, bytes):
-                                # Decode text files safely, ignore bad characters
                                 content = content.decode('utf-8',
                                                          errors='ignore')
                             tmp_file.write(content)
@@ -188,51 +289,31 @@ def main():
                     # Run schema mapping
                     results = engine.run_schema_mapping()
 
+                    # Filter results to only include selected columns
+                    if 'selected_columns' in st.session_state and len(
+                            st.session_state['selected_columns']) > 0:
+                        results = results[results['original_column'].isin(
+                            st.session_state['selected_columns'])]
+                        info_ph.info(
+                            f"Filtered to {len(results)} selected columns...")
+
                     # Remove `_source` columns
                     pattern = '_source'
                     columns_to_drop = results.columns[
                         results.columns.str.contains(pattern, case=False)]
-                    results.drop(columns=columns_to_drop,
-                                 inplace=True)  # drop the column
+                    results.drop(columns=columns_to_drop, inplace=True)
+
+                    # Store results in session state for persistent display
+                    st.session_state['mapping_results'] = results
+                    st.session_state['data_source'] = data_source
+                    st.session_state['mode'] = mode
+                    st.session_state['top_k'] = top_k
 
                     # Clean up temporary file if needed
                     if cleanup_needed:
                         os.unlink(tmp_file_path)
 
-                    # Display results
                     st.success("✅ Schema mapping completed successfully!")
-
-                    # Results section
-                    st.header("📊 Results")
-
-                    # Display results dataframe
-                    st.subheader("Mapping Results")
-                    st.dataframe(results, use_container_width=True)
-
-                    # Download button
-                    csv_buffer = StringIO()
-                    results.to_csv(csv_buffer, index=False)
-
-                    file_suffix = "demo" if data_source == "Use demo file" else "uploaded"
-                    st.download_button(
-                        label="📥 Download Results as CSV",
-                        data=csv_buffer.getvalue(),
-                        file_name=
-                        f"schema_mapping_results_{file_suffix}_{mode}_top{top_k}.csv",
-                        mime="text/csv")
-
-                    # # Display summary statistics
-                    # with st.expander("📈 Summary Statistics"):
-                    #     st.write(f"**Total mappings found:** {len(results)}")
-                    #     if 'confidence_score' in results.columns:
-                    #         st.write(f"**Average confidence score:** {results['confidence_score'].mean():.3f}")
-                    #     if 'original_column' in results.columns:
-                    #         st.write(f"**Unique columns mapped:** {results['original_column'].nunique()}")
-                    #
-                    #     # Display column info
-                    #     st.write("**Result columns:**")
-                    #     for col in results.columns:
-                    #         st.write(f"- {col}")
 
                 except Exception as e:
                     st.error(f"❌ Error during schema mapping: {str(e)}")
@@ -252,6 +333,120 @@ def main():
                 finally:
                     info_ph.empty()
 
+        # Display results if available in session state
+        if 'mapping_results' in st.session_state:
+            results = st.session_state['mapping_results']
+
+            # Results section
+            st.header("📊 Results")
+
+            # Add toggle for view mode
+            col1, col2 = st.columns([3, 1])
+            with col1:
+                st.subheader("Mapping Results")
+            with col2:
+                view_mode = st.selectbox(
+                    "View Mode",
+                    options=["Detailed View", "Simple View"],
+                    help=
+                    "Toggle between detailed results and simplified match view"
+                )
+
+            # Prepare dataframe based on view mode
+            if view_mode == "Simple View":
+                # Simple view: only original_column and match fields
+                simple_cols = ['original_column']
+
+                # Add match columns dynamically based on what's available
+                for i in range(1, st.session_state.get('top_k', 5) + 1):
+                    match_field_col = f'match{i}_field'
+                    if match_field_col in results.columns:
+                        simple_cols.append(match_field_col)
+
+                display_df = results[simple_cols].copy()
+
+                # Rename columns for better readability
+                rename_dict = {'original_column': 'Original Column'}
+                for i in range(1, st.session_state.get('top_k', 5) + 1):
+                    match_field_col = f'match{i}_field'
+                    if match_field_col in display_df.columns:
+                        rename_dict[match_field_col] = f'Match {i}'
+
+                display_df.rename(columns=rename_dict, inplace=True)
+
+            else:
+                # Detailed view: all columns
+                display_df = results.copy()
+
+            # Display the dataframe with limited height to prevent scrolling issues
+            st.dataframe(display_df, use_container_width=True, height=400)
+
+            # Download buttons
+            st.subheader("📥 Download Results")
+
+            col1, col2 = st.columns(2)
+
+            with col1:
+                # Download full results
+                csv_buffer_full = StringIO()
+                results.to_csv(csv_buffer_full, index=False)
+
+                file_suffix = "demo" if st.session_state[
+                    'data_source'] == "Use demo file" else "uploaded"
+                st.download_button(
+                    label="Download Full Results (CSV)",
+                    data=csv_buffer_full.getvalue(),
+                    file_name=
+                    f"schema_mapping_full_{file_suffix}_{st.session_state['mode']}_top{st.session_state['top_k']}.csv",
+                    mime="text/csv")
+
+            with col2:
+                # Download simple view
+                simple_cols = ['original_column']
+                for i in range(1, st.session_state.get('top_k', 5) + 1):
+                    match_field_col = f'match{i}_field'
+                    if match_field_col in results.columns:
+                        simple_cols.append(match_field_col)
+
+                simple_results = results[simple_cols].copy()
+                csv_buffer_simple = StringIO()
+                simple_results.to_csv(csv_buffer_simple, index=False)
+
+                st.download_button(
+                    label="Download Simple View (CSV)",
+                    data=csv_buffer_simple.getvalue(),
+                    file_name=
+                    f"schema_mapping_simple_{file_suffix}_{st.session_state['mode']}_top{st.session_state['top_k']}.csv",
+                    mime="text/csv")
+
+            # Summary statistics
+            with st.expander("Summary Statistics"):
+                st.write(f"**Total mappings found:** {len(results)}")
+                st.write(
+                    f"**Unique original columns:** {results['original_column'].nunique()}"
+                )
+
+                # Count columns with matches
+                match1_col = 'match1_field'
+                if match1_col in results.columns:
+                    non_null_matches = results[match1_col].notna().sum()
+                    st.write(
+                        f"**Columns with at least one match:** {non_null_matches}"
+                    )
+
+                # Show average scores if available
+                score_cols = [
+                    col for col in results.columns if col.endswith('_score')
+                ]
+                if score_cols:
+                    st.write("**Average match scores:**")
+                    for score_col in score_cols:
+                        avg_score = results[score_col].mean()
+                        if pd.notna(avg_score):
+                            match_num = score_col.replace('match', '').replace(
+                                '_score', '')
+                            st.write(f"  - Match {match_num}: {avg_score:.3f}")
+
     else:
         # Show message when no file is selected
         if data_source == "Upload your own file":
@@ -260,7 +455,7 @@ def main():
             st.error("❌ Demo file is not available")
 
     # Information section
-    with st.expander("ℹ️ About MetaHarmonizer"):
+    with st.expander("About MetaHarmonizer"):
         st.markdown("""
         **MetaHarmonizer** is a tool for harmonizing clinical data schemas across different datasets.
         
@@ -268,12 +463,18 @@ def main():
         - Automatic and manual schema mapping modes
         - Configurable number of top matches
         - Support for various file formats (CSV, TSV)
+        - Toggle between detailed and simplified result views
+        - Select specific columns for mapping
         
         **Parameters:**
         - **Mode**: 
           - `manual`: Interactive mapping process
           - `auto`: Automatic mapping based on similarity
         - **Top K**: Number of top matching suggestions to return
+        
+        **View Modes:**
+        - **Detailed View**: Shows all columns including matched_stage, matched_stage_detail, and all match scores
+        - **Simple View**: Shows only original_column and match fields for easy comparison
         
         **Repository:** [MetaHarmonizer on GitHub](https://github.com/shbrief/MetaHarmonizer)
         """)

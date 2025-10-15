@@ -16,8 +16,9 @@ services:
       - ./data:/app/data           
       - ./src:/app/src             
       - ./app:/app/app
+      - ./app_sm.py:/app/app_sm.py
     command: >
-      streamlit run streamlit_app_sm.py
+      streamlit run app_sm.py
       --server.port=8501
       --server.address=0.0.0.0
     restart: unless-stopped
