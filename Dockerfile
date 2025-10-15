@@ -15,11 +15,10 @@ RUN pip install --no-cache-dir -r requirements_sm.txt
 COPY src/ ./src/
 COPY demo_nb/ ./demo_nb/
 COPY readme.md ./readme.md
-COPY app_sm.py ./streamlit_app_sm.py
 
 ENV PYTHONPATH=/app
 EXPOSE 8501
 ENV STREAMLIT_SERVER_PORT=8501 \
     STREAMLIT_BROWSER_GATHER_USAGE_STATS=false
 
-CMD ["streamlit", "run", "streamlit_app_sm.py", "--server.port=8501", "--server.address=0.0.0.0"]
+CMD ["streamlit", "run", "app_sm.py", "--server.port=8501", "--server.address=0.0.0.0"]
