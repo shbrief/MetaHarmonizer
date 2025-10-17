@@ -25,459 +25,633 @@ def clear_session_state():
         st.session_state['upload_counter'] += 1
 
 
-def main():
-    st.set_page_config(page_title="MetaHarmonizer Schema Mapping",
-                       page_icon="🔗",
-                       layout="wide")
+def inject_custom_css():
+    """Inject modern, minimalist custom CSS"""
+    st.markdown("""
+        <style>
+        /* Import modern font */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        /* Global styles */
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        /* Main container */
+        .main {
+            padding: 2rem 3rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        /* Headers */
+        h1 {
+            font-weight: 700;
+            font-size: 2.5rem;
+            color: #1a1a1a;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+        
+        h2 {
+            font-weight: 600;
+            font-size: 1.5rem;
+            color: #2d2d2d;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            letter-spacing: -0.01em;
+        }
+        
+        h3 {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #404040;
+            margin-bottom: 0.75rem;
+        }
+        
+        /* Remove emoji clutter, use clean text */
+        .main h1::before,
+        .main h2::before,
+        .main h3::before {
+            content: none;
+        }
+        
+        /* Subtitle */
+        .subtitle {
+            font-size: 1.1rem;
+            color: #666;
+            font-weight: 400;
+            margin-bottom: 3rem;
+            line-height: 1.6;
+        }
+        
+        /* Cards */
+        .card {
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            transition: box-shadow 0.2s ease;
+        }
+        
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        
+        /* Buttons */
+        .stButton > button {
+            border-radius: 8px;
+            font-weight: 500;
+            border: none;
+            padding: 0.6rem 1.5rem;
+            transition: all 0.2s ease;
+            letter-spacing: 0.01em;
+        }
+        
+        .stButton > button[kind="primary"] {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+        
+        .stButton > button[kind="primary"]:hover {
+            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
+            transform: translateY(-1px);
+        }
+        
+        .stButton > button[kind="secondary"] {
+            background: #f8f9fa;
+            color: #495057;
+            border: 1px solid #e5e5e5;
+        }
+        
+        .stButton > button[kind="secondary"]:hover {
+            background: #e9ecef;
+            border-color: #dee2e6;
+        }
+        
+        /* File uploader */
+        .stFileUploader {
+            border: 2px dashed #d0d0d0;
+            border-radius: 12px;
+            padding: 2rem;
+            background: #fafafa;
+            transition: all 0.2s ease;
+        }
+        
+        .stFileUploader:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+        
+        /* Radio buttons - cleaner style */
+        .stRadio > div {
+            gap: 1rem;
+        }
+        
+        .stRadio > div > label {
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            padding: 0.75rem 1.25rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .stRadio > div > label:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+        
+        /* Multiselect */
+        .stMultiSelect [data-baseweb="tag"] {
+            background: #667eea;
+            color: white;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            padding: 4px 8px;
+            font-weight: 500;
+        }
+        
+        .stMultiSelect [data-baseweb="select"] {
+            border-radius: 8px;
+            border-color: #e5e5e5;
+        }
+        
+        /* Dataframe */
+        .stDataFrame {
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        /* Expander */
+        .streamlit-expanderHeader {
+            background: #fafafa;
+            border-radius: 8px;
+            font-weight: 500;
+            color: #2d2d2d;
+            border: 1px solid #e5e5e5;
+        }
+        
+        .streamlit-expanderHeader:hover {
+            background: #f0f0f0;
+        }
+        
+        /* Info/Success/Warning boxes */
+        .stAlert {
+            border-radius: 8px;
+            border: none;
+            padding: 1rem 1.25rem;
+            font-weight: 400;
+        }
+        
+        /* Success message */
+        .stSuccess {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        /* Info message */
+        .stInfo {
+            background: #e7f3ff;
+            color: #004085;
+        }
+        
+        /* Warning message */
+        .stWarning {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        /* Error message */
+        .stError {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        /* Sidebar */
+        [data-testid="stSidebar"] {
+            background: #fafbfc;
+            border-right: 1px solid #e5e5e5;
+            padding: 2rem 1rem;
+        }
+        
+        [data-testid="stSidebar"] h2 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2d2d2d;
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Metrics */
+        [data-testid="stMetricValue"] {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+        
+        /* Spinner */
+        .stSpinner > div {
+            border-top-color: #667eea;
+        }
+        
+        /* Download button special styling */
+        .download-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            border: 1px solid #e5e5e5;
+        }
+        
+        /* Stats grid */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .stat-card {
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            padding: 1.25rem;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 0.25rem;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        /* Hide Streamlit branding */
+        #MainMenu {visibility: hidden;}
+        footer {visibility: hidden;}
+        
+        /* Reduce padding on mobile */
+        @media (max-width: 768px) {
+            .main {
+                padding: 1rem;
+            }
+        }
+        </style>
+    """, unsafe_allow_html=True)
 
-    st.title("🔗 MetaHarmonizer Schema Mapping Tool")
+
+def main():
+    st.set_page_config(
+        page_title="MetaHarmonizer Schema Mapping",
+        page_icon="⚡",
+        layout="wide",
+        initial_sidebar_state="expanded"
+    )
+
+    # Inject custom CSS
+    inject_custom_css()
+
+    # Header
+    st.markdown("<h1>MetaHarmonizer</h1>", unsafe_allow_html=True)
     st.markdown(
-        "Upload your clinical data file and run schema mapping using MetaHarmonizer"
+        "<p class='subtitle'>Standardize clinical metadata schema for improved FAIRness</p>",
+        unsafe_allow_html=True
     )
 
     # Check if MetaHarmonizer is available
     if not METAHARMONIZER_AVAILABLE:
         st.error(f"""
-        ❌ **MetaHarmonizer not found!**
+        **MetaHarmonizer Engine Not Found**
         
-        Error: {import_error}
+        {import_error}
         
         **Setup Instructions:**
         1. Clone the repository: `git clone https://github.com/shbrief/MetaHarmonizer`
         2. Install dependencies: `pip install -r requirements_sm.txt`
-        3. Make sure the `src` folder is in your Python path
-        
-        Or run this app from within the MetaHarmonizer directory.
+        3. Ensure the `src` folder is in your Python path
         """)
         return
 
     # Sidebar configuration
-    st.sidebar.header("⚙️ Configuration")
+    with st.sidebar:
+        st.markdown("## Configuration")
+        
+        mode = st.selectbox(
+            "Mapping Mode",
+            options=["auto", "manual"],
+            help="Auto mode uses AI-powered automatic mapping"
+        )
 
-    mode = st.sidebar.selectbox(
-        "Mapping Mode",
-        options=["manual", "auto"],
-        help="Choose between manual or automatic schema mapping")
+        top_k = st.slider(
+            "Top Matches",
+            min_value=1,
+            max_value=20,
+            value=5,
+            help="Number of mapping suggestions to display"
+        )
+        
+        st.markdown("---")
+        
+        with st.expander("About"):
+            st.markdown("""
+            **MetaHarmonizer** harmonizes clinical data schemas across datasets.
+            
+            Built for researchers and data scientists working with heterogeneous clinical data.
+            
+            [Documentation](https://github.com/shbrief/MetaHarmonizer)
+            """)
 
-    top_k = st.sidebar.slider("Top K Matches",
-                              min_value=1,
-                              max_value=20,
-                              value=5,
-                              help="Number of top matches to return")
-
-    # File selection section
-    st.header("📁 Choose Your Data Source")
-
-    # Radio button to choose between demo or upload
+    # Data source selection
+    st.markdown("## Data Source")
+    
     data_source = st.radio(
-        "Select data source:",
-        options=["Upload your own file", "Use demo file"],
-        help="Choose whether to upload your own data or test with the demo file"
+        "Choose your data source",
+        options=["Upload File", "Demo Dataset"],
+        horizontal=True,
+        label_visibility="collapsed"
     )
 
-    if 'last_data_source' not in st.session_state or st.session_state[
-            'last_data_source'] != data_source:
+    if 'last_data_source' not in st.session_state or st.session_state['last_data_source'] != data_source:
         st.session_state['last_data_source'] = data_source
         clear_session_state()
 
     demo_file_path = "data/demo_data/clinical_metadata_demo.tsv"
+    file_available = False
+    selected_file = None
+    all_columns = []
 
-    if data_source == "Use demo file":
-        # Demo file section
-        st.subheader("🎯 Demo File Selected")
-
+    if data_source == "Demo Dataset":
         if os.path.exists(demo_file_path):
             try:
                 demo_df = pd.read_csv(demo_file_path, sep='\t')
-                st.success(f"✅ Demo file loaded: `{demo_file_path}`")
-                st.write(
-                    f"**Shape:** {demo_df.shape[0]} rows × {demo_df.shape[1]} columns"
-                )
+                
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    st.metric("Rows", f"{demo_df.shape[0]:,}")
+                with col2:
+                    st.metric("Columns", demo_df.shape[1])
+                with col3:
+                    st.metric("Source", "Demo")
 
-                with st.expander("Preview demo data"):
-                    st.dataframe(demo_df.head(10))
-                    if len(demo_df) > 10:
-                        st.info(
-                            f"Showing first 10 rows of {len(demo_df)} total rows"
-                        )
+                with st.expander("Preview Data"):
+                    st.dataframe(demo_df.head(10), use_container_width=True)
 
-                # Set variables for processing
                 selected_file = demo_file_path
                 file_available = True
                 all_columns = demo_df.columns.tolist()
-                if 'current_file' not in st.session_state or st.session_state[
-                        'current_file'] != demo_file_path:
+                
+                if 'current_file' not in st.session_state or st.session_state['current_file'] != demo_file_path:
                     st.session_state['selected_columns'] = all_columns
                     st.session_state['current_file'] = demo_file_path
                     if 'mapping_results' in st.session_state:
                         del st.session_state['mapping_results']
+                        
             except Exception as e:
-                st.error(f"Could not load demo file: {e}")
-                file_available = False
-                selected_file = None
-                all_columns = []
-                clear_session_state()
+                st.error(f"Unable to load demo file: {e}")
         else:
             st.error(f"Demo file not found at: `{demo_file_path}`")
-            file_available = False
-            selected_file = None
-            all_columns = []
-            clear_session_state()
-    else:
-        # File upload section
-        st.subheader("📤 Upload Your File")
-
+    
+    else:  # Upload File
         uploaded_file = st.file_uploader(
-            "Choose a clinical data file",
+            "Drop your clinical data file here",
             type=['csv', 'tsv'],
-            help="Upload a CSV or TSV file containing clinical data")
+            label_visibility="collapsed"
+        )
 
         if uploaded_file is not None:
-            st.success(f"✅ File uploaded: {uploaded_file.name}")
+            try:
+                separator = '\t' if uploaded_file.name.endswith('.tsv') else ','
+                df_preview = pd.read_csv(uploaded_file, sep=separator, nrows=10)
+                
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    st.metric("Rows", f"{df_preview.shape[0]:,}+")
+                with col2:
+                    st.metric("Columns", df_preview.shape[1])
+                with col3:
+                    st.metric("Type", uploaded_file.name.split('.')[-1].upper())
 
-            # Show file preview
-            with st.expander("👀 Preview uploaded data"):
-                try:
-                    # Determine separator based on file extension
-                    if uploaded_file.name.endswith('.tsv'):
-                        separator = '\t'
-                    else:
-                        separator = ','
+                with st.expander("Preview Data"):
+                    st.dataframe(df_preview, use_container_width=True)
 
-                    # Read and display preview
-                    df_preview = pd.read_csv(uploaded_file,
-                                             sep=separator,
-                                             nrows=5)
-                    st.dataframe(df_preview)
-                    st.info(
-                        f"File shape: {df_preview.shape[0]}+ rows × {df_preview.shape[1]} columns"
-                    )
-
-                    # Reset file pointer for processing
-                    uploaded_file.seek(0)
-
-                    # Get all columns
-                    all_columns = df_preview.columns.tolist()
-                    if 'current_file' not in st.session_state or st.session_state[
-                            'current_file'] != uploaded_file.name:
-                        st.session_state['selected_columns'] = all_columns
-                        st.session_state['current_file'] = uploaded_file.name
-                        if 'mapping_results' in st.session_state:
-                            del st.session_state['mapping_results']
-                except Exception as e:
-                    st.error(f"Error reading file: {e}")
-                    file_available = False
-                    selected_file = None
-                    all_columns = []
-                    return
-
-            # Set variables for processing
-            selected_file = uploaded_file
-            file_available = True
-        else:
-            file_available = False
-            selected_file = None
-            all_columns = []
-            clear_session_state()
-
-    # Column selection section (only show if file is available)
-    if file_available and len(all_columns) > 0:
-        st.header("📋 Select Columns for Mapping")
-
-        with st.expander("Click to select columns", expanded=True):
-            col1, col2 = st.columns(2)
-            with col1:
-                if st.button("Select All", key="select_all"):
+                uploaded_file.seek(0)
+                all_columns = df_preview.columns.tolist()
+                
+                if 'current_file' not in st.session_state or st.session_state['current_file'] != uploaded_file.name:
                     st.session_state['selected_columns'] = all_columns
-                    st.rerun()
-            with col2:
-                if st.button("Deselect All", key="deselect_all"):
-                    st.session_state['selected_columns'] = []
-                    st.rerun()
+                    st.session_state['current_file'] = uploaded_file.name
+                    if 'mapping_results' in st.session_state:
+                        del st.session_state['mapping_results']
 
-            st.markdown("""
-                <style>
-                .stMultiSelect [data-baseweb="tag"] {
-                    font-size: 0.85rem;
-                    height: auto;
-                    padding: 2px 4px;
-                    color: black;
-                    background-color: lightgrey;
-                }
-                .stMultiSelect [data-baseweb="select"] {
-                    font-size: 0.85rem;
-                    margin-top: -1.5rem;
-                }
-                button[kind="secondary"] {
-                    font-size: 0.85rem !important;
-                    padding: 0.1rem 0.4rem !important;
-                    height: auto !important;
-                    min-height: 1rem !important;
-                }
-                button[kind="secondary"] > div > p {
-                    font-size: 0.85rem !important;
-                }
-                </style>
-            """,
-                        unsafe_allow_html=True)
+                selected_file = uploaded_file
+                file_available = True
+                
+            except Exception as e:
+                st.error(f"Error reading file: {e}")
 
-            if 'selected_columns' not in st.session_state:
+    # Column selection
+    if file_available and len(all_columns) > 0:
+        st.markdown("## Column Selection")
+        
+        col1, col2, col3 = st.columns([1, 1, 4])
+        with col1:
+            if st.button("Select All", use_container_width=True):
                 st.session_state['selected_columns'] = all_columns
-            else:
-                kept = [
-                    c for c in st.session_state['selected_columns']
-                    if c in all_columns
-                ]
-                if kept != st.session_state['selected_columns']:
-                    st.session_state['selected_columns'] = kept or all_columns
+                st.rerun()
+        with col2:
+            if st.button("Clear All", use_container_width=True):
+                st.session_state['selected_columns'] = []
+                st.rerun()
 
-            selected_columns = st.multiselect(
-                "Choose columns to map:",
-                options=all_columns,
-                help=
-                "Select which columns you want to perform schema mapping on",
-                label_visibility="collapsed",
-                key="selected_columns",
-            )
+        if 'selected_columns' not in st.session_state:
+            st.session_state['selected_columns'] = all_columns
+        else:
+            kept = [c for c in st.session_state['selected_columns'] if c in all_columns]
+            if kept != st.session_state['selected_columns']:
+                st.session_state['selected_columns'] = kept or all_columns
+
+        selected_columns = st.multiselect(
+            "Select columns to map",
+            options=all_columns,
+            default=st.session_state['selected_columns'],
+            key="selected_columns",
+            label_visibility="collapsed"
+        )
 
         if len(selected_columns) == 0:
-            st.warning("⚠️ Please select at least one column to continue")
+            st.warning("Please select at least one column")
             file_available = False
         else:
-            st.success(
-                f"✅ {len(selected_columns)} column(s) selected for mapping")
+            st.caption(f"{len(selected_columns)} of {len(all_columns)} columns selected")
 
-    # Processing section (only show if file is available)
+    # Processing section
     if file_available:
-        # Processing section
-        st.header("🔄 Schema Mapping")
-
-        if st.button("🚀 Run Schema Mapping", type="primary"):
-            with st.spinner(
-                    "Processing schema mapping... This may take a few minutes."
-            ):
-                info_ph = st.empty()  # Placeholder for info messages
+        st.markdown("## Schema Mapping")
+        
+        if st.button("Run Mapping", type="primary", use_container_width=False):
+            with st.spinner("Processing..."):
                 try:
-                    # Handle file processing based on source
-                    if data_source == "Use demo file":
-                        # Use demo file directly
+                    # Handle file processing
+                    if data_source == "Demo Dataset":
                         tmp_file_path = selected_file
                         cleanup_needed = False
-                        info_ph.info("Processing demo file...")
                     else:
-                        # Create temporary file for uploaded file, preserve original suffix
                         suffix = Path(selected_file.name).suffix.lower()
-
-                        with tempfile.NamedTemporaryFile(
-                                mode='w+', delete=False,
-                                suffix=suffix) as tmp_file:
+                        with tempfile.NamedTemporaryFile(mode='w+', delete=False, suffix=suffix) as tmp_file:
                             content = selected_file.read()
                             if isinstance(content, bytes):
-                                content = content.decode('utf-8',
-                                                         errors='ignore')
+                                content = content.decode('utf-8', errors='ignore')
                             tmp_file.write(content)
                             tmp_file_path = tmp_file.name
-
                         cleanup_needed = True
-                        info_ph.info("Processing uploaded file...")
 
-                    # Initialize the SchemaMapEngine
-                    engine = SchemaMapEngine(clinical_data_path=tmp_file_path,
-                                             mode=mode,
-                                             top_k=top_k)
-
-                    # Run schema mapping
+                    # Initialize engine and run mapping
+                    engine = SchemaMapEngine(
+                        clinical_data_path=tmp_file_path,
+                        mode=mode,
+                        top_k=top_k
+                    )
                     results = engine.run_schema_mapping()
 
-                    # Filter results to only include selected columns
-                    if 'selected_columns' in st.session_state and len(
-                            st.session_state['selected_columns']) > 0:
-                        results = results[results['original_column'].isin(
-                            st.session_state['selected_columns'])]
-                        info_ph.info(
-                            f"Filtered to {len(results)} selected columns...")
+                    # Filter to selected columns
+                    if 'selected_columns' in st.session_state and len(st.session_state['selected_columns']) > 0:
+                        results = results[results['original_column'].isin(st.session_state['selected_columns'])]
 
-                    # Remove `_source` columns
+                    # Remove _source columns
                     pattern = '_source'
-                    columns_to_drop = results.columns[
-                        results.columns.str.contains(pattern, case=False)]
+                    columns_to_drop = results.columns[results.columns.str.contains(pattern, case=False)]
                     results.drop(columns=columns_to_drop, inplace=True)
 
-                    # Store results in session state for persistent display
+                    # Store results
                     st.session_state['mapping_results'] = results
                     st.session_state['data_source'] = data_source
                     st.session_state['mode'] = mode
                     st.session_state['top_k'] = top_k
 
-                    # Clean up temporary file if needed
-                    if cleanup_needed:
-                        os.unlink(tmp_file_path)
-
-                    st.success("✅ Schema mapping completed successfully!")
+                    st.success("Mapping completed successfully")
 
                 except Exception as e:
-                    st.error(f"❌ Error during schema mapping: {str(e)}")
-
-                    # More detailed error info in expander
-                    with st.expander("🔍 Detailed Error Information"):
+                    st.error(f"Mapping failed: {str(e)}")
+                    with st.expander("Error Details"):
                         st.code(str(e))
-                        st.write("**Possible solutions:**")
-                        st.write("- Check if your file format is correct")
-                        st.write(
-                            "- Ensure the file contains valid clinical data")
-                        st.write("- Try a different mode (manual/auto)")
-                        st.write(
-                            "- Check if all MetaHarmonizer dependencies are installed"
-                        )
-
+                
                 finally:
-                    info_ph.empty()
+                    if cleanup_needed and 'tmp_file_path' in locals():
+                        try:
+                            os.unlink(tmp_file_path)
+                        except:
+                            pass
 
-        # Display results if available in session state
+        # Display results
         if 'mapping_results' in st.session_state:
             results = st.session_state['mapping_results']
 
-            # Results section
-            st.header("📊 Results")
+            st.markdown("---")
+            st.markdown("## Results")
 
-            # Add toggle for view mode
-            col1, col2 = st.columns([3, 1])
+            # Summary statistics
+            col1, col2, col3, col4 = st.columns(4)
             with col1:
-                st.subheader("Mapping Results")
+                st.metric("Total Mappings", len(results))
+            with col2:
+                st.metric("Unique Columns", results['original_column'].nunique())
+            with col3:
+                match1_col = 'match1_field'
+                if match1_col in results.columns:
+                    st.metric("Matched", results[match1_col].notna().sum())
+            with col4:
+                score_cols = [col for col in results.columns if col.endswith('_score')]
+                if score_cols:
+                    avg_score = results[score_cols[0]].mean()
+                    if pd.notna(avg_score):
+                        st.metric("Avg Score", f"{avg_score:.2f}")
+
+            # View toggle
+            col1, col2 = st.columns([4, 1])
             with col2:
                 view_mode = st.selectbox(
-                    "View Mode",
-                    options=["Detailed View", "Simple View"],
-                    help=
-                    "Toggle between detailed results and simplified match view"
+                    "View",
+                    options=["Simple", "Detailed"],
+                    label_visibility="collapsed"
                 )
 
-            # Prepare dataframe based on view mode
-            if view_mode == "Simple View":
-                # Simple view: only original_column and match fields
+            # Prepare display dataframe
+            if view_mode == "Simple":
                 simple_cols = ['original_column']
-
-                # Add match columns dynamically based on what's available
                 for i in range(1, st.session_state.get('top_k', 5) + 1):
                     match_field_col = f'match{i}_field'
                     if match_field_col in results.columns:
                         simple_cols.append(match_field_col)
-
                 display_df = results[simple_cols].copy()
-
-                # Rename columns for better readability
+                
                 rename_dict = {'original_column': 'Original Column'}
                 for i in range(1, st.session_state.get('top_k', 5) + 1):
                     match_field_col = f'match{i}_field'
                     if match_field_col in display_df.columns:
                         rename_dict[match_field_col] = f'Match {i}'
-
                 display_df.rename(columns=rename_dict, inplace=True)
-
             else:
-                # Detailed view: all columns
                 display_df = results.copy()
 
-            # Display the dataframe with limited height to prevent scrolling issues
+            # Display dataframe
             st.dataframe(display_df, use_container_width=True, height=400)
 
-            # Download buttons
-            st.subheader("📥 Download Results")
-
+            # Download section
+            st.markdown("### Export Results")
+            
             col1, col2 = st.columns(2)
 
+            file_suffix = "demo" if st.session_state['data_source'] == "Demo Dataset" else "upload"
+            
             with col1:
-                # Download full results
                 csv_buffer_full = StringIO()
                 results.to_csv(csv_buffer_full, index=False)
-
-                file_suffix = "demo" if st.session_state[
-                    'data_source'] == "Use demo file" else "uploaded"
                 st.download_button(
-                    label="Download Full Results (CSV)",
+                    label="Download Full Results",
                     data=csv_buffer_full.getvalue(),
-                    file_name=
-                    f"schema_mapping_full_{file_suffix}_{st.session_state['mode']}_top{st.session_state['top_k']}.csv",
-                    mime="text/csv")
+                    file_name=f"mapping_full_{file_suffix}_{st.session_state['mode']}_k{st.session_state['top_k']}.csv",
+                    mime="text/csv",
+                    use_container_width=True
+                )
 
             with col2:
-                # Download simple view
                 simple_cols = ['original_column']
                 for i in range(1, st.session_state.get('top_k', 5) + 1):
                     match_field_col = f'match{i}_field'
                     if match_field_col in results.columns:
                         simple_cols.append(match_field_col)
-
                 simple_results = results[simple_cols].copy()
                 csv_buffer_simple = StringIO()
                 simple_results.to_csv(csv_buffer_simple, index=False)
-
+                
                 st.download_button(
-                    label="Download Simple View (CSV)",
+                    label="Download Simple View",
                     data=csv_buffer_simple.getvalue(),
-                    file_name=
-                    f"schema_mapping_simple_{file_suffix}_{st.session_state['mode']}_top{st.session_state['top_k']}.csv",
-                    mime="text/csv")
-
-            # Summary statistics
-            with st.expander("Summary Statistics"):
-                st.write(f"**Total mappings found:** {len(results)}")
-                st.write(
-                    f"**Unique original columns:** {results['original_column'].nunique()}"
+                    file_name=f"mapping_simple_{file_suffix}_{st.session_state['mode']}_k{st.session_state['top_k']}.csv",
+                    mime="text/csv",
+                    use_container_width=True
                 )
 
-                # Count columns with matches
-                match1_col = 'match1_field'
-                if match1_col in results.columns:
-                    non_null_matches = results[match1_col].notna().sum()
-                    st.write(
-                        f"**Columns with at least one match:** {non_null_matches}"
-                    )
-
-                # Show average scores if available
-                score_cols = [
-                    col for col in results.columns if col.endswith('_score')
-                ]
+            # Detailed statistics in expander
+            with st.expander("Detailed Statistics"):
+                score_cols = [col for col in results.columns if col.endswith('_score')]
                 if score_cols:
-                    st.write("**Average match scores:**")
+                    st.markdown("**Average Match Scores**")
                     for score_col in score_cols:
                         avg_score = results[score_col].mean()
                         if pd.notna(avg_score):
-                            match_num = score_col.replace('match', '').replace(
-                                '_score', '')
-                            st.write(f"  - Match {match_num}: {avg_score:.3f}")
-
-    else:
-        # Show message when no file is selected
-        if data_source == "Upload your own file":
-            st.info("👆 Please upload a file to continue")
-        else:
-            st.error("❌ Demo file is not available")
-
-    # Information section
-    with st.expander("About MetaHarmonizer"):
-        st.markdown("""
-        **MetaHarmonizer** is a tool for harmonizing clinical data schemas across different datasets.
-        
-        **Features:**
-        - Automatic and manual schema mapping modes
-        - Configurable number of top matches
-        - Support for various file formats (CSV, TSV)
-        - Toggle between detailed and simplified result views
-        - Select specific columns for mapping
-        
-        **Parameters:**
-        - **Mode**: 
-          - `manual`: Interactive mapping process
-          - `auto`: Automatic mapping based on similarity
-        - **Top K**: Number of top matching suggestions to return
-        
-        **View Modes:**
-        - **Detailed View**: Shows all columns including matched_stage, matched_stage_detail, and all match scores
-        - **Simple View**: Shows only original_column and match fields for easy comparison
-        
-        **Repository:** [MetaHarmonizer on GitHub](https://github.com/shbrief/MetaHarmonizer)
-        """)
+                            match_num = score_col.replace('match', '').replace('_score', '')
+                            st.write(f"Match {match_num}: {avg_score:.3f}")
 
 
 if __name__ == "__main__":
