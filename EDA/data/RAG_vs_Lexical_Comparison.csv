@@ -1,0 +1,20 @@
+input_term,lexical_match,lexical_score,rag_match,rag_confidence,improvement,explanation
+M0,Anal Sarcoma,33.33,Acute Myeloid Leukemia with Minimal Differentiation,95,MAJOR,"FAB classification M0 - lexical found random tumor, RAG found correct AML subtype"
+M2,Poroma,20.0,Acute Myeloid Leukemia with Maturation,95,MAJOR,FAB classification M2 - most common AML subtype (30-40% of cases)
+M3,Poroma,20.0,Acute Promyelocytic Leukemia with t(15;17)(q24.1;q21.2); PML-RARA,99,MAJOR,FAB M3 = APL. Exact term exists in corpus! This is a retrieval failure.
+M4,Poroma,20.0,Acute Myeloid Leukemia (Acute Myelomonocytic Leukemia),90,MAJOR,FAB M4 - mixed myeloid and monocytic differentiation
+M5,Poroma,15.0,Acute Myeloid Leukemia (Acute Monocytic Leukemia),95,MAJOR,FAB M5 - acute monocytic leukemia (M5a/M5b subtypes)
+M6,Poroma,15.0,Acute Myeloid Leukemia (Acute Erythroleukemia),95,MAJOR,FAB M6 - rare erythroid-predominant AML
+M7,Poroma,15.0,Acute Myeloid Leukemia (Acute Megakaryoblastic Leukemia),95,MAJOR,"FAB M7 - rarest AML subtype, associated with Down syndrome in children"
+ATL,Blastoma,22.86,Adult T-Cell Leukemia/Lymphoma,99,MAJOR,HTLV-1 associated malignancy. Exact term exists in corpus!
+MLL-ALL,Glioma,22.86,Acute Lymphoblastic Leukemia with KMT2A Rearrangement,90,MAJOR,"MLL (now KMT2A) rearranged ALL - poor prognosis, common in infants"
+RARS-T,Astrocytoma,23.33,Myelodysplastic/Myeloproliferative Neoplasm with Ring Sideroblasts and Thrombocytosis,92,MAJOR,Rare MDS/MPN hybrid with ring sideroblasts and elevated platelets
+HGGNOS,Schwannoma,23.33,"High Grade Glioma, Not Otherwise Specified",90,MAJOR,WHO CNS tumor classification - Grade III/IV gliomas
+LIHB,Trichoblastoma,20.91,Hepatoblastoma,85,MAJOR,"TCGA-style code: LI=Liver, HB=Hepatoblastoma (pediatric liver cancer)"
+RT,Teratoma,20.0,Atypical Teratoid/Rhabdoid Tumor,75,MODERATE,Aggressive pediatric CNS malignancy with SMARCB1/INI1 loss
+NKC,Keratoacanthoma,19.0,Extranodal NK/T-Cell Lymphoma,65,MODERATE,Natural Killer cell malignancy - aggressive lymphoma
+ACYC,Mastocytoma,22.86,Adenoid Cystic Carcinoma,60,MODERATE,Possible match to adenoid cystic carcinoma (salivary/respiratory)
+SBS,Sebaceoma,18.57,Not a disease term (likely Single Base Substitution signature),70,DIFFERENT APPROACH,"RAG identifies this as mutational signature code, not diagnosis"
+THPA,Thymoma,22.86,Thymoma (tentative - needs clarification),40,MINIMAL,Non-standard code - requires source data clarification
+THPD,Parachordoma,20.0,Hepatoblastoma (tentative - needs clarification),30,MINIMAL,Non-standard code - requires source data clarification
+APAD,Ependymoma,21.25,Pancreatic Adenocarcinoma (if typo of PAAD),35,MINIMAL,Possible typo of PAAD or non-standard code
