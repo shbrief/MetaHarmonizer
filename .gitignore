@@ -33,3 +33,5 @@ dist/
 
 # Model cache
 model_cache/
+.html
+EDA/data/concatenated_cols_for_189439_values.csv

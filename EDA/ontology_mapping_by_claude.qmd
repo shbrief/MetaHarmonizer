@@ -127,8 +127,6 @@ dim(succeed_wo) # out of 166 failed matches with context
 ```
 
 
-
-
 ## Without context
 
 Use Claude Sonnet 4.5
@@ -138,11 +136,8 @@ I'm trying to standardize clinical metadata of the cancer genomics database to t
 ```
 
 ```{r message=FALSE}
-matches_wo <- readxl::read_excel("data/disease_mapping_without_context.xlsx")
-colnames(matches_wo) <- c("original_value",
-                          paste0("confidence_", 1:5),
-                          paste0("score_", 1:5),
-                          paste0("match_", 1:5))
+matches_wo <- readr::read_csv("data/disease_mapping_without_context.csv") %>%
+    rename(original_value = input_term)
 res_wo <- left_join(matches_wo,
                     failed[c("original_value", "curated_ontology")],
                     by = "original_value")
