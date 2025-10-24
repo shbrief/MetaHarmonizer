@@ -1,2 +1,4 @@
 .gitattributes !filter !diff
 data/* filter=git-crypt diff=git-crypt
+
+*.ipynb filter=nbstripout
