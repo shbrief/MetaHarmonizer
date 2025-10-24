@@ -65,7 +65,62 @@ class OntoMapEngine:
 
         self._test_or_prod = self.other_params['test_or_prod']
         self._logger = logger.custlogger(loglevel='INFO')
+
+        corpus_df = self.other_params.get("corpus_df", None)
+
+        if self.om_strategy in ("rag", "rag_bie"):
+            if corpus_df is None:
+                raise ValueError(
+                    "corpus_df must be provided for 'rag'/'rag_bie'")
+            corpus_df = self._normalize_df(corpus_df, need_code=True)
+            self.other_params["corpus_df"] = corpus_df
+            self.corpus = corpus_df["official_label"].astype(
+                str).unique().tolist()
+
         self._logger.info("Initialized OntoMap Engine module")
+
+    def _normalize_df(self, df: pd.DataFrame, need_code: bool) -> pd.DataFrame:
+        """
+        Normalizes the input DataFrame by ensuring the presence of necessary columns and cleaning data.
+        - official_label: if missing, attempts to use 'label' column as fallback;
+        - clean_code: if missing, attempts to extract from 'obo_id' (format NCIT:C123456 → C123456);
+        - If still missing, raises an error;
+        - Removes null and duplicate values to ensure clean data.
+        """
+        df = df.copy()
+
+        # 1️⃣ official_label fallback
+        if "official_label" not in df.columns:
+            if "label" in df.columns:
+                df["official_label"] = df["label"]
+                self._logger.info(
+                    "`official_label` not found — using `label` as fallback.")
+            else:
+                raise ValueError(
+                    "DataFrame must contain 'official_label' or 'label'")
+
+        # 2️⃣ clean_code fallback
+        if need_code:
+            if "clean_code" not in df.columns:
+                if "obo_id" in df.columns:
+                    # Extract code part from obo_id, e.g., "NCIT:C156482" -> "C156482"
+                    df["clean_code"] = df["obo_id"].astype(str).str.extract(
+                        r'(C\d+)', expand=False)
+                    self._logger.info(
+                        "`clean_code` not found — generated from `obo_id`.")
+                else:
+                    raise ValueError(
+                        "DataFrame must contain 'clean_code' or 'obo_id' for RAG/RAG_BIE strategies"
+                    )
+
+        # 3️⃣ Basic cleaning
+        keep = ["official_label"] + (["clean_code"] if need_code else [])
+        df = df.dropna(subset=keep).drop_duplicates(subset=keep)
+        df["official_label"] = df["official_label"].astype(str)
+        if "clean_code" in df.columns:
+            df["clean_code"] = df["clean_code"].astype(str)
+
+        return df
 
     def _exact_matching(self):
         """
