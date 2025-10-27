@@ -105,8 +105,10 @@ library(clusterSim)
 index.DB(embeddings, clusters_kmeans)$DB
 ```
 
+
+
 ## Nearest centroid classification with cosine similarity
-Create target column name embeddings with context
+Create target column name embeddings (`target_colname_embeddings_with_context.csv`) with context
 https://colab.research.google.com/drive/1CdtvIS7HqVIIMKngsGv7I4VMdoIq6WcK#scrollTo=4993b9e6
 
 ```{r}
@@ -123,8 +125,6 @@ dim(colname_context)
 ```{r eval=FALSE}
 write.csv(colname_context, "data/colname_context.csv", row.names = FALSE)
 ```
-
-`target_colname_embeddings_with_context.csv` was created from [here](https://drive.google.com/file/d/1CdtvIS7HqVIIMKngsGv7I4VMdoIq6WcK/view?usp=sharing)
 
 ```{r}
 centroids <- readr::read_csv("data/target_colname_embeddings_with_context.csv", col_names = FALSE) %>% as.matrix
@@ -149,7 +149,7 @@ round(table(mapping_check$is_mapped_to_curated)/nrow(mapping_check)*100, 2)
 
 Top-5 matching
 ```{r}
-top_n <- 4
+top_n <- 5
 mapping_check_top_n <- check_mapping(res$similarity, expanded_ms, top_n)
 top_n_accuracy <- mapping_check_top_n %>% 
     group_by(original_field) %>% 
@@ -161,6 +161,7 @@ round(table(top_n_accuracy$any_mapped_correctly)/nrow(top_n_accuracy)*100, 2)
 Schema mapping accuracy of 673 source columns to 39 target columns:
 
 ```{r}
+top_n <- 5
 sm_accuracy <- function(mapping, schema, n) {
     tb <- as.data.frame(matrix(NA, nrow = n, ncol = 2))
     colnames(tb) <- c("top_n", "accuracy")
@@ -184,7 +185,38 @@ top_n_accuracy <- sm_accuracy(res$similarity, expanded_ms, 5)
 top_n_accuracy %>%
     ggplot(aes(x = top_n, y = accuracy)) +
     geom_line(color = "blue") +
-    labs(title = paste("Schema Mapping accuracy with top", n, "nearest embeddings"), 
+    labs(title = paste("Schema Mapping accuracy with top", top_n, "nearest embeddings"), 
+         x = "Top n embeddings", y = "Accuracy") +
+    theme_minimal()
+```
+
+### Compare the OntologyMapper result
+Schema mapping accuracy of 673 source columns to 39 target columns
+
+```{r}
+match <- readr::read_csv("~/Downloads/test_manual_eval.csv")
+sm_accuracy <- function(mapping, schema, n) {
+    tb <- as.data.frame(matrix(NA, nrow = n, ncol = 2))
+    colnames(tb) <- c("top_n", "accuracy")
+    for (i in seq_len(n)) {
+        check <- check_mapping(mapping, schema, top_n = i)
+        top_n_accuracy <- check %>% 
+            group_by(original_field) %>% 
+            summarise(any_mapped_correctly = any(is_mapped_to_curated))
+
+        summary <- table(top_n_accuracy$any_mapped_correctly)
+        per_accuracy <- round(summary["TRUE"]/nrow(top_n_accuracy)*100, 2)
+        
+        tb$top_n[i] <- i
+        tb$accuracy[i] <- per_accuracy
+    }
+    return(tb)
+}
+top_n_accuracy <- sm_accuracy(match, expanded_ms, 5)
+top_n_accuracy %>%
+    ggplot(aes(x = top_n, y = accuracy)) +
+    geom_line(color = "blue") +
+    labs(title = paste("Schema Mapping accuracy with top", top_n, "nearest embeddings"), 
          x = "Top n embeddings", y = "Accuracy") +
     theme_minimal()
 ```
