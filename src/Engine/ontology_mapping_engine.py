@@ -50,7 +50,7 @@ class OntoMapEngine:
             topk (int, optional): The number of top matches to return. Defaults to 5.
             s2_strategy (str, optional): The strategy to use for stage 2 OntoMap. Defaults to 'lm'. Options are 'st' or 'lm'.
             s3_strategy (str, optional): The strategy to use for stage 3 OntoMap. Defaults to None. Options are 'rag', 'rag_bie', or None.
-            s3_threshold (float, optional): The threshold for stage 3 OntoMap. Defaults to 0.8.
+            s3_threshold (float, optional): The threshold for stage 3 OntoMap. Defaults to 0.9.
             **other_params (dict): Other parameters to pass to the engine.
         """
         self.method = method
