@@ -319,7 +319,7 @@ def compute_accuracy(
         if include_methods:
             if "matched_stage_method" not in df.columns:
                 raise ValueError(
-                    "include_details was specified but 'matched_stage_method' is missing in eval DF."
+                    "include_methods was specified but 'matched_stage_method' is missing in eval DF."
                 )
             keep = {str(x) for x in include_methods}
             df = df[df["matched_stage_method"].astype(str).isin(keep)].copy()
