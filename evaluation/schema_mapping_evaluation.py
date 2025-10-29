@@ -2,6 +2,10 @@ import os
 from typing import Dict, List, Optional, Sequence, Set, Iterable, Tuple
 import pandas as pd
 
+CANCER_TOKENS: Iterable[str] = ("cancer_type", "cancer_subtype",
+                                "cancer_type_details")
+DISEASE_LABEL: str = "disease"
+
 # --------------------------- helpers ---------------------------
 
 
@@ -30,6 +34,69 @@ def _pred_cols(df: pd.DataFrame, top_k: int) -> List[str]:
         f"match{i}_field" for i in range(1, top_k + 1)
         if f"match{i}_field" in df.columns
     ]
+
+
+def _earliest_rank_of_label(row: pd.Series,
+                            label: str,
+                            pred_cols: List[str],
+                            normalize: bool = True) -> Optional[int]:
+    """Find the earliest rank (1-based) of label in pred_cols for the given row."""
+    tgt = str(label).strip().lower() if normalize else str(label)
+    for i, c in enumerate(pred_cols, start=1):
+        val = str(row.get(c, "")).strip()
+        if normalize:
+            val = val.lower()
+        if val == tgt:
+            return i
+    return None
+
+
+def _apply_cancer_disease_override(
+    df: pd.DataFrame,
+    pred_cols: List[str],
+) -> pd.DataFrame:
+    """
+    Apply override rules to matched_rank based on curated_field content:
+    - If curated_field contains any cancer_token and current matched_rank=99 (unmatched),
+      but disease appears in top-k predictions, set matched_rank to disease's rank.
+    - Conversely, if curated_field is disease and unmatched, but any cancer_token appears in top-k,
+      set matched_rank to earliest cancer_token's rank.
+
+    Returns: (updated DataFrame, number of rows overridden)
+    """
+    cancer_tokens_set = {t.strip().lower() for t in CANCER_TOKENS}
+    disease_norm = DISEASE_LABEL.strip().lower()
+
+    def is_cancer_row(s: str) -> bool:
+        toks = [t.strip().lower() for t in str(s or "").split("|") if t]
+        return any(t in cancer_tokens_set for t in toks)
+
+    def is_disease_row(s: str) -> bool:
+        toks = [t.strip().lower() for t in str(s or "").split("|") if t]
+        return disease_norm in toks
+
+    unmatched = df["matched_rank"].fillna(99).astype(int) == 99
+
+    # Case 1: curated contains any cancer token, but disease appears in predictions
+    is_cancer = df["curated_field"].apply(is_cancer_row)
+    disease_ranks = df.apply(
+        lambda r: _earliest_rank_of_label(r, DISEASE_LABEL, pred_cols), axis=1)
+    override_mask_1 = unmatched & is_cancer & disease_ranks.notna()
+    df.loc[override_mask_1,
+           "matched_rank"] = disease_ranks[override_mask_1].astype(int)
+
+    # Case 2: curated is disease, but any cancer token appears in predictions
+    is_disease = df["curated_field"].apply(is_disease_row)
+    cancer_ranks = df.apply(lambda r: min(
+        (rank for token in CANCER_TOKENS if
+         (rank := _earliest_rank_of_label(r, token, pred_cols)) is not None),
+        default=None),
+                            axis=1)
+    override_mask_2 = unmatched & is_disease & cancer_ranks.notna()
+    df.loc[override_mask_2,
+           "matched_rank"] = cancer_ranks[override_mask_2].astype(int)
+
+    return df
 
 
 # --------------------- 1) build eval DataFrame ----------------------
@@ -142,6 +209,7 @@ def compute_accuracy_from_eval(
     top_k: int = 5,
     include_details: Optional[Iterable[str]] = None,
     exclude_details: Optional[Iterable[str]] = None,
+    apply_cancer_disease_override: bool = False,
 ) -> Dict[str, float]:
     """
     Compute Top-k accuracy FROM an existing *_eval.csv.
@@ -156,6 +224,13 @@ def compute_accuracy_from_eval(
     if include_details and exclude_details:
         raise ValueError(
             "include_details and exclude_details are mutually exclusive.")
+
+    # Apply cancer-disease override if requested
+    if apply_cancer_disease_override:
+        pred_cols = _pred_cols(df, top_k)
+        if not pred_cols:
+            raise ValueError(f"No prediction columns found in {eval_csv}")
+        df = _apply_cancer_disease_override(df, pred_cols)
 
     # Apply include/exclude ONLY for metrics (does not touch the CSV on disk)
     if include_details:
@@ -200,8 +275,9 @@ def compute_accuracy(
     eval_csv: Optional[str] = None,
     top_k: int = 5,
     normalize_text: bool = False,
-    include_details: Optional[Iterable[str]] = None,
-    exclude_details: Optional[Iterable[str]] = None,
+    apply_cancer_disease_override: bool = False,
+    include_methods: Optional[Iterable[str]] = None,
+    exclude_methods: Optional[Iterable[str]] = None,
     save_eval: bool = False,
     out_dir: Optional[str] = "data/schema_mapping_eval",
 ) -> Dict[str, float]:
@@ -212,7 +288,7 @@ def compute_accuracy(
       - pass (pred_file, truth_file) and it will build eval (optionally save) then compute metrics, OR
       - pass eval_csv directly to compute metrics.
 
-    Filtering (include_details/exclude_details) applies to metrics only.
+    Filtering (include_details/exclude_methods) applies to metrics only.
     """
     if eval_csv is None:
         if not (pred_file and truth_file):
@@ -231,22 +307,28 @@ def compute_accuracy(
         df = eval_df.copy()
         mask = df["curated_field"].notna() & (df["curated_field"] != "")
         df = df[mask]  # only rows with truth
-        if include_details and exclude_details:
+
+        if apply_cancer_disease_override:
+            pred_cols = _pred_cols(df, top_k)
+            if pred_cols:
+                df = _apply_cancer_disease_override(df, pred_cols)
+
+        if include_methods and exclude_methods:
             raise ValueError(
                 "include_details and exclude_details are mutually exclusive.")
-        if include_details:
+        if include_methods:
             if "matched_stage_method" not in df.columns:
                 raise ValueError(
                     "include_details was specified but 'matched_stage_method' is missing in eval DF."
                 )
-            keep = {str(x) for x in include_details}
+            keep = {str(x) for x in include_methods}
             df = df[df["matched_stage_method"].astype(str).isin(keep)].copy()
-        if exclude_details:
+        if exclude_methods:
             if "matched_stage_method" not in df.columns:
                 raise ValueError(
                     "exclude_details was specified but 'matched_stage_method' is missing in eval DF."
                 )
-            drop = {str(x) for x in exclude_details}
+            drop = {str(x) for x in exclude_methods}
             df = df[~df["matched_stage_method"].astype(str).isin(drop)].copy()
 
         k_list: Sequence[int] = (1, 3, 5) if top_k == 5 else list(
@@ -274,6 +356,7 @@ def compute_accuracy(
         return compute_accuracy_from_eval(
             eval_csv=eval_csv,
             top_k=top_k,
-            include_details=include_details,
-            exclude_details=exclude_details,
+            apply_cancer_disease_override=apply_cancer_disease_override,
+            include_details=include_methods,
+            exclude_details=exclude_methods,
         )
