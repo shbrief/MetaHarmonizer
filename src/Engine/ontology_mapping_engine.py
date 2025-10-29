@@ -35,7 +35,9 @@ class OntoMapEngine:
                  corpus: list[str],
                  cura_map: dict,
                  topk: int = 5,
-                 om_strategy: str = 'lm',
+                 s2_strategy: str = 'lm',
+                 s3_strategy: str = None,
+                 s3_threshold: float = 0.9,
                  **other_params: dict) -> None:
         """
         Initializes the OntoMapEngine class.
@@ -46,7 +48,9 @@ class OntoMapEngine:
             corpus (list[str]): The list of corpus.
             cura_map (dict): The dictionary containing the mapping of queries to curated values.
             topk (int, optional): The number of top matches to return. Defaults to 5.
-            om_strategy (str, optional): The strategy to use for OntoMap. Defaults to 'lm'.
+            s2_strategy (str, optional): The strategy to use for stage 2 OntoMap. Defaults to 'lm'. Options are 'st' or 'lm'.
+            s3_strategy (str, optional): The strategy to use for stage 3 OntoMap. Defaults to None. Options are 'rag', 'rag_bie', or None.
+            s3_threshold (float, optional): The threshold for stage 3 OntoMap. Defaults to 0.8.
             **other_params (dict): Other parameters to pass to the engine.
         """
         self.method = method
@@ -55,7 +59,9 @@ class OntoMapEngine:
         self.corpus = list(
             dict.fromkeys(corpus))  # Remove duplicates while preserving order
         self.topk = topk
-        self.om_strategy = om_strategy
+        self.s2_strategy = s2_strategy
+        self.s3_strategy = s3_strategy
+        self.s3_threshold = s3_threshold
         self.cura_map = cura_map
         self.other_params = other_params
         if 'test_or_prod' not in self.other_params.keys():
@@ -68,16 +74,30 @@ class OntoMapEngine:
 
         corpus_df = self.other_params.get("corpus_df", None)
 
-        if self.om_strategy in ("rag", "rag_bie"):
+        if self.s2_strategy not in ('lm', 'st'):
+            raise ValueError("s2_strategy must be 'lm' or 'st'")
+        if self.s3_strategy is not None:
+            if self.s3_strategy not in ('rag', 'rag_bie'):
+                raise ValueError(
+                    "s3_strategy must be 'rag', 'rag_bie', or None")
             if corpus_df is None:
                 raise ValueError(
-                    "corpus_df must be provided for 'rag'/'rag_bie'")
+                    "corpus_df must be provided for 'rag'/'rag_bie' for running stage 3"
+                )
             corpus_df = self._normalize_df(corpus_df, need_code=True)
             self.other_params["corpus_df"] = corpus_df
             self.corpus = corpus_df["official_label"].astype(
                 str).unique().tolist()
 
-        self._logger.info("Initialized OntoMap Engine module")
+        self._logger.info("Initialized OntoMap Engine")
+        self._logger.info(f"Stage 1: Exact matching")
+        self._logger.info(f"Stage 2: {self.s2_strategy.upper()}")
+        if self.s3_strategy is not None:
+            self._logger.info(
+                f"Stage 3: {self.s3_strategy.upper()} (threshold={self.s3_threshold})"
+            )
+        else:
+            self._logger.info("Stage 3: Disabled")
 
     def _normalize_df(self, df: pd.DataFrame, need_code: bool) -> pd.DataFrame:
         """
@@ -134,30 +154,6 @@ class OntoMapEngine:
             q for q in self.query if q.strip().lower() in corpus_normalized
         ]
 
-    def _fuzzy_matching(self, fuzz_ratio: int = 90):
-        """
-        Performs fuzzy matching of queries to the corpus with normalization.
-        Currently we do not apply this in production, since transformer-based models already handle fuzzy and semantic matching.
-
-        Args:
-            fuzz_ratio (int, optional): The fuzz ratio threshold for matching. Defaults to 80.
-
-        Returns:
-            list[str]: The list of fuzzy matches from the query.
-        """
-        # Normalize corpus
-        normalized_corpus = [c.strip().lower() for c in self.corpus]
-
-        matches = []
-        for q in self.query:
-            q_norm = q.strip().lower()
-            best_score = max(
-                fuzz.partial_ratio(q_norm, c)
-                for c in normalized_corpus) if normalized_corpus else 0
-            if best_score > fuzz_ratio:
-                matches.append(q)
-        return matches
-
     def _map_shortname_to_fullname(self, non_exact_list: list[str]) -> dict:
         """
         Return a dict: original_value -> updated_value
@@ -183,11 +179,13 @@ class OntoMapEngine:
                     f"Replaced: {q_strip} → {short_to_name[q_strip]}")
         return replaced
 
-    def _om_model_from_strategy(self, non_exact_query_list: list[str]):
+    def _om_model_from_strategy(self, strategy: str,
+                                non_exact_query_list: list[str]):
         """
         Returns the OntoMap model based on the strategy.
 
         Args:
+            strategy (str): The strategy to use ('lm', 'st', 'rag', 'rag_bie').
             non_exact_query_list (list[str]): The list of non-exact query strings.
 
         Returns:
@@ -196,35 +194,35 @@ class OntoMapEngine:
         query_df = self.other_params.get('query_df', None)
         corpus_df = self.other_params.get('corpus_df', None)
 
-        if self.om_strategy == 'lm':
+        if strategy == 'lm':
             return oml.OntoMapLM(method=self.method,
                                  category=self.category,
-                                 om_strategy=self.om_strategy,
+                                 om_strategy='lm',
                                  query=non_exact_query_list,
                                  corpus=self.corpus,
                                  topk=self.topk,
                                  from_tokenizer=True)
 
-        elif self.om_strategy == 'st':
+        elif strategy == 'st':
             return oms.OntoMapST(method=self.method,
                                  category=self.category,
-                                 om_strategy=self.om_strategy,
+                                 om_strategy='st',
                                  query=non_exact_query_list,
                                  corpus=self.corpus,
                                  topk=self.topk,
                                  from_tokenizer=False)
-        elif self.om_strategy == 'rag':
+        elif strategy == 'rag':
             return omr.OntoMapRAG(method=self.method,
                                   category=self.category,
-                                  om_strategy=self.om_strategy,
+                                  om_strategy='rag',
                                   query=non_exact_query_list,
                                   corpus=self.corpus,
                                   topk=self.topk,
                                   corpus_df=corpus_df)
-        elif self.om_strategy == 'rag_bie':
+        elif strategy == 'rag_bie':
             return ombe.OntoMapBIE(method=self.method,
                                    category=self.category,
-                                   om_strategy=self.om_strategy,
+                                   om_strategy='rag_bie',
                                    query=non_exact_query_list,
                                    corpus=self.corpus,
                                    topk=self.topk,
@@ -232,109 +230,188 @@ class OntoMapEngine:
                                    corpus_df=corpus_df)
         else:
             raise ValueError(
-                "om_strategy should be either 'st', 'lm', 'rag', or 'rag_bie'")
-
-    def _separate_matches(self, matching_type: str = 'exact'):
-        """
-        Separates exact and non-exact matches.
-
-        Args:
-            matching_type (str, optional): The type of matching to perform ('exact' or 'fuzzy'). Defaults to 'exact'.
-
-        Returns:
-            list: The list of non-exact matches.
-        """
-        if matching_type not in ['exact', 'fuzzy']:
-            raise ValueError(
-                "Matching type should be either 'exact' or 'fuzzy'")
-
-        if matching_type == 'exact':
-            to_separate_matches = self._exact_matching()
-        elif matching_type == 'fuzzy':
-            to_separate_matches = self._fuzzy_matching()
-
-        non_exact_matches = list(np.setdiff1d(self.query, to_separate_matches))
-        return non_exact_matches
-
-    def get_results_for_non_exact(self,
-                                  non_exact_query_list: list[str],
-                                  topk: int = 5):
-        """
-        Retrieves the match results for the given non-exact query list.
-
-        Args:
-            non_exact_query_list (list[str]): The list of non-exact query strings.
-            topk (int, optional): The number of top matches to retrieve. Defaults to 5.
-
-        Returns:
-            pd.DataFrame: The DataFrame containing the match results.
-        """
-        onto_map = self._om_model_from_strategy(
-            non_exact_query_list=non_exact_query_list)
-        return onto_map.get_match_results(cura_map=self.cura_map,
-                                          topk=topk,
-                                          test_or_prod=self._test_or_prod)
+                f"strategy should be 'st', 'lm', 'rag', or 'rag_bie', got '{strategy}'"
+            )
 
     def run(self):
         """
-        Runs the OntoMap Engine module.
+        Runs the OntoMap Engine with multi-stage cascade.
 
         Returns:
-            pd.DataFrame: A DataFrame containing both exact and non-exact matches.
+            pd.DataFrame: A DataFrame containing results from all stages.
         """
-        self._logger.info("Running Ontology Mapping")
-        self._logger.info("Separating exact and non-exact matches")
+        self._logger.info("=" * 50)
+        self._logger.info("Starting Ontology Mapping")
+        self._logger.info("=" * 50)
+
+        # ========== Stage 1: Exact Matching ==========
+        self._logger.info("Stage 1: Exact Matching")
         exact_matches = self._exact_matching()
-        non_exact_matches_ls = self._separate_matches(matching_type='exact')
+        self._logger.info(f"Exact matches: {len(exact_matches)}")
 
-        self._logger.info("Replacing shortNames using rule-based name mapping")
-        mapping_dict = self._map_shortname_to_fullname(non_exact_matches_ls)
-        updated_queries = [mapping_dict[q] for q in non_exact_matches_ls]
+        stage1_matches = exact_matches
 
-        if updated_queries:
-            replace_df = pd.DataFrame({
-                "original_value": non_exact_matches_ls,
-                "updated_value": updated_queries
-            })
-
-            updated_cura_map = {
-                mapping_dict[k]: v
-                for k, v in self.cura_map.items() if k in mapping_dict
-            }
-
-            onto_map = self._om_model_from_strategy(updated_queries)
-            onto_map_res = onto_map.get_match_results(
-                cura_map=updated_cura_map,
-                topk=self.topk,
-                test_or_prod=self._test_or_prod)
-
-            onto_map_res.rename(columns={"original_value": "updated_value"},
-                                inplace=True)
-            onto_map_res = pd.merge(replace_df,
-                                    onto_map_res,
-                                    on="updated_value",
-                                    how="left")
-            onto_map_res["curated_ontology"] = onto_map_res[
-                "original_value"].map(self.cura_map).fillna("Not Found")
-        else:
-            onto_map_res = self.get_results_for_non_exact(
-                non_exact_query_list=non_exact_matches_ls, topk=self.topk)
-
-        # Create DataFrame for exact matches
-        exact_df = pd.DataFrame({'original_value': exact_matches})
-        exact_df['curated_ontology'] = exact_df[
-            'original_value']  # For exact matches, these are the same
+        # Create DataFrame for Stage 1 matches
+        exact_df = pd.DataFrame({'original_value': stage1_matches})
+        exact_df['curated_ontology'] = exact_df['original_value'].map(
+            self.cura_map).fillna(exact_df['original_value'])
         exact_df['match_level'] = 1
         exact_df['stage'] = 1
         for i in range(1, self.topk + 1):
             exact_df[f'top{i}_match'] = exact_df['curated_ontology']
             exact_df[f'top{i}_score'] = 1.00
 
-        # Add stage column to onto_map_res
-        onto_map_res['stage'] = 2
+        # Remaining queries for Stage 2
+        non_exact_matches_ls = list(np.setdiff1d(self.query, stage1_matches))
+        self._logger.info(
+            f"Remaining for Stage 2: {len(non_exact_matches_ls)}")
 
-        # Combine exact matches and non-exact matches
-        combined_results = pd.concat([exact_df, onto_map_res],
-                                     ignore_index=True)
+        if not non_exact_matches_ls:
+            self._logger.info(
+                "No queries for Stage 2. Returning Stage 1 results.")
+            return exact_df
 
-        return combined_results
+        # ========== Stage 2: LM/ST ==========
+        self._logger.info(f"Stage 2: {self.s2_strategy.upper()} Matching")
+        self._logger.info("Replacing shortNames using rule-based name mapping")
+        mapping_dict = self._map_shortname_to_fullname(non_exact_matches_ls)
+        updated_queries = [mapping_dict[q] for q in non_exact_matches_ls]
+
+        replace_df = pd.DataFrame({
+            "original_value": non_exact_matches_ls,
+            "updated_value": updated_queries
+        })
+
+        updated_cura_map = {
+            mapping_dict[k]: v
+            for k, v in self.cura_map.items() if k in mapping_dict
+        }
+
+        # Run Stage 2 model
+        s2_model = self._om_model_from_strategy(self.s2_strategy,
+                                                updated_queries)
+        s2_res = s2_model.get_match_results(cura_map=updated_cura_map,
+                                            topk=self.topk,
+                                            test_or_prod=self._test_or_prod)
+
+        # Merge back to original_value
+        s2_res.rename(columns={"original_value": "updated_value"},
+                      inplace=True)
+        s2_res = pd.merge(replace_df, s2_res, on="updated_value", how="left")
+        s2_res["curated_ontology"] = s2_res["original_value"].map(
+            self.cura_map).fillna("Not Found")
+        s2_res['stage'] = 2
+
+        self._logger.info(f"Stage 2 completed: {len(s2_res)} queries")
+
+        # ========== Stage 3: RAG/RAG_BIE (Optional) ==========
+        if self.s3_strategy is None:
+            # No Stage 3, combine Stage 1 + Stage 2
+            self._logger.info("Stage 3: Disabled")
+            combined_results = pd.concat([exact_df, s2_res], ignore_index=True)
+
+            self._logger.info("FINAL SUMMARY")
+            self._logger.info(f"Stage 1 (Exact): {len(exact_df)} queries")
+            self._logger.info(
+                f"Stage 2 ({self.s2_strategy.upper()}): {len(s2_res)} queries")
+
+            return combined_results
+
+        else:
+            # Check which queries need Stage 3 (top1_score < threshold)
+            self._logger.info(f"Stage 3: {self.s3_strategy.upper()} Matching")
+
+            top1_score_col = 'top1_score'
+            if top1_score_col not in s2_res.columns:
+                self._logger.warning(
+                    f"{top1_score_col} not found in Stage 2 results. Skipping Stage 3."
+                )
+                combined_results = pd.concat([exact_df, s2_res],
+                                             ignore_index=True)
+                return combined_results
+
+            self._logger.info(f"S2 result columns: {s2_res.columns.tolist()}")
+            self._logger.info(
+                f"S2 result top1_score dtype: {s2_res['top1_score'].dtype}")
+            self._logger.info(
+                f"S2 result top1_score unique values (first 10): {s2_res['top1_score'].unique()[:10]}"
+            )
+            # Identify low-confidence queries
+            low_confidence_mask = pd.to_numeric(
+                s2_res[top1_score_col],
+                errors='coerce').fillna(0) < self.s3_threshold
+            queries_for_s3 = s2_res.loc[low_confidence_mask,
+                                        'original_value'].tolist()
+
+            self._logger.info(
+                f"Queries with top1_score < {self.s3_threshold}: {len(queries_for_s3)}"
+            )
+
+            if not queries_for_s3:
+                self._logger.info("No queries require Stage 3.")
+                combined_results = pd.concat([exact_df, s2_res],
+                                             ignore_index=True)
+
+                self._logger.info("FINAL SUMMARY")
+                self._logger.info(f"Stage 1 (Exact): {len(exact_df)} queries")
+                self._logger.info(
+                    f"Stage 2 ({self.s2_strategy.upper()}): {len(s2_res)} queries"
+                )
+
+                return combined_results
+
+            # Apply shortname replacement for Stage 3 queries
+            mapping_dict_s3 = self._map_shortname_to_fullname(queries_for_s3)
+            updated_queries_s3 = [mapping_dict_s3[q] for q in queries_for_s3]
+
+            replace_df_s3 = pd.DataFrame({
+                "original_value": queries_for_s3,
+                "updated_value": updated_queries_s3
+            })
+
+            updated_cura_map_s3 = {
+                mapping_dict_s3[k]: v
+                for k, v in self.cura_map.items() if k in mapping_dict_s3
+            }
+
+            # Run Stage 3 model
+            s3_model = self._om_model_from_strategy(self.s3_strategy,
+                                                    updated_queries_s3)
+            s3_res = s3_model.get_match_results(
+                cura_map=updated_cura_map_s3,
+                topk=self.topk,
+                test_or_prod=self._test_or_prod)
+
+            # Merge back to original_value
+            s3_res.rename(columns={"original_value": "updated_value"},
+                          inplace=True)
+            s3_res = pd.merge(replace_df_s3,
+                              s3_res,
+                              on="updated_value",
+                              how="left")
+            s3_res["curated_ontology"] = s3_res["original_value"].map(
+                self.cura_map).fillna("Not Found")
+            s3_res['stage'] = 3
+
+            self._logger.info(f"Stage 3 completed: {len(s3_res)} queries")
+
+            # Remove Stage 2 results for queries that went to Stage 3
+            s2_res_filtered = s2_res[~s2_res['original_value'].
+                                     isin(queries_for_s3)].copy()
+
+            # Combine all stages: Stage 1 + Stage 2 (filtered) + Stage 3
+            combined_results = pd.concat([exact_df, s2_res_filtered, s3_res],
+                                         ignore_index=True)
+
+            # Final summary
+            self._logger.info("=" * 50)
+            self._logger.info("FINAL SUMMARY")
+            self._logger.info("=" * 50)
+            self._logger.info(f"Stage 1 (Exact): {len(exact_df)} queries")
+            self._logger.info(
+                f"Stage 2 ({self.s2_strategy.upper()}): {len(s2_res_filtered)} queries"
+            )
+            self._logger.info(
+                f"Stage 3 ({self.s3_strategy.upper()}): {len(s3_res)} queries")
+
+            return combined_results
