@@ -288,7 +288,7 @@ def compute_accuracy(
       - pass (pred_file, truth_file) and it will build eval (optionally save) then compute metrics, OR
       - pass eval_csv directly to compute metrics.
 
-    Filtering (include_details/exclude_methods) applies to metrics only.
+    Filtering (include_methods/exclude_methods) applies to metrics only.
     """
     if eval_csv is None:
         if not (pred_file and truth_file):
