@@ -326,7 +326,7 @@ def compute_accuracy(
         if exclude_methods:
             if "matched_stage_method" not in df.columns:
                 raise ValueError(
-                    "exclude_details was specified but 'matched_stage_method' is missing in eval DF."
+                    "exclude_methods was specified but 'matched_stage_method' is missing in eval DF."
                 )
             drop = {str(x) for x in exclude_methods}
             df = df[~df["matched_stage_method"].astype(str).isin(drop)].copy()
