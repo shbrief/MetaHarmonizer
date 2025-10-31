@@ -1,6 +1,7 @@
 import pandas as pd
-import os, json, time
-from collections import defaultdict
+import os
+import json
+import time
 import google.generativeai as genai
 from dotenv import load_dotenv
 

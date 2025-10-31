@@ -55,14 +55,15 @@ def is_stage_column(df: pd.DataFrame, col: str) -> bool:
     return False
 
 
-import re
-
-
 def is_id_column(col: str) -> bool:
     """
     Determine if a column is likely to contain identifiers (IDs).
     Combines explicit keyword list with flexible pattern matching.
     """
+
+    def norm(s: str) -> str:
+        """Removes separators and lowercases."""
+        return re.sub(r"[._\-\s]", "", s.lower())
 
     exact_keywords = {
         'id', 'identifier', 'code', 'mrn', 'uid', 'uuid', 'guid', 'accession'
@@ -81,11 +82,13 @@ def is_id_column(col: str) -> bool:
         return True
 
     # entity + id / number
-    for entity in id_entities:
-        entity_pattern = re.escape(entity).replace(r'\.', r'[\._]')
-        pattern = rf"{entity_pattern}[\s_\-\.]*(?:id|number)$"
-        if re.search(pattern, col_lower):
-            return True
+    norm_col = norm(col)
+
+    contains_entity = any(norm_col.startswith(e) for e in id_entities)
+    contains_id_suffix = any(norm_col.endswith(s) for s in exact_keywords)
+
+    if contains_entity and contains_id_suffix:
+        return True
 
     # general suffix: ends with separator + id
     if re.search(r'(^|[\s_\-\.])id$', col_lower):
