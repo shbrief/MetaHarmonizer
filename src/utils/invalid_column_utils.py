@@ -57,12 +57,43 @@ def is_stage_column(df: pd.DataFrame, col: str) -> bool:
 
 def is_id_column(col: str) -> bool:
     """
-    Determine if a column is likely to contain IDs (e.g., patient IDs).
-    Heuristic: if >90% of sampled non-null values are alphanumeric strings
-    of length 5-20 without spaces or special characters.
+    Determine if a column is likely to contain identifiers (IDs).
+    Combines explicit keyword list with flexible pattern matching.
     """
-    if "ID" in col or " id" in col or "Id" in col:
+
+    def norm(s: str) -> str:
+        """Removes separators and lowercases."""
+        return re.sub(r"[._\-\s]", "", s.lower())
+
+    exact_keywords = {
+        'id', 'identifier', 'code', 'mrn', 'uid', 'uuid', 'guid', 'accession'
+    }
+
+    id_entities = [
+        'patient', 'study', 'sample', 'subject', 'case', 'participant',
+        'enrollment', 'specimen', 'trial', 'record', 'medical',
+        'medicalrecord', 'accession'
+    ]
+
+    col_lower = col.lower().strip()
+
+    # exact match
+    if col_lower in exact_keywords:
         return True
+
+    # entity + id / number
+    norm_col = norm(col)
+
+    contains_entity = any(norm_col.startswith(e) for e in id_entities)
+    contains_id_suffix = any(norm_col.endswith(s) for s in exact_keywords)
+
+    if contains_entity and contains_id_suffix:
+        return True
+
+    # general suffix: ends with separator + id
+    if re.search(r'(^|[\s_\-\.])id$', col_lower):
+        return True
+
     return False
 
 
