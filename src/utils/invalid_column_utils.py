@@ -55,14 +55,42 @@ def is_stage_column(df: pd.DataFrame, col: str) -> bool:
     return False
 
 
+import re
+
+
 def is_id_column(col: str) -> bool:
     """
-    Determine if a column is likely to contain IDs (e.g., patient IDs).
-    Heuristic: if >90% of sampled non-null values are alphanumeric strings
-    of length 5-20 without spaces or special characters.
+    Determine if a column is likely to contain identifiers (IDs).
+    Combines explicit keyword list with flexible pattern matching.
     """
-    if "ID" in col or " id" in col or "Id" in col:
+
+    exact_keywords = {
+        'id', 'identifier', 'code', 'mrn', 'uid', 'uuid', 'guid', 'accession'
+    }
+
+    id_entities = [
+        'patient', 'study', 'sample', 'subject', 'case', 'participant',
+        'enrollment', 'specimen', 'trial', 'record', 'medical',
+        'medicalrecord', 'accession'
+    ]
+
+    col_lower = col.lower().strip()
+
+    # exact match
+    if col_lower in exact_keywords:
         return True
+
+    # entity + id / number
+    for entity in id_entities:
+        entity_pattern = re.escape(entity).replace(r'\.', r'[\._]')
+        pattern = rf"{entity_pattern}[\s_\-\.]*(?:id|number)$"
+        if re.search(pattern, col_lower):
+            return True
+
+    # general suffix: ends with separator + id
+    if re.search(r'(^|[\s_\-\.])id$', col_lower):
+        return True
+
     return False
 
 

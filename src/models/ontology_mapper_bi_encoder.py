@@ -103,7 +103,10 @@ class OntoMapBIE(OntoModelsBase):
         orig_queries = self.query_df['original_cancer_type_value'].tolist()
         ctx_queries = self.query_df['enriched_query'].tolist()
 
-        for ctx_q in tqdm(ctx_queries, desc="Processing queries (Bi-Encoder)"):
+        for ctx_q in tqdm(ctx_queries,
+                          desc="Processing queries (Bi-Encoder)",
+                          leave=False,
+                          disable=not sys.stdout.isatty()):
             hits = self.vector_store.similarity_search(query=ctx_q,
                                                        k=k,
                                                        as_documents=True)

@@ -36,7 +36,7 @@ class OntoMapRAG(OntoModelsBase):
 
         self.logger.info("Generating results table")
         results = []
-        for q in tqdm(self.query, desc="Processing queries"):
+        for q in tqdm(self.query, desc="Processing queries", leave=False):
             search_results = self.vector_store.similarity_search(
                 query=q, k=topk, as_documents=True)
             results.append(search_results)
