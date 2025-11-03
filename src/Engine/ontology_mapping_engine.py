@@ -29,13 +29,14 @@ class OntoMapEngine:
     """
 
     def __init__(self,
-                 method: str,
                  category: str,
                  query: list[str],
                  corpus: list[str],
                  cura_map: dict,
                  topk: int = 5,
+                 s2_method: str = 'sap-bert',
                  s2_strategy: str = 'lm',
+                 s3_method: str = 'pubmed-bert',
                  s3_strategy: str = None,
                  s3_threshold: float = 0.9,
                  **other_params: dict) -> None:
@@ -53,7 +54,8 @@ class OntoMapEngine:
             s3_threshold (float, optional): The threshold for stage 3 OntoMap. Defaults to 0.9.
             **other_params (dict): Other parameters to pass to the engine.
         """
-        self.method = method
+        self.s2_method = s2_method
+        self.s3_method = s3_method
         self.query = query
         self.category = category
         self.corpus = list(
@@ -86,7 +88,7 @@ class OntoMapEngine:
                 )
             corpus_df = self._normalize_df(corpus_df, need_code=True)
             self.other_params["corpus_df"] = corpus_df
-            self.corpus = corpus_df["official_label"].astype(
+            self.corpus_s3 = corpus_df["official_label"].astype(
                 str).unique().tolist()
 
         self._logger.info("Initialized OntoMap Engine")
@@ -195,7 +197,7 @@ class OntoMapEngine:
         corpus_df = self.other_params.get('corpus_df', None)
 
         if strategy == 'lm':
-            return oml.OntoMapLM(method=self.method,
+            return oml.OntoMapLM(method=self.s2_method,
                                  category=self.category,
                                  om_strategy='lm',
                                  query=non_exact_query_list,
@@ -204,7 +206,7 @@ class OntoMapEngine:
                                  from_tokenizer=True)
 
         elif strategy == 'st':
-            return oms.OntoMapST(method=self.method,
+            return oms.OntoMapST(method=self.s2_method,
                                  category=self.category,
                                  om_strategy='st',
                                  query=non_exact_query_list,
@@ -212,19 +214,19 @@ class OntoMapEngine:
                                  topk=self.topk,
                                  from_tokenizer=False)
         elif strategy == 'rag':
-            return omr.OntoMapRAG(method=self.method,
+            return omr.OntoMapRAG(method=self.s3_method,
                                   category=self.category,
                                   om_strategy='rag',
                                   query=non_exact_query_list,
-                                  corpus=self.corpus,
+                                  corpus=self.corpus_s3,
                                   topk=self.topk,
                                   corpus_df=corpus_df)
         elif strategy == 'rag_bie':
-            return ombe.OntoMapBIE(method=self.method,
+            return ombe.OntoMapBIE(method=self.s3_method,
                                    category=self.category,
                                    om_strategy='rag_bie',
                                    query=non_exact_query_list,
-                                   corpus=self.corpus,
+                                   corpus=self.corpus_s3,
                                    topk=self.topk,
                                    query_df=query_df,
                                    corpus_df=corpus_df)

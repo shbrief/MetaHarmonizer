@@ -1,6 +1,7 @@
+import sys
 import pandas as pd
 import requests
-from tqdm import tqdm
+from tqdm.auto import tqdm
 from src.models.ontology_models import OntoModelsBase
 
 
@@ -59,7 +60,8 @@ class OntoMapBIE(OntoModelsBase):
 
         for _, row in tqdm(query_df.iterrows(),
                            total=len(query_df),
-                           desc="Adding context to query_df"):
+                           desc="Adding context to query_df",
+                           leave=False):
             orig = str(row['original_cancer_type_value']).strip()
             oncotree_code = str(row.get('ONCOTREE_CODE', '')).strip()
             study_id = str(row.get('studyId', '')).strip()
@@ -105,8 +107,7 @@ class OntoMapBIE(OntoModelsBase):
 
         for ctx_q in tqdm(ctx_queries,
                           desc="Processing queries (Bi-Encoder)",
-                          leave=False,
-                          disable=not sys.stdout.isatty()):
+                          leave=False):
             hits = self.vector_store.similarity_search(query=ctx_q,
                                                        k=k,
                                                        as_documents=True)
