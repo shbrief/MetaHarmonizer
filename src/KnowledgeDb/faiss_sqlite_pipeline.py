@@ -10,7 +10,7 @@ import os
 from functools import lru_cache
 from src.utils.embeddings import EmbeddingAdapter
 from src.utils.model_loader import get_embedding_model_cached
-from tqdm import tqdm
+from tqdm.auto import tqdm
 from src.CustomLogger.custom_logger import CustomLogger
 import torch
 from src.KnowledgeDb.db_clients.nci_db import NCIDb
@@ -300,7 +300,8 @@ class FAISSSQLiteSearch:
         seen_codes = set()
 
         for term, codes in tqdm(all_term_code_pairs,
-                                desc="Building context and records"):
+                                desc="Building context and records",
+                                leave=False):
             for code in codes:
                 if code not in concept_data_map or code in seen_codes:
                     continue
@@ -340,7 +341,8 @@ class FAISSSQLiteSearch:
                     f"High GPU memory ({free_mem:.2f}GB), increasing embed_batch_size to {embed_batch_size}"
                 )
         for i in tqdm(range(0, len(contexts), embed_batch_size),
-                      desc="Embedding batches"):
+                      desc="Embedding batches",
+                      leave=False):
             batch_ctx = contexts[i:i + embed_batch_size]
             batch_vecs = self.embedder.embed_documents(batch_ctx)
             self._insert_to_faiss(batch_vecs)
