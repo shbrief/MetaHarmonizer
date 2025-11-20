@@ -1,5 +1,3 @@
-import os
-from src.KnowledgeDb.db_clients import nci_db
 from src.models import ontology_mapper_st as oms
 from src.models import ontology_mapper_lm as oml
 from src.models import ontology_mapper_rag as omr
@@ -11,7 +9,7 @@ from src.CustomLogger.custom_logger import CustomLogger
 
 logger = CustomLogger()
 ABBR_DICT_PATH = "data/corpus/oncotree_code_to_name.csv"
-FTS_MIN_CONFIDENCE = 0.6
+FTS_MIN_CONFIDENCE = 0.2
 
 
 class OntoMapEngine:
@@ -89,6 +87,7 @@ class OntoMapEngine:
                 raise ValueError(
                     "corpus_df must be provided for 'rag'/'rag_bie' for running stage 3"
                 )
+        if corpus_df is not None:
             corpus_df = self._normalize_df(corpus_df, need_code=True)
             self.other_params["corpus_df"] = corpus_df
             self.corpus_s3 = corpus_df["official_label"].astype(

@@ -1,8 +1,7 @@
 import sqlite3
-import asyncio
 import os
 import math
-from typing import List, Tuple, Optional, Set
+from typing import List, Tuple, Set
 from src.KnowledgeDb.db_clients.nci_db import NCIDb
 from src.CustomLogger.custom_logger import CustomLogger
 
@@ -169,6 +168,7 @@ class FTSSynonymDb:
 
             if results:
                 return self._normalize_results(results)
+                # return results
 
         except sqlite3.OperationalError as e:
             try:
@@ -183,6 +183,7 @@ class FTSSynonymDb:
 
                 if results:
                     return self._normalize_results(results)
+                    # return results
 
             except sqlite3.OperationalError as e2:
                 self.logger.warning(f"FTS search failed for '{query}': {e2}")
@@ -202,7 +203,7 @@ class FTSSynonymDb:
             abs_rank = abs(rank)
 
             # confidence = e^(-abs_rank / scale)
-            scale = 2.0
+            scale = 10.0
             confidence = math.exp(-abs_rank / scale)
             confidence = max(0.0, min(1.0, confidence))
 
