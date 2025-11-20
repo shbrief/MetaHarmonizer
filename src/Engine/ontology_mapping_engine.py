@@ -1,14 +1,17 @@
+import os
+from src.KnowledgeDb.db_clients import nci_db
 from src.models import ontology_mapper_st as oms
 from src.models import ontology_mapper_lm as oml
 from src.models import ontology_mapper_rag as omr
+from src.models import ontology_mapper_fts as omf
 from src.models import ontology_mapper_bi_encoder as ombe
 import pandas as pd
 import numpy as np
-from thefuzz import fuzz
 from src.CustomLogger.custom_logger import CustomLogger
 
 logger = CustomLogger()
 ABBR_DICT_PATH = "data/corpus/oncotree_code_to_name.csv"
+FTS_MIN_CONFIDENCE = 0.6
 
 
 class OntoMapEngine:
@@ -93,6 +96,9 @@ class OntoMapEngine:
 
         self._logger.info("Initialized OntoMap Engine")
         self._logger.info(f"Stage 1: Exact matching")
+        self._logger.info(
+            f"Stage 1.5: FTS Synonym matching (confidence>={FTS_MIN_CONFIDENCE})"
+        )
         self._logger.info(f"Stage 2: {self.s2_strategy.upper()}")
         if self.s3_strategy is not None:
             self._logger.info(
@@ -213,6 +219,14 @@ class OntoMapEngine:
                                  corpus=self.corpus,
                                  topk=self.topk,
                                  from_tokenizer=False)
+        elif strategy == 'fts':
+            return omf.OntoMapFTS(method=None,
+                                  category=self.category,
+                                  om_strategy='fts',
+                                  query=non_exact_query_list,
+                                  corpus=self.corpus,
+                                  topk=self.topk,
+                                  corpus_df=corpus_df)
         elif strategy == 'rag':
             return omr.OntoMapRAG(method=self.s3_method,
                                   category=self.category,
@@ -273,14 +287,58 @@ class OntoMapEngine:
                 "No queries for Stage 2. Returning Stage 1 results.")
             return exact_df
 
+        # ========== Stage 1.5: FTS Synonym Matching ==========
+        fts_df = pd.DataFrame()
+        remaining_for_s2 = non_exact_matches_ls
+
+        self._logger.info("Stage 1.5: FTS Synonym Matching")
+
+        fts_model = self._om_model_from_strategy('fts', non_exact_matches_ls)
+        fts_df = fts_model.get_match_results(cura_map=self.cura_map,
+                                             topk=self.topk,
+                                             test_or_prod=self._test_or_prod)
+        fts_df['stage'] = 1.5
+
+        if not fts_df.empty:
+            fts_df['top1_score_float'] = pd.to_numeric(
+                fts_df['top1_score'], errors='coerce').fillna(0)
+
+            fts_matched = fts_df[
+                fts_df['top1_score_float'] >=
+                FTS_MIN_CONFIDENCE]['original_value'].tolist()
+
+            fts_df = fts_df[fts_df['original_value'].isin(fts_matched)]
+            fts_df = fts_df.drop(columns=['top1_score_float'])
+
+            remaining_for_s2 = list(
+                np.setdiff1d(non_exact_matches_ls, fts_matched))
+
+            self._logger.info(f"FTS matched {len(fts_matched)} queries "
+                              f"(confidence >= {FTS_MIN_CONFIDENCE})")
+            self._logger.info(
+                f"Remaining for Stage 2: {len(remaining_for_s2)}")
+        else:
+            self._logger.info("No FTS matches found")
+
+        if not remaining_for_s2:
+            # All queries matched in Stage 1 + 1.5
+            combined_results = pd.concat([exact_df, fts_df], ignore_index=True)
+
+            self._logger.info("=" * 50)
+            self._logger.info("FINAL SUMMARY")
+            self._logger.info(f"Stage 1 (Exact): {len(exact_df)} queries")
+            self._logger.info(f"Stage 1.5 (FTS): {len(fts_df)} queries")
+
+            return combined_results
+
         # ========== Stage 2: LM/ST ==========
         self._logger.info(f"Stage 2: {self.s2_strategy.upper()} Matching")
         self._logger.info("Replacing shortNames using rule-based name mapping")
-        mapping_dict = self._map_shortname_to_fullname(non_exact_matches_ls)
-        updated_queries = [mapping_dict[q] for q in non_exact_matches_ls]
+        mapping_dict = self._map_shortname_to_fullname(remaining_for_s2)
+        updated_queries = [mapping_dict[q] for q in remaining_for_s2]
 
         replace_df = pd.DataFrame({
-            "original_value": non_exact_matches_ls,
+            "original_value": remaining_for_s2,
             "updated_value": updated_queries
         })
 
@@ -310,7 +368,8 @@ class OntoMapEngine:
         if self.s3_strategy is None:
             # No Stage 3, combine Stage 1 + Stage 2
             self._logger.info("Stage 3: Disabled")
-            combined_results = pd.concat([exact_df, s2_res], ignore_index=True)
+            combined_results = pd.concat([exact_df, fts_df, s2_res],
+                                         ignore_index=True)
 
             self._logger.info("FINAL SUMMARY")
             self._logger.info(f"Stage 1 (Exact): {len(exact_df)} queries")
@@ -402,8 +461,8 @@ class OntoMapEngine:
                                      isin(queries_for_s3)].copy()
 
             # Combine all stages: Stage 1 + Stage 2 (filtered) + Stage 3
-            combined_results = pd.concat([exact_df, s2_res_filtered, s3_res],
-                                         ignore_index=True)
+            combined_results = pd.concat(
+                [exact_df, fts_df, s2_res_filtered, s3_res], ignore_index=True)
 
             # Final summary
             self._logger.info("=" * 50)
