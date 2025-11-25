@@ -29,8 +29,9 @@ class SynonymDict:
     def __init__(self, category: str, method: str = None):
         self.category = category
         self.method = method
-        self.table_name = f"synonym_{category}"
-        self.index_name = f"synonym_{category}.index"
+        method_clean = method.replace('-', '_')
+        self.table_name = f"synonym_{method_clean}_{category}"
+        self.index_name = f"synonym_{method_clean}_{category}.index"
 
         self.db_path = BASE_DB
         self.index_path = os.path.join(BASE_IDX_DIR, self.index_name)
@@ -69,10 +70,26 @@ class SynonymDict:
         self._qcache = OrderedDict()
         self._qcache_cap = 200000
 
+    def close(self):
+        """Explicitly close the database connection."""
+        if hasattr(self, '_conn') and self._conn:
+            try:
+                self._conn.close()
+            except Exception:
+                pass
+            self._conn = None
+
+    def __enter__(self):
+        """Enter context manager."""
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        """Exit context manager and close connection."""
+        self.close()
+
     def __del__(self):
         """Close connection on cleanup."""
-        if hasattr(self, '_conn'):
-            self._conn.close()
+        self.close()
 
     def _cache_get(self, key):
         v = self._qcache.get(key)
@@ -122,45 +139,57 @@ class SynonymDict:
     def _insert_synonyms_batch(
             self, records: List[Tuple[str, str, str]]) -> List[int]:
         """
-        ✅ FIX #1: Atomic batch insert with RETURNING clause (SQLite 3.35+).
-        Returns list of inserted row IDs atomically.
+        Atomic batch insert with RETURNING clause (SQLite 3.35+).
+        Uses chunking to avoid SQLITE_MAX_VARIABLE_NUMBER limits.
+        
+        Args:
+            records: List of (synonym, official_label, nci_code) tuples
+            
+        Returns:
+            List of inserted row IDs
+            
+        Raises:
+            RuntimeError: If SQLite version < 3.35.0
+            sqlite3.Error: If insertion fails
         """
         if not records:
             return []
 
-        cursor = self._conn.cursor()
-
         # Check SQLite version
-        sqlite_version = sqlite3.sqlite_version_info
-
-        if sqlite_version >= (3, 35, 0):
-            # ✅ Use RETURNING clause for atomic operation
-            inserted_ids = []
-            for record in records:
-                cursor.execute(
-                    f"INSERT INTO {self.table_name}(synonym, official_label, nci_code) "
-                    f"VALUES(?, ?, ?) RETURNING id", record)
-                inserted_ids.append(cursor.fetchone()[0])
-            self._conn.commit()
-            return inserted_ids
-        else:
-            # Fallback for older SQLite versions
-            self.logger.warning(
+        if sqlite3.sqlite_version_info < (3, 35, 0):
+            raise RuntimeError(
                 f"SQLite {sqlite3.sqlite_version} detected. "
-                f"Using fallback insertion method (not thread-safe).")
-            cursor.execute(
-                f"SELECT COALESCE(MAX(id), 0) FROM {self.table_name}")
-            max_id_before = cursor.fetchone()[0]
+                f"Minimum required version is 3.35.0 for atomic batch insert with RETURNING clause. "
+                f"Please upgrade your SQLite installation.")
 
-            cursor.executemany(
-                f"INSERT INTO {self.table_name}(synonym, official_label, nci_code) "
-                f"VALUES(?, ?, ?)", records)
+        cursor = self._conn.cursor()
+        all_inserted_ids = []
+
+        CHUNK_SIZE = 3000
+
+        try:
+            for i in range(0, len(records), CHUNK_SIZE):
+                chunk = records[i:i + CHUNK_SIZE]
+
+                placeholders = ', '.join(['(?, ?, ?)'] * len(chunk))
+                sql = (
+                    f"INSERT INTO {self.table_name}(synonym, official_label, nci_code) "
+                    f"VALUES {placeholders} RETURNING id")
+
+                flat_values = [item for record in chunk for item in record]
+
+                cursor.execute(sql, flat_values)
+                chunk_ids = [row[0] for row in cursor.fetchall()]
+                all_inserted_ids.extend(chunk_ids)
+
             self._conn.commit()
 
-            cursor.execute(
-                f"SELECT id FROM {self.table_name} WHERE id > ? ORDER BY id",
-                (max_id_before, ))
-            return [row[0] for row in cursor.fetchall()]
+        except sqlite3.Error as e:
+            self._conn.rollback()
+            self.logger.error(f"Batch insert failed: {e}")
+            raise
+
+        return all_inserted_ids
 
     def get_meta_by_ids(self, ids: List[int]) -> List[Dict]:
         """Get full metadata for given IDs using persistent connection."""
@@ -236,7 +265,7 @@ class SynonymDict:
             raise RuntimeError(f"Index dim {self.dim} != model dim {out_dim}")
 
     def _add_to_faiss(self, vectors: np.ndarray, ids: np.ndarray):
-        """dd vectors with their SQLite IDs to FAISS."""
+        """Add vectors with their SQLite IDs to FAISS."""
         if len(vectors) == 0:
             return
 
@@ -384,12 +413,7 @@ class SynonymDict:
                                codes: List[str],
                                force_rebuild: bool = False):
         """Synchronous wrapper for build_index_from_codes_async."""
-        loop = asyncio.new_event_loop()
-        try:
-            loop.run_until_complete(
-                self.build_index_from_codes_async(codes, force_rebuild))
-        finally:
-            loop.close()
+        asyncio.run(self.build_index_from_codes_async(codes, force_rebuild))
 
     # ---------------- Warm Run ----------------
     def warm_run(self, codes: List[str], force_rebuild: bool = False):
@@ -406,7 +430,7 @@ class SynonymDict:
 
     # ---------------- Search Operations ----------------
     def search(self, query_text: str, top_k: int = 10) -> List[Dict]:
-        """ Semantic search using FAISS with direct ID mapping."""
+        """Semantic search using FAISS with direct ID mapping."""
         if self.index is None or self.index.ntotal == 0:
             return []
 

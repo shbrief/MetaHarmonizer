@@ -25,7 +25,7 @@ class OntoModelsBase:
         self.query_df = query_df
         self.corpus_df = corpus_df
 
-        if om_strategy != 'syn' and self.method is None:
+        if self.method is None:
             raise ValueError("Method name cannot be None")
 
         if om_strategy in ["rag_bie", "rag", "syn"] and corpus_df is None:

@@ -7,6 +7,9 @@ from src.CustomLogger.custom_logger import CustomLogger
 
 BASE_DB = os.getenv("VECTOR_DB_PATH")
 UMLS_API_KEY = os.getenv("UMLS_API_KEY")
+if not BASE_DB or not UMLS_API_KEY:
+    raise EnvironmentError(
+        "Environment variables VECTOR_DB_PATH and UMLS_API_KEY must be set.")
 
 
 class FTSSynonymDb:
@@ -73,7 +76,7 @@ class FTSSynonymDb:
 
         if force_rebuild:
             self.logger.info(
-                f"🔄 Force rebuild: fetching all {len(codes_set)} codes")
+                f"Force rebuild: fetching all {len(codes_set)} codes")
             cursor = self.conn.cursor()
             cursor.execute(f"DELETE FROM {self.table_name}")
             self.conn.commit()
@@ -84,12 +87,12 @@ class FTSSynonymDb:
 
             if not codes_to_fetch:
                 self.logger.info(
-                    f"✅ All {len(codes_set)} codes already indexed. Skipping API calls."
+                    f"All {len(codes_set)} codes already indexed. Skipping API calls."
                 )
                 return
 
             self.logger.info(
-                f"📥 Fetching synonyms for {len(codes_to_fetch)} new codes "
+                f"Fetching synonyms for {len(codes_to_fetch)} new codes "
                 f"(skipping {len(indexed_codes & codes_set)} already indexed)")
 
         # Fetch concept data from NCI API
@@ -130,7 +133,7 @@ class FTSSynonymDb:
 
         self.conn.commit()
         self.logger.info(
-            f"✅ Built FTS index: {insert_count} synonyms from {len(concept_data)} codes"
+            f"Built FTS index: {insert_count} synonyms from {len(concept_data)} codes"
         )
 
     def search(self,
@@ -168,7 +171,6 @@ class FTSSynonymDb:
 
             if results:
                 return self._normalize_results(results)
-                # return results
 
         except sqlite3.OperationalError as e:
             try:
@@ -183,7 +185,6 @@ class FTSSynonymDb:
 
                 if results:
                     return self._normalize_results(results)
-                    # return results
 
             except sqlite3.OperationalError as e2:
                 self.logger.warning(f"FTS search failed for '{query}': {e2}")

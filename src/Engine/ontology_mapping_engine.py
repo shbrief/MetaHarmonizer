@@ -9,7 +9,7 @@ from src.CustomLogger.custom_logger import CustomLogger
 
 logger = CustomLogger()
 ABBR_DICT_PATH = "data/corpus/oncotree_code_to_name.csv"
-SYNONYM_MIN_CONFIDENCE = 0.7
+SYNONYM_MIN_CONFIDENCE = 0.9
 
 
 class OntoMapEngine:
@@ -87,6 +87,7 @@ class OntoMapEngine:
                 raise ValueError(
                     "corpus_df must be provided for 'rag'/'rag_bie' for running stage 3"
                 )
+        self.enable_stage_25 = corpus_df is not None
         if corpus_df is not None:
             corpus_df = self._normalize_df(corpus_df, need_code=True)
             self.other_params["corpus_df"] = corpus_df
@@ -96,9 +97,13 @@ class OntoMapEngine:
         self._logger.info("Initialized OntoMap Engine")
         self._logger.info(f"Stage 1: Exact matching")
         self._logger.info(f"Stage 2: {self.s2_strategy.upper()}")
-        self._logger.info(
-            f"Stage 2.5: Synonym matching (confidence>={SYNONYM_MIN_CONFIDENCE})"
-        )
+        if self.enable_stage_25:
+            self._logger.info(
+                f"Stage 2.5: Synonym matching (confidence>={SYNONYM_MIN_CONFIDENCE})"
+            )
+        else:
+            self._logger.info("Stage 2.5: Disabled (corpus_df not provided)")
+
         if self.s3_strategy is not None:
             self._logger.info(
                 f"Stage 3: {self.s3_strategy.upper()} (threshold={self.s3_threshold})"
@@ -320,99 +325,115 @@ class OntoMapEngine:
         self._logger.info(f"Stage 2 completed: {len(s2_res)} queries")
 
         # ========== Stage 2.5: Synonym Verification ==========
-        self._logger.info(
-            "Stage 2.5: Synonym Verification for Low Confidence Results")
+        if not self.enable_stage_25:
+            self._logger.info("Stage 2.5: Skipped (corpus_df not provided)")
+            s2_res['top1_score_float'] = pd.to_numeric(
+                s2_res['top1_score'], errors='coerce').fillna(0)
+        else:
+            self._logger.info(
+                "Stage 2.5: Synonym Verification for Low Confidence Results")
 
-        s2_res['top1_score_float'] = pd.to_numeric(s2_res['top1_score'],
-                                                   errors='coerce').fillna(0)
+            s2_res['top1_score_float'] = pd.to_numeric(
+                s2_res['top1_score'], errors='coerce').fillna(0)
 
-        low_conf_mask = s2_res['top1_score_float'] < SYNONYM_MIN_CONFIDENCE
-        low_conf_queries = s2_res.loc[low_conf_mask, 'original_value'].tolist()
+            low_conf_mask = s2_res['top1_score_float'] < SYNONYM_MIN_CONFIDENCE
+            low_conf_queries = s2_res.loc[low_conf_mask,
+                                          'original_value'].tolist()
 
-        self._logger.info(
-            f"Found {len(low_conf_queries)} low-confidence queries "
-            f"(score < {SYNONYM_MIN_CONFIDENCE}) for synonym verification")
+            self._logger.info(
+                f"Found {len(low_conf_queries)} low-confidence queries "
+                f"(score < {SYNONYM_MIN_CONFIDENCE}) for synonym verification")
 
-        syn_boosted = []
+            syn_boosted = []
 
-        if low_conf_queries:
-            syn_model = self._om_model_from_strategy('syn', low_conf_queries)
-            syn_results = syn_model.get_match_results(
-                cura_map=self.cura_map,
-                topk=self.topk,
-                test_or_prod=self._test_or_prod)
+            if low_conf_queries:
+                syn_model = self._om_model_from_strategy(
+                    'syn', low_conf_queries)
+                syn_results = syn_model.get_match_results(
+                    cura_map=self.cura_map,
+                    topk=self.topk,
+                    test_or_prod=self._test_or_prod)
 
-            for idx, row in s2_res[low_conf_mask].iterrows():
-                orig_val = row['original_value']
-                curated = row['curated_ontology']
+                for idx, row in s2_res[low_conf_mask].iterrows():
+                    orig_val = row['original_value']
+                    curated = row['curated_ontology']
 
-                combined_candidates = {}
-                for i in range(1, self.topk + 1):
-                    match = row[f'top{i}_match']
-                    score = float(row[f'top{i}_score'])
-                    if pd.notna(match) and match:
-                        combined_candidates[match] = score
-
-                syn_row = syn_results[syn_results['original_value'] ==
-                                      orig_val]
-
-                if not syn_row.empty:
+                    combined_candidates = {}
                     for i in range(1, self.topk + 1):
-                        match = syn_row.iloc[0][f'top{i}_match']
-                        score = float(syn_row.iloc[0][f'top{i}_score'])
+                        match = row[f'top{i}_match']
+                        score = float(row[f'top{i}_score'])
                         if pd.notna(match) and match:
-                            if match in combined_candidates:
-                                combined_candidates[match] = max(
-                                    combined_candidates[match], score)
-                            else:
-                                combined_candidates[match] = score
+                            combined_candidates[match] = score
 
-                    sorted_candidates = sorted(combined_candidates.items(),
-                                               key=lambda x: x[1],
-                                               reverse=True)[:self.topk]
+                    syn_row = syn_results[syn_results['original_value'] ==
+                                          orig_val]
 
-                    combined_matches = [
-                        match for match, _ in sorted_candidates
-                    ]
-                    combined_scores = [score for _, score in sorted_candidates]
-
-                    while len(combined_matches) < self.topk:
-                        combined_matches.append(None)
-                        combined_scores.append(0.0)
-
-                    match_level = next(
-                        (i + 1 for i, term in enumerate(combined_matches)
-                         if term == curated), 99)
-
-                    old_top1_score = float(row['top1_score'])
-                    new_top1_score = combined_scores[0]
-                    old_match_level = int(row['match_level'])
-
-                    boosted = (new_top1_score > old_top1_score
-                               or match_level < old_match_level)
-
-                    if boosted:
-                        self._logger.info(
-                            f"Boosted '{orig_val}': "
-                            f"S2_top1={row['top1_match']}({old_top1_score:.3f}) → "
-                            f"Combined_top1={combined_matches[0]}({new_top1_score:.3f}), "
-                            f"match_level: {old_match_level} → {match_level}")
-
+                    if not syn_row.empty:
                         for i in range(1, self.topk + 1):
-                            s2_res.at[idx,
-                                      f'top{i}_match'] = combined_matches[i -
-                                                                          1]
-                            s2_res.at[
-                                idx,
-                                f'top{i}_score'] = f"{combined_scores[i - 1]:.4f}"
+                            match = syn_row.iloc[0][f'top{i}_match']
+                            score = float(syn_row.iloc[0][f'top{i}_score'])
+                            if pd.notna(match) and match:
+                                if match in combined_candidates:
+                                    combined_candidates[match] = max(
+                                        combined_candidates[match], score)
+                                else:
+                                    combined_candidates[match] = score
 
-                        s2_res.at[idx, 'match_level'] = match_level
-                        s2_res.at[idx, 'stage'] = 2.5
-                        s2_res.at[idx, 'top1_score_float'] = new_top1_score
-                        syn_boosted.append(orig_val)
+                        if not combined_candidates:
+                            self._logger.warning(
+                                f"No valid candidates for '{orig_val}' in Stage 2 or Synonym results, skipping boost"
+                            )
+                            continue
 
-        self._logger.info(
-            f"Stage 2.5: Boosted {len(syn_boosted)} queries with synonyms")
+                        sorted_candidates = sorted(combined_candidates.items(),
+                                                   key=lambda x: x[1],
+                                                   reverse=True)[:self.topk]
+
+                        combined_matches = [
+                            match for match, _ in sorted_candidates
+                        ]
+                        combined_scores = [
+                            score for _, score in sorted_candidates
+                        ]
+
+                        while len(combined_matches) < self.topk:
+                            combined_matches.append(None)
+                            combined_scores.append(0.0)
+
+                        match_level = next(
+                            (i + 1 for i, term in enumerate(combined_matches)
+                             if term == curated), 99)
+
+                        old_top1_score = float(row['top1_score'])
+                        new_top1_score = combined_scores[0]
+                        old_match_level = int(row['match_level'])
+
+                        boosted = (new_top1_score > old_top1_score
+                                   or match_level < old_match_level)
+
+                        if boosted:
+                            self._logger.info(
+                                f"Boosted '{orig_val}': "
+                                f"S2_top1={row['top1_match']}({old_top1_score:.3f}) → "
+                                f"Combined_top1={combined_matches[0]}({new_top1_score:.3f}), "
+                                f"match_level: {old_match_level} → {match_level}"
+                            )
+
+                            for i in range(1, self.topk + 1):
+                                s2_res.at[idx,
+                                          f'top{i}_match'] = combined_matches[
+                                              i - 1]
+                                s2_res.at[
+                                    idx,
+                                    f'top{i}_score'] = f"{combined_scores[i - 1]:.4f}"
+
+                            s2_res.at[idx, 'match_level'] = match_level
+                            s2_res.at[idx, 'stage'] = 2.5
+                            s2_res.at[idx, 'top1_score_float'] = new_top1_score
+                            syn_boosted.append(orig_val)
+
+            self._logger.info(
+                f"Stage 2.5: Boosted {len(syn_boosted)} queries with synonyms")
 
         # ========== Stage 3: RAG/RAG_BIE (Optional) ==========
         if self.s3_strategy is None:
@@ -480,11 +501,13 @@ class OntoMapEngine:
                 self._logger.info(f"Stage 1 (Exact): {len(exact_df)} queries")
 
                 s2_only = len(s2_res[s2_res['stage'] == 2])
-                s25_boosted = len(s2_res[s2_res['stage'] == 2.5])
                 self._logger.info(
                     f"Stage 2 ({self.s2_strategy.upper()}): {s2_only} queries")
-                self._logger.info(
-                    f"Stage 2.5 (Synonym boost): {s25_boosted} queries")
+
+                if self.enable_stage_25:
+                    s25_boosted = len(s2_res[s2_res['stage'] == 2.5])
+                    self._logger.info(
+                        f"Stage 2.5 (Synonym boost): {s25_boosted} queries")
 
                 return combined_results
 

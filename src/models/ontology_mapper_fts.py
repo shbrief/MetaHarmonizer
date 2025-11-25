@@ -36,9 +36,7 @@ class OntoMapFTS(otm.OntoModelsBase):
             corpus: List of corpus terms (standard terms)
             om_strategy: Strategy name (should be 'fts')
             topk: Number of top results to return
-            nci_db: NCIDb instance for building index
             corpus_df: DataFrame with 'official_label' and 'clean_code' columns
-            min_confidence: Minimum confidence score threshold
         """
         super().__init__(method,
                          category,
@@ -67,14 +65,9 @@ class OntoMapFTS(otm.OntoModelsBase):
         self.logger.info(f"Building FTS index from {len(codes)} NCI codes...")
 
         # Run async build in sync context
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        try:
-            loop.run_until_complete(self.fts_db.build_index_from_codes(codes))
-        finally:
-            loop.close()
+        asyncio.run(self.fts_db.build_index_from_codes(codes))
 
-    def create_embeddings(self, query_list: List[str], **kwargs):
+    def create_embeddings(self, query, **kwargs):
         """
         FTS doesn't use embeddings, but this method is required by base class.
         Returns None to indicate embeddings are not used.

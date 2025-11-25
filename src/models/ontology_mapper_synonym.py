@@ -97,10 +97,10 @@ class OntoMapSynonym:
                         top_terms.append(match['official_label'])
                         top_scores.append(score)
                     else:
-                        top_terms.append('Not Found')
+                        top_terms.append(None)
                         top_scores.append(0.0)
                 else:
-                    top_terms.append('Not Found')
+                    top_terms.append(None)
                     top_scores.append(0.0)
 
             # Calculate match_level: position of curated term in top-k results
