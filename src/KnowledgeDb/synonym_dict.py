@@ -26,7 +26,7 @@ class SynonymDict:
     SQLite + FAISS based synonym dictionary with proper ID mapping.
     """
 
-    def __init__(self, category: str, method: str = None):
+    def __init__(self, category: str, method: str):
         self.category = category
         self.method = method
         method_clean = method.replace('-', '_')
@@ -75,8 +75,8 @@ class SynonymDict:
         if hasattr(self, '_conn') and self._conn:
             try:
                 self._conn.close()
-            except Exception:
-                pass
+            except Exception as e:
+                self.logger.error(f"Error closing database connection: {e}")
             self._conn = None
 
     def __enter__(self):
@@ -554,11 +554,3 @@ class SynonymDict:
             "unique_codes": unique_codes,
             "index_size": self.index.ntotal if self.index else 0
         }
-
-    def close(self):
-        """Close resources."""
-        if hasattr(self, '_conn'):
-            self._conn.close()
-        if self.index and faiss.get_num_gpus() > 0:
-            del self.index
-            torch.cuda.empty_cache()

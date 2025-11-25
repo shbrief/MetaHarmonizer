@@ -253,6 +253,156 @@ class OntoMapEngine:
                 f"strategy should be 'st', 'lm', 'rag', or 'rag_bie', got '{strategy}'"
             )
 
+    def _log_final_summary(self, exact_df, stage2_results, s3_res=None):
+        """Log final summary statistics.
+        
+        Args:
+            exact_df: Stage 1 exact match results
+            stage2_results: Stage 2/2.5 results (may be filtered if Stage 3 exists)
+            s3_res: Stage 3 results (optional)
+        """
+        self._logger.info("=" * 50)
+        self._logger.info("FINAL SUMMARY")
+        self._logger.info("=" * 50)
+        self._logger.info(f"Stage 1 (Exact): {len(exact_df)} queries")
+
+        s2_only = len(stage2_results[stage2_results['stage'] == 2])
+        self._logger.info(
+            f"Stage 2 ({self.s2_strategy.upper()}): {s2_only} queries")
+
+        if self.enable_stage_25:
+            s25_boosted = len(stage2_results[stage2_results['stage'] == 2.5])
+            self._logger.info(
+                f"Stage 2.5 (Synonym boost): {s25_boosted} queries")
+
+        if s3_res is not None:
+            self._logger.info(
+                f"Stage 3 ({self.s3_strategy.upper()}): {len(s3_res)} queries")
+
+    def _apply_synonym_boost(self, s2_res):
+        """
+        Applies synonym verification to low-confidence results in Stage 2.
+
+        Args:
+            s2_res (pd.DataFrame): The DataFrame containing Stage 2 results.
+
+        Returns:
+            None (modifies s2_res in place)
+        """
+        if not self.enable_stage_25:
+            self._logger.info("Stage 2.5: Skipped (corpus_df not provided)")
+            s2_res['top1_score_float'] = pd.to_numeric(
+                s2_res['top1_score'], errors='coerce').fillna(0)
+        else:
+            self._logger.info(
+                "Stage 2.5: Synonym Verification for Low Confidence Results")
+
+            s2_res['top1_score_float'] = pd.to_numeric(
+                s2_res['top1_score'], errors='coerce').fillna(0)
+
+            low_conf_mask = s2_res['top1_score_float'] < SYNONYM_MIN_CONFIDENCE
+            low_conf_queries = s2_res.loc[low_conf_mask,
+                                          'original_value'].tolist()
+
+            self._logger.info(
+                f"Found {len(low_conf_queries)} low-confidence queries "
+                f"(score < {SYNONYM_MIN_CONFIDENCE}) for synonym verification")
+
+            syn_boosted = []
+
+            if low_conf_queries:
+                syn_model = self._om_model_from_strategy(
+                    'syn', low_conf_queries)
+                syn_results = syn_model.get_match_results(
+                    cura_map=self.cura_map,
+                    topk=self.topk,
+                    test_or_prod=self._test_or_prod)
+
+                syn_dict = {}
+                for _, syn_row in syn_results.iterrows():
+                    orig_val = syn_row['original_value']
+                    syn_dict[orig_val] = syn_row
+
+                for idx, row in s2_res[low_conf_mask].iterrows():
+                    orig_val = row['original_value']
+                    curated = row['curated_ontology']
+
+                    combined_candidates = {}
+                    for i in range(1, self.topk + 1):
+                        match = row[f'top{i}_match']
+                        score = float(row[f'top{i}_score'])
+                        if pd.notna(match) and match:
+                            combined_candidates[match] = score
+
+                    syn_row = syn_dict.get(orig_val)
+
+                    if syn_row is not None:
+                        for i in range(1, self.topk + 1):
+                            match = syn_row[f'top{i}_match']
+                            score = float(syn_row[f'top{i}_score'])
+                            if pd.notna(match) and match:
+                                if match in combined_candidates:
+                                    combined_candidates[match] = max(
+                                        combined_candidates[match], score)
+                                else:
+                                    combined_candidates[match] = score
+
+                        if not combined_candidates:
+                            self._logger.warning(
+                                f"No valid candidates for '{orig_val}' in Stage 2 or Synonym results, skipping boost"
+                            )
+                            continue
+
+                        sorted_candidates = sorted(combined_candidates.items(),
+                                                   key=lambda x: x[1],
+                                                   reverse=True)[:self.topk]
+
+                        combined_matches = [
+                            match for match, _ in sorted_candidates
+                        ]
+                        combined_scores = [
+                            score for _, score in sorted_candidates
+                        ]
+
+                        while len(combined_matches) < self.topk:
+                            combined_matches.append(None)
+                            combined_scores.append(0.0)
+
+                        match_level = next(
+                            (i + 1 for i, term in enumerate(combined_matches)
+                             if term == curated), 99)
+
+                        old_top1_score = float(row['top1_score'])
+                        new_top1_score = combined_scores[0]
+                        old_match_level = int(row['match_level'])
+
+                        boosted = (new_top1_score > old_top1_score
+                                   or match_level < old_match_level)
+
+                        if boosted:
+                            self._logger.info(
+                                f"Boosted '{orig_val}': "
+                                f"S2_top1={row['top1_match']}({old_top1_score:.3f}) → "
+                                f"Combined_top1={combined_matches[0]}({new_top1_score:.3f}), "
+                                f"match_level: {old_match_level} → {match_level}"
+                            )
+
+                            for i in range(1, self.topk + 1):
+                                s2_res.at[idx,
+                                          f'top{i}_match'] = combined_matches[
+                                              i - 1]
+                                s2_res.at[
+                                    idx,
+                                    f'top{i}_score'] = f"{combined_scores[i - 1]:.4f}"
+
+                            s2_res.at[idx, 'match_level'] = match_level
+                            s2_res.at[idx, 'stage'] = 2.5
+                            s2_res.at[idx, 'top1_score_float'] = new_top1_score
+                            syn_boosted.append(orig_val)
+
+            self._logger.info(
+                f"Stage 2.5: Boosted {len(syn_boosted)} queries with synonyms")
+
     def run(self):
         """
         Runs the OntoMap Engine with multi-stage cascade.
@@ -325,138 +475,17 @@ class OntoMapEngine:
         self._logger.info(f"Stage 2 completed: {len(s2_res)} queries")
 
         # ========== Stage 2.5: Synonym Verification ==========
-        if not self.enable_stage_25:
-            self._logger.info("Stage 2.5: Skipped (corpus_df not provided)")
-            s2_res['top1_score_float'] = pd.to_numeric(
-                s2_res['top1_score'], errors='coerce').fillna(0)
-        else:
-            self._logger.info(
-                "Stage 2.5: Synonym Verification for Low Confidence Results")
-
-            s2_res['top1_score_float'] = pd.to_numeric(
-                s2_res['top1_score'], errors='coerce').fillna(0)
-
-            low_conf_mask = s2_res['top1_score_float'] < SYNONYM_MIN_CONFIDENCE
-            low_conf_queries = s2_res.loc[low_conf_mask,
-                                          'original_value'].tolist()
-
-            self._logger.info(
-                f"Found {len(low_conf_queries)} low-confidence queries "
-                f"(score < {SYNONYM_MIN_CONFIDENCE}) for synonym verification")
-
-            syn_boosted = []
-
-            if low_conf_queries:
-                syn_model = self._om_model_from_strategy(
-                    'syn', low_conf_queries)
-                syn_results = syn_model.get_match_results(
-                    cura_map=self.cura_map,
-                    topk=self.topk,
-                    test_or_prod=self._test_or_prod)
-
-                for idx, row in s2_res[low_conf_mask].iterrows():
-                    orig_val = row['original_value']
-                    curated = row['curated_ontology']
-
-                    combined_candidates = {}
-                    for i in range(1, self.topk + 1):
-                        match = row[f'top{i}_match']
-                        score = float(row[f'top{i}_score'])
-                        if pd.notna(match) and match:
-                            combined_candidates[match] = score
-
-                    syn_row = syn_results[syn_results['original_value'] ==
-                                          orig_val]
-
-                    if not syn_row.empty:
-                        for i in range(1, self.topk + 1):
-                            match = syn_row.iloc[0][f'top{i}_match']
-                            score = float(syn_row.iloc[0][f'top{i}_score'])
-                            if pd.notna(match) and match:
-                                if match in combined_candidates:
-                                    combined_candidates[match] = max(
-                                        combined_candidates[match], score)
-                                else:
-                                    combined_candidates[match] = score
-
-                        if not combined_candidates:
-                            self._logger.warning(
-                                f"No valid candidates for '{orig_val}' in Stage 2 or Synonym results, skipping boost"
-                            )
-                            continue
-
-                        sorted_candidates = sorted(combined_candidates.items(),
-                                                   key=lambda x: x[1],
-                                                   reverse=True)[:self.topk]
-
-                        combined_matches = [
-                            match for match, _ in sorted_candidates
-                        ]
-                        combined_scores = [
-                            score for _, score in sorted_candidates
-                        ]
-
-                        while len(combined_matches) < self.topk:
-                            combined_matches.append(None)
-                            combined_scores.append(0.0)
-
-                        match_level = next(
-                            (i + 1 for i, term in enumerate(combined_matches)
-                             if term == curated), 99)
-
-                        old_top1_score = float(row['top1_score'])
-                        new_top1_score = combined_scores[0]
-                        old_match_level = int(row['match_level'])
-
-                        boosted = (new_top1_score > old_top1_score
-                                   or match_level < old_match_level)
-
-                        if boosted:
-                            self._logger.info(
-                                f"Boosted '{orig_val}': "
-                                f"S2_top1={row['top1_match']}({old_top1_score:.3f}) → "
-                                f"Combined_top1={combined_matches[0]}({new_top1_score:.3f}), "
-                                f"match_level: {old_match_level} → {match_level}"
-                            )
-
-                            for i in range(1, self.topk + 1):
-                                s2_res.at[idx,
-                                          f'top{i}_match'] = combined_matches[
-                                              i - 1]
-                                s2_res.at[
-                                    idx,
-                                    f'top{i}_score'] = f"{combined_scores[i - 1]:.4f}"
-
-                            s2_res.at[idx, 'match_level'] = match_level
-                            s2_res.at[idx, 'stage'] = 2.5
-                            s2_res.at[idx, 'top1_score_float'] = new_top1_score
-                            syn_boosted.append(orig_val)
-
-            self._logger.info(
-                f"Stage 2.5: Boosted {len(syn_boosted)} queries with synonyms")
+        self._apply_synonym_boost(s2_res)
 
         # ========== Stage 3: RAG/RAG_BIE (Optional) ==========
         if self.s3_strategy is None:
             # No Stage 3, combine Stage 1 + Stage 2
             self._logger.info("Stage 3: Disabled")
 
-            # Now safe to drop top1_score_float
             s2_res.drop(columns=['top1_score_float'], inplace=True)
-
             combined_results = pd.concat([exact_df, s2_res], ignore_index=True)
 
-            self._logger.info("=" * 50)
-            self._logger.info("FINAL SUMMARY")
-            self._logger.info("=" * 50)
-            self._logger.info(f"Stage 1 (Exact): {len(exact_df)} queries")
-
-            s2_only = len(s2_res[s2_res['stage'] == 2])
-            s25_boosted = len(s2_res[s2_res['stage'] == 2.5])
-            self._logger.info(
-                f"Stage 2 ({self.s2_strategy.upper()}): {s2_only} queries")
-            self._logger.info(
-                f"Stage 2.5 (Synonym boost): {s25_boosted} queries")
-
+            self._log_final_summary(exact_df, s2_res)
             return combined_results
 
         else:
@@ -495,20 +524,7 @@ class OntoMapEngine:
                 combined_results = pd.concat([exact_df, s2_res],
                                              ignore_index=True)
 
-                self._logger.info("=" * 50)
-                self._logger.info("FINAL SUMMARY")
-                self._logger.info("=" * 50)
-                self._logger.info(f"Stage 1 (Exact): {len(exact_df)} queries")
-
-                s2_only = len(s2_res[s2_res['stage'] == 2])
-                self._logger.info(
-                    f"Stage 2 ({self.s2_strategy.upper()}): {s2_only} queries")
-
-                if self.enable_stage_25:
-                    s25_boosted = len(s2_res[s2_res['stage'] == 2.5])
-                    self._logger.info(
-                        f"Stage 2.5 (Synonym boost): {s25_boosted} queries")
-
+                self._log_final_summary(exact_df, s2_res)
                 return combined_results
 
             # Apply shortname replacement for Stage 3 queries
@@ -558,18 +574,5 @@ class OntoMapEngine:
                                          ignore_index=True)
 
             # Final summary
-            self._logger.info("=" * 50)
-            self._logger.info("FINAL SUMMARY")
-            self._logger.info("=" * 50)
-            self._logger.info(f"Stage 1 (Exact): {len(exact_df)} queries")
-
-            s2_only = len(s2_res_filtered[s2_res_filtered['stage'] == 2])
-            s25_boosted = len(s2_res_filtered[s2_res_filtered['stage'] == 2.5])
-            self._logger.info(
-                f"Stage 2 ({self.s2_strategy.upper()}): {s2_only} queries")
-            self._logger.info(
-                f"Stage 2.5 (Synonym boost): {s25_boosted} queries")
-            self._logger.info(
-                f"Stage 3 ({self.s3_strategy.upper()}): {len(s3_res)} queries")
-
+            self._log_final_summary(exact_df, s2_res_filtered, s3_res)
             return combined_results
