@@ -25,12 +25,12 @@ class OntoModelsBase:
         self.query_df = query_df
         self.corpus_df = corpus_df
 
-        if om_strategy != 'fts' and self.method is None:
+        if om_strategy != 'syn' and self.method is None:
             raise ValueError("Method name cannot be None")
 
-        if om_strategy in ["rag_bie", "rag", "fts"] and corpus_df is None:
+        if om_strategy in ["rag_bie", "rag", "syn"] and corpus_df is None:
             raise ValueError(
-                "corpus_df must be provided when om_strategy is 'rag_bie', 'rag', or 'fts'"
+                "corpus_df must be provided when om_strategy is 'rag_bie', 'rag', or 'syn'"
             )
         if om_strategy == "rag_bie" and query_df is None:
             raise ValueError(
@@ -41,7 +41,7 @@ class OntoModelsBase:
         if len(self.corpus) == 0:
             raise ValueError("Corpus list cannot be empty")
 
-        if om_strategy != 'fts':
+        if om_strategy != 'syn':
             # Load method_model_dict from a YAML file
             self.method_model_dict = load_method_model_dict()
             self.list_of_methods = list(self.method_model_dict.keys())

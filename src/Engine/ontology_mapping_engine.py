@@ -1,7 +1,7 @@
 from src.models import ontology_mapper_st as oms
 from src.models import ontology_mapper_lm as oml
 from src.models import ontology_mapper_rag as omr
-from src.models import ontology_mapper_fts as omf
+from src.models import ontology_mapper_synonym as omsyn
 from src.models import ontology_mapper_bi_encoder as ombe
 import pandas as pd
 import numpy as np
@@ -9,7 +9,7 @@ from src.CustomLogger.custom_logger import CustomLogger
 
 logger = CustomLogger()
 ABBR_DICT_PATH = "data/corpus/oncotree_code_to_name.csv"
-FTS_MIN_CONFIDENCE = 0.2
+SYNONYM_MIN_CONFIDENCE = 0.7
 
 
 class OntoMapEngine:
@@ -95,10 +95,10 @@ class OntoMapEngine:
 
         self._logger.info("Initialized OntoMap Engine")
         self._logger.info(f"Stage 1: Exact matching")
-        self._logger.info(
-            f"Stage 1.5: FTS Synonym matching (confidence>={FTS_MIN_CONFIDENCE})"
-        )
         self._logger.info(f"Stage 2: {self.s2_strategy.upper()}")
+        self._logger.info(
+            f"Stage 2.5: Synonym matching (confidence>={SYNONYM_MIN_CONFIDENCE})"
+        )
         if self.s3_strategy is not None:
             self._logger.info(
                 f"Stage 3: {self.s3_strategy.upper()} (threshold={self.s3_threshold})"
@@ -116,7 +116,7 @@ class OntoMapEngine:
         """
         df = df.copy()
 
-        # 1️⃣ official_label fallback
+        # official_label fallback
         if "official_label" not in df.columns:
             if "label" in df.columns:
                 df["official_label"] = df["label"]
@@ -126,7 +126,7 @@ class OntoMapEngine:
                 raise ValueError(
                     "DataFrame must contain 'official_label' or 'label'")
 
-        # 2️⃣ clean_code fallback
+        # clean_code fallback
         if need_code:
             if "clean_code" not in df.columns:
                 if "obo_id" in df.columns:
@@ -140,7 +140,7 @@ class OntoMapEngine:
                         "DataFrame must contain 'clean_code' or 'obo_id' for RAG/RAG_BIE strategies"
                     )
 
-        # 3️⃣ Basic cleaning
+        # Basic cleaning
         keep = ["official_label"] + (["clean_code"] if need_code else [])
         df = df.dropna(subset=keep).drop_duplicates(subset=keep)
         df["official_label"] = df["official_label"].astype(str)
@@ -218,14 +218,14 @@ class OntoMapEngine:
                                  corpus=self.corpus,
                                  topk=self.topk,
                                  from_tokenizer=False)
-        elif strategy == 'fts':
-            return omf.OntoMapFTS(method=None,
-                                  category=self.category,
-                                  om_strategy='fts',
-                                  query=non_exact_query_list,
-                                  corpus=self.corpus,
-                                  topk=self.topk,
-                                  corpus_df=corpus_df)
+        elif strategy == 'syn':
+            return omsyn.OntoMapSynonym(method=self.s2_method,
+                                        category=self.category,
+                                        om_strategy='syn',
+                                        query=non_exact_query_list,
+                                        corpus=self.corpus,
+                                        topk=self.topk,
+                                        corpus_df=corpus_df)
         elif strategy == 'rag':
             return omr.OntoMapRAG(method=self.s3_method,
                                   category=self.category,
@@ -286,58 +286,14 @@ class OntoMapEngine:
                 "No queries for Stage 2. Returning Stage 1 results.")
             return exact_df
 
-        # ========== Stage 1.5: FTS Synonym Matching ==========
-        fts_df = pd.DataFrame()
-        remaining_for_s2 = non_exact_matches_ls
-
-        self._logger.info("Stage 1.5: FTS Synonym Matching")
-
-        fts_model = self._om_model_from_strategy('fts', non_exact_matches_ls)
-        fts_df = fts_model.get_match_results(cura_map=self.cura_map,
-                                             topk=self.topk,
-                                             test_or_prod=self._test_or_prod)
-        fts_df['stage'] = 1.5
-
-        if not fts_df.empty:
-            fts_df['top1_score_float'] = pd.to_numeric(
-                fts_df['top1_score'], errors='coerce').fillna(0)
-
-            fts_matched = fts_df[
-                fts_df['top1_score_float'] >=
-                FTS_MIN_CONFIDENCE]['original_value'].tolist()
-
-            fts_df = fts_df[fts_df['original_value'].isin(fts_matched)]
-            fts_df = fts_df.drop(columns=['top1_score_float'])
-
-            remaining_for_s2 = list(
-                np.setdiff1d(non_exact_matches_ls, fts_matched))
-
-            self._logger.info(f"FTS matched {len(fts_matched)} queries "
-                              f"(confidence >= {FTS_MIN_CONFIDENCE})")
-            self._logger.info(
-                f"Remaining for Stage 2: {len(remaining_for_s2)}")
-        else:
-            self._logger.info("No FTS matches found")
-
-        if not remaining_for_s2:
-            # All queries matched in Stage 1 + 1.5
-            combined_results = pd.concat([exact_df, fts_df], ignore_index=True)
-
-            self._logger.info("=" * 50)
-            self._logger.info("FINAL SUMMARY")
-            self._logger.info(f"Stage 1 (Exact): {len(exact_df)} queries")
-            self._logger.info(f"Stage 1.5 (FTS): {len(fts_df)} queries")
-
-            return combined_results
-
         # ========== Stage 2: LM/ST ==========
         self._logger.info(f"Stage 2: {self.s2_strategy.upper()} Matching")
         self._logger.info("Replacing shortNames using rule-based name mapping")
-        mapping_dict = self._map_shortname_to_fullname(remaining_for_s2)
-        updated_queries = [mapping_dict[q] for q in remaining_for_s2]
+        mapping_dict = self._map_shortname_to_fullname(non_exact_matches_ls)
+        updated_queries = [mapping_dict[q] for q in non_exact_matches_ls]
 
         replace_df = pd.DataFrame({
-            "original_value": remaining_for_s2,
+            "original_value": non_exact_matches_ls,
             "updated_value": updated_queries
         })
 
@@ -363,17 +319,122 @@ class OntoMapEngine:
 
         self._logger.info(f"Stage 2 completed: {len(s2_res)} queries")
 
+        # ========== Stage 2.5: Synonym Verification ==========
+        self._logger.info(
+            "Stage 2.5: Synonym Verification for Low Confidence Results")
+
+        s2_res['top1_score_float'] = pd.to_numeric(s2_res['top1_score'],
+                                                   errors='coerce').fillna(0)
+
+        low_conf_mask = s2_res['top1_score_float'] < SYNONYM_MIN_CONFIDENCE
+        low_conf_queries = s2_res.loc[low_conf_mask, 'original_value'].tolist()
+
+        self._logger.info(
+            f"Found {len(low_conf_queries)} low-confidence queries "
+            f"(score < {SYNONYM_MIN_CONFIDENCE}) for synonym verification")
+
+        syn_boosted = []
+
+        if low_conf_queries:
+            syn_model = self._om_model_from_strategy('syn', low_conf_queries)
+            syn_results = syn_model.get_match_results(
+                cura_map=self.cura_map,
+                topk=self.topk,
+                test_or_prod=self._test_or_prod)
+
+            for idx, row in s2_res[low_conf_mask].iterrows():
+                orig_val = row['original_value']
+                curated = row['curated_ontology']
+
+                combined_candidates = {}
+                for i in range(1, self.topk + 1):
+                    match = row[f'top{i}_match']
+                    score = float(row[f'top{i}_score'])
+                    if pd.notna(match) and match:
+                        combined_candidates[match] = score
+
+                syn_row = syn_results[syn_results['original_value'] ==
+                                      orig_val]
+
+                if not syn_row.empty:
+                    for i in range(1, self.topk + 1):
+                        match = syn_row.iloc[0][f'top{i}_match']
+                        score = float(syn_row.iloc[0][f'top{i}_score'])
+                        if pd.notna(match) and match:
+                            if match in combined_candidates:
+                                combined_candidates[match] = max(
+                                    combined_candidates[match], score)
+                            else:
+                                combined_candidates[match] = score
+
+                    sorted_candidates = sorted(combined_candidates.items(),
+                                               key=lambda x: x[1],
+                                               reverse=True)[:self.topk]
+
+                    combined_matches = [
+                        match for match, _ in sorted_candidates
+                    ]
+                    combined_scores = [score for _, score in sorted_candidates]
+
+                    while len(combined_matches) < self.topk:
+                        combined_matches.append(None)
+                        combined_scores.append(0.0)
+
+                    match_level = next(
+                        (i + 1 for i, term in enumerate(combined_matches)
+                         if term == curated), 99)
+
+                    old_top1_score = float(row['top1_score'])
+                    new_top1_score = combined_scores[0]
+                    old_match_level = int(row['match_level'])
+
+                    boosted = (new_top1_score > old_top1_score
+                               or match_level < old_match_level)
+
+                    if boosted:
+                        self._logger.info(
+                            f"Boosted '{orig_val}': "
+                            f"S2_top1={row['top1_match']}({old_top1_score:.3f}) → "
+                            f"Combined_top1={combined_matches[0]}({new_top1_score:.3f}), "
+                            f"match_level: {old_match_level} → {match_level}")
+
+                        for i in range(1, self.topk + 1):
+                            s2_res.at[idx,
+                                      f'top{i}_match'] = combined_matches[i -
+                                                                          1]
+                            s2_res.at[
+                                idx,
+                                f'top{i}_score'] = f"{combined_scores[i - 1]:.4f}"
+
+                        s2_res.at[idx, 'match_level'] = match_level
+                        s2_res.at[idx, 'stage'] = 2.5
+                        s2_res.at[idx, 'top1_score_float'] = new_top1_score
+                        syn_boosted.append(orig_val)
+
+        self._logger.info(
+            f"Stage 2.5: Boosted {len(syn_boosted)} queries with synonyms")
+
         # ========== Stage 3: RAG/RAG_BIE (Optional) ==========
         if self.s3_strategy is None:
             # No Stage 3, combine Stage 1 + Stage 2
             self._logger.info("Stage 3: Disabled")
-            combined_results = pd.concat([exact_df, fts_df, s2_res],
-                                         ignore_index=True)
 
+            # Now safe to drop top1_score_float
+            s2_res.drop(columns=['top1_score_float'], inplace=True)
+
+            combined_results = pd.concat([exact_df, s2_res], ignore_index=True)
+
+            self._logger.info("=" * 50)
             self._logger.info("FINAL SUMMARY")
+            self._logger.info("=" * 50)
             self._logger.info(f"Stage 1 (Exact): {len(exact_df)} queries")
+
+            s2_only = len(s2_res[s2_res['stage'] == 2])
+            s25_boosted = len(s2_res[s2_res['stage'] == 2.5])
             self._logger.info(
-                f"Stage 2 ({self.s2_strategy.upper()}): {len(s2_res)} queries")
+                f"Stage 2 ({self.s2_strategy.upper()}): {s2_only} queries")
+            self._logger.info(
+                f"Stage 2.5 (Synonym boost): {s25_boosted} queries")
 
             return combined_results
 
@@ -386,20 +447,17 @@ class OntoMapEngine:
                 self._logger.warning(
                     f"{top1_score_col} not found in Stage 2 results. Skipping Stage 3."
                 )
+                s2_res.drop(columns=['top1_score_float'],
+                            inplace=True,
+                            errors='ignore')
                 combined_results = pd.concat([exact_df, s2_res],
                                              ignore_index=True)
                 return combined_results
 
-            self._logger.info(f"S2 result columns: {s2_res.columns.tolist()}")
-            self._logger.info(
-                f"S2 result top1_score dtype: {s2_res['top1_score'].dtype}")
-            self._logger.info(
-                f"S2 result top1_score unique values (first 10): {s2_res['top1_score'].unique()[:10]}"
-            )
-            # Identify low-confidence queries
-            low_confidence_mask = pd.to_numeric(
-                s2_res[top1_score_col],
-                errors='coerce').fillna(0) < self.s3_threshold
+            # Identify low-confidence queries for Stage 3
+            # Use existing top1_score_float column
+            low_confidence_mask = s2_res[
+                'top1_score_float'] < self.s3_threshold
             queries_for_s3 = s2_res.loc[low_confidence_mask,
                                         'original_value'].tolist()
 
@@ -409,14 +467,24 @@ class OntoMapEngine:
 
             if not queries_for_s3:
                 self._logger.info("No queries require Stage 3.")
+
+                # Drop temp column
+                s2_res.drop(columns=['top1_score_float'], inplace=True)
+
                 combined_results = pd.concat([exact_df, s2_res],
                                              ignore_index=True)
 
+                self._logger.info("=" * 50)
                 self._logger.info("FINAL SUMMARY")
+                self._logger.info("=" * 50)
                 self._logger.info(f"Stage 1 (Exact): {len(exact_df)} queries")
+
+                s2_only = len(s2_res[s2_res['stage'] == 2])
+                s25_boosted = len(s2_res[s2_res['stage'] == 2.5])
                 self._logger.info(
-                    f"Stage 2 ({self.s2_strategy.upper()}): {len(s2_res)} queries"
-                )
+                    f"Stage 2 ({self.s2_strategy.upper()}): {s2_only} queries")
+                self._logger.info(
+                    f"Stage 2.5 (Synonym boost): {s25_boosted} queries")
 
                 return combined_results
 
@@ -459,18 +527,25 @@ class OntoMapEngine:
             s2_res_filtered = s2_res[~s2_res['original_value'].
                                      isin(queries_for_s3)].copy()
 
-            # Combine all stages: Stage 1 + Stage 2 (filtered) + Stage 3
-            combined_results = pd.concat(
-                [exact_df, fts_df, s2_res_filtered, s3_res], ignore_index=True)
+            # Drop temp column from filtered results
+            s2_res_filtered.drop(columns=['top1_score_float'], inplace=True)
+
+            # Combine all stages
+            combined_results = pd.concat([exact_df, s2_res_filtered, s3_res],
+                                         ignore_index=True)
 
             # Final summary
             self._logger.info("=" * 50)
             self._logger.info("FINAL SUMMARY")
             self._logger.info("=" * 50)
             self._logger.info(f"Stage 1 (Exact): {len(exact_df)} queries")
+
+            s2_only = len(s2_res_filtered[s2_res_filtered['stage'] == 2])
+            s25_boosted = len(s2_res_filtered[s2_res_filtered['stage'] == 2.5])
             self._logger.info(
-                f"Stage 2 ({self.s2_strategy.upper()}): {len(s2_res_filtered)} queries"
-            )
+                f"Stage 2 ({self.s2_strategy.upper()}): {s2_only} queries")
+            self._logger.info(
+                f"Stage 2.5 (Synonym boost): {s25_boosted} queries")
             self._logger.info(
                 f"Stage 3 ({self.s3_strategy.upper()}): {len(s3_res)} queries")
 

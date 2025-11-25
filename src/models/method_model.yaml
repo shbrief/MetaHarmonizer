@@ -11,3 +11,4 @@ msr-biomed-bert: microsoft/BiomedNLP-BiomedBERT-base-uncased-abstract-fulltext
 biolink-large: michiyasunaga/BioLinkBERT-large
 biolink-base: michiyasunaga/BioLinkBERT-base
 coder: GanjinZero/coder_eng_pp
+biolord: FremyCompany/BioLORD-2023
