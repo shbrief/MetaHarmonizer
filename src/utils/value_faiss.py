@@ -9,8 +9,8 @@ from src.utils.schema_mapper_utils import normalize
 from src.CustomLogger.custom_logger import CustomLogger
 
 # -------- ENV / CONSTS --------
-BASE_DB = os.getenv("VECTOR_DB_PATH") or "store/values.db"
-BASE_IDX_DIR = os.getenv("FAISS_INDEX_DIR") or "store"
+BASE_DB = os.getenv("VECTOR_DB_PATH") or "src/KnowledgeDb/vector_db.sqlite"
+BASE_IDX_DIR = os.getenv("FAISS_INDEX_DIR") or "src/KnowledgeDb/faiss_indexes"
 MODEL_NAME = "mt-sap-bert"
 JSON_VOCAB = os.getenv("FIELD_VALUE_JSON") or "field_value_dict.json"
 IDX_NAME = "dict_value.index"

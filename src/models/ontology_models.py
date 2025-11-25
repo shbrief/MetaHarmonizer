@@ -28,9 +28,9 @@ class OntoModelsBase:
         if self.method is None:
             raise ValueError("Method name cannot be None")
 
-        if om_strategy in ["rag_bie", "rag"] and corpus_df is None:
+        if om_strategy in ["rag_bie", "rag", "syn"] and corpus_df is None:
             raise ValueError(
-                "corpus_df must be provided when om_strategy is 'rag_bie' or 'rag'"
+                "corpus_df must be provided when om_strategy is 'rag_bie', 'rag', or 'syn'"
             )
         if om_strategy == "rag_bie" and query_df is None:
             raise ValueError(
@@ -41,12 +41,16 @@ class OntoModelsBase:
         if len(self.corpus) == 0:
             raise ValueError("Corpus list cannot be empty")
 
-        # Load method_model_dict from a YAML file
-        self.method_model_dict = load_method_model_dict()
-        self.list_of_methods = list(self.method_model_dict.keys())
-        if self.method not in self.list_of_methods:
-            raise ValueError(
-                f"Method name should be one of {self.list_of_methods}")
+        if om_strategy != 'syn':
+            # Load method_model_dict from a YAML file
+            self.method_model_dict = load_method_model_dict()
+            self.list_of_methods = list(self.method_model_dict.keys())
+            if self.method not in self.list_of_methods:
+                raise ValueError(
+                    f"Method name should be one of {self.list_of_methods}")
+        else:
+            self.method_model_dict = {}
+            self.list_of_methods = []
 
         self.topk = topk
         self.logger = CustomLogger().custlogger(loglevel='INFO')
