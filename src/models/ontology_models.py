@@ -1,6 +1,5 @@
 from sentence_transformers import util
 import pandas as pd
-import torch
 from src.KnowledgeDb.faiss_sqlite_pipeline import FAISSSQLiteSearch
 from src.utils.model_loader import load_method_model_dict
 from src.CustomLogger.custom_logger import CustomLogger

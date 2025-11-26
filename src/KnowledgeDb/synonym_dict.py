@@ -1,17 +1,18 @@
 import os
 import sqlite3
-import numpy as np
-from typing import List, Dict, Tuple, Optional, Set
-from pathlib import Path
-from collections import OrderedDict
 import faiss
 import asyncio
 import httpx
 import gc
 import torch
+import numpy as np
+from typing import List, Dict, Tuple, Optional, Set
+from pathlib import Path
+from collections import OrderedDict
 from tqdm.auto import tqdm
 from src.utils.embeddings import EmbeddingAdapter
 from src.utils.model_loader import get_embedding_model_cached
+from src.KnowledgeDb import ensure_knowledge_db
 from src.KnowledgeDb.db_clients.nci_db import NCIDb
 from src.CustomLogger.custom_logger import CustomLogger
 
@@ -27,6 +28,7 @@ class SynonymDict:
     """
 
     def __init__(self, category: str, method: str):
+        ensure_knowledge_db()
         self.category = category
         self.method = method
         method_clean = method.replace('-', '_')

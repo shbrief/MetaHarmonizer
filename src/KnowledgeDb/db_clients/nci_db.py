@@ -13,7 +13,7 @@ from src.KnowledgeDb.db_clients.umls_db import UMLSDb
 NCI_CALLS = 18
 NCI_PERIOD = 1
 LIST_OF_CONCEPTS = [
-    "synonyms",
+    # "synonyms",
     "definitions",
     "parents",
     "children",
