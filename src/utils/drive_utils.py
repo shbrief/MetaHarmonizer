@@ -8,6 +8,10 @@ from dotenv import load_dotenv
 load_dotenv()
 CREDENTIALS_PATH = os.getenv("CREDENTIALS_PATH")
 FOLDER_ID = os.getenv("FOLDER_ID")
+if CREDENTIALS_PATH is None:
+    raise ValueError("CREDENTIALS_PATH environment variable is required")
+if FOLDER_ID is None:
+    raise ValueError("FOLDER_ID environment variable is required")
 
 
 def get_drive_service():
@@ -54,7 +58,8 @@ def download_folder(folder_id: str = FOLDER_ID,
     Path(output_dir).mkdir(parents=True, exist_ok=True)
 
     for f in files:
-        output_path = Path(output_dir) / f['name']
+        safe_name = Path(f['name']).name
+        output_path = Path(output_dir) / safe_name
 
         if f['mimeType'] == 'application/vnd.google-apps.folder':
             print(f"📁 Entering folder: {f['name']}")

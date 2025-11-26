@@ -5,6 +5,7 @@ Downloads from Google Drive if missing, falls back to local build if download fa
 """
 
 import os
+import threading
 from pathlib import Path
 from src.CustomLogger.custom_logger import CustomLogger
 from dotenv import load_dotenv
@@ -19,6 +20,7 @@ FAISS_INDEX_DIR = Path(
     os.getenv("FAISS_INDEX_DIR", "src/KnowledgeDb/faiss_indexes"))
 
 _initialized = False
+_init_lock = threading.Lock()
 _logger = None
 
 
@@ -78,26 +80,32 @@ def ensure_knowledge_db() -> None:
     """
     global _initialized
 
+    # Fast path: already initialized
     if _initialized:
         return
 
-    logger = _get_logger()
+    with _init_lock:
+        # Double-check after acquiring lock
+        if _initialized:
+            return
 
-    # Check if files already exist
-    if _check_files_exist():
-        logger.info("KnowledgeDb files found, using existing data")
-        _initialized = True
-        return
+        logger = _get_logger()
 
-    # Try to download
-    if _try_download():
+        # Check if files already exist
         if _check_files_exist():
+            logger.info("KnowledgeDb files found, using existing data")
             _initialized = True
             return
 
-    # Download failed or incomplete, will use local build
-    logger.info("Will use local build mode (first run may be slow)")
-    _initialized = True
+        # Try to download
+        if _try_download():
+            if _check_files_exist():
+                _initialized = True
+                return
+
+        # Download failed or incomplete, will use local build
+        logger.info("Will use local build mode (first run may be slow)")
+        _initialized = True
 
 
 def reset_initialization() -> None:
@@ -105,4 +113,5 @@ def reset_initialization() -> None:
     Reset initialization state. Useful for testing.
     """
     global _initialized
-    _initialized = False
+    with _init_lock:
+        _initialized = False
