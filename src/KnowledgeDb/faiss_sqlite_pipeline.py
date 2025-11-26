@@ -1,18 +1,19 @@
 import gc
-from typing import List
+import torch
+import sqlite3
+import faiss
+import os
 import asyncio
 import httpx
 import numpy as np
 import pandas as pd
-import sqlite3
-import faiss
-import os
+from typing import List
 from functools import lru_cache
+from tqdm.auto import tqdm
 from src.utils.embeddings import EmbeddingAdapter
 from src.utils.model_loader import get_embedding_model_cached
-from tqdm.auto import tqdm
 from src.CustomLogger.custom_logger import CustomLogger
-import torch
+from src.KnowledgeDb import ensure_knowledge_db
 from src.KnowledgeDb.db_clients.nci_db import NCIDb
 
 # Load environment variables for paths and API key
@@ -44,6 +45,7 @@ class FAISSSQLiteSearch:
         category: str,
         om_strategy: str = "rag",
     ):
+        ensure_knowledge_db()
         self.db_path = BASE_DB
         self.db = NCIDb(UMLS_API_KEY)
         idx_name = f"{om_strategy}_{method}_{category}.index"
