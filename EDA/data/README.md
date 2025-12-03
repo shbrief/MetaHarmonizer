@@ -1,7 +1,14 @@
 ### 1553_values_with_context.csv
-1553 disease-related values ('term' column) from cBioPortalData and 
+1,553 disease-related values ('term' column) from cBioPortalData and 
 concatenated values ('context' column) from all non-NA columns of samples/rows 
 (only one row per value retrieved).
+
+### 3533_cbio_colnames.csv
+3,533 column names from cBioPortal clinical metadata
+
+### cbio_dict_for_embed.csv
+39 target column names and their brief (token length < 25) description prepared
+by Claude
 
 ### colname_context.csv
 39 x 2 data frame with the target column name and their context
@@ -44,6 +51,12 @@ Mapping results from OntologyMapper
 ### st_sub_for_LLM_evaluation.csv
 Subset of `st_sapbert_disease.csv` for LLM evaluation (without curated_ontology
 and similarity score for matches)
+
+### target_colname_embeddings_with_context.csv
+39 target columns' SapBERT embeddings from concatenated information (some tokens were > 25)
+
+### target_colname_embeddings_with_description.csv
+39 target columns' SapBERT embeddings from short description (from `cbio_dict_for_embed.csv`)
 
 ### unique_values.txt
 **673 column names** from cBioPortal data that were harmonized

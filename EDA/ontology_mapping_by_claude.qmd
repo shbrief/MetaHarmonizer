@@ -25,6 +25,7 @@ query <- st$original_value
 ```
 
 ```{r}
+source("~/OmicsMLRepo/MetaHarmonizer/EDA/R/subset_by_top_n.R")
 failed <- subset_by_top_n(st, 
                           curated_col = "curated_ontology",
                           match_prefix = "top", 
@@ -43,22 +44,30 @@ cbio_all <- readRDS("~/OmicsMLRepo/OmicsMLRepoData/cBioPortalData/source/cBioPor
 # Prepare inputs
 ## Create 'with context' input table
 ```{r eval=FALSE}
+source("~/OmicsMLRepo/MetaHarmonizer/EDA/R/remove_id_count_na_columns.R")
+source("~/OmicsMLRepo/MetaHarmonizer/EDA/R/concatenate_row_values.R")
+source("~/OmicsMLRepo/MetaHarmonizer/EDA/R/find_terms_in_context.R")
+
 # remove id/count/NA columns
 input1 <- remove_id_count_na_columns(cbio_all)
 
 # concatenate values from all the columns
-input2 <- concatenate_row_values(input1)
+input2 <- concatenate_row_values(input1) # returns a list
 
 # identify the row with a keyword in it (one row per keyword)
 # system.time(input3 <- find_first_iterative(as.character(unlist(input2)), query))
-system.time(input4 <- find_terms_in_context(input2, query))
+system.time(input4 <- find_terms_in_context(input2, query)) # returns a data frame
+
+# > system.time(input4 <- find_terms_in_context(input2, query))
+#    user  system elapsed 
+# 328.956   2.274 333.234 
 ```
 
-```{r}
-fname2 <- paste0("concatenated_cols_for_", length(input2), "_values.csv")
-write.table(input2, file.path("data", fname2), row.names = FALSE)
+```{r eval=FALSE, echo=FALSE}
+fname2 <- paste0("concatenated_cols_for_", length(input2), "_values.rds") # concatenated_cols_for_189439_values.csv
+saveRDS(input2, file.path("data", fname2), row.names = FALSE)
 
-fname4 <- paste0(nrow(input4), "_values_with_context.csv")
+fname4 <- paste0(nrow(input4), "_values_with_context.csv") # 1553_values_with_context.csv
 write.table(input4, file.path("data", fname4), row.names = FALSE)
 ```
 

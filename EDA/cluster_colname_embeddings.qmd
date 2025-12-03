@@ -37,7 +37,6 @@ expanded_ms <- ms %>%
     separate_rows(original_field, sep = ";")
 ```
 
-
 ```{r eval=FALSE, echo=FALSE}
 # Assuming your embeddings are in a matrix called 'embeddings'
 # with dimensions 673 x 768
@@ -56,15 +55,15 @@ normalized_embeddings <- normalize_vectors(embeddings)
 ```{r}
 # K-Means on normalized embeddings
 set.seed(42)
-kmeans_result <- kmeans(embeddings, centers = 10, nstart = 25)
+kmeans_result <- kmeans(embeddings, centers = 30, nstart = 25)
 clusters_kmeans <- kmeans_result$cluster
 
-# Find optimal k using elbow method
-wss <- sapply(1:15, function(k) {
-  kmeans(embeddings, centers = k, nstart = 25)$tot.withinss
-})
-plot(1:15, wss, type = "b", xlab = "Number of Clusters", ylab = "WSS",
-     main = "Elbow Method for Optimal k")
+# # Find optimal k using elbow method
+# wss <- sapply(1:50, function(k) {
+#   kmeans(embeddings, centers = k, nstart = 25)$tot.withinss
+# })
+# plot(1:15, wss, type = "b", xlab = "Number of Clusters", ylab = "WSS",
+#      main = "Elbow Method for Optimal k")
 
 # Visualize clusters using PCA (2D projection)
 library(ggplot2)
@@ -105,13 +104,67 @@ library(clusterSim)
 index.DB(embeddings, clusters_kmeans)$DB
 ```
 
+## Fuzzy C-Means Clustering
+K-means clustering is an exclusive (hard) clustering method, meaning each data 
+point is assigned to one and only one cluster. It does not inherently allow 
+elements to overlap. To allow elements to belong to multiple clusters simultaneously, 
+we tried Fuzzy C-Means (FCM) clustering, also known as soft clustering or soft K-means. 
+
+FCM with cosine similarity: When vectors are L2-normalized (unit length), the 
+Euclidean distance between them is monotonically related to cosine distance. 
+Specifically: euclidean_dist² = 2(1 - cosine_similarity)
+
+```{r eval=FALSE}
+library(e1071)
+library(ggplot2)
+
+## L2 normalize each row
+x <- embeddings
+x_normalized <- x / sqrt(rowSums(x^2))
+
+## Apply standard FCM
+clustObj <- cmeans(x_normalized, 
+                   centers = 50,      # number of clusters
+                   iter.max = 40,
+                   m = 2,            # fuzziness parameter
+                   method = "cmeans")
+
+## Access results
+clusters <- clustObj$cluster          # hard cluster assignments
+membership <- clustObj$membership     # fuzzy membership matrix
+centers <- clustObj$centers           # cluster centers
+
+## Extract cluster assignments
+cluster_assignments <- as.factor(clustObj$cluster)
+length(levels(cluster_assignments)) # the number of final clusters
+
+## Add cluster assignments to the original data frame
+x_clustered <- data.frame(x, cluster = cluster_assignments)
+
+## Visualize the clusters using factoextra::fviz_cluster (performs PCA if needed)
+fviz_cluster(list(data = x, cluster = cluster_assignments), 
+             geom = "point", 
+             ellipse.type = "convex", 
+             main = "Fuzzy C-Means Clustering Visualization")
+
+## Clusters and their size
+table(clustObj$cluster)
+```
+
+
+## vMF mixture models
+For true directional/cosine-based clustering, use von Mises-Fisher (vMF) mixture 
+models, which are the spherical equivalent of GMM. vMF is the "cosine similarity 
+version" of GMM - it models data as lying on a hypersphere and uses cosine similarity naturally.
+
+For sentence embeddings, vMF mixture models are theoretically more appropriate 
+than standard GMM because they naturally handle the directional nature of embeddings 
+where magnitude is less meaningful than direction.
 
 
 ## Nearest centroid classification with cosine similarity
-Create target column name embeddings (`target_colname_embeddings_with_context.csv`) with context
-https://colab.research.google.com/drive/1CdtvIS7HqVIIMKngsGv7I4VMdoIq6WcK#scrollTo=4993b9e6
-
-```{r}
+### Directly from dictionary
+```{r eval=FALSE}
 source("~/OmicsMLRepo/MetaHarmonizer/EDA/R/concatenate_row_values.R")
 
 dict <- readr::read_csv("~/OmicsMLRepo/OmicsMLRepoData/inst/extdata/cBioPortal_data_dictionary.csv")
@@ -126,11 +179,44 @@ dim(colname_context)
 write.csv(colname_context, "data/colname_context.csv", row.names = FALSE)
 ```
 
+Create target column name embeddings (`target_colname_embeddings_with_context.csv`) with context
+(`colname_context.csv`) https://colab.research.google.com/drive/1CdtvIS7HqVIIMKngsGv7I4VMdoIq6WcK#scrollTo=4993b9e6 
+
+
+
+### Optimized dictionary embeddings
+```{r eval=FALSE}
+## SapBERT optimized version of dictionary
+url <- "https://docs.google.com/spreadsheets/d/1t2GTvDpgIrR84_ECoft6bQbb2qUr9RoeFtLZWM-ZRDI/edit?usp=sharing"
+ss <- googledrive::as_id(url)
+dict <- googlesheets4::read_sheet(ss, sheet = "data_dictionary_for_embedding")
+write.csv(dict, "data/cbio_dict_for_embed.csv", row.names = FALSE)
+```
+
+Confirm that all the token sizes are < 25 for SapBERT
+```{r eval=FALSE}
+reticulate::source_python('~/OmicsMLRepo/MetaHarmonizer/EDA/Python/token_size.py')
+```
+
+Create target column name embeddings (`target_colname_embeddings_with_description.csv`) with context
+https://colab.research.google.com/drive/1CdtvIS7HqVIIMKngsGv7I4VMdoIq6WcK#scrollTo=4993b9e6 
+
 ```{r}
-centroids <- readr::read_csv("data/target_colname_embeddings_with_context.csv", col_names = FALSE) %>% as.matrix
+centroids <- readr::read_csv("data/target_colname_embeddings_with_description.csv", col_names = FALSE) %>% as.matrix
 rownames(centroids) <- dict$ColName
 centroids[1:4, 1:4]
 ```
+
+### Optimized dictionary + Clinical-Longformer
+```{r clinical_longformer, eval=FALSE}
+## Target column description embeddings using Clinical-Longformer
+## Mapping accuracy is much worse than SapBERT
+centroids <- readr::read_csv("data/target_colname_embeddings_clinical_lf.csv", col_names = TRUE) %>% as.matrix
+rownames(centroids) <- dict$ColName
+centroids[1:4, 1:4]
+```
+
+We continue with the 'optimized-dictionary with SapBERT' (i.e., `target_colname_embeddings_with_description.csv`)
 
 ```{r}
 source("~/OmicsMLRepo/MetaHarmonizer/EDA/R/centroid_cluster_by_cosine.R")
@@ -158,10 +244,8 @@ top_n_accuracy <- mapping_check_top_n %>%
 round(table(top_n_accuracy$any_mapped_correctly)/nrow(top_n_accuracy)*100, 2)
 ```
 
-Schema mapping accuracy of 673 source columns to 39 target columns:
-
-```{r}
-top_n <- 5
+Visualize schema mapping accuracy of 673 source columns to 39 target columns:
+```{r sm_accuracy_function}
 sm_accuracy <- function(mapping, schema, n) {
     tb <- as.data.frame(matrix(NA, nrow = n, ncol = 2))
     colnames(tb) <- c("top_n", "accuracy")
@@ -179,7 +263,10 @@ sm_accuracy <- function(mapping, schema, n) {
     }
     return(tb)
 }
+```
 
+```{r}
+top_n <- 5
 top_n_accuracy <- sm_accuracy(res$similarity, expanded_ms, 5)
 
 top_n_accuracy %>%
@@ -190,28 +277,12 @@ top_n_accuracy %>%
     theme_minimal()
 ```
 
-### Compare the OntologyMapper result
+### Compare the SchemaMapper result
 Schema mapping accuracy of 673 source columns to 39 target columns
 
 ```{r}
-match <- readr::read_csv("~/Downloads/test_manual_eval.csv")
-sm_accuracy <- function(mapping, schema, n) {
-    tb <- as.data.frame(matrix(NA, nrow = n, ncol = 2))
-    colnames(tb) <- c("top_n", "accuracy")
-    for (i in seq_len(n)) {
-        check <- check_mapping(mapping, schema, top_n = i)
-        top_n_accuracy <- check %>% 
-            group_by(original_field) %>% 
-            summarise(any_mapped_correctly = any(is_mapped_to_curated))
+match <- readr::read_csv("data/test_manual_eval.csv")
 
-        summary <- table(top_n_accuracy$any_mapped_correctly)
-        per_accuracy <- round(summary["TRUE"]/nrow(top_n_accuracy)*100, 2)
-        
-        tb$top_n[i] <- i
-        tb$accuracy[i] <- per_accuracy
-    }
-    return(tb)
-}
 top_n_accuracy <- sm_accuracy(match, expanded_ms, 5)
 top_n_accuracy %>%
     ggplot(aes(x = top_n, y = accuracy)) +
@@ -220,6 +291,74 @@ top_n_accuracy %>%
          x = "Top n embeddings", y = "Accuracy") +
     theme_minimal()
 ```
+
+```{r}
+top_n <- 5
+
+## Top-n accuracy from fixed centroid
+mapping_check_top_n <- check_mapping(res$similarity, expanded_ms, top_n) 
+top_n_accuracy <- mapping_check_top_n %>% 
+    group_by(original_field) %>% 
+    summarise(mapped_fixed_centroid = any(is_mapped_to_curated))
+
+ind <- which(top_n_accuracy$original_field == "DIAGNOSIS AGE") # manual update of column name
+top_n_accuracy$original_field[ind] <- "DIAGNOSIS.AGE"
+
+## Top-n accuracy from SchemaMapper
+top_n_accuracy_sm <- check_mapping(match, expanded_ms)
+
+compare <- top_n_accuracy_sm %>%
+    select(original_field, centroid, is_mapped_to_curated) %>%
+    rename(mapped_schema_mapper = is_mapped_to_curated) %>%
+    left_join(top_n_accuracy, by = "original_field")
+```
+
+Closer look on the mapping results comparisons
+```{r}
+## The number of source column that were mapped only by fixed centroid approach
+fixed_centroid <- which(compare$mapped_schema_mapper == "FALSE" & 
+                            compare$mapped_fixed_centroid == "TRUE")
+length(fixed_centroid)
+
+## The number of source column that were failed to be mapped by both approaches
+both_failed <- which(compare$mapped_schema_mapper == "FALSE" & 
+                         compare$mapped_fixed_centroid == "FALSE")
+length(both_failed)
+
+## Actual source column names for the above cases
+compare$original_field[fixed_centroid]
+compare$original_field[both_failed]
+```
+We can probably add `TX_` to the rule as 'treatment'.
+
+```{r}
+## Easy-to-map columns
+both_succeed <- which(compare$mapped_schema_mapper == "TRUE" & 
+                         compare$mapped_fixed_centroid == "TRUE")
+easy_case <- table(compare$centroid[both_succeed])
+# easy_case_df <- stack(easy_case) %>%
+#     rename(curated_field = ind, mapped_field_num = values) %>%
+#     left_join(., ms[c("curated_field", "original_field_num")], by = "curated_field")
+
+## Hard-to-map columns
+rescued <- table(compare$centroid[fixed_centroid]) # mapped by fixed centroid, but not by SchemaMapper
+hard_case <- table(compare$centroid[both_failed]) # failed to be mapped by both
+```
+
+
+
+### Schpperical K-Means (Simpler Alternative)
+```{r}
+library(skmeans)
+
+# Spherical k-means (uses cosine similarity)
+result <- skmeans(X, k = 5, m = 1, method = "genetic")
+
+clusters <- result$cluster
+centers <- result$prototypes
+```
+
+
 
 
 ## Hierarchical clustering with cosine distance

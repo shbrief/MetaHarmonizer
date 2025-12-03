@@ -38,7 +38,7 @@
 #' @seealso \code{\link{grepl}}, \code{\link{grep}}
 #'
 #' @export
-find_terms_in_context <- function(context, terms) {
+find_terms_in_context <- function(context, terms, index = 1) {
     
     # Ensure context is a character vector
     context <- as.character(context)
@@ -47,7 +47,7 @@ find_terms_in_context <- function(context, terms) {
     matches <- vapply(terms, function(term) {
         match_idx <- which(grepl(term, context, ignore.case = TRUE, perl = TRUE))
         if (length(match_idx) > 0) {
-            context[match_idx[1]]
+            paste(context[match_idx[index]], collapse = ";;")
         } else {
             NA_character_
         }
