@@ -1,0 +1,40 @@
+"ColName","Description","ColClass","Unique","Required","MultipleValues","AllowedValues","Delimiter","Separater","DynamicEnum","DynamicEnumProperty","...12","Released","Ontology","OntologyDB","AttrOntology"
+"age_at_death","The patient's age in years at the time of their death","Numeric",FALSE,FALSE,FALSE,NA,NA,NA,"HANCESTRO:0004","children",NA,TRUE,NA,NA,"NCIT:C135383"
+"age_at_diagnosis","The patient's age in years when their cancer was first diagnosed","Numeric",FALSE,FALSE,FALSE,NA,NA,NA,NA,NA,NA,TRUE,NA,NA,"NCIT:C156420"
+"age_at_metastasis","The patient's age in years when metastatic spread of cancer was first detected","Numeric",FALSE,FALSE,FALSE,NA,NA,NA,NA,NA,NA,TRUE,NA,NA,NA
+"age_at_procurement","The patient's age in years when the biological tissue or blood specimen was collected","Numeric",FALSE,TRUE,FALSE,NA,NA,NA,NA,NA,NA,TRUE,NA,NA,NA
+"age_group","A categorical classification grouping patients into age ranges such as pediatric, young adult, adult, or elderly","String",FALSE,TRUE,FALSE,"Adolescent;Adult;Children 2-11 Years Old;Elderly;Infant",NA,NA,NA,NA,NA,TRUE,NA,NA,NA
+"ancestry","The patient's genetic or ethnic ancestry and population group","String",FALSE,TRUE,TRUE,NA,";",NA,"HANCESTRO:0004","children",NA,TRUE,NA,NA,"NCIT:C176763"
+"ancestry_details","Detailed information about the patient's ancestral background and genetic population","String",FALSE,FALSE,TRUE,NA,NA,NA,"HANCESTRO:0004","descendant",NA,TRUE,NA,NA,NA
+"body_site","The specific anatomical location or organ where the tissue sample was collected","String",FALSE,FALSE,TRUE,NA,"<;>",NA,NA,NA,NA,TRUE,NA,NA,"NCIT:C13717"
+"cancer_status","The current state of the patient's cancer disease, such as active, remission, or progressive","String",FALSE,FALSE,FALSE,"Tumor Free;With Tumor",NA,NA,"NCIT:C96643","children",NA,TRUE,"NCIT:C156848;NCIT:C156849",NA,NA
+"cancer_subtype","The specific histological, molecular, or pathological subtype classification of the cancer","String",FALSE,FALSE,TRUE,NA,"<;>",NA,NA,NA,NA,TRUE,NA,NA,NA
+"cancer_type","The primary type or category of cancer diagnosis","String",FALSE,FALSE,TRUE,NA,"<;>",NA,NA,NA,NA,TRUE,NA,NA,NA
+"cancer_type_details","Extended detailed information about the specific cancer classification and characteristics","String",FALSE,FALSE,TRUE,NA,"<;>",NA,NA,NA,NA,TRUE,NA,NA,NA
+"country","The geographic country where the patient received treatment or was enrolled in the study","String",FALSE,FALSE,FALSE,NA,NA,NA,"NCIT:C25464","descendant",NA,TRUE,NA,NA,NA
+"curation_id","A unique identifier tracking the version and curation process of this data record","String",TRUE,TRUE,FALSE,NA,NA,NA,NA,NA,NA,TRUE,NA,NA,NA
+"disease","The general disease classification, diagnosis term, or medical condition","String",FALSE,FALSE,TRUE,NA,"<;>",NA,"NCIT:C7057;EFO_0000408","descendant",NA,TRUE,NA,NA,"NCIT:C2991"
+"location","The geographic location of treatment or anatomical site relevant to the clinical context","String",FALSE,FALSE,FALSE,NA,NA,NA,NA,NA,NA,TRUE,NA,NA,NA
+"oncotree_code","The standardized OncoTree ontology code representing the specific cancer type","String",FALSE,FALSE,FALSE,NA,NA,NA,NA,NA,NA,TRUE,NA,NA,NA
+"patientId","A unique identifier assigned to each individual patient in the database","String",FALSE,TRUE,FALSE,NA,NA,NA,NA,NA,NA,TRUE,NA,NA,NA
+"sample_count","The total number of biological specimens or samples collected from this patient","Numeric",FALSE,TRUE,FALSE,NA,NA,NA,NA,NA,NA,TRUE,NA,NA,NA
+"sample_type","The category of biological sample, such as primary tumor, metastatic tumor, normal tissue, or blood","String",FALSE,FALSE,FALSE,"Primary Neoplasm;Metastatic Neoplasm;Recurrent Neoplasm;Neoplasm;Benigh Neoplasm;Locally Recurrent Disease;Clinical Relapse;Distant Metastasis",NA,NA,NA,NA,NA,TRUE,"NCIT:C40557;NCIT:C14173",NA,NA
+"sampleId","A unique identifier assigned to each individual biological specimen","String",FALSE,TRUE,FALSE,NA,NA,NA,NA,NA,NA,TRUE,NA,NA,NA
+"sex","The patient's biological sex assigned at birth, typically male or female","String",FALSE,TRUE,FALSE,"Female;Male",NA,NA,NA,NA,NA,TRUE,NA,NA,NA
+"specimen_type","The specific method of specimen collection or the format of the biological material","String",FALSE,FALSE,TRUE,NA,"<;>",NA,NA,NA,NA,TRUE,NA,NA,NA
+"study_design","The research study methodology and experimental design type, such as case-control, cohort, or clinical trial","String",FALSE,FALSE,TRUE,NA,";",NA,NA,NA,NA,TRUE,NA,NA,"NCIT:C15320"
+"studyId","A unique identifier for the research study or clinical trial","String",FALSE,TRUE,FALSE,NA,NA,NA,NA,NA,NA,TRUE,NA,NA,NA
+"target_condition","The specific disease, cancer type, or medical condition being investigated in the study","String",FALSE,TRUE,TRUE,NA,";",NA,"NCIT:C7057;EFO_0000408","descendant",NA,TRUE,NA,NA,NA
+"treatment_dose","The amount or dosage of medication administered to the patient","Numeric",FALSE,FALSE,TRUE,NA,"<;>",NA,NA,NA,NA,FALSE,NA,NA,"NCIT:C25488"
+"treatment_duration","The length of time over which the treatment was administered","Numeric",FALSE,FALSE,TRUE,NA,"<;>",NA,NA,NA,NA,FALSE,NA,NA,"NCIT:C192388"
+"treatment_end","The date or time point when the treatment was concluded or discontinued","String",FALSE,FALSE,TRUE,NA,"<;>",NA,NA,NA,NA,FALSE,NA,NA,NA
+"treatment_frequency","The schedule or frequency of medication administration, such as daily, weekly, or per cycle","String",FALSE,FALSE,TRUE,NA,"<;>",NA,NA,NA,NA,FALSE,NA,NA,"NCIT:C89081"
+"treatment_group","The treatment arm, cohort, or experimental group to which the patient was assigned","String",FALSE,FALSE,TRUE,NA,"<;>",NA,NA,NA,NA,FALSE,NA,NA,"NCIT:C161322"
+"treatment_name","The specific name of the medication, drug, or therapeutic agent used","String",FALSE,FALSE,TRUE,NA,"<;>",NA,NA,NA,NA,TRUE,NA,NA,"NCIT:C82542"
+"treatment_notes","Free-text clinical notes and annotations about the treatment details","String",FALSE,FALSE,TRUE,NA,"<;>",NA,NA,NA,NA,FALSE,NA,NA,NA
+"treatment_number","The sequential line of therapy, indicating whether this is first-line, second-line, or subsequent treatment","Numeric",FALSE,FALSE,TRUE,NA,"<;>",NA,NA,NA,NA,FALSE,NA,NA,"NCIT:C192539"
+"treatment_reason","The clinical indication or rationale for initiating this therapy","String",FALSE,FALSE,TRUE,NA,"<;>",NA,NA,NA,NA,FALSE,NA,NA,NA
+"treatment_start","The date or time point when the treatment was initiated or began","String",FALSE,FALSE,TRUE,NA,"<;>",NA,NA,NA,NA,FALSE,NA,NA,NA
+"treatment_status","The current status of the treatment, such as ongoing, completed, discontinued, or interrupted","String",FALSE,FALSE,TRUE,NA,"<;>",NA,NA,NA,NA,FALSE,NA,NA,"NCIT:C45501"
+"treatment_type","The category or modality of therapy, such as chemotherapy, immunotherapy, radiation, or targeted therapy","String",FALSE,FALSE,TRUE,NA,"<;>",NA,NA,NA,NA,TRUE,NA,NA,NA
+"vital_status","The patient's survival status indicating whether they are currently alive or deceased","String",FALSE,FALSE,FALSE,"Dead;Alive;Unknown",NA,NA,NA,NA,NA,TRUE,NA,NA,NA
