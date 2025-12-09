@@ -12,3 +12,7 @@ biolink-large: michiyasunaga/BioLinkBERT-large
 biolink-base: michiyasunaga/BioLinkBERT-base
 coder: GanjinZero/coder_eng_pp
 biolord: FremyCompany/BioLORD-2023
+medcpt-article: ncbi/MedCPT-Article-Encoder
+medcpt-query: ncbi/MedCPT-Query-Encoder
+medcpt-ce: ncbi/MedCPT-Cross-Encoder
+bge-m3: BAAI/bge-m3
