@@ -40,6 +40,8 @@ class OntoMapEngine:
                  s3_method: str = 'pubmed-bert',
                  s3_strategy: str = None,
                  s3_threshold: float = 0.9,
+                 use_reranker: bool = None,
+                 reranker_method: str = None,
                  **other_params: dict) -> None:
         """
         Initializes the OntoMapEngine class.
@@ -66,6 +68,8 @@ class OntoMapEngine:
         self.s3_strategy = s3_strategy
         self.s3_threshold = s3_threshold
         self.cura_map = cura_map
+        self.use_reranker = use_reranker
+        self.reranker_method = reranker_method
         self.other_params = other_params
         if 'test_or_prod' not in self.other_params.keys():
             raise ValueError(
@@ -238,7 +242,9 @@ class OntoMapEngine:
                                   query=non_exact_query_list,
                                   corpus=self.corpus_s3,
                                   topk=self.topk,
-                                  corpus_df=corpus_df)
+                                  corpus_df=corpus_df,
+                                  use_reranker=self.use_reranker,
+                                  reranker_method=self.reranker_method)
         elif strategy == 'rag_bie':
             return ombe.OntoMapBIE(method=self.s3_method,
                                    category=self.category,
