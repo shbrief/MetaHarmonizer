@@ -1,14 +1,11 @@
 import pandas as pd
 import numpy as np
 
-# import statsmodels.api as sm
-
 
 class CalcStats:
 
     def __init__(self) -> None:
         pass
-        # self.required_columns = ['curated_ontology', 'top1_match', 'top2_match', 'top3_match', 'top4_match', 'top5_match']
 
     def check_required_columns(self, data, required_columns=None):
         """
@@ -19,66 +16,72 @@ class CalcStats:
 
         Returns:
         - missing_columns (list): A list of columns that are missing from the DataFrame.
-
         """
         if not set(required_columns).issubset(data.columns):
             missing_columns = list(set(required_columns) - set(data.columns))
             raise ValueError(f"Missing required columns: {missing_columns}")
         return True
 
-    def calc_accuracy(self, data):
+    def calc_accuracy(self, data, mode="t5", custom_top_k=None):
         """
-        Calculate the accuracy of the model predictions.
+        Calculate the accuracy of the model predictions for multiple top-k values.
 
         Parameters:
         - data (pandas.DataFrame): The input data containing the model predictions and the ground truth labels.
+        - mode (str): Evaluation mode. Options:
+            - "t5": Standard top-1, 3, 5 evaluation (default)
+            - "rerank": Evaluate reranking candidate quality at top-1, 5, 20, 30, 50
+        - custom_top_k (list, optional): Custom list of top-k values. Overrides mode if provided.
 
         Returns:
         - accuracy_df (pandas.DataFrame): A DataFrame containing the accuracy levels and their corresponding accuracies.
-
         """
-        required_columns = [
-            "curated_ontology",
-            "top1_match",
-            "top2_match",
-            "top3_match",
-            "top4_match",
-            "top5_match",
-        ]
+        # Determine top-k list based on mode
+        if custom_top_k is not None:
+            top_k_list = custom_top_k
+        elif mode == "t5":
+            top_k_list = [1, 3, 5]
+        elif mode == "rerank":
+            top_k_list = [1, 5, 20, 30, 50]
+        else:
+            raise ValueError(
+                f"Invalid mode: {mode}. Choose 't5' or 'rerank', or provide custom_top_k."
+            )
 
-        # Check if all required columns exist in the DataFrame
+        # Determine maximum k needed
+        max_k = max(top_k_list)
 
+        # Build required columns list
+        required_columns = ["curated_ontology"]
+        required_columns.extend([f"top{i}_match" for i in range(1, max_k + 1)])
+
+        # Check if all required columns exist
         self.check_required_columns(data, required_columns)
 
-        # Calculate accuracy for Top 1, Top 3, and Top 5 matches
-        data["top1_accuracy"] = data.apply(
-            lambda row: row["curated_ontology"] == row["top1_match"], axis=1)
-        data["top3_accuracy"] = data.apply(
-            lambda row: row["curated_ontology"] in row[
-                ["top1_match", "top2_match", "top3_match"]].values,
-            axis=1,
-        )
-        data["top5_accuracy"] = data.apply(
-            lambda row: row["curated_ontology"] in row[[
-                "top1_match", "top2_match", "top3_match", "top4_match",
-                "top5_match"
-            ]].values,
-            axis=1,
-        )
+        # Calculate accuracy for each top-k
+        accuracy_results = []
 
-        # Calculate percentage accuracies
-        top1_accuracy = data["top1_accuracy"].mean() * 100
-        top3_accuracy = data["top3_accuracy"].mean() * 100
-        top5_accuracy = data["top5_accuracy"].mean() * 100
+        for k in top_k_list:
+            # Get the column names for top-k matches
+            top_k_columns = [f"top{i}_match" for i in range(1, k + 1)]
 
-        # Prepare data for plotting
-        accuracy_data = {
-            "Accuracy Level":
-            ["Top 1 Match", "Top 3 Matches", "Top 5 Matches"],
-            "Accuracy": [top1_accuracy, top3_accuracy, top5_accuracy],
-        }
+            # Calculate if curated_ontology is in top-k matches
+            accuracy_col = f"top{k}_accuracy"
+            data[accuracy_col] = data.apply(lambda row: row["curated_ontology"]
+                                            in row[top_k_columns].values,
+                                            axis=1)
 
-        accuracy_df = pd.DataFrame(accuracy_data)
+            # Calculate percentage accuracy
+            accuracy_pct = data[accuracy_col].mean() * 100
+
+            accuracy_results.append({
+                "Accuracy Level": f"Top {k} Match{'es' if k > 1 else ''}",
+                "Accuracy": accuracy_pct,
+                "k": k
+            })
+
+        # Create DataFrame
+        accuracy_df = pd.DataFrame(accuracy_results)
 
         return accuracy_df
 
@@ -92,7 +95,6 @@ class CalcStats:
 
         Returns:
         - confusion_matrix_df (pandas.DataFrame): A DataFrame containing the confusion matrix values.
-
         """
         required_columns = ["curated_ontology", match_type]
 
@@ -114,7 +116,6 @@ class CalcStats:
 
         Returns:
         - f1_score (float): The F1 score for the model predictions.
-
         """
         required_columns = ["curated_ontology", match_type]
 
@@ -147,17 +148,16 @@ class CalcStats:
 
         Returns:
         - mismatches_by_range (dict): A dictionary containing the number of mismatches for each score range.
-
         """
         required_columns = ["curated_ontology", match_type, score_type]
 
         self.check_required_columns(data, required_columns)
 
         # Create a new column for the score range
-        data["score_range"] = pd.cut(data["top1_score"], ranges)
+        data["score_range"] = pd.cut(data[score_type], ranges)
 
         # Calculate the number of mismatches for each score range
         mismatches_by_range = (
-            data[data["curated_ontology"] != data["top1_match"]].groupby(
+            data[data["curated_ontology"] != data[match_type]].groupby(
                 "score_range").size().to_dict())
         return mismatches_by_range
