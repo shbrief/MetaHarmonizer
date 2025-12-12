@@ -17,7 +17,7 @@ class LLMReranker:
         device: str = None,
         use_8bit: bool = False,
         max_length: int = 512,
-        batch_size: int = 4,
+        batch_size: int = 16,
         cache_dir: str = "model_cache",
     ):
         self.model_name = model_name
