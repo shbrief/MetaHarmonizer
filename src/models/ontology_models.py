@@ -17,8 +17,6 @@ class OntoModelsBase:
         corpus: list,
         query_df: pd.DataFrame = None,
         corpus_df: pd.DataFrame = None,
-        use_reranker: bool = None,
-        reranker_method: str = None,
     ) -> None:
         self.method = method
         self.category = category
@@ -27,8 +25,6 @@ class OntoModelsBase:
         self.corpus = corpus
         self.query_df = query_df
         self.corpus_df = corpus_df
-        self.use_reranker = use_reranker
-        self.reranker_method = reranker_method
 
         if self.method is None:
             raise ValueError("Method name cannot be None")

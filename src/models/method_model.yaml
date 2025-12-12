@@ -14,6 +14,19 @@ coder: GanjinZero/coder_eng_pp
 biolord: FremyCompany/BioLORD-2023
 medcpt-article: ncbi/MedCPT-Article-Encoder
 medcpt-query: ncbi/MedCPT-Query-Encoder
-medcpt-ce: ncbi/MedCPT-Cross-Encoder
 bge-m3: BAAI/bge-m3
+
+# Cross-Encoder rerankers
+medcpt-ce: ncbi/MedCPT-Cross-Encoder
 minilm: "cross-encoder/ms-marco-MiniLM-L-6-v2"
+bge-ce: BAAI/bge-reranker-v2-m3
+
+# LLM rerankers
+rankllama-7b: "castorini/rankllama-v1-7b-lora-passage"
+rankllama-13b: "castorini/rankllama-v1-13b-lora-passage"
+rankzephyr-7b: "castorini/rankzephyr-7b-v1-full"
+monot5-3b: "castorini/monot5-3b-msmarco-10k"
+monot5-base: "castorini/monot5-base-msmarco-10k"
+qwen-7b: "Qwen/Qwen2.5-7B-Instruct"
+qwen-14b: "Qwen/Qwen2.5-14B-Instruct"
+mistral-7b: "mistralai/Mistral-7B-Instruct-v0.3"
