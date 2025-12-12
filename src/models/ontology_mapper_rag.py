@@ -20,7 +20,7 @@ class OntoMapRAG(OntoModelsBase):
         topk: int = 5,
         om_strategy: str = 'rag',
         use_llm_reranker: bool = True,
-        llm_reranker_method: str = 'rankllama-7b',
+        llm_reranker_method: str = 'monot5-3b',
     ):
         super().__init__(method,
                          category,
