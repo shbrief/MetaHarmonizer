@@ -5,7 +5,7 @@ from functools import lru_cache
 import os
 from dotenv import load_dotenv
 from huggingface_hub import snapshot_download
-from src.models.llm_reranker import LLMReranker
+from src.models.reranker import Reranker
 
 load_dotenv()
 
@@ -72,7 +72,7 @@ def get_model(
                                     local_files_only=True)
         model._is_normalized = getattr(model, "normalize_embeddings", False)
     elif model_type == "reranker":
-        model = CrossEncoder(local_dir, max_length=512, device=device)
+        model = CrossEncoder(local_dir, device=device)
     else:
         raise ValueError(
             f"Unknown model_type: {model_type}. Must be 'embedding' or 'reranker'"
@@ -87,35 +87,16 @@ def get_embedding_model_cached(method: str,
     return get_model(method, yaml_path, model_type="embedding")
 
 
-@lru_cache(maxsize=5)
-def get_reranker_model_cached(method: str, yaml_path: str = DEFAULT_YAML_PATH):
-    return get_model(method, yaml_path, model_type="reranker")
-
-
-@lru_cache(maxsize=2)
-def get_llm_reranker_cached(method: str,
-                            use_8bit: bool = False,
-                            batch_size: int = 4,
-                            yaml_path: str = DEFAULT_YAML_PATH):
-    """
-    Get cached LLM reranker model.
-    
-    Args:
-        method: Model identifier (defined in YAML)
-        use_8bit: Use 8-bit quantization
-        batch_size: Inference batch size
-        yaml_path: Path to method-model mapping YAML
-    """
+@lru_cache(maxsize=3)
+def get_reranker_cached(method: str,
+                        use_8bit: bool = False,
+                        yaml_path: str = DEFAULT_YAML_PATH):
     method_model_dict = load_method_model_dict(yaml_path)
 
     if method not in method_model_dict:
-        raise ValueError(
-            f"Unknown LLM reranker method: {method}. Must be one of {list(method_model_dict.keys())}"
-        )
+        raise ValueError(f"Unknown method: {method}")
 
-    model_name = method_model_dict[method]
-
-    return LLMReranker(model_name=model_name,
-                       use_8bit=use_8bit,
-                       batch_size=batch_size,
-                       cache_dir=CACHE_ROOT)
+    return Reranker(model_name=method_model_dict[method],
+                    method=method,
+                    use_8bit=use_8bit,
+                    cache_dir=CACHE_ROOT)

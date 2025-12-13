@@ -27,6 +27,9 @@ rankllama-13b: "castorini/rankllama-v1-13b-lora-passage"
 rankzephyr-7b: "castorini/rankzephyr-7b-v1-full"
 monot5-3b: "castorini/monot5-3b-msmarco-10k"
 monot5-base: "castorini/monot5-base-msmarco-10k"
+
+# Generative LLM Rerankers (for listwise ranking)
 qwen-7b: "Qwen/Qwen2.5-7B-Instruct"
 qwen-14b: "Qwen/Qwen2.5-14B-Instruct"
 mistral-7b: "mistralai/Mistral-7B-Instruct-v0.3"
+llama-8b: "meta-llama/Llama-3.1-8B-Instruct"
