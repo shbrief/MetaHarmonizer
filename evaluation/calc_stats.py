@@ -22,14 +22,14 @@ class CalcStats:
             raise ValueError(f"Missing required columns: {missing_columns}")
         return True
 
-    def calc_accuracy(self, data, mode="t5", custom_top_k=None):
+    def calc_accuracy(self, data, mode="top5", custom_top_k=None):
         """
         Calculate the accuracy of the model predictions for multiple top-k values.
 
         Parameters:
         - data (pandas.DataFrame): The input data containing the model predictions and the ground truth labels.
         - mode (str): Evaluation mode. Options:
-            - "t5": Standard top-1, 3, 5 evaluation (default)
+            - "top5": Standard top-1, 3, 5 evaluation (default)
             - "rerank": Evaluate reranking candidate quality at top-1, 5, 20, 30, 50
         - custom_top_k (list, optional): Custom list of top-k values. Overrides mode if provided.
 
@@ -39,13 +39,13 @@ class CalcStats:
         # Determine top-k list based on mode
         if custom_top_k is not None:
             top_k_list = custom_top_k
-        elif mode == "t5":
+        elif mode == "top5":
             top_k_list = [1, 3, 5]
         elif mode == "rerank":
             top_k_list = [1, 5, 20, 30, 50]
         else:
             raise ValueError(
-                f"Invalid mode: {mode}. Choose 't5' or 'rerank', or provide custom_top_k."
+                f"Invalid mode: {mode}. Choose 'top5' or 'rerank', or provide custom_top_k."
             )
 
         # Determine maximum k needed
