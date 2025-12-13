@@ -1,10 +1,11 @@
-from sentence_transformers import SentenceTransformer
+from sentence_transformers import SentenceTransformer, CrossEncoder
 import torch
 import yaml
 from functools import lru_cache
 import os
 from dotenv import load_dotenv
 from huggingface_hub import snapshot_download
+from src.models.reranker import Reranker
 
 load_dotenv()
 
@@ -18,8 +19,22 @@ def load_method_model_dict(yaml_path: str = DEFAULT_YAML_PATH) -> dict:
         return yaml.safe_load(file)
 
 
-def get_model(method: str,
-              yaml_path: str = DEFAULT_YAML_PATH) -> SentenceTransformer:
+def get_model(
+        method: str,
+        yaml_path: str = DEFAULT_YAML_PATH,
+        model_type: str = "embedding") -> SentenceTransformer | CrossEncoder:
+    """
+    Load a model from Hugging Face Hub (cached locally).
+    
+    Parameters:
+    - method: Method name as defined in YAML
+    - yaml_path: Path to method-model mapping YAML
+    - model_type: Either "embedding" or "reranker"
+    
+    Returns:
+    - SentenceTransformer for embedding models
+    - CrossEncoder for reranker models
+    """
     method_model_dict = load_method_model_dict(yaml_path)
     if method not in method_model_dict:
         raise ValueError(
@@ -48,16 +63,40 @@ def get_model(method: str,
         os.replace(os.path.join(CACHE_ROOT, hf_dir), local_dir)
         print(f"Successfully downloaded {repo_id} to {local_dir}")
 
-    model = SentenceTransformer(
-        local_dir,
-        device="cuda" if torch.cuda.is_available() else "cpu",
-        local_files_only=True)
+    device = "cuda" if torch.cuda.is_available() else "cpu"
 
-    model._is_normalized = getattr(model, "normalize_embeddings", False)
+    # Load different model types
+    if model_type == "embedding":
+        model = SentenceTransformer(local_dir,
+                                    device=device,
+                                    local_files_only=True)
+        model._is_normalized = getattr(model, "normalize_embeddings", False)
+    elif model_type == "reranker":
+        model = CrossEncoder(local_dir, device=device)
+    else:
+        raise ValueError(
+            f"Unknown model_type: {model_type}. Must be 'embedding' or 'reranker'"
+        )
+
     return model
 
 
 @lru_cache(maxsize=5)
 def get_embedding_model_cached(method: str,
                                yaml_path: str = DEFAULT_YAML_PATH):
-    return get_model(method, yaml_path)
+    return get_model(method, yaml_path, model_type="embedding")
+
+
+@lru_cache(maxsize=3)
+def get_reranker_cached(method: str,
+                        use_8bit: bool = False,
+                        yaml_path: str = DEFAULT_YAML_PATH):
+    method_model_dict = load_method_model_dict(yaml_path)
+
+    if method not in method_model_dict:
+        raise ValueError(f"Unknown method: {method}")
+
+    return Reranker(model_name=method_model_dict[method],
+                    method=method,
+                    use_8bit=use_8bit,
+                    cache_dir=CACHE_ROOT)

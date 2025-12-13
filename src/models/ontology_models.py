@@ -7,15 +7,17 @@ from src.CustomLogger.custom_logger import CustomLogger
 
 class OntoModelsBase:
 
-    def __init__(self,
-                 method: str,
-                 category: str,
-                 om_strategy: str,
-                 topk: int,
-                 query: list,
-                 corpus: list,
-                 query_df: pd.DataFrame = None,
-                 corpus_df: pd.DataFrame = None) -> None:
+    def __init__(
+        self,
+        method: str,
+        category: str,
+        om_strategy: str,
+        topk: int,
+        query: list,
+        corpus: list,
+        query_df: pd.DataFrame = None,
+        corpus_df: pd.DataFrame = None,
+    ) -> None:
         self.method = method
         self.category = category
         self.om_strategy = om_strategy
