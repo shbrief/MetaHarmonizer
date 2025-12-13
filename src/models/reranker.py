@@ -230,7 +230,9 @@ class Reranker:
                     orig_idx = docs.index(doc)
                     scores[indices[orig_idx]] = 1.0 - (rank / len(ranked))
                 except ValueError:
-                    pass
+                    CustomLogger().warning(
+                        f"Document '{doc}' not found in docs list for query '{query}'. Skipping."
+                    )
 
         return np.array(scores)
 

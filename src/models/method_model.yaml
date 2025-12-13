@@ -25,6 +25,8 @@ bge-ce: BAAI/bge-reranker-v2-m3
 rankllama-7b: "castorini/rankllama-v1-7b-lora-passage"
 rankllama-13b: "castorini/rankllama-v1-13b-lora-passage"
 rankzephyr-7b: "castorini/rankzephyr-7b-v1-full"
+
+# T5-based rerankers
 monot5-3b: "castorini/monot5-3b-msmarco-10k"
 monot5-base: "castorini/monot5-base-msmarco-10k"
 

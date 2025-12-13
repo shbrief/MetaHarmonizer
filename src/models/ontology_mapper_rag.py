@@ -3,6 +3,7 @@ import pandas as pd
 from tqdm.auto import tqdm
 from src.models.ontology_models import OntoModelsBase
 from src.utils.model_loader import get_reranker_cached
+from src.models.reranker import RERANKER_TYPE_MAP
 
 
 class OntoMapRAG(OntoModelsBase):
@@ -31,6 +32,10 @@ class OntoMapRAG(OntoModelsBase):
                          corpus,
                          corpus_df=corpus_df)
         self.use_reranker = use_reranker
+        if reranker_method not in RERANKER_TYPE_MAP:
+            raise ValueError(
+                f"Unknown reranker_method '{reranker_method}'. Must be one of {list(RERANKER_TYPE_MAP.keys())}"
+            )
         self.reranker_method = reranker_method
         self.reranker_topk = reranker_topk
         self._reranker = None
@@ -43,10 +48,7 @@ class OntoMapRAG(OntoModelsBase):
     def reranker(self):
         """Lazy loading"""
         if self._reranker is None and self.use_reranker:
-            from src.models.reranker import RERANKER_TYPE_MAP
-
-            reranker_type = RERANKER_TYPE_MAP.get(self.reranker_method,
-                                                  "cross_encoder")
+            reranker_type = RERANKER_TYPE_MAP.get(self.reranker_method)
 
             # Auto 8-bit for large models
             if torch.cuda.is_available():
