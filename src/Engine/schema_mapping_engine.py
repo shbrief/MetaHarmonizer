@@ -531,10 +531,10 @@ class SchemaMapEngine:
                 continue
 
             # Stage1
-            row = self.dict_fuzzy_match(col)
-            if row.get("match1_score"):
-                results.append(row)
-                continue
+            # row = self.dict_fuzzy_match(col)
+            # if row.get("match1_score"):
+            #     results.append(row)
+            #     continue
 
             # Stage2a
             row = self.numeric_field_match(col)
