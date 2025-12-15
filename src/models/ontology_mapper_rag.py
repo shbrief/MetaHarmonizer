@@ -18,11 +18,11 @@ class OntoMapRAG(OntoModelsBase):
         query: list[str],
         corpus: list[str],
         corpus_df: pd.DataFrame,
+        use_reranker: bool,
+        reranker_method: str,
+        reranker_topk: int,
         topk: int = 5,
         om_strategy: str = 'rag',
-        use_reranker: bool = False,
-        reranker_method: str = 'minilm',
-        reranker_topk: int = 50,
     ):
         super().__init__(method,
                          category,
@@ -32,12 +32,18 @@ class OntoMapRAG(OntoModelsBase):
                          corpus,
                          corpus_df=corpus_df)
         self.use_reranker = use_reranker
-        if reranker_method not in RERANKER_TYPE_MAP:
-            raise ValueError(
-                f"Unknown reranker_method '{reranker_method}'. Must be one of {list(RERANKER_TYPE_MAP.keys())}"
-            )
-        self.reranker_method = reranker_method
-        self.reranker_topk = reranker_topk
+
+        if self.use_reranker:
+            if reranker_method not in RERANKER_TYPE_MAP:
+                raise ValueError(
+                    f"Unknown reranker_method '{reranker_method}'. Must be one of {list(RERANKER_TYPE_MAP.keys())}"
+                )
+            self.reranker_method = reranker_method
+            self.reranker_topk = reranker_topk
+        else:
+            self.reranker_method = None
+            self.reranker_topk = None
+
         self._reranker = None
 
         self.logger.info(

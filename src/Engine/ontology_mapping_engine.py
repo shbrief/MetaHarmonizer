@@ -205,6 +205,9 @@ class OntoMapEngine:
         """
         query_df = self.other_params.get('query_df', None)
         corpus_df = self.other_params.get('corpus_df', None)
+        use_reranker = self.other_params.get('use_reranker', True)
+        reranker_method = self.other_params.get('reranker_method', 'minilm')
+        reranker_topk = self.other_params.get('reranker_topk', 50)
 
         if strategy == 'lm':
             return oml.OntoMapLM(method=self.s2_method,
@@ -238,7 +241,10 @@ class OntoMapEngine:
                                   query=non_exact_query_list,
                                   corpus=self.corpus_s3,
                                   topk=self.topk,
-                                  corpus_df=corpus_df)
+                                  corpus_df=corpus_df,
+                                  use_reranker=use_reranker,
+                                  reranker_method=reranker_method,
+                                  reranker_topk=reranker_topk)
         elif strategy == 'rag_bie':
             return ombe.OntoMapBIE(method=self.s3_method,
                                    category=self.category,
