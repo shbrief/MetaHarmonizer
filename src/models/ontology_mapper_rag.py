@@ -141,27 +141,27 @@ class OntoMapRAG(OntoModelsBase):
         })
 
         for i in range(topk):
-            df[f'top{i+1}_match'] = [
+            df[f'match{i+1}'] = [
                 r[i].metadata['term'] if i < len(r) else "N/A" for r in results
             ]
-            df[f'top{i+1}_score'] = [
+            df[f'match{i+1}_score'] = [
                 f"{r[i].metadata['score']:.4f}" if i < len(r) else "N/A"
                 for r in results
             ]
 
             if self.use_reranker:
-                df[f'top{i+1}_similarity_score'] = [
+                df[f'match{i+1}_similarity_score'] = [
                     f"{r[i].metadata.get('similarity_score', 0):.4f}"
                     if i < len(r) else "N/A" for r in results
                 ]
-                df[f'top{i+1}_reranker_score'] = [
+                df[f'match{i+1}_reranker_score'] = [
                     f"{r[i].metadata.get('reranker_score', 0):.4f}"
                     if i < len(r) else "N/A" for r in results
                 ]
 
         df['match_level'] = df.apply(lambda row: next(
             (i + 1 for i in range(topk)
-             if row[f'top{i+1}_match'] == row['curated_ontology']), 99),
+             if row[f'match{i+1}'] == row['curated_ontology']), 99),
                                      axis=1)
 
         self.logger.info("Results Generated")

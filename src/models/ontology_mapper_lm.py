@@ -222,8 +222,8 @@ class OntoMapLM(otm.OntoModelsBase):
                 "match_level": lvl
             }
             for i, (t, s) in enumerate(zip(top_terms, top_scores), start=1):
-                row[f"top{i}_match"] = t
-                row[f"top{i}_score"] = f"{s:.4f}"
+                row[f"match{i}"] = t
+                row[f"match{i}_score"] = f"{s:.4f}"
             rows.append(row)
 
         return pd.DataFrame(rows)

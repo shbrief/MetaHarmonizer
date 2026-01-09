@@ -122,15 +122,15 @@ class OntoMapFTS(otm.OntoModelsBase):
                 # Add top-k matches
                 for i, (standard_term, nci_code,
                         confidence) in enumerate(results, start=1):
-                    row[f"top{i}_match"] = standard_term
-                    row[f"top{i}_score"] = f"{confidence:.4f}"
-                    row[f"top{i}_code"] = nci_code
+                    row[f"match{i}"] = standard_term
+                    row[f"match{i}_score"] = f"{confidence:.4f}"
+                    row[f"match{i}_code"] = nci_code
 
                 # Fill remaining slots if fewer than topk results
                 for i in range(len(results) + 1, topk + 1):
-                    row[f"top{i}_match"] = ""
-                    row[f"top{i}_score"] = "0.0000"
-                    row[f"top{i}_code"] = ""
+                    row[f"match{i}"] = ""
+                    row[f"match{i}_score"] = "0.0000"
+                    row[f"match{i}_code"] = ""
 
                 self.logger.info(f"FTS: '{query}' → '{results[0][0]}' "
                                  f"[confidence={results[0][2]:.3f}]")
@@ -138,9 +138,9 @@ class OntoMapFTS(otm.OntoModelsBase):
                 # No matches found
                 row["match_level"] = 99
                 for i in range(1, topk + 1):
-                    row[f"top{i}_match"] = ""
-                    row[f"top{i}_score"] = "0.0000"
-                    row[f"top{i}_code"] = ""
+                    row[f"match{i}"] = ""
+                    row[f"match{i}_score"] = "0.0000"
+                    row[f"match{i}_code"] = ""
 
                 self.logger.info(f"FTS: No match for '{query}'")
 

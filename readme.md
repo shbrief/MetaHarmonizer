@@ -155,8 +155,8 @@ _schema_map_manual.csv for manual mode
 _schema_map_stage3.csv for Stage 3 results  
   - Columns:  
 original_column  
-matched_stage (stage1, stage2, stage3  )  
-matched_stage_detail (dict, fuzzy, numeric, alias, bert, freq)  
+stage (stage1, stage2, stage3  )  
+method (dict, fuzzy, numeric, alias, bert, freq)  
 match{i}_field, match{i}_score, match{i}_source (for top-k matches)
 
 #### 2.5. Demo Notebooks For Schema and Ontology Mapping

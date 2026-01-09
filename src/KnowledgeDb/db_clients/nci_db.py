@@ -1,4 +1,6 @@
+import os
 import re
+import sqlite3
 from typing import Dict, List
 import asyncio
 import httpx
@@ -13,12 +15,14 @@ from src.KnowledgeDb.db_clients.umls_db import UMLSDb
 NCI_CALLS = 18
 NCI_PERIOD = 1
 LIST_OF_CONCEPTS = [
-    # "synonyms",
+    "synonyms",
     "definitions",
     "parents",
     "children",
     "roles",
 ]
+VECTOR_DB_PATH = os.getenv(
+    "VECTOR_DB_PATH") or "src/KnowledgeDb/vector_db.sqlite"
 
 
 class NCIDb:
@@ -42,6 +46,25 @@ class NCIDb:
         self.batch_size = 50
         self.concurrency = 4
         self.list_of_concepts = LIST_OF_CONCEPTS
+
+        self.cache_db_path = VECTOR_DB_PATH
+        self._ensure_cache_table()
+
+    def _ensure_cache_table(self):
+        """Build cache table if not exists."""
+        with sqlite3.connect(self.cache_db_path) as conn:
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS nci_concept_cache (
+                    code TEXT PRIMARY KEY,
+                    name TEXT,
+                    data_json TEXT,
+                    fetched_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                );
+            """)
+            conn.execute("""
+                CREATE INDEX IF NOT EXISTS idx_nci_cache_code 
+                ON nci_concept_cache(code);
+            """)
 
     async def fetch_one(self, client, url):
         """Fetch a single URL with rate limiting and error handling.

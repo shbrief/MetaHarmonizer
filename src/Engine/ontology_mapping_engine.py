@@ -298,13 +298,13 @@ class OntoMapEngine:
         if not self.enable_stage_25:
             self._logger.info("Stage 2.5: Skipped (corpus_df not provided)")
             s2_res['top1_score_float'] = pd.to_numeric(
-                s2_res['top1_score'], errors='coerce').fillna(0)
+                s2_res['match1_score'], errors='coerce').fillna(0)
         else:
             self._logger.info(
                 "Stage 2.5: Synonym Verification for Low Confidence Results")
 
             s2_res['top1_score_float'] = pd.to_numeric(
-                s2_res['top1_score'], errors='coerce').fillna(0)
+                s2_res['match1_score'], errors='coerce').fillna(0)
 
             low_conf_mask = s2_res['top1_score_float'] < SYNONYM_MIN_CONFIDENCE
             low_conf_queries = s2_res.loc[low_conf_mask,
@@ -335,8 +335,8 @@ class OntoMapEngine:
 
                     combined_candidates = {}
                     for i in range(1, self.topk + 1):
-                        match = row[f'top{i}_match']
-                        score = float(row[f'top{i}_score'])
+                        match = row[f'match{i}']
+                        score = float(row[f'match{i}_score'])
                         if pd.notna(match) and match:
                             combined_candidates[match] = score
 
@@ -344,8 +344,8 @@ class OntoMapEngine:
 
                     if syn_row is not None:
                         for i in range(1, self.topk + 1):
-                            match = syn_row[f'top{i}_match']
-                            score = float(syn_row[f'top{i}_score'])
+                            match = syn_row[f'match{i}']
+                            score = float(syn_row[f'match{i}_score'])
                             if pd.notna(match) and match:
                                 if match in combined_candidates:
                                     combined_candidates[match] = max(
@@ -378,7 +378,7 @@ class OntoMapEngine:
                             (i + 1 for i, term in enumerate(combined_matches)
                              if term == curated), 99)
 
-                        old_top1_score = float(row['top1_score'])
+                        old_top1_score = float(row['match1_score'])
                         new_top1_score = combined_scores[0]
                         old_match_level = int(row['match_level'])
 
@@ -388,18 +388,18 @@ class OntoMapEngine:
                         if boosted:
                             self._logger.info(
                                 f"Boosted '{orig_val}': "
-                                f"S2_top1={row['top1_match']}({old_top1_score:.3f}) → "
+                                f"S2_top1={row['match1']}({old_top1_score:.3f}) → "
                                 f"Combined_top1={combined_matches[0]}({new_top1_score:.3f}), "
                                 f"match_level: {old_match_level} → {match_level}"
                             )
 
                             for i in range(1, self.topk + 1):
                                 s2_res.at[idx,
-                                          f'top{i}_match'] = combined_matches[
-                                              i - 1]
+                                          f'match{i}'] = combined_matches[i -
+                                                                          1]
                                 s2_res.at[
                                     idx,
-                                    f'top{i}_score'] = f"{combined_scores[i - 1]:.4f}"
+                                    f'match{i}_score'] = f"{combined_scores[i - 1]:.4f}"
 
                             s2_res.at[idx, 'match_level'] = match_level
                             s2_res.at[idx, 'stage'] = 2.5
@@ -433,9 +433,8 @@ class OntoMapEngine:
             self.cura_map).fillna(exact_df['original_value'])
         exact_df['match_level'] = 1
         exact_df['stage'] = 1
-        for i in range(1, self.topk + 1):
-            exact_df[f'top{i}_match'] = exact_df['curated_ontology']
-            exact_df[f'top{i}_score'] = 1.00
+        exact_df['match1'] = exact_df['curated_ontology']
+        exact_df['match1_score'] = 1.00
 
         # Remaining queries for Stage 2
         non_exact_matches_ls = list(np.setdiff1d(self.query, stage1_matches))
@@ -498,7 +497,7 @@ class OntoMapEngine:
             # Check which queries need Stage 3 (top1_score < threshold)
             self._logger.info(f"Stage 3: {self.s3_strategy.upper()} Matching")
 
-            top1_score_col = 'top1_score'
+            top1_score_col = 'match1_score'
             if top1_score_col not in s2_res.columns:
                 self._logger.warning(
                     f"{top1_score_col} not found in Stage 2 results. Skipping Stage 3."
@@ -518,7 +517,7 @@ class OntoMapEngine:
                                         'original_value'].tolist()
 
             self._logger.info(
-                f"Queries with top1_score < {self.s3_threshold}: {len(queries_for_s3)}"
+                f"Queries with match1_score < {self.s3_threshold}: {len(queries_for_s3)}"
             )
 
             if not queries_for_s3:

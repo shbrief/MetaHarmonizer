@@ -35,7 +35,7 @@ NOISE_VALUES = {
 class SchemaMapEngine:
     """
     Performs schema mapping in three stages and outputs a CSV with columns:
-      original_column | matched_stage | matched_stage_method |
+      original_column | stage | method |
       match1_field | match1_score | match1_source |
       match2_field | match2_score | match2_source |
       match3_field | match3_score | match3_source | ...
@@ -202,8 +202,8 @@ class SchemaMapEngine:
         """
         row: Dict[str, Any] = {
             "original_column": col,
-            "matched_stage": stage,
-            "matched_stage_method": detail
+            "stage": stage,
+            "method": detail
         }
 
         for i, (field, score, source) in enumerate(matches[:self.top_k],
@@ -525,8 +525,8 @@ class SchemaMapEngine:
             if is_invalid:
                 results.append({
                     "original_column": col,
-                    "matched_stage": "invalid",
-                    "matched_stage_method": is_invalid
+                    "stage": "invalid",
+                    "method": is_invalid
                 })
                 continue
 
@@ -579,21 +579,20 @@ class SchemaMapEngine:
         Load manual Stage3 results, run Stage4 on unmatched/pending columns.
         """
         df_manual = pd.read_csv(manual_csv)
-        if "matched_stage" in df_manual.columns and "original_column" in df_manual.columns:
-            mask = ((df_manual["matched_stage"] == "stage3_pending")
-                    | df_manual["matched_stage"].isna()
-                    |
-                    (df_manual["matched_stage"].astype(str).str.strip() == ""))
+        if "stage" in df_manual.columns and "original_column" in df_manual.columns:
+            mask = ((df_manual["stage"] == "stage3_pending")
+                    | df_manual["stage"].isna()
+                    | (df_manual["stage"].astype(str).str.strip() == ""))
             pending_cols = df_manual.loc[mask, "original_column"]
         elif "original_column" in df_manual.columns:
             logger.warning(
-                "[Stage3] 'matched_stage' not found; assuming all 'original_column' need Stage4."
+                "[Stage3] 'stage' not found; assuming all 'original_column' need Stage4."
             )
             pending_cols = (df_manual["original_column"].dropna().astype(
                 str).unique().tolist())
         else:
             raise ValueError(
-                "Expected columns 'matched_stage' and/or 'original_column'. ")
+                "Expected columns 'stage' and/or 'original_column'. ")
 
         results = []
         for col in pending_cols:

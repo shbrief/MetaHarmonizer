@@ -115,7 +115,7 @@ def build_eval_df(
       - curated_field: all valid truths (pipe-joined) for the source
       - matched_rank : 1..top_k if any truth appears in top-k predictions; 99 otherwise
 
-    NOTE: This function NEVER filters rows by matched_stage_method.
+    NOTE: This function NEVER filters rows by method.
     The saved *_eval.csv contains ALL prediction rows.
     """
     pred = pd.read_csv(pred_file)
@@ -202,8 +202,6 @@ def build_eval_df(
 
 
 # ------------------ 2) compute accuracy FROM an eval CSV (filter only for metrics) ------------------
-
-
 def compute_accuracy_from_eval(
     eval_csv: str,
     top_k: int = 5,
@@ -213,7 +211,7 @@ def compute_accuracy_from_eval(
 ) -> Dict[str, float]:
     """
     Compute Top-k accuracy FROM an existing *_eval.csv.
-    include/exclude (by matched_stage_method) are applied ONLY for metric computation.
+    include/exclude (by method) are applied ONLY for metric computation.
     """
     df = pd.read_csv(eval_csv)
     df = df[df["curated_field"].notna() &
@@ -234,19 +232,19 @@ def compute_accuracy_from_eval(
 
     # Apply include/exclude ONLY for metrics (does not touch the CSV on disk)
     if include_details:
-        if "matched_stage_method" not in df.columns:
+        if "method" not in df.columns:
             raise ValueError(
-                "include_details was specified but 'matched_stage_method' is missing in eval CSV."
+                "include_details was specified but 'method' is missing in eval CSV."
             )
         keep = {str(x) for x in include_details}
-        df = df[df["matched_stage_method"].astype(str).isin(keep)].copy()
+        df = df[df["method"].astype(str).isin(keep)].copy()
     if exclude_details:
-        if "matched_stage_method" not in df.columns:
+        if "method" not in df.columns:
             raise ValueError(
-                "exclude_details was specified but 'matched_stage_method' is missing in eval CSV."
+                "exclude_details was specified but 'method' is missing in eval CSV."
             )
         drop = {str(x) for x in exclude_details}
-        df = df[~df["matched_stage_method"].astype(str).isin(drop)].copy()
+        df = df[~df["method"].astype(str).isin(drop)].copy()
 
     k_list: Sequence[int] = (1, 3,
                              5) if top_k == 5 else list(range(1, top_k + 1))
@@ -317,19 +315,19 @@ def compute_accuracy(
             raise ValueError(
                 "include_details and exclude_details are mutually exclusive.")
         if include_methods:
-            if "matched_stage_method" not in df.columns:
+            if "method" not in df.columns:
                 raise ValueError(
-                    "include_methods was specified but 'matched_stage_method' is missing in eval DF."
+                    "include_methods was specified but 'method' is missing in eval DF."
                 )
             keep = {str(x) for x in include_methods}
-            df = df[df["matched_stage_method"].astype(str).isin(keep)].copy()
+            df = df[df["method"].astype(str).isin(keep)].copy()
         if exclude_methods:
-            if "matched_stage_method" not in df.columns:
+            if "method" not in df.columns:
                 raise ValueError(
-                    "exclude_methods was specified but 'matched_stage_method' is missing in eval DF."
+                    "exclude_methods was specified but 'method' is missing in eval DF."
                 )
             drop = {str(x) for x in exclude_methods}
-            df = df[~df["matched_stage_method"].astype(str).isin(drop)].copy()
+            df = df[~df["method"].astype(str).isin(drop)].copy()
 
         k_list: Sequence[int] = (1, 3, 5) if top_k == 5 else list(
             range(1, top_k + 1))

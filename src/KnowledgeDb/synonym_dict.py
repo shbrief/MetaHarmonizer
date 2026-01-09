@@ -2,11 +2,10 @@ import os
 import sqlite3
 import faiss
 import asyncio
-import httpx
 import gc
 import torch
 import numpy as np
-from typing import List, Dict, Tuple, Optional, Set
+from typing import List, Dict, Optional, Set
 from pathlib import Path
 from collections import OrderedDict
 from tqdm.auto import tqdm
@@ -14,6 +13,7 @@ from src.utils.embeddings import EmbeddingAdapter
 from src.utils.model_loader import get_embedding_model_cached
 from src.KnowledgeDb import ensure_knowledge_db
 from src.KnowledgeDb.db_clients.nci_db import NCIDb
+from src.KnowledgeDb.concept_table_builder import ConceptTableBuilder
 from src.CustomLogger.custom_logger import CustomLogger
 
 # -------- ENV / CONSTS --------
@@ -31,8 +31,8 @@ class SynonymDict:
         ensure_knowledge_db()
         self.category = category
         self.method = method
+        self.table_name = f"synonym_{category}"
         method_clean = method.replace('-', '_')
-        self.table_name = f"synonym_{method_clean}_{category}"
         self.index_name = f"synonym_{method_clean}_{category}.index"
 
         self.db_path = BASE_DB
@@ -51,24 +51,21 @@ class SynonymDict:
         Path(os.path.dirname(self.index_path)).mkdir(parents=True,
                                                      exist_ok=True)
 
-        # Initialize database
-        self._ensure_db()
-
-        # Keep a persistent connection for faster queries
+        # Keep a persistent connection
         self._conn = sqlite3.connect(self.db_path)
-        self._conn.execute("PRAGMA journal_mode=WAL;")
-        self._conn.execute("PRAGMA synchronous=NORMAL;")
+        self._conn.execute("PRAGMA journal_mode=DELETE;")
+        self._conn.execute("PRAGMA synchronous=FULL;")
 
-        # Initialize FAISS index (using IndexIDMap2)
+        # Initialize FAISS index
         self.index: Optional[faiss.Index] = None
         self.dim: Optional[int] = None
 
         if os.path.exists(self.index_path):
             self.load_index()
             self.logger.info(
-                f"📊 Loaded index: FAISS vectors={self.index.ntotal}")
+                f"Loaded index: FAISS vectors={self.index.ntotal}")
 
-        # Query cache for performance
+        # Query cache
         self._qcache = OrderedDict()
         self._qcache_cap = 200000
 
@@ -106,24 +103,6 @@ class SynonymDict:
             self._qcache.popitem(last=False)
 
     # ---------------- SQLite Operations ----------------
-    def _ensure_db(self):
-        """Create table if not exists."""
-        with sqlite3.connect(self.db_path) as con:
-            con.execute("PRAGMA journal_mode=WAL;")
-            con.execute("PRAGMA synchronous=NORMAL;")
-            con.execute(f"""
-                CREATE TABLE IF NOT EXISTS {self.table_name}(
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    synonym TEXT NOT NULL,
-                    official_label TEXT NOT NULL,
-                    nci_code TEXT NOT NULL
-                );
-            """)
-            con.execute(f"""
-                CREATE INDEX IF NOT EXISTS idx_{self.table_name}_code 
-                ON {self.table_name}(nci_code);
-            """)
-
     def get_indexed_codes(self) -> Set[str]:
         """Get all NCI codes already indexed."""
         cursor = self._conn.cursor()
@@ -131,67 +110,15 @@ class SynonymDict:
             f"SELECT DISTINCT nci_code FROM {self.table_name}").fetchall()
         return set(row[0] for row in rows)
 
-    def has_ontology(self) -> bool:
+    def has_synonym_data(self) -> bool:
         """Check if this category has any synonyms indexed."""
-        cursor = self._conn.cursor()
-        count = cursor.execute(
-            f"SELECT COUNT(*) FROM {self.table_name}").fetchone()[0]
-        return count > 0
-
-    def _insert_synonyms_batch(
-            self, records: List[Tuple[str, str, str]]) -> List[int]:
-        """
-        Atomic batch insert with RETURNING clause (SQLite 3.35+).
-        Uses chunking to avoid SQLITE_MAX_VARIABLE_NUMBER limits.
-        
-        Args:
-            records: List of (synonym, official_label, nci_code) tuples
-            
-        Returns:
-            List of inserted row IDs
-            
-        Raises:
-            RuntimeError: If SQLite version < 3.35.0
-            sqlite3.Error: If insertion fails
-        """
-        if not records:
-            return []
-
-        # Check SQLite version
-        if sqlite3.sqlite_version_info < (3, 35, 0):
-            raise RuntimeError(
-                f"SQLite {sqlite3.sqlite_version} detected. "
-                f"Minimum required version is 3.35.0 for atomic batch insert with RETURNING clause. "
-                f"Please upgrade your SQLite installation.")
-
-        cursor = self._conn.cursor()
-        all_inserted_ids = []
-
-        CHUNK_SIZE = 3000
-
         try:
-            for i in range(0, len(records), CHUNK_SIZE):
-                chunk = records[i:i + CHUNK_SIZE]
-
-                placeholders = ', '.join(['(?, ?, ?)'] * len(chunk))
-                sql = (
-                    f"INSERT INTO {self.table_name}(synonym, official_label, nci_code) "
-                    f"VALUES {placeholders} RETURNING id")
-
-                flat_values = [item for record in chunk for item in record]
-
-                cursor.execute(sql, flat_values)
-                chunk_ids = [row[0] for row in cursor.fetchall()]
-                all_inserted_ids.extend(chunk_ids)
-
-            self._conn.commit()
-
-        except sqlite3.Error as e:
-            self._conn.rollback()
-            self.logger.error(f"Batch insert failed: {e}")
-            raise
-
-        return all_inserted_ids
+            cursor = self._conn.cursor()
+            count = cursor.execute(
+                f"SELECT COUNT(*) FROM {self.table_name}").fetchone()[0]
+            return count > 0
+        except sqlite3.OperationalError:
+            return False
 
     def get_meta_by_ids(self, ids: List[int]) -> List[Dict]:
         """Get full metadata for given IDs using persistent connection."""
@@ -287,92 +214,17 @@ class SynonymDict:
         return self._l2_normalize(vecs)
 
     # ---------------- Build Index from NCI API ----------------
-    async def build_index_from_codes_async(self,
-                                           codes: List[str],
-                                           force_rebuild: bool = False):
-        """Build index from NCI codes using NCI API (async version)."""
-        codes_set = set(codes)
-
-        if force_rebuild:
-            self.logger.info(
-                f"🔄 Force rebuild: fetching all {len(codes_set)} codes")
-            cursor = self._conn.cursor()
-            cursor.execute(f"DELETE FROM {self.table_name}")
-            self._conn.commit()
-            codes_to_fetch = list(codes_set)
-        else:
-            indexed_codes = self.get_indexed_codes()
-            codes_to_fetch = list(codes_set - indexed_codes)
-
-            if not codes_to_fetch:
-                self.logger.info(
-                    f"✅ All {len(codes_set)} codes already indexed. Skipping API calls."
-                )
-                return
-
-            self.logger.info(
-                f"📥 Fetching synonyms for {len(codes_to_fetch)} new codes "
-                f"(skipping {len(indexed_codes & codes_set)} already indexed)")
-
-        # Fetch concept data from NCI API
+    def _build_faiss_index_from_synonyms(self, db_ids: List[int],
+                                         synonyms: List[str]):
+        """
+        Build FAISS index from given synonyms and their DB IDs.
+        
+        General method that can be called by build_index_from_codes_async and _build_index_from_existing_table.
+        """
         self.logger.info(
-            f"Fetching concept data for {len(codes_to_fetch)} codes")
+            f"Building FAISS index for {len(synonyms)} synonym terms")
 
-        async with httpx.AsyncClient(
-                limits=httpx.Limits(max_connections=self.nci_db.concurrency *
-                                    self.nci_db.batch_size)) as client:
-            concept_data = await self.nci_db.get_custom_concepts_by_codes(
-                codes_to_fetch, client)
-
-        if not concept_data:
-            self.logger.warning("No concept data fetched from NCI")
-            return
-
-        self.logger.info(f"Retrieved {len(concept_data)} concept data entries")
-
-        # Extract synonyms and prepare records
-        records = []
-        synonyms_list = []
-
-        for code, data in tqdm(concept_data.items(),
-                               desc="Extracting synonyms",
-                               leave=False):
-            if not data:
-                continue
-
-            official_label = data.get("name", "").strip()
-            if not official_label:
-                continue
-
-            synonym_set = set()
-            synonym_set.add(official_label)
-
-            if "synonyms" in data:
-                for syn_item in data["synonyms"]:
-                    if isinstance(syn_item, dict):
-                        syn_name = syn_item.get("name", "").strip()
-                        if syn_name:
-                            synonym_set.add(syn_name)
-
-            for synonym in synonym_set:
-                records.append((synonym, official_label, code))
-                synonyms_list.append(synonym)
-
-        if not records:
-            self.logger.warning("No valid records to insert")
-            return
-
-        self.logger.info(
-            f"Extracted {len(records)} synonyms from {len(concept_data)} codes"
-        )
-
-        # ✅ Insert into SQLite atomically
-        self.logger.info("Inserting records into SQLite...")
-        inserted_ids = self._insert_synonyms_batch(records)
-
-        # Build FAISS index in batches
-        self.logger.info("Building FAISS index...")
-
+        # Batch embedding
         embed_batch_size = 512
         if faiss.get_num_gpus() > 0:
             total_mem = torch.cuda.get_device_properties(0).total_memory / (
@@ -382,34 +234,96 @@ class SynonymDict:
 
             if free_mem < 2:
                 embed_batch_size = max(64, embed_batch_size // 2)
-                self.logger.warning(
-                    f"Low GPU memory ({free_mem:.2f}GB), reducing batch size to {embed_batch_size}"
-                )
             elif free_mem > 8:
                 embed_batch_size = min(2048, embed_batch_size * 2)
-                self.logger.info(
-                    f"High GPU memory ({free_mem:.2f}GB), increasing batch size to {embed_batch_size}"
-                )
 
-        # ✅ Process in batches with proper ID mapping
-        for i in tqdm(range(0, len(synonyms_list), embed_batch_size),
+        all_vectors = []
+        for i in tqdm(range(0, len(synonyms), embed_batch_size),
                       desc="Embedding batches",
                       leave=False):
-            batch_syns = synonyms_list[i:i + embed_batch_size]
-            batch_ids = inserted_ids[i:i + embed_batch_size]
-
+            batch_syns = synonyms[i:i + embed_batch_size]
             batch_vecs = self.embedder.embed_documents(batch_syns)
-            self._add_to_faiss(batch_vecs, np.array(batch_ids))
+            all_vectors.extend(batch_vecs)
 
             del batch_syns, batch_vecs
             if faiss.get_num_gpus() > 0:
                 torch.cuda.empty_cache()
             gc.collect()
 
-        # Save index
+        # Build FAISS index
+        vectors_array = np.array(all_vectors, dtype=np.float32)
+        vectors_array = self._l2_normalize(vectors_array)
+        ids_array = np.array(db_ids, dtype=np.int64)
+
+        dim = vectors_array.shape[1]
+        base_index = faiss.IndexFlatIP(dim)
+        cpu_index = faiss.IndexIDMap2(base_index)
+
+        if faiss.get_num_gpus() > 0:
+            res = faiss.StandardGpuResources()
+            self.index = faiss.index_cpu_to_gpu(res, 0, cpu_index)
+        else:
+            self.index = cpu_index
+
+        self.index.add_with_ids(vectors_array, ids_array)
+
+        # Save
         self.save_index()
         self.logger.info(
             f"✅ FAISS index built with {self.index.ntotal} vectors")
+
+    def _build_index_from_existing_table(self):
+        """Build FAISS index from existing synonym table."""
+        cursor = self._conn.cursor()
+        rows = cursor.execute(
+            f"SELECT id, synonym FROM {self.table_name} ORDER BY id").fetchall(
+            )
+
+        if not rows:
+            self.logger.warning("No data in synonym table")
+            return
+
+        db_ids = [row[0] for row in rows]
+        synonyms = [row[1] for row in rows]
+
+        self._build_faiss_index_from_synonyms(db_ids, synonyms)
+
+    async def build_index_from_codes_async(self,
+                                           codes: List[str],
+                                           force_rebuild: bool = False):
+        """Build FAISS index from NCI codes asynchronously."""
+
+        # 1. Ensure the synonym table is built
+        builder = ConceptTableBuilder(self.category)
+        await builder.fetch_and_build_tables(codes,
+                                             force_rebuild=force_rebuild)
+
+        # 2. Check if FAISS index needs to be rebuilt
+        if not force_rebuild and os.path.exists(self.index_path):
+            cursor = self._conn.cursor()
+            table_count = cursor.execute(
+                f"SELECT COUNT(*) FROM {self.table_name}").fetchone()[0]
+
+            if self.index and self.index.ntotal == table_count:
+                self.logger.info(
+                    f"✅ FAISS index already up-to-date ({self.index.ntotal} vectors)"
+                )
+                return
+
+        # 3. Read data from synonym table
+        cursor = self._conn.cursor()
+        rows = cursor.execute(
+            f"SELECT id, synonym FROM {self.table_name} ORDER BY id").fetchall(
+            )
+
+        if not rows:
+            self.logger.warning("No data in synonym table")
+            return
+
+        db_ids = [row[0] for row in rows]
+        synonyms = [row[1] for row in rows]
+
+        self._build_faiss_index_from_synonyms(db_ids, synonyms)
 
     def build_index_from_codes(self,
                                codes: List[str],
@@ -419,16 +333,60 @@ class SynonymDict:
 
     # ---------------- Warm Run ----------------
     def warm_run(self, codes: List[str], force_rebuild: bool = False):
-        """Warm run: Check if index exists and build if needed."""
-        if not force_rebuild and self.has_ontology():
-            stats = self.get_stats()
-            self.logger.info(
-                f"✅ Synonyms already exist for '{self.category}': "
-                f"{stats['total_synonyms']} synonyms, {stats['unique_labels']} unique labels"
-            )
+        """
+        Warm run: ensure synonym data and index are ready
+        
+        Workflow:
+        1. Use ConceptTableBuilder to ensure the table is created and populated
+        2. Check if FAISS index needs to be built
+        3. If needed, build the index from the table
+        """
+        # ✅ 1. Ensure the table is created and populated
+        builder = ConceptTableBuilder(self.category)
+
+        loop = asyncio.new_event_loop()
+        try:
+            loop.run_until_complete(
+                builder.fetch_and_build_tables(codes,
+                                               force_rebuild=force_rebuild))
+        finally:
+            loop.close()
+
+        # ✅ 2. Check if the table has data
+        if not self.has_synonym_data():
+            self.logger.error(
+                f"Failed to build synonym table {self.table_name}. "
+                f"ConceptTableBuilder did not populate data.")
             return
 
-        self.build_index_from_codes(codes, force_rebuild)
+        # ✅ 3. Check and build FAISS index
+        has_index = self.has_faiss_index()
+
+        if force_rebuild or not has_index:
+            self.logger.info("🔨 Building FAISS index from synonym table...")
+            self._build_index_from_existing_table()
+        else:
+            # Verify index consistency
+            stats = self.get_stats()
+            if self.index and self.index.ntotal == stats['total_synonyms']:
+                self.logger.info(
+                    f"✅ Synonym index complete: "
+                    f"{stats['total_synonyms']} synonyms, {stats['unique_labels']} unique labels"
+                )
+            else:
+                self.logger.warning("⚠️ Index inconsistent, rebuilding...")
+                self._build_index_from_existing_table()
+
+    def has_faiss_index(self) -> bool:
+        """Check if FAISS index exists and is valid"""
+        if not os.path.exists(self.index_path):
+            return False
+
+        try:
+            test_index = faiss.read_index(self.index_path)
+            return test_index.ntotal > 0
+        except Exception:
+            return False
 
     # ---------------- Search Operations ----------------
     def search(self, query_text: str, top_k: int = 10) -> List[Dict]:
@@ -506,7 +464,7 @@ class SynonymDict:
                 } for c in cached]
                 results.append(metas)
             else:
-                results.append(None)  # type: ignore
+                results.append(None)
                 needed_idx.append(i)
                 Q.append(q)
 
@@ -528,7 +486,7 @@ class SynonymDict:
             for m, s in zip(metas, scores):
                 m["score"] = s
 
-            results[i_query] = metas  # type: ignore
+            results[i_query] = metas
 
             ck = cache_keys[i_query]
             frozen = tuple(

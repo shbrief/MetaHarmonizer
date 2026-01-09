@@ -44,10 +44,6 @@ class OntoMapSynonym:
             f"Warm run: Checking synonym index for '{self.category}'")
 
         # Extract NCI codes from corpus_df
-        if "clean_code" not in self.corpus_df.columns:
-            self.logger.error("corpus_df must contain 'clean_code' column")
-            return
-
         codes = self.corpus_df["clean_code"].dropna().unique().tolist()
         self.logger.info(f"Found {len(codes)} unique NCI codes in corpus_df")
 
@@ -70,7 +66,7 @@ class OntoMapSynonym:
             
         Returns:
             DataFrame with columns: original_value, curated_ontology, match_level,
-                                   top1_match, top1_score, ..., topN_match, topN_score
+                                   match1, match1_score, ..., matchN, matchN_score
         """
         k = topk or self.topk
         self.logger.info(f"Searching synonyms for {len(self.query)} queries")
@@ -118,8 +114,8 @@ class OntoMapSynonym:
 
             # Fill top-k results
             for i in range(1, k + 1):
-                row[f'top{i}_match'] = top_terms[i - 1]
-                row[f'top{i}_score'] = f"{top_scores[i - 1]:.4f}"
+                row[f'match{i}'] = top_terms[i - 1]
+                row[f'match{i}_score'] = f"{top_scores[i - 1]:.4f}"
 
             results.append(row)
 
