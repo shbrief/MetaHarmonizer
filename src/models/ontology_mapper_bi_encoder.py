@@ -125,18 +125,18 @@ class OntoMapBIE(OntoModelsBase):
         })
 
         for i in range(k):
-            df[f'top{i+1}_match'] = [
+            df[f'match{i+1}'] = [
                 hits[i].metadata['term'] if i < len(hits) else "N/A"
                 for hits in all_results
             ]
-            df[f'top{i+1}_score'] = [
+            df[f'match{i+1}_score'] = [
                 f"{hits[i].metadata['score']:.4f}" if i < len(hits) else "N/A"
                 for hits in all_results
             ]
 
         df['match_level'] = df.apply(lambda row: next(
             (j + 1 for j in range(k)
-             if row[f'top{j+1}_match'] == row['curated_ontology']), 99),
+             if row[f'match{j+1}'] == row['curated_ontology']), 99),
                                      axis=1)
 
         self.logger.info("Bi-Encoder Results Generated")

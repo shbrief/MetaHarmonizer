@@ -48,7 +48,6 @@ class OntoMapST(otm.OntoModelsBase):
         self.from_tokenizer = from_tokenizer
         self._query_embeddings = None
         self._corpus_embeddings = None
-        self._vs = None
         self._model = None
         self._tokenizer = None
         self.logger.info("Initialized OntoMap Sentence Transformer module")
@@ -67,22 +66,6 @@ class OntoMapST(otm.OntoModelsBase):
             return self._tokenizer
         else:
             return None
-
-    @property
-    def vector_store(self) -> FAISSSQLiteSearch:
-        if self._vs is None:
-
-            store = FAISSSQLiteSearch(method=self.method,
-                                      category=self.category,
-                                      om_strategy=self.om_strategy)
-
-            if store.index is None:
-                store.build_corpus_vector_db(self.corpus)
-
-            store.index = faiss.read_index(store.index_path,
-                                           faiss.IO_FLAG_MMAP)
-            self._vs = store
-        return self._vs
 
     @property
     def model(self):
@@ -192,8 +175,8 @@ class OntoMapST(otm.OntoModelsBase):
                 "match_level": lvl
             }
             for i, (t, s) in enumerate(zip(top_terms, top_scores), start=1):
-                row[f"top{i}_match"] = t
-                row[f"top{i}_score"] = f"{s:.4f}"
+                row[f"match{i}"] = t
+                row[f"match{i}_score"] = f"{s:.4f}"
             rows.append(row)
 
         return pd.DataFrame(rows)

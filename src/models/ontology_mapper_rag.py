@@ -18,11 +18,11 @@ class OntoMapRAG(OntoModelsBase):
         query: list[str],
         corpus: list[str],
         corpus_df: pd.DataFrame,
+        use_reranker: bool,
+        reranker_method: str,
+        reranker_topk: int,
         topk: int = 5,
         om_strategy: str = 'rag',
-        use_reranker: bool = False,
-        reranker_method: str = 'minilm',
-        reranker_topk: int = 50,
     ):
         super().__init__(method,
                          category,
@@ -32,12 +32,18 @@ class OntoMapRAG(OntoModelsBase):
                          corpus,
                          corpus_df=corpus_df)
         self.use_reranker = use_reranker
-        if reranker_method not in RERANKER_TYPE_MAP:
-            raise ValueError(
-                f"Unknown reranker_method '{reranker_method}'. Must be one of {list(RERANKER_TYPE_MAP.keys())}"
-            )
-        self.reranker_method = reranker_method
-        self.reranker_topk = reranker_topk
+
+        if self.use_reranker:
+            if reranker_method not in RERANKER_TYPE_MAP:
+                raise ValueError(
+                    f"Unknown reranker_method '{reranker_method}'. Must be one of {list(RERANKER_TYPE_MAP.keys())}"
+                )
+            self.reranker_method = reranker_method
+            self.reranker_topk = reranker_topk
+        else:
+            self.reranker_method = None
+            self.reranker_topk = None
+
         self._reranker = None
 
         self.logger.info(
@@ -135,27 +141,27 @@ class OntoMapRAG(OntoModelsBase):
         })
 
         for i in range(topk):
-            df[f'top{i+1}_match'] = [
+            df[f'match{i+1}'] = [
                 r[i].metadata['term'] if i < len(r) else "N/A" for r in results
             ]
-            df[f'top{i+1}_score'] = [
+            df[f'match{i+1}_score'] = [
                 f"{r[i].metadata['score']:.4f}" if i < len(r) else "N/A"
                 for r in results
             ]
 
             if self.use_reranker:
-                df[f'top{i+1}_similarity_score'] = [
+                df[f'match{i+1}_similarity_score'] = [
                     f"{r[i].metadata.get('similarity_score', 0):.4f}"
                     if i < len(r) else "N/A" for r in results
                 ]
-                df[f'top{i+1}_reranker_score'] = [
+                df[f'match{i+1}_reranker_score'] = [
                     f"{r[i].metadata.get('reranker_score', 0):.4f}"
                     if i < len(r) else "N/A" for r in results
                 ]
 
         df['match_level'] = df.apply(lambda row: next(
             (i + 1 for i in range(topk)
-             if row[f'top{i+1}_match'] == row['curated_ontology']), 99),
+             if row[f'match{i+1}'] == row['curated_ontology']), 99),
                                      axis=1)
 
         self.logger.info("Results Generated")

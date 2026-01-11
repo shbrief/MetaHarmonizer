@@ -16,7 +16,8 @@ from src.utils.ncit_match_utils import NCIClientSync
 # === Configuration ===
 logger = CustomLogger().custlogger(loglevel='WARNING')
 OUTPUT_DIR = "data/schema_mapping_eval"
-DICT_PATH = "data/schema/curated_fields_source_latest_with_flags.csv"
+CURATED_DICT_PATH = "data/schema/curated_fields.csv"
+ALIAS_DICT_PATH = "data/schema/curated_fields_source_latest_with_flags.csv"
 VALUE_DICT_PATH = os.getenv(
     "FIELD_VALUE_JSON") or "data/schema/field_value_dict.json"
 FIELD_MODEL = "all-MiniLM-L6-v2"
@@ -35,10 +36,10 @@ NOISE_VALUES = {
 class SchemaMapEngine:
     """
     Performs schema mapping in three stages and outputs a CSV with columns:
-      original_column | matched_stage | matched_stage_method |
-      match1_field | match1_score | match1_source |
-      match2_field | match2_score | match2_source |
-      match3_field | match3_score | match3_source | ...
+      query | stage | method |
+      match1 | match1_score | match1_source |
+      match2 | match2_score | match2_source |
+      match3 | match3_score | match3_source | ...
     - Stage1: Dict/fuzzy match against dictionary using alias names.
     - Stage2: Numeric/alias field matching based on header names and value types using SentenceTransformer embeddings.
     - Stage3: Value match using standard value dictionary and ncit.
@@ -73,7 +74,7 @@ class SchemaMapEngine:
         self.output_file = os.path.join(OUTPUT_DIR, f"{root}.csv")
 
         # Load alias dictionary
-        self.df_dict = pd.read_csv(DICT_PATH)
+        self.df_dict = pd.read_csv(ALIAS_DICT_PATH)
 
         # Normalize alias to fields mapping
         self.sources_to_fields = (self.df_dict.groupby(
@@ -201,14 +202,14 @@ class SchemaMapEngine:
             Dict[str, Any]: A row for output to the result table.
         """
         row: Dict[str, Any] = {
-            "original_column": col,
-            "matched_stage": stage,
-            "matched_stage_method": detail
+            "query": col,
+            "stage": stage,
+            "method": detail
         }
 
         for i, (field, score, source) in enumerate(matches[:self.top_k],
                                                    start=1):
-            row[f"match{i}_field"] = field
+            row[f"match{i}"] = field
             row[f"match{i}_score"] = round(score, 4)
             row[f"match{i}_source"] = source
 
@@ -524,17 +525,17 @@ class SchemaMapEngine:
             is_invalid = check_invalid(self.df, col)
             if is_invalid:
                 results.append({
-                    "original_column": col,
-                    "matched_stage": "invalid",
-                    "matched_stage_method": is_invalid
+                    "query": col,
+                    "stage": "invalid",
+                    "method": is_invalid
                 })
                 continue
 
             # Stage1
-            row = self.dict_fuzzy_match(col)
-            if row.get("match1_score"):
-                results.append(row)
-                continue
+            # row = self.dict_fuzzy_match(col)
+            # if row.get("match1_score"):
+            #     results.append(row)
+            #     continue
 
             # Stage2a
             row = self.numeric_field_match(col)
@@ -579,22 +580,20 @@ class SchemaMapEngine:
         Load manual Stage3 results, run Stage4 on unmatched/pending columns.
         """
         df_manual = pd.read_csv(manual_csv)
-        if "matched_stage" in df_manual.columns and "original_column" in df_manual.columns:
-            mask = ((df_manual["matched_stage"] == "stage3_pending")
-                    | df_manual["matched_stage"].isna()
-                    |
-                    (df_manual["matched_stage"].astype(str).str.strip() == ""))
-            pending_cols = df_manual.loc[mask, "original_column"]
-        elif "original_column" in df_manual.columns:
+        if "stage" in df_manual.columns and "query" in df_manual.columns:
+            mask = ((df_manual["stage"] == "stage3_pending")
+                    | df_manual["stage"].isna()
+                    | (df_manual["stage"].astype(str).str.strip() == ""))
+            pending_cols = df_manual.loc[mask, "query"]
+        elif "query" in df_manual.columns:
             logger.warning(
-                "[Stage3] 'matched_stage' not found; assuming all 'original_column' need Stage4."
+                "[Stage3] 'stage' not found; assuming all 'query' need Stage4."
             )
-            pending_cols = (df_manual["original_column"].dropna().astype(
+            pending_cols = (df_manual["query"].dropna().astype(
                 str).unique().tolist())
         else:
             raise ValueError(
-                "Expected columns 'matched_stage' and/or 'original_column'. ")
-
+                "Expected columns 'stage' and/or 'query'. ")
         results = []
         for col in pending_cols:
             row = self.field_value_match(col)

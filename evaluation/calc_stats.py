@@ -53,7 +53,7 @@ class CalcStats:
 
         # Build required columns list
         required_columns = ["curated_ontology"]
-        required_columns.extend([f"top{i}_match" for i in range(1, max_k + 1)])
+        required_columns.extend([f"match{i}" for i in range(1, max_k + 1)])
 
         # Check if all required columns exist
         self.check_required_columns(data, required_columns)
@@ -63,7 +63,7 @@ class CalcStats:
 
         for k in top_k_list:
             # Get the column names for top-k matches
-            top_k_columns = [f"top{i}_match" for i in range(1, k + 1)]
+            top_k_columns = [f"match{i}" for i in range(1, k + 1)]
 
             # Calculate if curated_ontology is in top-k matches
             accuracy_col = f"top{k}_accuracy"
@@ -91,7 +91,7 @@ class CalcStats:
 
         Parameters:
         - data (pandas.DataFrame): The input data containing the model predictions and the ground truth labels.
-        - match_type (str): The type of match to use for the confusion matrix. Can be 'top1_match', 'top3_match', or 'top5_match'.
+        - match_type (str): The type of match to use for the confusion matrix. Can be 'match1', 'match3', or 'match5'.
 
         Returns:
         - confusion_matrix_df (pandas.DataFrame): A DataFrame containing the confusion matrix values.
@@ -112,7 +112,7 @@ class CalcStats:
 
         Parameters:
         - data (pandas.DataFrame): The input data containing the model predictions and the ground truth labels.
-        - match_type (str): The type of match to use for the F1 score calculation. Can be 'top1_match', 'top3_match', or 'top5_match'.
+        - match_type (str): The type of match to use for the F1 score calculation. Can be 'match1', 'match3', or 'match5'.
 
         Returns:
         - f1_score (float): The F1 score for the model predictions.
@@ -137,8 +137,8 @@ class CalcStats:
     def calc_mismatches_by_score_range(self,
                                        data,
                                        ranges,
-                                       match_type="top1_match",
-                                       score_type="top1_score"):
+                                       match_type="match1",
+                                       score_type="match1_score"):
         """
         Calculate the number of mismatches for each score range.
 

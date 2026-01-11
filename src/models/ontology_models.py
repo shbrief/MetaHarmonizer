@@ -64,13 +64,24 @@ class OntoModelsBase:
                                       category=self.category,
                                       om_strategy=self.om_strategy)
 
-            if self.corpus or self.corpus_df:
+            # For rag & rag bie, use ConceptTableBuilder
+            if self.om_strategy in ("rag", "rag_bie"):
+                if self.corpus_df is None:
+                    raise ValueError("corpus_df is required for RAG strategy")
+
                 store.ensure_corpus_integrity(self.corpus, self.corpus_df)
+
+            # For ST/LM: use corpus list
+            elif self.corpus:
+                store.ensure_corpus_integrity(self.corpus, None)
+
             self._vs = store
 
             self.logger.info(
-                f"{self._vs.index is not None} - Vector store initialized for method={self.method}, category={self.category}, om_strategy={self.om_strategy}"
+                f"{self._vs.index is not None} - Vector store initialized for "
+                f"method={self.method}, category={self.category}, om_strategy={self.om_strategy}"
             )
+
         return self._vs
 
     def calc_similarity(self, query_emb, corpus_emb):

@@ -16,8 +16,6 @@ RERANKER_TYPE_MAP = {
     # Cross-Encoders
     "minilm": "cross_encoder",
     "electra": "cross_encoder",
-    "bge-reranker-base": "cross_encoder",
-    "bge-reranker-large": "cross_encoder",
     "bge-ce": "cross_encoder",
     "medcpt-ce": "cross_encoder",
 
