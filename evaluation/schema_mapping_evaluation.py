@@ -31,8 +31,8 @@ def _safe_split_pipe(s) -> List[str]:
 
 def _pred_cols(df: pd.DataFrame, top_k: int) -> List[str]:
     return [
-        f"match{i}_field" for i in range(1, top_k + 1)
-        if f"match{i}_field" in df.columns
+        f"match{i}" for i in range(1, top_k + 1)
+        if f"match{i}" in df.columns
     ]
 
 
@@ -56,11 +56,11 @@ def _apply_cancer_disease_override(
     pred_cols: List[str],
 ) -> pd.DataFrame:
     """
-    Apply override rules to matched_rank based on curated_field content:
-    - If curated_field contains any cancer_token and current matched_rank=99 (unmatched),
-      but disease appears in top-k predictions, set matched_rank to disease's rank.
-    - Conversely, if curated_field is disease and unmatched, but any cancer_token appears in top-k,
-      set matched_rank to earliest cancer_token's rank.
+    Apply override rules to match_level based on ref_match content:
+    - If ref_match contains any cancer_token and current match_level=99 (unmatched),
+      but disease appears in top-k predictions, set match_level to disease's rank.
+    - Conversely, if ref_match is disease and unmatched, but any cancer_token appears in top-k,
+      set match_level to earliest cancer_token's rank.
 
     Returns: (updated DataFrame, number of rows overridden)
     """
@@ -75,18 +75,18 @@ def _apply_cancer_disease_override(
         toks = [t.strip().lower() for t in str(s or "").split("|") if t]
         return disease_norm in toks
 
-    unmatched = df["matched_rank"].fillna(99).astype(int) == 99
+    unmatched = df["match_level"].fillna(99).astype(int) == 99
 
     # Case 1: curated contains any cancer token, but disease appears in predictions
-    is_cancer = df["curated_field"].apply(is_cancer_row)
+    is_cancer = df["ref_match"].apply(is_cancer_row)
     disease_ranks = df.apply(
         lambda r: _earliest_rank_of_label(r, DISEASE_LABEL, pred_cols), axis=1)
     override_mask_1 = unmatched & is_cancer & disease_ranks.notna()
     df.loc[override_mask_1,
-           "matched_rank"] = disease_ranks[override_mask_1].astype(int)
+           "match_level"] = disease_ranks[override_mask_1].astype(int)
 
     # Case 2: curated is disease, but any cancer token appears in predictions
-    is_disease = df["curated_field"].apply(is_disease_row)
+    is_disease = df["ref_match"].apply(is_disease_row)
     cancer_ranks = df.apply(lambda r: min(
         (rank for token in CANCER_TOKENS if
          (rank := _earliest_rank_of_label(r, token, pred_cols)) is not None),
@@ -94,7 +94,7 @@ def _apply_cancer_disease_override(
                             axis=1)
     override_mask_2 = unmatched & is_disease & cancer_ranks.notna()
     df.loc[override_mask_2,
-           "matched_rank"] = cancer_ranks[override_mask_2].astype(int)
+           "match_level"] = cancer_ranks[override_mask_2].astype(int)
 
     return df
 
@@ -112,8 +112,8 @@ def build_eval_df(
 ) -> Tuple[pd.DataFrame, Optional[str]]:
     """
     Create an augmented DataFrame with:
-      - curated_field: all valid truths (pipe-joined) for the source
-      - matched_rank : 1..top_k if any truth appears in top-k predictions; 99 otherwise
+      - ref_match: all valid truths (pipe-joined) for the source
+      - match_level : 1..top_k if any truth appears in top-k predictions; 99 otherwise
 
     NOTE: This function NEVER filters rows by method.
     The saved *_eval.csv contains ALL prediction rows.
@@ -121,51 +121,50 @@ def build_eval_df(
     pred = pd.read_csv(pred_file)
     truth_raw = pd.read_csv(truth_file)
 
-    if "original_column" not in pred.columns:
-        raise ValueError("pred_file missing column 'original_column'")
-    for col in ("source", "curated_field"):
+    if "query" not in pred.columns:
+        raise ValueError("pred_file missing column 'query'")
+    for col in ("source", "ref_match"):
         if col not in truth_raw.columns:
             raise ValueError(f"truth_file missing column '{col}'")
 
-    truth_clean = truth_raw.dropna(subset=["curated_field"]).copy()
+    truth_clean = truth_raw.dropna(subset=["ref_match"]).copy()
     truth_clean["source"] = truth_clean["source"].astype(str)
-    truth_clean["curated_field"] = truth_clean["curated_field"].astype(str)
-
-    truth_grouped = (truth_clean.groupby("source")["curated_field"].apply(
+    truth_clean["ref_match"] = truth_clean["ref_match"].astype(str)
+    truth_grouped = (truth_clean.groupby("source")["ref_match"].apply(
         lambda s: sorted(set(map(str, s)))).reset_index())
     truth_for_merge = truth_grouped.copy()
-    truth_for_merge["curated_field"] = truth_for_merge["curated_field"].apply(
+    truth_for_merge["ref_match"] = truth_for_merge["ref_match"].apply(
         lambda lst: "|".join(lst))
 
     merged = pred.merge(
         truth_for_merge,
         how="left",
-        left_on="original_column",
+        left_on="query",
         right_on="source",
         suffixes=("", "_truth"),
     )
     if merged.empty:
-        raise ValueError("No rows after merge (original_column vs source).")
+        raise ValueError("No rows after merge (query vs source).")
 
     pred_cols: List[str] = _pred_cols(merged, top_k)
     if not pred_cols:
         raise ValueError(
-            f"No prediction columns like 'match1_field'..'match{top_k}_field'."
+            f"No prediction columns like 'match1'..'match{top_k}'."
         )
 
     truth_map_norm: Dict[str, Set[str]] = {}
     for _, r in truth_for_merge.iterrows():
         src = str(r["source"])
-        truths = _safe_split_pipe(r["curated_field"])
+        truths = _safe_split_pipe(r["ref_match"])
         truth_map_norm[src] = {_norm(v, normalize_text) for v in truths}
 
-    matched_ranks: List[int] = []
+    match_levels: List[int] = []
     curated_lists: List[str] = []
 
     for _, row in merged.iterrows():
-        src = str(row.get("original_column"))
+        src = str(row.get("query"))
         truths_norm = truth_map_norm.get(src, set())
-        raw = row.get("curated_field")
+        raw = row.get("ref_match")
         parts = _safe_split_pipe(raw)
         curated_lists.append("|".join(sorted(parts)) if parts else "")
 
@@ -175,19 +174,19 @@ def build_eval_df(
                 if _norm(row.get(col), normalize_text) in truths_norm:
                     rank = r
                     break
-        matched_ranks.append(rank)
+        match_levels.append(rank)
 
-    merged["curated_field"] = curated_lists
+    merged["ref_match"] = curated_lists
     cols = list(merged.columns)
-    oc_idx = cols.index("original_column") if "original_column" in cols else 0
-    if "curated_field" in cols:
-        cols.remove("curated_field")
-    cols.insert(oc_idx + 1, "curated_field")
+    oc_idx = cols.index("query") if "query" in cols else 0
+    if "ref_match" in cols:
+        cols.remove("ref_match")
+    cols.insert(oc_idx + 1, "ref_match")
     merged = merged[cols]
     merged.insert(
-        loc=merged.columns.get_loc("original_column") + 2,
-        column="matched_rank",
-        value=matched_ranks,
+        loc=merged.columns.get_loc("query") + 2,
+        column="match_level",
+        value=match_levels,
     )
 
     saved_path: Optional[str] = None
@@ -214,11 +213,11 @@ def compute_accuracy_from_eval(
     include/exclude (by method) are applied ONLY for metric computation.
     """
     df = pd.read_csv(eval_csv)
-    df = df[df["curated_field"].notna() &
-            (df["curated_field"] != "")]  # only rows with truth
+    df = df[df["ref_match"].notna() &
+            (df["ref_match"] != "")]  # only rows with truth
 
-    if "matched_rank" not in df.columns:
-        raise ValueError("Eval table is missing 'matched_rank'.")
+    if "match_level" not in df.columns:
+        raise ValueError("Eval table is missing 'match_level'.")
     if include_details and exclude_details:
         raise ValueError(
             "include_details and exclude_details are mutually exclusive.")
@@ -257,7 +256,7 @@ def compute_accuracy_from_eval(
         return results
 
     for k in k_list:
-        hits = int((df["matched_rank"].fillna(99).astype(int) <= k).sum())
+        hits = int((df["match_level"].fillna(99).astype(int) <= k).sum())
         results[f"acc@{k}"] = hits / n
     results["n_rows"] = float(n)
     return results
@@ -303,7 +302,7 @@ def compute_accuracy(
         # compute on the just-built df in-memory
         # But to reuse the metric code, write a tiny in-memory branch:
         df = eval_df.copy()
-        mask = df["curated_field"].notna() & (df["curated_field"] != "")
+        mask = df["ref_match"].notna() & (df["ref_match"] != "")
         df = df[mask]  # only rows with truth
 
         if apply_cancer_disease_override:
@@ -342,7 +341,7 @@ def compute_accuracy(
             return results
 
         for k in k_list:
-            hits = int((df["matched_rank"].fillna(99).astype(int) <= k).sum())
+            hits = int((df["match_level"].fillna(99).astype(int) <= k).sum())
             results[f"acc@{k}"] = hits / n
         results["n_rows"] = float(n)
         if save_eval and saved_path:

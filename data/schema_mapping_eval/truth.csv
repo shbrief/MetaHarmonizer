@@ -1,4 +1,4 @@
-source,curated_field
+source,ref_match
 2L_TREATMENT,treatment_name
 2L_TREATMENT,treatment_reason
 3L_TREATMENT,treatment_name
