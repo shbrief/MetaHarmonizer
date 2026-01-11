@@ -53,8 +53,9 @@ class SynonymDict:
 
         # Keep a persistent connection
         self._conn = sqlite3.connect(self.db_path)
-        self._conn.execute("PRAGMA journal_mode=DELETE;")
-        self._conn.execute("PRAGMA synchronous=FULL;")
+        # Use WAL + NORMAL for better read/write concurrency and performance
+        self._conn.execute("PRAGMA journal_mode=WAL;")
+        self._conn.execute("PRAGMA synchronous=NORMAL;")
 
         # Initialize FAISS index
         self.index: Optional[faiss.Index] = None
