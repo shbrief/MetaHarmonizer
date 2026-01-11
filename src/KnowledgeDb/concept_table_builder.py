@@ -126,30 +126,30 @@ class ConceptTableBuilder:
             "definitions", "parents", "children", "roles"
         ]
 
-        for code, data in concept_data.items():
-            official_label = data.get('name', '').strip()
-            if not official_label:
-                continue
+        try:
+            for code, data in concept_data.items():
+                official_label = data.get('name', '').strip()
+                if not official_label:
+                    continue
 
-            # 1. Extract Synonym records
-            syn_set = {official_label}
-            for syn_item in data.get('synonyms', []):
-                if isinstance(syn_item, dict):
-                    syn_name = syn_item.get('name', '').strip()
-                    if syn_name:
-                        syn_set.add(syn_name)
+                # 1. Extract Synonym records
+                syn_set = {official_label}
+                for syn_item in data.get('synonyms', []):
+                    if isinstance(syn_item, dict):
+                        syn_name = syn_item.get('name', '').strip()
+                        if syn_name:
+                            syn_set.add(syn_name)
 
-            for syn in syn_set:
-                syn_records.append((syn, official_label, code))
+                for syn in syn_set:
+                    syn_records.append((syn, official_label, code))
 
-            # 2. Build RAG records (context excludes synonyms)
-            context = self.nci_db.create_context_list(data)
-            combined = f"{official_label}: {context}"
-            rag_records.append((official_label, code, combined))
-
-        # Restore list_of_concepts
-        self.nci_db.list_of_concepts = original_concepts
-
+                # 2. Build RAG records (context excludes synonyms)
+                context = self.nci_db.create_context_list(data)
+                combined = f"{official_label}: {context}"
+                rag_records.append((official_label, code, combined))
+        finally:
+            # Restore list_of_concepts even if an error occurs above
+            self.nci_db.list_of_concepts = original_concepts
         # ===== Asynchronously batch insert into both tables =====
         def batch_insert():
             with sqlite3.connect(self.db_path) as conn:
