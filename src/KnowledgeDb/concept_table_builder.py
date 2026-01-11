@@ -28,7 +28,7 @@ class ConceptTableBuilder:
         self._ensure_tables()
 
     def _ensure_tables(self):
-        """B synonym and rag tables"""
+        """Build synonym and RAG tables if they do not already exist."""
         with sqlite3.connect(self.db_path) as conn:
             # Synonym
             conn.execute(f"""
