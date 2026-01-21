@@ -53,20 +53,20 @@ def _try_download() -> bool:
     """
     logger = _get_logger()
 
-    try:
-        from src.utils.drive_utils import download_folder
-        logger.info(
-            "KnowledgeDb files missing, attempting download from Google Drive..."
-        )
-        download_folder(FOLDER_ID, str(KNOWLEDGE_DB_DIR))
-        logger.info("Download completed successfully")
-        return True
-    except ImportError:
-        logger.warning("drive_utils not available, skipping download")
-        return False
-    except Exception as e:
-        logger.warning(f"Download failed: {e}")
-        return False
+    # try:
+    #     from src.utils.drive_utils import download_folder
+    #     logger.info(
+    #         "KnowledgeDb files missing, attempting download from Google Drive..."
+    #     )
+    #     download_folder(FOLDER_ID, str(KNOWLEDGE_DB_DIR))
+    #     logger.info("Download completed successfully")
+    #     return True
+    # except ImportError:
+    #     logger.warning("drive_utils not available, skipping download")
+    #     return False
+    # except Exception as e:
+    #     logger.warning(f"Download failed: {e}")
+    #     return False
 
 
 def ensure_knowledge_db() -> None:

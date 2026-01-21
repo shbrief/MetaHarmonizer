@@ -70,9 +70,8 @@ class OntoMapST(otm.OntoModelsBase):
     @property
     def model(self):
         if self._model is None:
-            self._model = SentenceTransformer(
-                self.method_model_dict[self.method],
-                device='cuda' if torch.cuda.is_available() else 'cpu')
+            from src.utils.model_loader import get_embedding_model_cached
+            self._model = get_embedding_model_cached(self.method) 
         return self._model
 
     @property
