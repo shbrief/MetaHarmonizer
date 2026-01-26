@@ -190,6 +190,40 @@ class OntoMapEngine:
                 self._logger.info(
                     f"Replaced: {q_strip} → {short_to_name[q_strip]}")
         return replaced
+    
+    def _finalize_results(self, df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Finalize results for output by renaming columns and dropping internal columns.
+        
+        Args:
+            df (pd.DataFrame): The combined results DataFrame.
+            
+        Returns:
+            pd.DataFrame: Cleaned DataFrame with user-facing column names.
+        """
+        df = df.copy()
+        
+        # Rename columns
+        df = df.rename(columns={
+            'original_value': 'query',
+            'curated_ontology': 'ref_match'
+        })
+        
+        # Drop internal columns
+        columns_to_drop = [
+            'updated_value',
+            'top1_accuracy',
+            'top3_accuracy', 
+            'top5_accuracy'
+        ]
+        
+        # Only drop columns that exist (avoid KeyError)
+        existing_cols_to_drop = [col for col in columns_to_drop if col in df.columns]
+        if existing_cols_to_drop:
+            df = df.drop(columns=existing_cols_to_drop)
+            self._logger.info(f"Dropped internal columns: {existing_cols_to_drop}")
+        
+        return df
 
     def _om_model_from_strategy(self, strategy: str,
                                 non_exact_query_list: list[str]):
@@ -444,7 +478,7 @@ class OntoMapEngine:
         if not non_exact_matches_ls:
             self._logger.info(
                 "No queries for Stage 2. Returning Stage 1 results.")
-            return exact_df
+            return self._finalize_results(exact_df)
 
         # ========== Stage 2: LM/ST ==========
         self._logger.info(f"Stage 2: {self.s2_strategy.upper()} Matching")
@@ -491,7 +525,7 @@ class OntoMapEngine:
             combined_results = pd.concat([exact_df, s2_res], ignore_index=True)
 
             self._log_final_summary(exact_df, s2_res)
-            return combined_results
+            return self._finalize_results(combined_results)
 
         else:
             # Check which queries need Stage 3 (top1_score < threshold)
@@ -580,4 +614,4 @@ class OntoMapEngine:
 
             # Final summary
             self._log_final_summary(exact_df, s2_res_filtered, s3_res)
-            return combined_results
+            return self._finalize_results(combined_results)

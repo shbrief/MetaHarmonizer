@@ -51,12 +51,15 @@ class CalcStats:
         # Determine maximum k needed
         max_k = max(top_k_list)
 
-        # Build required columns list
-        required_columns = ["curated_ontology"]
+        # Build required columns list - now using ref_match instead of curated_ontology
+        required_columns = ["ref_match"]
         required_columns.extend([f"match{i}" for i in range(1, max_k + 1)])
 
         # Check if all required columns exist
         self.check_required_columns(data, required_columns)
+
+        # Make a copy to avoid modifying original data
+        data = data.copy()
 
         # Calculate accuracy for each top-k
         accuracy_results = []
@@ -65,14 +68,14 @@ class CalcStats:
             # Get the column names for top-k matches
             top_k_columns = [f"match{i}" for i in range(1, k + 1)]
 
-            # Calculate if curated_ontology is in top-k matches
-            accuracy_col = f"top{k}_accuracy"
-            data[accuracy_col] = data.apply(lambda row: row["curated_ontology"]
-                                            in row[top_k_columns].values,
-                                            axis=1)
+            # Calculate if ref_match is in top-k matches (dynamically computed)
+            matches = data.apply(
+                lambda row: row["ref_match"] in row[top_k_columns].values,
+                axis=1
+            )
 
             # Calculate percentage accuracy
-            accuracy_pct = data[accuracy_col].mean() * 100
+            accuracy_pct = matches.mean() * 100
 
             accuracy_results.append({
                 "Accuracy Level": f"Top {k} Match{'es' if k > 1 else ''}",
@@ -96,12 +99,12 @@ class CalcStats:
         Returns:
         - confusion_matrix_df (pandas.DataFrame): A DataFrame containing the confusion matrix values.
         """
-        required_columns = ["curated_ontology", match_type]
+        required_columns = ["ref_match", match_type]
 
         self.check_required_columns(data, required_columns)
         # Create a confusion matrix
-        confusion_matrix = pd.crosstab(data["curated_ontology"],
-                                       data[match_type])
+        confusion_matrix = pd.crosstab(data["ref_match"],
+                                    data[match_type])
         confusion_matrix_df = pd.DataFrame(confusion_matrix)
 
         return confusion_matrix_df
@@ -117,17 +120,17 @@ class CalcStats:
         Returns:
         - f1_score (float): The F1 score for the model predictions.
         """
-        required_columns = ["curated_ontology", match_type]
+        required_columns = ["ref_match", match_type]
 
         self.check_required_columns(data, required_columns)
 
         # Create a confusion matrix
-        confusion_matrix = pd.crosstab(data["curated_ontology"],
-                                       data[match_type])
+        confusion_matrix = pd.crosstab(data["ref_match"],
+                                    data[match_type])
 
         # Calculate precision, recall, and F1 score
         precision = np.diag(confusion_matrix) / np.sum(confusion_matrix,
-                                                       axis=0)
+                                                    axis=0)
         recall = np.diag(confusion_matrix) / np.sum(confusion_matrix, axis=1)
         f1_score = 2 * (precision * recall) / (precision + recall)
         f1_score = np.nanmean(f1_score)
@@ -135,10 +138,10 @@ class CalcStats:
         return f1_score
 
     def calc_mismatches_by_score_range(self,
-                                       data,
-                                       ranges,
-                                       match_type="match1",
-                                       score_type="match1_score"):
+                                    data,
+                                    ranges,
+                                    match_type="match1",
+                                    score_type="match1_score"):
         """
         Calculate the number of mismatches for each score range.
 
@@ -149,15 +152,18 @@ class CalcStats:
         Returns:
         - mismatches_by_range (dict): A dictionary containing the number of mismatches for each score range.
         """
-        required_columns = ["curated_ontology", match_type, score_type]
+        required_columns = ["ref_match", match_type, score_type]
 
         self.check_required_columns(data, required_columns)
+
+        # Make a copy to avoid modifying original data
+        data = data.copy()
 
         # Create a new column for the score range
         data["score_range"] = pd.cut(data[score_type], ranges)
 
         # Calculate the number of mismatches for each score range
         mismatches_by_range = (
-            data[data["curated_ontology"] != data[match_type]].groupby(
+            data[data["ref_match"] != data[match_type]].groupby(
                 "score_range").size().to_dict())
         return mismatches_by_range
