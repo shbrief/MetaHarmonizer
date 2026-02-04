@@ -36,6 +36,10 @@ Disease term ontology mapping with context
 ### embeddings.csv 
 SapBERT embeddings of 673 column names in cBioPortalData that were harmonized
 
+### heterogeneous_attribute_mapping.csv
+LLM-generated SM corpus diversification; i.e., potential, real-life attribute
+names that can be harmonized into our schema
+
 ### input_with_context.csv
 **263 original column names** failed to be mapped by *OntologyMapper* + their context
 
