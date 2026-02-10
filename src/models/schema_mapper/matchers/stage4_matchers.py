@@ -1,20 +1,21 @@
-"""Stage 4: LLM-based matching using Gemini."""
+"""Stage 4: LLM-based fallback matching."""
 import os
 import json
 from typing import List, Tuple, Optional
 import google.generativeai as genai
 from .base import BaseMatcher
+from ..config import LLM_MODEL
 from src.CustomLogger.custom_logger import CustomLogger
 
 logger = CustomLogger().custlogger(loglevel='WARNING')
 
 
-class GeminiMatcher(BaseMatcher):
-    """LLM-based schema matching using Gemini."""
+class LLMMatcher(BaseMatcher):
+    """LLM-based fallback matching using Gemini/Gemma."""
     
     def __init__(self, engine):
         """
-        Initialize Gemini matcher.
+        Initialize LLM matcher.
         
         Args:
             engine: Reference to SchemaMapEngine
@@ -31,50 +32,66 @@ class GeminiMatcher(BaseMatcher):
         
         # Configure Gemini
         genai.configure(api_key=api_key)
-        self.model = genai.GenerativeModel('models/gemini-2.0-flash-exp')
         
-        logger.info("[GeminiMatcher] Initialized with gemini-2.0-flash-exp")
+        # Use model from config
+        model_name = LLM_MODEL
+        
+        # Add 'models/' prefix if not present
+        if not model_name.startswith('models/'):
+            model_name = f'models/{model_name}'
+        
+        self.model = genai.GenerativeModel(model_name)
+        self.model_name = model_name
+        
+        logger.info(f"[LLM] Initialized with {model_name}")
     
-    def _build_prompt(self, col: str, sample_values: List[str]) -> str:
+    def _build_prompt(self, col: str, sample_values: Optional[List[str]] = None) -> str:
         """
-        Build prompt for Gemini to match column to standard fields.
+        Build prompt for LLM to match column to standard fields.
         
         Args:
             col: Column name to match
-            sample_values: Sample values from the column
+            sample_values: Optional sample values from the column
             
         Returns:
             Formatted prompt string
         """
-        # Get standard field list
-        field_list = "\n".join([f"- {f}" for f in self.engine.standard_fields[:50]])  # Limit to avoid token overflow
+        # Get standard field list (limit to avoid token overflow)
+        field_list = "\n".join([f"- {f}" for f in self.engine.standard_fields[:100]])
         
-        # Format sample values
-        values_str = ", ".join([f'"{v}"' for v in sample_values[:10]])
+        # Format sample values if provided
+        values_part = ""
+        if sample_values:
+            values_str = ", ".join([f'"{v}"' for v in sample_values[:10]])
+            values_part = f"\nSample Values: {values_str}"
         
         prompt = f"""You are a clinical data schema mapper. Your task is to map a source column to standard clinical data fields.
 
-Source Column Name: "{col}"
-Sample Values: {values_str}
+Source Column Name: "{col}"{values_part}
 
 Standard Fields (select from this list):
 {field_list}
 
 Instructions:
-1. Analyze the column name and sample values
-2. Return the top 5 most likely matching standard fields
-3. Return your answer as a JSON array with this exact format:
+1. Analyze the column name{' and sample values' if sample_values else ''}
+2. Return the top {self.engine.top_k} most likely matching standard fields
+3. Consider semantic similarity, medical terminology, and common naming conventions
+4. Return your answer as a JSON array with this exact format:
 [
   {{"field": "field_name_1", "confidence": 0.95, "reasoning": "brief explanation"}},
   {{"field": "field_name_2", "confidence": 0.80, "reasoning": "brief explanation"}},
   ...
 ]
 
-IMPORTANT:
-- confidence must be a number between 0 and 1
-- Only suggest fields from the provided standard fields list
+CRITICAL FORMAT REQUIREMENTS:
+- confidence MUST be a decimal number between 0 and 1 (e.g., 0.95, not "95%" or "high" or 95)
+- field MUST be exactly as listed in standard fields (copy-paste, don't modify)
+- Return PURE JSON only - no markdown code blocks, no explanations
 - If no good match exists, return an empty array []
-- Return ONLY the JSON array, no other text
+
+EXAMPLES:
+{{"field": "age_at_diagnosis", "confidence": 0.95}}
+{{"field": "sex", "confidence": 0.80}}
 
 JSON Response:"""
         
@@ -82,7 +99,7 @@ JSON Response:"""
     
     def match(self, col: str) -> List[Tuple[str, float, str]]:
         """
-        Match column using Gemini LLM.
+        Match column using LLM.
         
         Args:
             col: Column name to match
@@ -92,13 +109,13 @@ JSON Response:"""
         """
         try:
             # Get sample values from the column
-            sample_values = self.engine.unique_values(col, cap=10)
+            sample_values = self.engine.unique_values(col, cap=10) if hasattr(self.engine, 'unique_values') else None
             
             # Build prompt
             prompt = self._build_prompt(col, sample_values)
             
-            # Call Gemini API
-            logger.info(f"[Gemini] Calling API for column '{col}'")
+            # Call LLM API
+            logger.info(f"[LLM] Calling API for column '{col}'")
             response = self.model.generate_content(prompt)
             
             # Parse response
@@ -114,7 +131,7 @@ JSON Response:"""
             matches_raw = json.loads(response_text)
             
             if not isinstance(matches_raw, list):
-                logger.warning(f"[Gemini] Invalid response format for '{col}': expected list")
+                logger.warning(f"[LLM] Invalid response format for '{col}': expected list")
                 return []
             
             # Convert to tuple format: (field, score, source)
@@ -128,32 +145,32 @@ JSON Response:"""
                 
                 # Validate field exists in standard fields
                 if field not in self.engine.standard_fields:
-                    logger.warning(f"[Gemini] Suggested field '{field}' not in standard fields, skipping")
+                    logger.warning(f"[LLM] Suggested field '{field}' not in standard fields, skipping")
                     continue
                 
                 # Validate confidence
                 try:
                     score = float(confidence)
                     if not (0 <= score <= 1):
-                        logger.warning(f"[Gemini] Invalid confidence {score} for field '{field}', skipping")
+                        logger.warning(f"[LLM] Invalid confidence {score} for field '{field}', skipping")
                         continue
                 except (ValueError, TypeError):
-                    logger.warning(f"[Gemini] Non-numeric confidence for field '{field}', skipping")
+                    logger.warning(f"[LLM] Non-numeric confidence for field '{field}', skipping")
                     continue
                 
-                # source = "gemini" to indicate LLM match
-                matches.append((field, score, "gemini"))
+                # source = "llm" to indicate LLM match
+                matches.append((field, score, "llm"))
             
             # Sort by confidence
             matches.sort(key=lambda x: x[1], reverse=True)
             
-            logger.info(f"[Gemini] Got {len(matches)} valid matches for '{col}'")
+            logger.info(f"[LLM] Got {len(matches)} valid matches for '{col}'")
             return matches[:self.engine.top_k]
             
         except json.JSONDecodeError as e:
-            logger.error(f"[Gemini] JSON parse error for '{col}': {e}")
-            logger.error(f"[Gemini] Response was: {response_text}")
+            logger.error(f"[LLM] JSON parse error for '{col}': {e}")
+            logger.error(f"[LLM] Response was: {response_text[:200]}")
             return []
         except Exception as e:
-            logger.error(f"[Gemini] Error matching '{col}': {e}")
+            logger.error(f"[LLM] Error matching '{col}': {e}")
             return []
