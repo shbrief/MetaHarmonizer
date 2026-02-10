@@ -57,44 +57,55 @@ def _apply_cancer_disease_override(
 ) -> pd.DataFrame:
     """
     Apply override rules to match_level based on ref_match content:
-    - If ref_match contains any cancer_token and current match_level=99 (unmatched),
-      but disease appears in top-k predictions, set match_level to disease's rank.
-    - Conversely, if ref_match is disease and unmatched, but any cancer_token appears in top-k,
-      set match_level to earliest cancer_token's rank.
-
-    Returns: (updated DataFrame, number of rows overridden)
+    
+    Cancer/Disease cross-matching rules:
+    1. If ref_match is any cancer token (cancer_type, cancer_subtype, cancer_type_details):
+       - Accept disease as valid match
+       - Accept any other cancer token as valid match
+    2. If ref_match is disease:
+       - Accept any cancer token as valid match
+    
+    Returns: updated DataFrame with modified match_level column
     """
     cancer_tokens_set = {t.strip().lower() for t in CANCER_TOKENS}
     disease_norm = DISEASE_LABEL.strip().lower()
+    
+    # All cancer-related tokens (including disease)
+    cancer_related_set = cancer_tokens_set | {disease_norm}
 
     def is_cancer_row(s: str) -> bool:
+        """Check if ref_match contains any cancer token."""
         toks = [t.strip().lower() for t in str(s or "").split("|") if t]
         return any(t in cancer_tokens_set for t in toks)
 
     def is_disease_row(s: str) -> bool:
+        """Check if ref_match contains disease."""
         toks = [t.strip().lower() for t in str(s or "").split("|") if t]
         return disease_norm in toks
+    
+    def is_cancer_or_disease_row(s: str) -> bool:
+        """Check if ref_match contains any cancer-related token (cancer or disease)."""
+        toks = [t.strip().lower() for t in str(s or "").split("|") if t]
+        return any(t in cancer_related_set for t in toks)
 
+    def find_earliest_cancer_related_rank(row: pd.Series) -> Optional[int]:
+        """Find earliest rank of ANY cancer-related token in predictions."""
+        for i, col in enumerate(pred_cols, start=1):
+            val = str(row.get(col, "")).strip().lower()
+            if val in cancer_related_set:
+                return i
+        return None
+
+    # Only apply override to unmatched rows
     unmatched = df["match_level"].fillna(99).astype(int) == 99
 
-    # Case 1: curated contains any cancer token, but disease appears in predictions
-    is_cancer = df["ref_match"].apply(is_cancer_row)
-    disease_ranks = df.apply(
-        lambda r: _earliest_rank_of_label(r, DISEASE_LABEL, pred_cols), axis=1)
-    override_mask_1 = unmatched & is_cancer & disease_ranks.notna()
-    df.loc[override_mask_1,
-           "match_level"] = disease_ranks[override_mask_1].astype(int)
-
-    # Case 2: curated is disease, but any cancer token appears in predictions
-    is_disease = df["ref_match"].apply(is_disease_row)
-    cancer_ranks = df.apply(lambda r: min(
-        (rank for token in CANCER_TOKENS if
-         (rank := _earliest_rank_of_label(r, token, pred_cols)) is not None),
-        default=None),
-                            axis=1)
-    override_mask_2 = unmatched & is_disease & cancer_ranks.notna()
-    df.loc[override_mask_2,
-           "match_level"] = cancer_ranks[override_mask_2].astype(int)
+    # Case 1: ref_match is cancer-related AND unmatched
+    # → Check if ANY cancer-related token appears in predictions
+    is_cancer_related = df["ref_match"].apply(is_cancer_or_disease_row)
+    cancer_related_ranks = df.apply(find_earliest_cancer_related_rank, axis=1)
+    
+    override_mask = unmatched & is_cancer_related & cancer_related_ranks.notna()
+    df.loc[override_mask, "match_level"] = cancer_related_ranks[override_mask].astype(int)
 
     return df
 
@@ -113,7 +124,18 @@ def build_eval_df(
     """
     Create an augmented DataFrame with:
       - ref_match: all valid truths (pipe-joined) for the source
-      - match_level : 1..top_k if any truth appears in top-k predictions; 99 otherwise
+      - match_level: 1..top_k if any truth appears in top-k predictions; 99 otherwise
+
+    Args:
+        pred_file: Path to predictions CSV (must have 'query' column and match1..matchN columns)
+        truth_file: Path to ground truth CSV (must have 'source' and 'ref_match' columns)
+        top_k: Number of top predictions to consider
+        normalize_text: Whether to normalize text for matching (lowercase, strip)
+        save_eval: Whether to save the evaluation DataFrame
+        out_dir: Directory to save evaluation file
+
+    Returns:
+        Tuple of (evaluation DataFrame, path to saved file or None)
 
     NOTE: This function NEVER filters rows by method.
     The saved *_eval.csv contains ALL prediction rows.
@@ -121,21 +143,26 @@ def build_eval_df(
     pred = pd.read_csv(pred_file)
     truth_raw = pd.read_csv(truth_file)
 
+    # Validate required columns
     if "query" not in pred.columns:
         raise ValueError("pred_file missing column 'query'")
     for col in ("source", "ref_match"):
         if col not in truth_raw.columns:
             raise ValueError(f"truth_file missing column '{col}'")
 
+    # Prepare truth data
     truth_clean = truth_raw.dropna(subset=["ref_match"]).copy()
     truth_clean["source"] = truth_clean["source"].astype(str)
     truth_clean["ref_match"] = truth_clean["ref_match"].astype(str)
+    
+    # Group multiple truths per source
     truth_grouped = (truth_clean.groupby("source")["ref_match"].apply(
         lambda s: sorted(set(map(str, s)))).reset_index())
     truth_for_merge = truth_grouped.copy()
     truth_for_merge["ref_match"] = truth_for_merge["ref_match"].apply(
         lambda lst: "|".join(lst))
 
+    # Merge predictions with truth
     merged = pred.merge(
         truth_for_merge,
         how="left",
@@ -146,27 +173,33 @@ def build_eval_df(
     if merged.empty:
         raise ValueError("No rows after merge (query vs source).")
 
+    if "source" in merged.columns:
+        merged = merged.drop(columns=["source"])
+
+    # Get prediction columns
     pred_cols: List[str] = _pred_cols(merged, top_k)
     if not pred_cols:
         raise ValueError(
             f"No prediction columns like 'match1'..'match{top_k}'."
         )
 
+    # Build normalized truth map
     truth_map_norm: Dict[str, Set[str]] = {}
     for _, r in truth_for_merge.iterrows():
         src = str(r["source"])
         truths = _safe_split_pipe(r["ref_match"])
         truth_map_norm[src] = {_norm(v, normalize_text) for v in truths}
 
+    # Calculate match levels
     match_levels: List[int] = []
-    curated_lists: List[str] = []
+    ref_match_lists: List[str] = []
 
     for _, row in merged.iterrows():
         src = str(row.get("query"))
         truths_norm = truth_map_norm.get(src, set())
         raw = row.get("ref_match")
         parts = _safe_split_pipe(raw)
-        curated_lists.append("|".join(sorted(parts)) if parts else "")
+        ref_match_lists.append("|".join(sorted(parts)) if parts else "")
 
         rank = 99
         if truths_norm:
@@ -176,19 +209,25 @@ def build_eval_df(
                     break
         match_levels.append(rank)
 
-    merged["ref_match"] = curated_lists
+    # Update ref_match column
+    merged["ref_match"] = ref_match_lists
+    
+    # Reorder columns: query, ref_match, match_level, ...
     cols = list(merged.columns)
-    oc_idx = cols.index("query") if "query" in cols else 0
+    query_idx = cols.index("query") if "query" in cols else 0
     if "ref_match" in cols:
         cols.remove("ref_match")
-    cols.insert(oc_idx + 1, "ref_match")
+    cols.insert(query_idx + 1, "ref_match")
     merged = merged[cols]
+    
+    # Insert match_level after ref_match
     merged.insert(
-        loc=merged.columns.get_loc("query") + 2,
+        loc=merged.columns.get_loc("ref_match") + 1,
         column="match_level",
         value=match_levels,
     )
 
+    # Save if requested
     saved_path: Optional[str] = None
     if save_eval:
         base_name = os.path.basename(pred_file).replace(".csv", "_eval.csv")
@@ -201,26 +240,40 @@ def build_eval_df(
 
 
 # ------------------ 2) compute accuracy FROM an eval CSV (filter only for metrics) ------------------
+
+
 def compute_accuracy_from_eval(
     eval_csv: str,
     top_k: int = 5,
-    include_details: Optional[Iterable[str]] = None,
-    exclude_details: Optional[Iterable[str]] = None,
-    apply_cancer_disease_override: bool = False,
+    include_methods: Optional[Iterable[str]] = None,
+    exclude_methods: Optional[Iterable[str]] = None,
+    apply_cancer_disease_override: bool = True,
 ) -> Dict[str, float]:
     """
     Compute Top-k accuracy FROM an existing *_eval.csv.
-    include/exclude (by method) are applied ONLY for metric computation.
+    
+    Args:
+        eval_csv: Path to evaluation CSV file
+        top_k: Number of top predictions to evaluate
+        include_methods: Only compute metrics for these methods (mutually exclusive with exclude_methods)
+        exclude_methods: Exclude these methods from metrics (mutually exclusive with include_methods)
+        apply_cancer_disease_override: Whether to apply cancer/disease override rules
+        
+    Returns:
+        Dictionary with accuracy metrics: acc@1, acc@3, acc@5, n_rows
+        
+    NOTE: include/exclude (by method) are applied ONLY for metric computation.
     """
     df = pd.read_csv(eval_csv)
-    df = df[df["ref_match"].notna() &
-            (df["ref_match"] != "")]  # only rows with truth
+    
+    # Only rows with truth
+    df = df[df["ref_match"].notna() & (df["ref_match"] != "")]
 
     if "match_level" not in df.columns:
         raise ValueError("Eval table is missing 'match_level'.")
-    if include_details and exclude_details:
+    if include_methods and exclude_methods:
         raise ValueError(
-            "include_details and exclude_details are mutually exclusive.")
+            "include_methods and exclude_methods are mutually exclusive.")
 
     # Apply cancer-disease override if requested
     if apply_cancer_disease_override:
@@ -230,25 +283,26 @@ def compute_accuracy_from_eval(
         df = _apply_cancer_disease_override(df, pred_cols)
 
     # Apply include/exclude ONLY for metrics (does not touch the CSV on disk)
-    if include_details:
+    if include_methods:
         if "method" not in df.columns:
             raise ValueError(
-                "include_details was specified but 'method' is missing in eval CSV."
+                "include_methods was specified but 'method' is missing in eval CSV."
             )
-        keep = {str(x) for x in include_details}
+        keep = {str(x) for x in include_methods}
         df = df[df["method"].astype(str).isin(keep)].copy()
-    if exclude_details:
+    if exclude_methods:
         if "method" not in df.columns:
             raise ValueError(
-                "exclude_details was specified but 'method' is missing in eval CSV."
+                "exclude_methods was specified but 'method' is missing in eval CSV."
             )
-        drop = {str(x) for x in exclude_details}
+        drop = {str(x) for x in exclude_methods}
         df = df[~df["method"].astype(str).isin(drop)].copy()
 
-    k_list: Sequence[int] = (1, 3,
-                             5) if top_k == 5 else list(range(1, top_k + 1))
+    # Calculate accuracy for each k
+    k_list: Sequence[int] = (1, 3, 5) if top_k == 5 else list(range(1, top_k + 1))
     n = len(df)
     results: Dict[str, float] = {}
+    
     if n == 0:
         for k in k_list:
             results[f"acc@{k}"] = 0.0
@@ -259,6 +313,7 @@ def compute_accuracy_from_eval(
         hits = int((df["match_level"].fillna(99).astype(int) <= k).sum())
         results[f"acc@{k}"] = hits / n
     results["n_rows"] = float(n)
+    
     return results
 
 
@@ -272,7 +327,7 @@ def compute_accuracy(
     eval_csv: Optional[str] = None,
     top_k: int = 5,
     normalize_text: bool = False,
-    apply_cancer_disease_override: bool = False,
+    apply_cancer_disease_override: bool = True,
     include_methods: Optional[Iterable[str]] = None,
     exclude_methods: Optional[Iterable[str]] = None,
     save_eval: bool = False,
@@ -285,12 +340,29 @@ def compute_accuracy(
       - pass (pred_file, truth_file) and it will build eval (optionally save) then compute metrics, OR
       - pass eval_csv directly to compute metrics.
 
-    Filtering (include_methods/exclude_methods) applies to metrics only.
+    Args:
+        pred_file: Path to predictions CSV
+        truth_file: Path to ground truth CSV
+        eval_csv: Path to existing evaluation CSV (alternative to pred_file + truth_file)
+        top_k: Number of top predictions to evaluate
+        normalize_text: Whether to normalize text for matching
+        apply_cancer_disease_override: Whether to apply cancer/disease override rules
+        include_methods: Only compute metrics for these methods
+        exclude_methods: Exclude these methods from metrics
+        save_eval: Whether to save evaluation DataFrame when building from pred/truth files
+        out_dir: Directory to save evaluation file
+
+    Returns:
+        Dictionary with accuracy metrics and optional eval_path
+
+    NOTE: Filtering (include_methods/exclude_methods) applies to metrics only, not to saved eval CSV.
     """
     if eval_csv is None:
+        # Build eval from pred_file and truth_file
         if not (pred_file and truth_file):
             raise ValueError(
                 "Provide either eval_csv OR both pred_file and truth_file.")
+        
         eval_df, saved_path = build_eval_df(
             pred_file=pred_file,
             truth_file=truth_file,
@@ -299,8 +371,8 @@ def compute_accuracy(
             save_eval=save_eval,
             out_dir=out_dir,
         )
-        # compute on the just-built df in-memory
-        # But to reuse the metric code, write a tiny in-memory branch:
+        
+        # Compute on the just-built df in-memory
         df = eval_df.copy()
         mask = df["ref_match"].notna() & (df["ref_match"] != "")
         df = df[mask]  # only rows with truth
@@ -312,7 +384,8 @@ def compute_accuracy(
 
         if include_methods and exclude_methods:
             raise ValueError(
-                "include_details and exclude_details are mutually exclusive.")
+                "include_methods and exclude_methods are mutually exclusive.")
+        
         if include_methods:
             if "method" not in df.columns:
                 raise ValueError(
@@ -320,6 +393,7 @@ def compute_accuracy(
                 )
             keep = {str(x) for x in include_methods}
             df = df[df["method"].astype(str).isin(keep)].copy()
+        
         if exclude_methods:
             if "method" not in df.columns:
                 raise ValueError(
@@ -328,10 +402,11 @@ def compute_accuracy(
             drop = {str(x) for x in exclude_methods}
             df = df[~df["method"].astype(str).isin(drop)].copy()
 
-        k_list: Sequence[int] = (1, 3, 5) if top_k == 5 else list(
-            range(1, top_k + 1))
+        # Calculate accuracy
+        k_list: Sequence[int] = (1, 3, 5) if top_k == 5 else list(range(1, top_k + 1))
         n = len(df)
         results: Dict[str, float] = {}
+        
         if n == 0:
             for k in k_list:
                 results[f"acc@{k}"] = 0.0
@@ -344,16 +419,18 @@ def compute_accuracy(
             hits = int((df["match_level"].fillna(99).astype(int) <= k).sum())
             results[f"acc@{k}"] = hits / n
         results["n_rows"] = float(n)
+        
         if save_eval and saved_path:
             results["eval_path"] = saved_path
+        
         return results
 
     else:
-        # compute from provided eval CSV
+        # Compute from provided eval CSV
         return compute_accuracy_from_eval(
             eval_csv=eval_csv,
             top_k=top_k,
             apply_cancer_disease_override=apply_cancer_disease_override,
-            include_details=include_methods,
-            exclude_details=exclude_methods,
+            include_methods=include_methods,
+            exclude_methods=exclude_methods,
         )

@@ -2,14 +2,15 @@
 import os
 import time
 import pandas as pd
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 from functools import lru_cache
 from sentence_transformers import SentenceTransformer, util
 import torch
 
 from .config import (
     FUZZY_THRESH, OUTPUT_DIR, ALIAS_DICT_PATH, FIELD_MODEL,
-    NUMERIC_THRESH, FIELD_ALIAS_THRESH, VALUE_PERCENTAGE_THRESH
+    NUMERIC_THRESH, FIELD_ALIAS_THRESH, VALUE_PERCENTAGE_THRESH,
+    LLM_THRESHOLD 
 )
 from .loaders.dict_loader import DictLoader
 from .loaders.value_loader import ValueLoader
@@ -24,6 +25,7 @@ from .matchers.stage2_matchers import (
 from .matchers.stage3_matchers import (
     ValueStandardMatcher, OntologyMatcher
 )
+from .matchers.stage4_matchers import LLMMatcher 
 from src.utils.schema_mapper_utils import normalize, is_numeric_column, extract_valid_value
 from src.utils.invalid_column_utils import check_invalid
 from src.utils.ncit_match_utils import NCIClientSync
@@ -40,6 +42,7 @@ class SchemaMapEngine:
     - Stage 1: Dictionary matching (exact + fuzzy, standard + alias)
     - Stage 2: Field matching (numeric + semantic, standard + alias)
     - Stage 3: Value matching (value dict + ontology)
+    - Stage 4: LLM fallback (auto mode only)
     """
     
     def __init__(self, clinical_data_path: str, mode: str = "auto", top_k: int = 5):
@@ -130,13 +133,24 @@ class SchemaMapEngine:
             self.alias_exact = None
             self.alias_fuzzy = None
         
-        # Stage 2 - Use combined matchers
+        # Stage 2
         self.numeric_combined = NumericCombinedMatcher(self)
         self.semantic_combined = SemanticCombinedMatcher(self)
         
         # Stage 3
         self.value_std = ValueStandardMatcher(self)
         self.ontology = OntologyMatcher(self)
+        
+        # Stage 4 - LLM (only in auto mode)
+        if self.mode == "auto":
+            try:
+                self.llm = LLMMatcher(self)
+                logger.info("[Engine] LLM matcher initialized for auto mode")
+            except Exception as e:
+                logger.warning(f"[Engine] Failed to initialize LLM matcher: {e}")
+                self.llm = None
+        else:
+            self.llm = None
     
     def _ensure_numeric_index(self):
         """Lazy-build numeric embedding index on first use."""
@@ -320,6 +334,23 @@ class SchemaMapEngine:
         ]
         return self._run_cascade(col, "stage3", strategies)
     
+    def stage4_match(self, col: str) -> Dict[str, Any]:
+        """Stage 4: LLM matching."""
+        if self.llm is None:
+            return {}
+        
+        matches = self.llm.match(col)
+        
+        if not matches:
+            return {}
+        
+        return self.format_matches_to_row(
+            col=col,
+            stage="stage4",
+            detail="llm",
+            matches=matches
+        )
+    
     def run_schema_mapping(self) -> pd.DataFrame:
         """
         Run schema mapping pipeline.
@@ -360,11 +391,46 @@ class SchemaMapEngine:
             t0 = time.perf_counter()
             row = self.stage2_match(col)
             if row:
-                results.append(row)
+                # Auto mode: check if LLM fallback should be triggered
+                if self.mode == "auto" and self.llm and row.get('match1_score', 0) < LLM_THRESHOLD:
+                    logger.info(
+                        f"[Stage2] '{col}' low confidence "
+                        f"({row.get('match1_score', 0):.3f} < {LLM_THRESHOLD}), "
+                        f"trying LLM fallback"
+                    )
+                    
+                    # Try LLM fallback
+                    t0_llm = time.perf_counter()
+                    llm_row = self.stage4_match(col)
+                    
+                    if llm_row and llm_row.get('match1_score', 0) > row.get('match1_score', 0):
+                        logger.info(
+                            f"[Stage4] '{col}' LLM improved: "
+                            f"{row.get('match1_score', 0):.3f} → {llm_row.get('match1_score', 0):.3f}"
+                        )
+                        results.append(llm_row)
+                    else:
+                        logger.info(f"[Stage4] '{col}' keeping Stage2 result")
+                        results.append(row)
+                    
+                    logger.info(f"[Stage4] '{col}' in {time.perf_counter() - t0_llm:.2f}s")
+                else:
+                    results.append(row)
+                
                 logger.info(f"[Stage2] '{col}' matched in {time.perf_counter() - t0:.2f}s")
                 continue
             
-            # No match found - skip this column (original behavior)
+            # No match found - try LLM as last resort (auto mode only)
+            if self.mode == "auto" and self.llm:
+                logger.info(f"[NoMatch] '{col}' trying LLM as last resort")
+                t0 = time.perf_counter()
+                row = self.stage4_match(col)
+                if row:
+                    results.append(row)
+                    logger.info(f"[Stage4] '{col}' matched in {time.perf_counter() - t0:.2f}s")
+                    continue
+            
+            # Really no match found
             logger.warning(f"[NoMatch] '{col}' did not match any stage")
         
         df_out = pd.DataFrame(results)
@@ -374,76 +440,99 @@ class SchemaMapEngine:
         
         return df_out
     
-    def run_stage4_from_manual(self, manual_csv: str) -> pd.DataFrame:
+    def run_llm_on_file(
+        self,
+        input_csv: str,
+        output_csv: str,
+        stage_filter: Optional[List[str]] = None,
+        merge_results: bool = False
+    ) -> pd.DataFrame:
         """
-        Load manual results, run Stage4 (Gemini LLM) on low-confidence Stage2 matches.
+        Run LLM on an existing results file (manual mode).
         
         Args:
-            manual_csv: Path to manual review CSV
+            input_csv: Path to existing results CSV
+            output_csv: Path to save LLM results
+            stage_filter: Only re-match specific stages (e.g., ['stage2'])
+            merge_results: If True, merge with original results
             
         Returns:
-            DataFrame with Stage4 results
+            DataFrame with LLM results (merged or standalone)
         """
-        df_manual = pd.read_csv(manual_csv)
+        # Initialize LLM matcher if not already done
+        if self.llm is None:
+            try:
+                self.llm = LLMMatcher(self)
+                logger.info("[Engine] LLM matcher initialized for manual mode")
+            except Exception as e:
+                logger.error(f"[Engine] Failed to initialize LLM matcher: {e}")
+                return pd.DataFrame()
         
-        # Identify columns that need Stage 4
-        # Criteria: stage2 with match1_score < FIELD_ALIAS_THRESH
-        if "stage" in df_manual.columns and "match1_score" in df_manual.columns:
-            mask = (
-                (df_manual["stage"] == "stage2") &
-                (df_manual["match1_score"] < FIELD_ALIAS_THRESH)
-            )
-            pending_cols = df_manual.loc[mask, "query"].tolist()
-            
-            logger.info(
-                f"[Stage4] Found {len(pending_cols)} Stage2 columns with "
-                f"score < {FIELD_ALIAS_THRESH}"
-            )
-        elif "query" in df_manual.columns:
-            logger.warning("[Stage4] 'stage' or 'match1_score' not found; processing all queries.")
-            pending_cols = df_manual["query"].dropna().astype(str).unique().tolist()
-        else:
-            raise ValueError("Expected column 'query' in manual CSV.")
+        # Load input file
+        try:
+            df_input = pd.read_csv(input_csv)
+            logger.info(f"[Engine] Loaded {len(df_input)} rows from {input_csv}")
+        except Exception as e:
+            logger.error(f"[Engine] Failed to load input CSV: {e}")
+            raise
         
-        if not pending_cols:
-            logger.info("[Stage4] No columns need Stage4 processing")
+        # Identify queries to re-match
+        needs_rematching = pd.Series([True] * len(df_input))
+        
+        # Filter by confidence threshold
+        if 'match1_score' in df_input.columns:
+            needs_rematching &= (
+                df_input['match1_score'].isna() | 
+                (df_input['match1_score'] < LLM_THRESHOLD)
+            )
+        
+        # Filter by stage
+        if stage_filter and 'stage' in df_input.columns:
+            needs_rematching &= df_input['stage'].isin(stage_filter)
+        
+        queries_to_rematch = df_input[needs_rematching]['query'].tolist()
+        
+        logger.info(f"[Engine] Found {len(queries_to_rematch)} queries for LLM")
+        logger.info(f"[Engine] Criteria: match1_score < {LLM_THRESHOLD}")
+        if stage_filter:
+            logger.info(f"[Engine] Stage filter: {stage_filter}")
+        
+        if len(queries_to_rematch) == 0:
+            logger.info("[Engine] No queries need LLM")
             return pd.DataFrame()
         
+        # Re-match queries
         results = []
-        for col in pending_cols:
-            try:
-                # Use Gemini matcher
-                gemini_matches = self.gemini.match(col)
-                
-                if gemini_matches:
-                    row = self.format_matches_to_row(
-                        col=col,
-                        stage="stage4",
-                        detail="gemini",
-                        matches=gemini_matches
-                    )
-                    results.append(row)
-                    logger.info(f"[Stage4] '{col}' matched by Gemini")
-                else:
-                    logger.warning(f"[Stage4] '{col}' no matches from Gemini")
-                    # Record empty result
-                    results.append({
-                        "query": col,
-                        "stage": "stage4",
-                        "method": "gemini_no_match"
-                    })
-            except Exception as e:
-                logger.error(f"[Stage4] Error processing '{col}': {e}")
+        for idx, query in enumerate(queries_to_rematch, 1):
+            logger.info(f"[Engine] LLM {idx}/{len(queries_to_rematch)}: '{query}'")
+            
+            row = self.stage4_match(query)
+            if row:
+                results.append(row)
+            else:
                 results.append({
-                    "query": col,
-                    "stage": "stage4",
-                    "method": "gemini_error",
-                    "error": str(e)
+                    'query': query,
+                    'stage': 'stage4',
+                    'method': 'llm_no_match'
                 })
+            
+            # Rate limiting
+            time.sleep(2.0)
         
-        df_out = pd.DataFrame(results)
-        out_file = manual_csv.replace(".csv", "_stage4.csv")
-        df_out.to_csv(out_file, index=False)
-        logger.info(f"[Stage4] Saved {len(results)} results to {out_file}")
+        df_llm = pd.DataFrame(results)
         
-        return df_out
+        # Save or merge
+        if merge_results:
+            # Merge: replace original results with LLM results
+            rematched_queries = set(df_llm['query'].tolist())
+            df_keep = df_input[~df_input['query'].isin(rematched_queries)]
+            df_merged = pd.concat([df_keep, df_llm], ignore_index=True)
+            
+            df_merged.to_csv(output_csv, index=False)
+            logger.info(f"[Engine] Saved merged results ({len(df_merged)} rows) to {output_csv}")
+            return df_merged
+        else:
+            # Save only LLM results
+            df_llm.to_csv(output_csv, index=False)
+            logger.info(f"[Engine] Saved LLM results ({len(df_llm)} rows) to {output_csv}")
+            return df_llm
