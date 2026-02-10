@@ -15,20 +15,31 @@
 │   │   ├── ontology_mapper_rag.py
 │   │   ├── ontology_mapper_lm.py
 │   │   ├── ontology_mapper_st.py
+│   │   ├── ontology_mapper_bi_encoder.py
+│   │   ├── ontology_mapper_fts.py
+│   │   ├── ontology_mapper_synonym.py
+│   │   ├── reranker.py
 │   │   ├── method_model.yaml
+│   │   ├── schema_mapper
+│   │   │   ├── engine.py
+│   │   │   ├── config.py
+│   │   │   ├── loaders
+│   │   │   └── matchers
 │   ├── Engine
 │   │   ├── ontology_mapping_engine.py
 │   │   ├── schema_mapping_engine.py
-│   ├── CustomLogger   
+│   ├── CustomLogger
 │   ├── KnowledgeDb
 │   │   ├── faiss_sqlite_pipeline.py
+│   │   ├── corpus_builder.py
 │   │   └── db_clients
 │   │       ├── nci_db.py
-│   │       └── umls_db.py
+│   │       ├── umls_db.py
+│   │       └── ols_client.py
+│   ├── utils
 │   ├── Plotter
-├── setup.py   
+├── setup.py
 └── readme.md
-└── LICENSE
 ```
 ### 2. Usage
 
@@ -86,7 +97,7 @@ reload(om_bi)
 OntoMapEngine = get_ontology_engine()
 
 ## Import useful utilities 
-from src.models.calc_stats import CalcStats # for calculating accuracy (testing) 
+from evaluation.calc_stats import CalcStats # for calculating accuracy (testing)
 from src.utils.cleanup_vector_store import cleanup_vector_store # for cleaning up the vector store
 
 ## Now you must initialize the engine
@@ -124,9 +135,7 @@ results_engine_testing = onto_engine_large.run()
 
 2. Schema mapping
 ```python
-from src.Engine import get_schema_engine
-
-SchemaMapEngine = get_schema_engine()
+from src.models.schema_mapper import SchemaMapEngine
 
 # Initialize the engine
 engine = SchemaMapEngine(
@@ -139,7 +148,7 @@ engine = SchemaMapEngine(
 engine.run_schema_mapping()
 
 # (Optional) Run Stage 4 after manual review
-engine.run_stage3_from_manual("path_to_stage3_results.csv")
+engine.run_stage4_from_manual("path_to_stage3_results.csv")
 ```
 - Parameters that can be changed in the model:
   - clinical_data_path (str): Path to clinical dataset (TSV or CSV).
