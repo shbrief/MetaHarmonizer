@@ -1,0 +1,396 @@
+---
+title: "Comparative PCA Analysis of Embeddings"
+author: "MetaHarmonizer"
+date: "`r Sys.Date()`"
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-depth: 3
+    code-fold: true
+    code-tools: true
+    embed-resources: true
+execute:
+  warning: false
+  message: false
+---
+
+## Introduction
+
+This document performs comparative Principal Component Analysis (PCA) on two embedding matrices:
+
+1. **embeddings.csv** - Base embeddings (673 samples)
+2. **target_colname_embeddings_with_description.csv** - Target column embeddings with descriptions (39 samples)
+
+The analysis explores the underlying structure, dimensionality, and differences between these two embedding spaces.
+
+```{r setup}
+#| label: setup
+#| include: true
+
+# Load required libraries
+library(ggplot2)
+library(factoextra)
+library(tidyverse)
+library(patchwork)
+
+# Set theme
+theme_set(theme_minimal())
+```
+
+## Load Data
+
+```{r load-data}
+# Load both embedding datasets
+embeddings <- read.csv("data/embeddings.csv", header = FALSE)
+target_embeddings <- read.csv("data/target_colname_embeddings_with_description.csv", header = FALSE)
+
+cat("Dataset 1 (embeddings.csv):", dim(embeddings)[1], "rows ×", dim(embeddings)[2], "columns\n")
+cat("Dataset 2 (target_colname_embeddings_with_description.csv):", dim(target_embeddings)[1], "rows ×", dim(target_embeddings)[2], "columns\n")
+
+# Check if dimensions match
+if (ncol(embeddings) != ncol(target_embeddings)) {
+  warning("Warning: The two datasets have different numbers of features!")
+}
+```
+
+```{r perform-pca-1}
+# Perform PCA with centering and scaling
+pca_1 <- prcomp(embeddings, center = TRUE, scale. = TRUE)
+
+# Calculate variance explained
+var_exp_1 <- pca_1$sdev^2 / sum(pca_1$sdev^2)
+cum_var_1 <- cumsum(var_exp_1)
+
+# Summary statistics
+cat("Dataset 1 (embeddings.csv) - Variance explained by first 10 PCs:\n")
+for (i in 1:10) {
+  cat(sprintf("PC%d: %.2f%% (Cumulative: %.2f%%)\n", 
+              i, var_exp_1[i] * 100, cum_var_1[i] * 100))
+}
+
+# Find PCs needed for thresholds
+pc_90_1 <- which(cum_var_1 >= 0.90)[1]
+pc_95_1 <- which(cum_var_1 >= 0.95)[1]
+
+cat(sprintf("\nPCs needed for 90%% variance: %d\n", pc_90_1))
+cat(sprintf("PCs needed for 95%% variance: %d\n", pc_95_1))
+```
+
+### Dataset 2: target_colname_embeddings_with_description.csv
+
+```{r pca-dataset2}
+#| label: perform-pca-2
+
+# Perform PCA with centering and scaling
+pca_2 <- prcomp(target_embeddings, center = TRUE, scale. = TRUE)
+
+# Calculate variance explained
+var_exp_2 <- pca_2$sdev^2 / sum(pca_2$sdev^2)
+cum_var_2 <- cumsum(var_exp_2)
+
+# Summary statistics
+cat("\nDataset 2 (target_colname_embeddings_with_description.csv) - Variance explained by first 10 PCs:\n")
+n_show <- min(10, length(var_exp_2))
+for (i in 1:n_show) {
+  cat(sprintf("PC%d: %.2f%% (Cumulative: %.2f%%)\n", 
+              i, var_exp_2[i] * 100, cum_var_2[i] * 100))
+}
+
+# Find PCs needed for thresholds
+pc_90_2 <- which(cum_var_2 >= 0.90)[1]
+pc_95_2 <- which(cum_var_2 >= 0.95)[1]
+
+cat(sprintf("\nPCs needed for 90%% variance: %d\n", pc_90_2))
+cat(sprintf("PCs needed for 95%% variance: %d\n", pc_95_2))
+```
+
+## Comparative Visualizations
+
+### Scree Plots Comparison
+
+```{r scree-plots-comparison}
+#| label: fig-scree-comparison
+#| fig-cap: "Comparison of variance explained by principal components"
+#| fig-width: 14
+#| fig-height: 6
+
+# Create scree plot for dataset 1
+p_scree_1 <- fviz_eig(pca_1, 
+                      addlabels = TRUE, 
+                      ncp = 20,
+                      main = "Dataset 1: embeddings.csv",
+                      xlab = "Principal Component",
+                      ylab = "Percentage of Variance (%)",
+                      barfill = "steelblue",
+                      barcolor = "steelblue")
+
+# Create scree plot for dataset 2
+n_show_2 <- min(20, length(var_exp_2))
+p_scree_2 <- fviz_eig(pca_2, 
+                      addlabels = TRUE, 
+                      ncp = n_show_2,
+                      main = "Dataset 2: target_colname_embeddings_with_description.csv",
+                      xlab = "Principal Component",
+                      ylab = "Percentage of Variance (%)",
+                      barfill = "coral",
+                      barcolor = "coral")
+
+# Combine plots
+p_scree_1 + p_scree_2
+```
+
+### Cumulative Variance Comparison
+
+```{r cumulative-variance-comparison}
+#| label: fig-cumvar-comparison
+#| fig-cap: "Comparison of cumulative variance explained"
+#| fig-width: 12
+#| fig-height: 6
+
+# Prepare data for both datasets
+max_pc <- max(50, length(var_exp_2))
+cumvar_df <- data.frame(
+  PC = c(1:min(50, length(cum_var_1)), 1:length(cum_var_2)),
+  Cumulative = c(cum_var_1[1:min(50, length(cum_var_1))] * 100, cum_var_2 * 100),
+  Dataset = c(rep("Dataset 1 (embeddings.csv)", min(50, length(cum_var_1))),
+              rep("Dataset 2 (target w/ description)", length(cum_var_2)))
+)
+
+ggplot(cumvar_df, aes(x = PC, y = Cumulative, color = Dataset, group = Dataset)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2) +
+  geom_hline(yintercept = 90, linetype = "dashed", color = "gray40", alpha = 0.5) +
+  geom_hline(yintercept = 95, linetype = "dashed", color = "gray60", alpha = 0.5) +
+  annotate("text", x = max(cumvar_df$PC) * 0.9, y = 92, label = "90%", color = "gray40", size = 3) +
+  annotate("text", x = max(cumvar_df$PC) * 0.9, y = 97, label = "95%", color = "gray60", size = 3) +
+  scale_color_manual(values = c("Dataset 1 (embeddings.csv)" = "steelblue", 
+                                 "Dataset 2 (target w/ description)" = "coral")) +
+  labs(title = "Cumulative Variance Explained - Comparison",
+       x = "Principal Component",
+       y = "Cumulative Variance (%)",
+       color = "Dataset") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 14),
+        legend.position = "bottom")
+```
+
+### PCA Biplots - Dataset 1
+
+#### Dataset 1: PC1 vs PC2
+
+```{r biplot-1-pc1-pc2}
+#| label: fig-biplot-1-1-2
+#| fig-cap: "Dataset 1 PCA biplot (PC1 vs PC2)"
+#| fig-width: 10
+#| fig-height: 8
+
+fviz_pca_ind(pca_1,
+             axes = c(1, 2),
+             geom.ind = "point",
+             col.ind = "cos2",
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+             repel = FALSE,
+             title = "Dataset 1: PCA Biplot (PC1 vs PC2)",
+             legend.title = "Quality") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 14))
+```
+
+#### Dataset 1: PC1 vs PC3
+
+```{r biplot-1-pc1-pc3}
+#| label: fig-biplot-1-1-3
+#| fig-cap: "Dataset 1 PCA biplot (PC1 vs PC3)"
+#| fig-width: 10
+#| fig-height: 8
+
+fviz_pca_ind(pca_1,
+             axes = c(1, 3),
+             geom.ind = "point",
+             col.ind = "cos2",
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+             repel = FALSE,
+             title = "Dataset 1: PCA Biplot (PC1 vs PC3)",
+             legend.title = "Quality") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 14))
+```
+
+### PCA Biplots - Dataset 2
+
+#### Dataset 2: PC1 vs PC2
+
+```{r biplot-2-pc1-pc2}
+#| label: fig-biplot-2-1-2
+#| fig-cap: "Dataset 2 PCA biplot (PC1 vs PC2)"
+#| fig-width: 10
+#| fig-height: 8
+
+fviz_pca_ind(pca_2,
+             axes = c(1, 2),
+             geom.ind = "point",
+             col.ind = "cos2",
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+             repel = FALSE,
+             title = "Dataset 2: PCA Biplot (PC1 vs PC2)",
+             legend.title = "Quality") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 14))
+```
+
+#### Dataset 2: PC1 vs PC3
+
+```{r biplot-2-pc1-pc3}
+#| label: fig-biplot-2-1-3
+#| fig-cap: "Dataset 2 PCA biplot (PC1 vs PC3)"
+#| fig-width: 10
+#| fig-height: 8
+
+fviz_pca_ind(pca_2,
+             axes = c(1, 3),
+             geom.ind = "point",
+             col.ind = "cos2",
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+             repel = FALSE,
+             title = "Dataset 2: PCA Biplot (PC1 vs PC3)",
+             legend.title = "Quality") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 14))
+```
+
+### PC Score Distributions Comparison
+
+```{r pc-distributions-comparison}
+#| label: fig-distributions-comparison
+#| fig-cap: "Comparison of PC score distributions for the first 4 principal components"
+#| fig-width: 14
+#| fig-height: 10
+
+# Create dataframe for both datasets
+pc_scores_1 <- data.frame(pca_1$x[, 1:4])
+pc_scores_1$Dataset <- "Dataset 1"
+pc_scores_1$ID <- 1:nrow(pc_scores_1)
+
+pc_scores_2 <- data.frame(pca_2$x[, 1:4])
+pc_scores_2$Dataset <- "Dataset 2"
+pc_scores_2$ID <- 1:nrow(pc_scores_2)
+
+# Combine and reshape to long format
+pc_scores_combined <- rbind(pc_scores_1, pc_scores_2) %>%
+  pivot_longer(cols = starts_with("PC"), 
+               names_to = "Component", 
+               values_to = "Score")
+
+# Plot distributions with overlay
+ggplot(pc_scores_combined, aes(x = Score, fill = Dataset, color = Dataset)) +
+  geom_density(alpha = 0.4, linewidth = 1) +
+  facet_wrap(~ Component, scales = "free", nrow = 2) +
+  labs(title = "Comparison of PC Score Distributions",
+       x = "PC Score",
+       y = "Density") +
+  scale_fill_manual(values = c("Dataset 1" = "steelblue", "Dataset 2" = "coral")) +
+  scale_color_manual(values = c("Dataset 1" = "steelblue", "Dataset 2" = "coral")) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 14),
+        legend.position = "bottom")
+```
+
+### Side-by-Side PC Scatter Plots
+
+```{r combined-scatter-comparison}
+#| label: fig-combined-comparison
+#| fig-cap: "Side-by-side comparison of PC1 vs PC2 for both datasets"
+#| fig-width: 14
+#| fig-height: 6
+
+# Prepare data for both datasets
+pc_df_1 <- as.data.frame(pca_1$x[, 1:2])
+pc_df_1$Dataset <- "Dataset 1"
+
+pc_df_2 <- as.data.frame(pca_2$x[, 1:2])
+pc_df_2$Dataset <- "Dataset 2"
+
+# Plot for Dataset 1
+p_scatter_1 <- ggplot(pc_df_1, aes(x = PC1, y = PC2)) +
+  geom_point(alpha = 0.6, color = "steelblue", size = 2.5) +
+  labs(title = "Dataset 1: embeddings.csv",
+       x = paste0("PC1 (", sprintf("%.1f", var_exp_1[1] * 100), "%)"),
+       y = paste0("PC2 (", sprintf("%.1f", var_exp_1[2] * 100), "%)")) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 12))
+
+# Plot for Dataset 2
+p_scatter_2 <- ggplot(pc_df_2, aes(x = PC1, y = PC2)) +
+  geom_point(alpha = 0.6, color = "coral", size = 2.5) +
+  labs(title = "Dataset 2: target w/ description",
+       x = paste0("PC1 (", sprintf("%.1f", var_exp_2[1] * 100), "%)"),
+       y = paste0("PC2 (", sprintf("%.1f", var_exp_2[2] * 100), "%)")) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 12))
+
+# Combine plots
+p_scatter_1 + p_scatter_2 +
+  plot_annotation(title = "PC Space Comparison: Both Datasets",
+                  theme = theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 16)))
+```
+
+### Variance Explained Comparison Table
+
+```{r variance-table}
+#| label: tbl-variance
+#| tbl-cap: "Comparison of variance explained by first 10 PCs"
+
+# Create comparison table
+n_comp <- min(10, min(length(var_exp_1), length(var_exp_2)))
+variance_comparison <- data.frame(
+  PC = 1:n_comp,
+  Dataset1_Individual = sprintf("%.2f%%", var_exp_1[1:n_comp] * 100),
+  Dataset1_Cumulative = sprintf("%.2f%%", cum_var_1[1:n_comp] * 100),
+  Dataset2_Individual = sprintf("%.2f%%", var_exp_2[1:n_comp] * 100),
+  Dataset2_Cumulative = sprintf("%.2f%%", cum_var_2[1:n_comp] * 100)
+)
+
+knitr::kable(variance_comparison,
+             col.names = c("PC", 
+                          "Dataset 1 (%)", 
+                          "Dataset 1 Cumulative (%)",
+                          "Dataset 2 (%)",
+                          "Dataset 2 Cumulative (%)"),
+             align = c("c", "r", "r", "r", "r"))
+```
+
+## Summary
+
+::: {.callout-note}
+## Key Findings
+
+### Dataset 1: embeddings.csv
+- **Total observations**: `r nrow(embeddings)` samples
+- **Total dimensions**: `r ncol(embeddings)` features
+- **PC1 variance**: `r sprintf("%.2f%%", var_exp_1[1] * 100)`
+- **PC2 variance**: `r sprintf("%.2f%%", var_exp_1[2] * 100)`
+- **PC3 variance**: `r sprintf("%.2f%%", var_exp_1[3] * 100)`
+- **Top 3 PCs capture**: `r sprintf("%.2f%%", cum_var_1[3] * 100)` of total variance
+- **PCs for 90% variance**: `r pc_90_1` components
+- **PCs for 95% variance**: `r pc_95_1` components
+
+### Dataset 2: target_colname_embeddings_with_description.csv
+- **Total observations**: `r nrow(target_embeddings)` samples
+- **Total dimensions**: `r ncol(target_embeddings)` features
+- **PC1 variance**: `r sprintf("%.2f%%", var_exp_2[1] * 100)`
+- **PC2 variance**: `r sprintf("%.2f%%", var_exp_2[2] * 100)`
+- **PC3 variance**: `r sprintf("%.2f%%", var_exp_2[3] * 100)`
+- **Top 3 PCs capture**: `r sprintf("%.2f%%", cum_var_2[3] * 100)` of total variance
+- **PCs for 90% variance**: `r pc_90_2` components
+- **PCs for 95% variance**: `r pc_95_2` components
+:::
+
+
+## Session Info
+
+```{r session-info}
+#| label: session-info
+
+sessionInfo()
+```

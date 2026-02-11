@@ -1,0 +1,247 @@
+query,ref_match,match_level,stage,method,match1,match1_score,match1_source,match2,match2_score,match2_source,match3,match3_score,match3_source,match4,match4_score,match4_source,match5,match5_score,match5_source,source
+source_file,,99,stage2,semantic,body_site,0.6801,source type,treatment_status,0.3075,post sample tx,location,0.3029,,treatment_name,0.2989,tx abt 263,treatment_type,0.2802,tert targeted tx,
+studyId,studyId,99,invalid,id_column,,,,,,,,,,,,,,,,studyId
+patientId,patientId,99,invalid,id_column,,,,,,,,,,,,,,,,patientId
+SAMPLE_COUNT,sample_count,99,stage2,semantic,sample_type,0.6634,,specimen_type,0.6634,sample type,age_at_procurement,0.5728,age at sample collection,treatment_type,0.5538,tx bet pri met sample collection,treatment_status,0.4674,post sample targeted,SAMPLE_COUNT
+sampleId,sampleId,99,invalid,id_column,,,,,,,,,,,,,,,,sampleId
+MUTATION_COUNT,mutation_count,99,stage2,semantic,cancer_subtype,0.734,mutation phenotype,age_at_procurement,0.4489,age at sequencing,disease,0.3891,disease code,treatment_number,0.3859,,treatment_name,0.3613,number of cycles trastuzumab,MUTATION_COUNT
+CANCER_TYPE,cancer_type,1,stage1,std_exact,cancer_type,1.0,,,,,,,,,,,,,,CANCER_TYPE
+CANCER_TYPE_DETAILED,cancer_type_detailed,99,stage1,alias_exact,cancer_type_details,1.0,CANCER_TYPE_DETAILED,,,,,,,,,,,,,CANCER_TYPE_DETAILED
+ONCOTREE_CODE,oncotree_code,1,stage1,std_exact,oncotree_code,1.0,,,,,,,,,,,,,,ONCOTREE_CODE
+SAMPLE_TYPE,sample_type,1,stage1,std_exact,sample_type,1.0,,,,,,,,,,,,,,SAMPLE_TYPE
+SEX,sex,1,stage1,std_exact,sex,1.0,,,,,,,,,,,,,,SEX
+OS_STATUS,vital_status,1,stage1,alias_exact,vital_status,1.0,OS_STATUS,,,,,,,,,,,,,OS_STATUS
+OS_MONTHS,vital_status,99,stage2,numeric,treatment_duration,0.8256,DOT_MONTHS,treatment_start,0.5497,YEAR_OF_SURGERY,age_at_death_min,0.2018,,age_at_metastasis_min,0.1984,,age_at_metastasis,0.1934,,OS_MONTHS
+RACE,ancestry,1,stage1,alias_exact,ancestry,1.0,RACE,ancestry_details,1.0,RACE,,,,,,,,,,RACE
+ETHNICITY,ancestry,1,stage1,alias_exact,ancestry,1.0,ETHNICITY,ancestry_details,1.0,ETHNICITY,,,,,,,,,,ETHNICITY
+FRACTION_GENOME_ALTERED,,99,stage2,numeric,treatment_number,0.427,CHEMO_CONCURRENT_FRACTIONS_TOTAL,treatment_dose,0.427,CHEMO_CONCURRENT_FRACTIONS_TOTAL,age_at_procurement,0.3538,AGE_AT_SEQUENCING,treatment_frequency,0.1076,,age_at_metastasis,0.0757,,
+AGE,age_at_procurement,1,stage1,alias_exact,age_at_procurement,1.0,AGE,,,,,,,,,,,,,AGE
+DISEASE_TYPE,cancer_type|disease_type,1,stage3,ontology,cancer_type,1.0,DISEASE_TYPE,disease,1.0,DISEASE_TYPE,cancer_type_details,1.0,DISEASE_TYPE,,,,,,,DISEASE_TYPE
+MORPHOLOGY,histological_subtype,99,stage3,ontology,cancer_type,1.0,MORPHOLOGY,disease,1.0,MORPHOLOGY,cancer_type_details,1.0,MORPHOLOGY,,,,,,,MORPHOLOGY
+OTHER_PATIENT_ID,patientId,99,invalid,id_column,,,,,,,,,,,,,,,,OTHER_PATIENT_ID
+OTHER_SAMPLE_ID,sampleId,99,invalid,id_column,,,,,,,,,,,,,,,,OTHER_SAMPLE_ID
+PRIMARY_DIAGNOSIS,cancer_type|disease_type|target_condition,1,stage1,alias_exact,cancer_type,1.0,PRIMARY_DIAGNOSIS,,,,,,,,,,,,,PRIMARY_DIAGNOSIS
+PRIMARY_SITE_PATIENT,body_site,1,stage1,alias_exact,body_site,1.0,PRIMARY_SITE_PATIENT,,,,,,,,,,,,,PRIMARY_SITE_PATIENT
+PROJECT_ID,,99,invalid,id_column,,,,,,,,,,,,,,,,
+PROJECT_NAME,,99,stage3,ontology,cancer_type,1.0,PROJECT_NAME,disease,1.0,PROJECT_NAME,cancer_type_details,1.0,PROJECT_NAME,,,,,,,
+PROJECT_STATE,,99,stage2,semantic,location,0.3605,participant country,country,0.3605,participant country,body_site,0.351,location,cancer_type_details,0.3101,dx org inst,treatment_name,0.2952,current regimen,
+BIOPSY_SITE,body_site|metastasis_site,1,stage1,alias_exact,body_site,1.0,BIOPSY_SITE,,,,,,,,,,,,,BIOPSY_SITE
+VITAL_STATUS,vital_status,1,stage1,std_exact,vital_status,1.0,,,,,,,,,,,,,,VITAL_STATUS
+YEAR_OF_DEATH,age_at_death,2,stage2,numeric,treatment_start,0.7037,YEAR_OF_SURGERY,age_at_death,0.6739,,age_at_death_max,0.529,age_at_death_max,age_at_death_min,0.4953,,age_at_metastasis,0.3127,,YEAR_OF_DEATH
+YEAR_OF_DIAGNOSIS,age_at_diagnosis,1,stage2,numeric,age_at_diagnosis,0.6941,DIAGNOSIS.AGE,age_at_diagnosis_max,0.5916,,age_at_diagnosis_min,0.542,,treatment_duration,0.4788,,treatment_start,0.4691,,YEAR_OF_DIAGNOSIS
+PRIOR_MALIGNANCY,,99,stage2,semantic,treatment_type,0.7856,prior malignancy radiation tx,cancer_type_details,0.598,,body_site,0.5952,localized tumor,treatment_name,0.5831,chemotherapy prior sample acquired,cancer_status,0.5779,,
+IS_FFPE,specimen_type,99,stage2,semantic,treatment_name,0.3539,cisplatin tx,treatment_duration,0.286,x2yr fulvestrant,body_site,0.2715,metastatic site,treatment_group,0.2212,,cancer_type,0.1987,,IS_FFPE
+PRIOR_TREATMENT,treatment_note,99,stage1,alias_exact,treatment_dose,1.0,PRIOR_TREATMENT,treatment_duration,1.0,PRIOR_TREATMENT,treatment_name,1.0,PRIOR_TREATMENT,treatment_notes,1.0,PRIOR_TREATMENT,treatment_number,1.0,PRIOR_TREATMENT,PRIOR_TREATMENT
+SOMATIC_STATUS,,99,stage2,semantic,vital_status,0.5975,status,treatment_status,0.4605,treatment status,treatment_name,0.409,sorafenib treatment,treatment_status_ontology_term_id,0.3907,,vital_status_ontology_term_id,0.3394,,
+SAMPLE_CLASS,specimen_type,2,stage1,alias_exact,sample_type,1.0,SAMPLE_CLASS,specimen_type,1.0,SAMPLE_CLASS,,,,,,,,,,SAMPLE_CLASS
+TMB_NONSYNONYMOUS,,99,stage2,semantic,treatment_type,0.3894,tert antimetabolite tx,treatment_name,0.3571,tmz treatment,cancer_type_details,0.3524,histological type,cancer_subtype,0.3353,histological subtype,treatment_duration,0.3308,x2yr antiher2,
+GENE_PANEL,,99,stage2,semantic,cancer_subtype,0.3932,integrated phenotype,treatment_name,0.3623,tx genz 644282,disease,0.3574,disease code,ancestry_ontology_term_id,0.3456,,body_site,0.3425,biopsy site,
+SMOKING_STATUS,smoker,99,stage2,semantic,cancer_status,0.5532,,vital_status,0.451,status,treatment_status,0.3903,treatment status,cancer_status_ontology_term_id,0.3729,,body_site,0.3366,diagnosis cancer loc lung,SMOKING_STATUS
+TISSUE_SITE,body_site,1,stage1,alias_exact,body_site,1.0,TISSUE_SITE,,,,,,,,,,,,,TISSUE_SITE
+TUMOR_STAGE,tumor_staging_tnm,99,invalid,stage_column,,,,,,,,,,,,,,,,TUMOR_STAGE
+SPECIMEN_PRESERVATION_TYPE,specimen_type,1,stage2,semantic,specimen_type,0.8071,specimen type,sample_type,0.8071,specimen type,specimen_type_ontology_term_id,0.5881,,age_at_procurement,0.5126,age at specimen acquisition,body_site,0.4695,tissue type,SPECIMEN_PRESERVATION_TYPE
+ETHINICITY,ancestry,1,stage1,alias_fuzzy,ancestry,0.9474,ETHNICITY,ancestry_details,0.9474,ETHNICITY,,,,,,,,,,ETHINICITY
+ORTHOTOPIC_XENOGRAFT_INFORMATION,,99,stage2,semantic,treatment_duration,0.3483,x2yr alkylating agent,treatment_type,0.3483,x2yr alkylating agent,treatment_notes,0.3081,radiation therapy xrt type,treatment_name,0.281,x2yr antiher2,treatment_reason,0.2534,neoadjuvant xrt,
+PATHOLOGICAL_CLASSIFICATION_OF_PARENTAL_TUMOR_SAMPLE,body_site|cancer_type|cancer_type_detailed,1,stage3,ontology,cancer_type,1.0,PATHOLOGICAL_CLASSIFICATION_OF_PARENTAL_TUMOR_SAMPLE,disease,1.0,PATHOLOGICAL_CLASSIFICATION_OF_PARENTAL_TUMOR_SAMPLE,cancer_type_details,1.0,PATHOLOGICAL_CLASSIFICATION_OF_PARENTAL_TUMOR_SAMPLE,,,,,,,PATHOLOGICAL_CLASSIFICATION_OF_PARENTAL_TUMOR_SAMPLE
+PRIOR_INTRAVESICAL_THERAPY,treatment_name|treatment_not|treatment_type,1,stage3,ontology,treatment_name,1.0,PRIOR_INTRAVESICAL_THERAPY,,,,,,,,,,,,,PRIOR_INTRAVESICAL_THERAPY
+TUMOR_PURITY,,99,stage2,semantic,body_site,0.7257,tumor level,cancer_type_details,0.6212,detailed cancer type,cancer_status,0.5827,,cancer_type,0.5692,,cancer_subtype,0.545,,
+MSI_SCORE,,99,stage2,semantic,treatment_name,0.3525,ici,treatment_notes,0.3332,all tx at msk,vital_status,0.2836,dss status,treatment_type,0.2689,io tx,age_at_death_max,0.1869,,
+MSI_TYPE,,99,stage2,semantic,disease,0.4629,mds type,treatment_name,0.44,dx type,treatment_notes,0.44,dx type,treatment_type,0.44,dx type,cancer_subtype,0.4312,type,
+SAMPLE_COVERAGE,,99,stage2,semantic,sample_type,0.6144,,specimen_type,0.6144,sample type,treatment_status,0.5496,pre sample targeted,treatment_type,0.5496,pre sample targeted,age_at_procurement,0.4339,age at sample collection,
+AGE_AT_SEQ_REPORTED_YEARS,age_at_procurement,1,stage1,alias_exact,age_at_procurement,1.0,AGE_AT_SEQ_REPORTED_YEARS,,,,,,,,,,,,,AGE_AT_SEQ_REPORTED_YEARS
+BEST_RESPONSE,,99,stage2,semantic,treatment_group,0.3596,details first line comments,treatment_name,0.3596,details first line comments,treatment_notes,0.3596,details first line comments,treatment_reason,0.3596,details first line comments,sex,0.3093,,
+DISEASE_STATE,disease_type,99,stage3,ontology,cancer_type,1.0,DISEASE_STATE,disease,1.0,DISEASE_STATE,cancer_type_details,1.0,DISEASE_STATE,,,,,,,DISEASE_STATE
+ERDAFITINIB_TREATED,treatment_name,1,stage2,semantic,treatment_name,0.58,tx eribulin,treatment_status,0.4897,treatment ongoing,treatment_reason,0.4523,previous treatment,treatment_type,0.4523,previous treatment,treatment_number,0.4419,treatment details,ERDAFITINIB_TREATED
+ERDAFITINIB_TX_OS_MONTHS,vital_status,99,stage2,numeric,treatment_duration,0.6225,TOTAL_TIME_PERIOD_MONTHS,treatment_start,0.5429,TX_90DAYS_POST_RESECTION,treatment_frequency,0.3432,,age_at_diagnosis,0.1685,,age_at_diagnosis_max,0.1546,,ERDAFITINIB_TX_OS_MONTHS
+ERDAFITINIB_TX_OS_STATUS,vital_status,2,stage2,semantic,treatment_name,0.5913,tx eribulin,vital_status,0.5061,os status,treatment_reason,0.461,maintenance tx,treatment_type,0.4388,io tx,treatment_status,0.3036,,ERDAFITINIB_TX_OS_STATUS
+ERDAFITINIB_TX_PFS_MONTHS,,99,stage2,numeric,treatment_duration,0.5684,TOTAL_TIME_PERIOD_MONTHS,treatment_start,0.5202,TX_90DAYS_POST_RESECTION,age_at_procurement_max,0.1707,,age_at_procurement_min,0.1689,,age_at_procurement,0.1608,,
+ERDAFITINIB_TX_PFS_STATUS,,99,stage2,semantic,vital_status,0.6824,pfs status io,treatment_name,0.5282,tx eribulin,treatment_notes,0.3957,reason for tx discontinuation,treatment_reason,0.3922,maintenance tx,cancer_status,0.2842,,
+SEQUENCING_OS_MONTHS,,99,stage2,numeric,treatment_duration,0.6861,DOT_MONTHS,age_at_procurement,0.5254,AGE_AT_SEQUENCING,treatment_frequency,0.3285,,age_at_metastasis_min,0.1872,,age_at_diagnosis_min,0.166,,
+SEQUENCING_OS_STATUS,,99,stage2,semantic,vital_status,0.6492,os status,age_at_procurement,0.4704,age at sequencing,treatment_status,0.2531,,treatment_status_ontology_term_id,0.2127,,treatment_number_unit_ontology_term_id,0.2038,,
+SMOKIMG_STATUS,,99,stage2,semantic,vital_status,0.4706,status,cancer_status,0.3495,,treatment_dose,0.3398,steroids gt 10mg daily,treatment_frequency,0.3398,steroids gt 10mg daily,treatment_name,0.3398,steroids gt 10mg daily,
+DFS_MONTHS,,99,stage2,numeric,treatment_duration,0.7337,DOT_MONTHS,age_at_diagnosis,0.3691,AGE_AT_DX,age_at_metastasis_max,0.1895,,age_at_procurement,0.1895,,age_at_procurement_max,0.1874,,
+DFS_STATUS,,99,stage1,alias_exact,vital_status,1.0,DFS_STATUS,,,,,,,,,,,,,
+METASTATIC_SITE,disease_metastasic_site,99,stage1,alias_exact,body_site,1.0,METASTATIC_SITE,,,,,,,,,,,,,METASTATIC_SITE
+HISTOLOGY,histological_subtype,99,stage3,ontology,cancer_type,1.0,HISTOLOGY,disease,1.0,HISTOLOGY,cancer_type_details,1.0,HISTOLOGY,,,,,,,HISTOLOGY
+SAMPLE_DISPLAY_NAME,,99,stage2,semantic,sample_type,0.4134,sample class,specimen_type,0.4134,sample class,treatment_status,0.3403,post sample xrt,treatment_type,0.3403,post sample xrt,specimen_type_ontology_term_id,0.3016,,
+ADJ_TXT,treatment_type,1,stage2,semantic,treatment_type,0.5302,tert alkylating tx,treatment_name,0.5189,tx abt 199,treatment_reason,0.5108,adjuvant tx,body_site,0.2336,,oncotree_code,0.2164,,ADJ_TXT
+DEM_ETHNICITY,ancestry,99,stage3,value_std,ancestry_details,1.0,Not Hispanic/Latina,,,,,,,,,,,,,DEM_ETHNICITY
+DEM_FAMILY,,99,stage2,semantic,ancestry,0.491,,ancestry_details,0.4509,,cancer_subtype,0.3321,lineage subtype,sex,0.3137,family history testicular cancer,country,0.3098,birth country,
+DEM_RACE,ancestry,1,stage2,semantic,ancestry,0.7088,race,ancestry_details,0.7088,race,age_group,0.2759,,sex,0.2668,,country,0.2557,,DEM_RACE
+MUTATIONAL_SOURCE,,99,stage2,semantic,cancer_subtype,0.7202,mutation phenotype,body_site,0.5008,source type,treatment_name,0.3715,therapy prior to derivation,treatment_status,0.3715,therapy prior to derivation,treatment_type,0.3164,transplant type,
+NUMBER_PROLIFERATING_CELLS,,99,stage2,semantic,treatment_reason,0.3776,tumor surgery number,treatment_type,0.3776,tumor surgery number,treatment_number,0.3444,num lines immuno,treatment_dose,0.3203,chemo concurrent fractions total,treatment_status,0.3203,chemo concurrent fractions total,
+PARTICIPATING_SITE,,99,stage2,semantic,body_site,0.514,primary site,location,0.4998,participant country,country,0.4998,participant country,vital_status,0.37,status,treatment_number,0.369,cycles completed,
+PERCENT_INFLAM_INFILTRATION,,99,stage2,semantic,treatment_number_unit,0.2563,treatment number unit,treatment_name,0.2534,3l treatment,treatment_reason,0.2534,3l treatment,treatment_end_unit,0.2471,treatment end unit,treatment_start_unit,0.2289,treatment start unit,
+PERCENT_LYMPHOCYTE_INFILTRATION,,99,stage2,semantic,treatment_type,0.364,any line immuno,treatment_status,0.3517,post sample immunotherapy,treatment_name,0.3506,immunosuppression,treatment_number,0.3303,radiotherapy fractions,treatment_reason,0.33,immune treatment,
+PERCENT_NECROSIS,,99,stage2,semantic,disease,0.3304,,vital_status,0.3231,survival status,body_site,0.3035,disease extent,treatment_number_unit,0.3032,,treatment_status,0.3004,treatment status,
+PERCENT_NORMAL_CELLS,,99,stage2,numeric,treatment_number,0.3028,RADIOTHERAPY_FRACTIONS,treatment_dose,0.26,CHEMO_CONCURRENT_FRACTIONS_TOTAL,treatment_frequency,0.1974,,age_at_metastasis_max,0.1109,,age_at_diagnosis_max,0.1028,,
+PERCENT_STROMAL_CELLS,,99,stage2,numeric,treatment_number,0.2998,RADIOTHERAPY_FRACTIONS,treatment_dose,0.2676,CHEMO_CONCURRENT_FRACTIONS_TOTAL,treatment_frequency,0.1964,,age_at_metastasis_max,0.15,,age_at_metastasis,0.1429,,
+PERCENT_TUMOR_CELLS,,99,stage2,semantic,body_site,0.6093,tumor level,cancer_subtype,0.4902,,cancer_status,0.4861,,cancer_type_details,0.4668,,cancer_type,0.4404,,
+PERCENT_TUMOR_NUCLEI,,99,stage2,semantic,body_site,0.5983,tumor level,treatment_number,0.532,radiotherapy fractions,treatment_type,0.532,radiotherapy fractions,treatment_dose,0.5019,radiation dose pelvic nodes primary tumor,cancer_status,0.4595,,
+PORTION_BARCODES,,99,stage2,semantic,treatment_name,0.266,tx cabozantinib xl 148,disease,0.2507,disease code,treatment_number,0.2427,lines of tx,treatment_notes,0.2324,num lines,oncotree_code,0.1991,,
+PRESERVATION,specimen_type,99,stage2,semantic,vital_status,0.4745,survival status,treatment_reason,0.3704,salvage chemo,treatment_type,0.3704,salvage chemo,treatment_name,0.3148,pretreatment history,treatment_status,0.3148,pretreatment history,PRESERVATION
+PRIM_ER,,99,stage2,semantic,treatment_type,0.4062,tx bet pri met sample collection,ancestry,0.3895,prd hispanic,ancestry_details,0.3895,prd hispanic,treatment_notes,0.3552,prd surgery,sex,0.3231,prd prostatectomy,
+PRIM_ER_PCT,,99,stage2,semantic,treatment_type,0.3964,tert taxane tx,treatment_name,0.3595,tert topo i inh tx,ancestry,0.3372,prd race,ancestry_details,0.3372,prd race,treatment_notes,0.3293,prd surgery,
+PRIM_HER2,,99,stage3,ontology,cancer_type,1.0,PRIM_HER2,disease,1.0,PRIM_HER2,cancer_type_details,1.0,PRIM_HER2,,,,,,,
+PRIM_HER2_COPY,,99,stage2,semantic,vital_status,0.482,her2 vital status,cancer_subtype,0.3564,hist subtype2,treatment_type,0.3201,tx bet pri met sample collection,treatment_duration,0.3052,x2yr cdk46,treatment_name,0.3052,x2yr cdk46,
+PRIM_HER2_COPYNUM,,99,stage2,semantic,vital_status,0.4919,her2 vital status,treatment_number,0.3609,num lines ntrk,treatment_type,0.3609,num lines ntrk,cancer_subtype,0.345,hist subtype2,treatment_name,0.3437,tx cx 5461 pol1,
+PRIM_HER2_FISH,,99,stage2,semantic,vital_status,0.4841,her2 vital status,cancer_subtype,0.3373,hist subtype2,treatment_type,0.3067,tx bet pri met sample collection,treatment_duration,0.2878,x2yr taxane,ancestry,0.279,prd race,
+PRIM_HER2_INTERPRETATION,,99,stage2,semantic,vital_status,0.5943,her2 vital status,cancer_subtype,0.3941,hist subtype2,treatment_name,0.3174,2l treatment,treatment_reason,0.3174,2l treatment,treatment_notes,0.2806,prd other therapy,
+PRIM_M,tumor_staging_tnm,99,invalid,stage_column,,,,,,,,,,,,,,,,PRIM_M
+PRIM_N,tumor_staging_tnm,99,invalid,stage_column,,,,,,,,,,,,,,,,PRIM_N
+PRIM_ONCOTYPE,,99,stage2,semantic,oncotree_code,0.44,,cancer_subtype,0.3909,type,treatment_type,0.3451,tx bet pri met sample collection,treatment_status,0.3421,on treatment,ancestry,0.3182,prd race,
+PRIM_ONCOTYPE_SOURCE,,99,stage2,semantic,body_site,0.4898,source type,oncotree_code,0.4562,oncotree code,treatment_type,0.3586,tx bet pri met sample collection,cancer_subtype,0.3104,type,treatment_status,0.3026,on treatment,
+PRIM_PR,,99,stage2,semantic,ancestry,0.5262,prd race,ancestry_details,0.5262,prd race,treatment_notes,0.4828,prd surgery,treatment_type,0.4828,prd surgery,treatment_name,0.4592,tx pr 104,
+PRIM_PR_PCT,,99,stage2,semantic,ancestry,0.4796,prd race,ancestry_details,0.4796,prd race,treatment_notes,0.4655,prd other therapy,treatment_type,0.4655,prd other therapy,treatment_status,0.456,prd treated at enrollment,
+PRIM_STAGE_DX,tumor_staging_ajcc,99,invalid,stage_column,,,,,,,,,,,,,,,,PRIM_STAGE_DX
+PRIM_T,tumor_staging_tnm,99,invalid,stage_column,,,,,,,,,,,,,,,,PRIM_T
+PRIM2,,99,stage2,semantic,ancestry,0.3944,prd race,ancestry_details,0.3944,prd race,treatment_name,0.3637,2l treatment,treatment_reason,0.3637,2l treatment,treatment_notes,0.3499,prd other therapy,
+RADS_LOCAL_YN,treatment_name|treatment_type,1,stage2,semantic,treatment_name,0.3923,radadjuvantrx,treatment_reason,0.3923,radadjuvantrx,treatment_type,0.3923,radadjuvantrx,body_site,0.385,localized vs mets at dx,location,0.3304,,RADS_LOCAL_YN
+RADS_METASTATIC_YN,disease_metastasis|treatment_name|treatment_type,3,stage2,semantic,body_site,0.5141,metastatic site,treatment_reason,0.4932,metastatic radiation therapy,treatment_type,0.4932,metastatic radiation therapy,treatment_notes,0.4361,prd radiation,treatment_name,0.4146,radadjuvantrx,RADS_METASTATIC_YN
+SLIDE_BARCODE,,99,stage2,semantic,treatment_name,0.3029,tx gs 9820,disease,0.2528,disease code,oncotree_code,0.2106,,age_at_procurement,0.1274,,age_at_procurement_min,0.1213,,
+SURGPATH,treatment_name|treatment_type,1,stage3,value_std,treatment_type,1.0,Mastectomy,,,,,,,,,,,,,SURGPATH
+YPM,tumor_staging_tnm,99,invalid,stage_column,,,,,,,,,,,,,,,,YPM
+YPN,tumor_staging_tnm,99,invalid,stage_column,,,,,,,,,,,,,,,,YPN
+YPRIM2,,99,stage2,semantic,treatment_name,0.42,x2yr fulvestrant,treatment_duration,0.42,x2yr fulvestrant,treatment_type,0.3335,x2yr taxane,cancer_subtype,0.3181,hist subtype2,location,0.247,,
+YPT,tumor_staging_tnm,99,invalid,stage_column,,,,,,,,,,,,,,,,YPT
+YSTAGE_AT_PSTAGING,tumor_staging_ajcc,99,invalid,stage_column,,,,,,,,,,,,,,,,YSTAGE_AT_PSTAGING
+ICD_10,cancer_type|disease_type,99,stage2,semantic,treatment_name,0.6424,ici,treatment_type,0.436,treated with ici,cancer_type_details,0.428,dx org inst,treatment_duration,0.4039,x2yr ais,age_at_diagnosis,0.3875,age d,ICD_10
+PATH_STAGE,tumor_staging_ajcc,99,invalid,stage_column,,,,,,,,,,,,,,,,PATH_STAGE
+PATH_N_STAGE,tumor_staging_tnm,99,invalid,stage_column,,,,,,,,,,,,,,,,PATH_N_STAGE
+PATH_T_STAGE,tumor_staging_tnm,99,invalid,stage_column,,,,,,,,,,,,,,,,PATH_T_STAGE
+PATH_M_STAGE,tumor_staging_tnm,99,invalid,stage_column,,,,,,,,,,,,,,,,PATH_M_STAGE
+AJCC_STAGING_EDITION,tumor_staging_ajcc,99,invalid,stage_column,,,,,,,,,,,,,,,,AJCC_STAGING_EDITION
+SMOKING_PACK_YEARS,,99,stage2,numeric,treatment_start,0.4914,AGE_AT_CHEMOTHERAPY_STOP,treatment_end,0.4914,AGE_AT_CHEMOTHERAPY_STOP,age_at_procurement,0.4392,AGE_TESTING_YEARS,age_at_death,0.309,,age_at_death_max,0.267,,
+CLIN_M_STAGE,tumor_staging_tnm,99,invalid,stage_column,,,,,,,,,,,,,,,,CLIN_M_STAGE
+SMOKER_YEARS,,99,stage2,numeric,age_at_procurement,0.5192,AGE_YRS,age_at_death,0.3793,,age_at_diagnosis,0.3623,,age_at_diagnosis_max,0.336,,age_at_death_max,0.3356,,
+CAUSE_OF_DEATH,,99,stage3,value_std,vital_status,1.0,Alive,,,,,,,,,,,,,
+PFS_MONTHS,,99,stage2,numeric,treatment_duration,0.7468,TOTAL_TIME_PERIOD_MONTHS,age_at_procurement,0.2668,,age_at_procurement_min,0.2619,,age_at_procurement_max,0.2548,,age_at_metastasis_max,0.2123,,
+PFS_STATUS,disease_metastasis,99,stage1,alias_fuzzy,vital_status,0.9,DFS_STATUS,,,,,,,,,,,,,PFS_STATUS
+CLINICAL_STAGE,tumor_staging_ajcc,99,invalid,stage_column,,,,,,,,,,,,,,,,CLINICAL_STAGE
+AGE_AT_DX,age_at_diagnosis,1,stage1,alias_exact,age_at_diagnosis,1.0,AGE_AT_DX,,,,,,,,,,,,,AGE_AT_DX
+DSS_MONTHS,,99,stage2,numeric,treatment_duration,0.7926,DOT_MONTHS,age_at_diagnosis,0.3583,AGE_D,age_at_procurement,0.1915,,age_at_death_min,0.1874,,age_at_procurement_min,0.1841,,
+DSS_STATUS,,99,stage1,alias_exact,vital_status,1.0,DSS_STATUS,,,,,,,,,,,,,
+ADJUVANT_TREATMENT,treatment_name|treatment_type,1,stage3,value_std,treatment_type,1.0,Systemic Chemotherapy,treatment_status,0.5,Radiotherapy,,,,,,,,,,ADJUVANT_TREATMENT
+AJCC_PATH_STAGE,tumor_staging_ajcc,99,invalid,stage_column,,,,,,,,,,,,,,,,AJCC_PATH_STAGE
+CLINICAL_M_STAGE,tumor_staging_tnm,99,invalid,stage_column,,,,,,,,,,,,,,,,CLINICAL_M_STAGE
+CLINICAL_N_STAGE,tumor_staging_tnm,99,invalid,stage_column,,,,,,,,,,,,,,,,CLINICAL_N_STAGE
+CLINICAL_T_STAGE,tumor_staging_tnm,99,invalid,stage_column,,,,,,,,,,,,,,,,CLINICAL_T_STAGE
+CMS,cancer_type|cancer_type_detailed,99,stage2,semantic,disease,0.3537,mds type,cancer_subtype,0.336,mcrc type,body_site,0.315,metastatic site,vital_status,0.3133,dss status,location,0.3064,,CMS
+DISTANT_RECURRENCE_STATUS,disease_metastasis,99,stage2,semantic,treatment_duration,0.3649,most recent treatment duration,treatment_status,0.3649,most recent treatment duration,treatment_reason,0.3649,most recent treatment duration,treatment_type,0.3557,ifn tx 90 days prior to resection,treatment_notes,0.3286,cumulative treatment stage count,DISTANT_RECURRENCE_STATUS
+HISTORY_OF_CANCER,,99,stage2,semantic,cancer_type_details,0.6559,,cancer_type,0.6279,,body_site,0.6193,tumor tissue origin,cancer_status,0.5994,cancer status,cancer_subtype,0.5668,,
+ICR_HML,,99,stage2,semantic,treatment_name,0.6367,ici,treatment_type,0.4506,treated with ici,treatment_duration,0.4245,x2yr cdk46,cancer_type,0.3259,cancer identification ilc,treatment_no,0.2274,,
+ICRSCORE,,99,stage2,semantic,treatment_name,0.5692,ici,treatment_duration,0.3972,x2yr ais,treatment_type,0.3591,treated with ici,cancer_type_details,0.2976,dx org inst,age_at_procurement,0.2744,age yrs,
+IES,,99,stage2,semantic,treatment_type,0.2851,io tx,cancer_subtype,0.2806,type,disease,0.2785,mds type,location,0.2716,,body_site,0.2716,location,
+LOCAL_RECURRENCE_STATUS,body_site|disease_metastasic_site|disease_metastasis,3,stage2,semantic,treatment_duration,0.3595,duration of induction treatment,treatment_reason,0.3595,duration of induction treatment,body_site,0.3372,location recurred,treatment_number,0.3276,cumulative treatment type count,treatment_notes,0.3276,cumulative treatment type count,LOCAL_RECURRENCE_STATUS
+LOCATION_METASTASIS_AT_DX,body_site|disease_metastasic_site|disease_metastasis,1,stage3,ontology,body_site,1.0,LOCATION_METASTASIS_AT_DX,,,,,,,,,,,,,LOCATION_METASTASIS_AT_DX
+MBR_GROUP,,99,stage2,semantic,treatment_group,0.4237,treatment group,treatment_dose,0.4237,treatment group,treatment_reason,0.4237,treatment group,age_group,0.3551,,age_at_procurement,0.3551,age group,
+MBR_SCORE,,99,stage2,semantic,treatment_name,0.2923,tx bms 754807,disease,0.2515,diabetes diagnosis indicator,cancer_status,0.1827,,vital_status,0.168,,sex,0.1645,,
+MICROBIOME_COHORT,,99,stage2,semantic,age_at_procurement,0.3405,age at sequencing,disease,0.3259,disease code,body_site,0.3228,disease extent,treatment_number,0.2789,number of lines of treatment for met disease,cancer_subtype,0.2771,cancer subtype curated,
+MICROSCORE,,99,stage2,semantic,body_site,0.4809,tumor megasite,treatment_name,0.3861,tx lapatinib,treatment_type,0.336,microtubule tx,treatment_notes,0.3308,metastasectomy site,location,0.2748,,
+NEOADJUVANT_TREATED,treatment_reason,1,stage1,alias_fuzzy,treatment_reason,0.9231,NEOADJUVANT_TARGETED,treatment_type,0.9231,NEOADJUVANT_TARGETED,,,,,,,,,,NEOADJUVANT_TREATED
+NEW_PRIMARY_TUMOR_IN_FU,disease_metastasis,99,stage2,semantic,body_site,0.6324,primary tumor location,cancer_type_details,0.516,initial diagnosis of recurrent tumors,cancer_subtype,0.498,primary tumor localization type,treatment_dose,0.4976,radiation dose pelvic nodes primary tumor,treatment_type,0.4976,radiation dose pelvic nodes primary tumor,NEW_PRIMARY_TUMOR_IN_FU
+PATH_METASTASIS_STAGE,tumor_staging_tnm,99,invalid,stage_column,,,,,,,,,,,,,,,,PATH_METASTASIS_STAGE
+PATH_NODES_STAGE,tumor_staging_tnm,99,invalid,stage_column,,,,,,,,,,,,,,,,PATH_NODES_STAGE
+PATH_TUMOR_STAGE,tumor_staging_tnm,99,invalid,stage_column,,,,,,,,,,,,,,,,PATH_TUMOR_STAGE
+REGIONAL_RECURRENCE_STATUS,disease_metastasis,99,stage2,semantic,treatment_number,0.3778,cumulative treatment stage count,treatment_notes,0.3778,cumulative treatment stage count,body_site,0.3771,location recurred,treatment_duration,0.3438,duration of induction treatment,treatment_reason,0.3438,duration of induction treatment,REGIONAL_RECURRENCE_STATUS
+TCR_PRODUCTIVE_CLONALITY,,99,stage2,numeric,age_at_procurement,0.3874,AGE_AT_TCGA_SPECIMEN,treatment_number,0.3167,SECOND_LINE_TC_OR_SURGERY,treatment_frequency,0.1801,,treatment_end,0.0958,,treatment_start,0.0849,,
+TCR_PRODUCTIVE_REARRANGEMENTS,,99,stage2,numeric,treatment_number,0.3709,SECOND_LINE_TC_OR_SURGERY,treatment_dose,0.2859,SUBSEQUENT_RX,treatment_frequency,0.2449,ALPELISIB_SCHEDULING,treatment_end,0.1018,,treatment_duration,0.0691,,
+TCR_PRODUCTIVE_TEMPLATES,,99,stage2,semantic,treatment_type,0.3792,tert alkylating tx,treatment_name,0.36,tert platinum tx,age_at_procurement,0.3187,age at tcga specimen,specimen_type_ontology_term_id,0.2009,,treatment_frequency_unit_ontology_term_id,0.1762,,
+THERAPY_METASTASIS_AT_DX,treatment_name|treatment_type,1,stage3,value_std,treatment_type,1.0,Systemic Chemotherapy,,,,,,,,,,,,,THERAPY_METASTASIS_AT_DX
+TUMOR_ANATOMIC_LOCATION,body_site,1,stage3,ontology,body_site,1.0,TUMOR_ANATOMIC_LOCATION,,,,,,,,,,,,,TUMOR_ANATOMIC_LOCATION
+TUMOR_MORPHOLOGY,histological_subtype,99,stage3,ontology,cancer_type,1.0,TUMOR_MORPHOLOGY,disease,1.0,TUMOR_MORPHOLOGY,cancer_type_details,1.0,TUMOR_MORPHOLOGY,,,,,,,TUMOR_MORPHOLOGY
+STAGE,tumor_staging_ajcc,99,invalid,stage_column,,,,,,,,,,,,,,,,STAGE
+TUMOR_SITE,body_site,1,stage1,alias_exact,body_site,1.0,TUMOR_SITE,,,,,,,,,,,,,TUMOR_SITE
+FOLLOW_UP,,99,stage2,semantic,vital_status,0.3179,status,treatment_dose,0.2778,third line,treatment_name,0.2778,third line,treatment_number,0.2778,third line,treatment_reason,0.2778,third line,
+ATOMIC_SITE_DETAIL,body_site,1,stage3,ontology,body_site,1.0,ATOMIC_SITE_DETAIL,,,,,,,,,,,,,ATOMIC_SITE_DETAIL
+CA19_9,,99,stage2,semantic,treatment_name,0.5539,tx sgn cd19a,location,0.3308,,ancestry,0.3134,,ancestry_details,0.2987,,country,0.2959,,
+CEA,,99,stage2,semantic,treatment_name,0.4224,ici,treatment_duration,0.3561,x2yr capecitabine,vital_status,0.3346,last status,sex,0.3296,cervix suv results,age_at_procurement,0.3156,age at scc,
+DISTANT_LM,,99,stage2,semantic,location,0.3267,,body_site,0.3267,location,vital_status,0.322,lfs status,treatment_dose,0.3061,subsequent rx,treatment_name,0.3061,subsequent rx,
+HISTOPATHOLOGY,histological_subtype,99,stage3,ontology,cancer_type,1.0,HISTOPATHOLOGY,disease,1.0,HISTOPATHOLOGY,cancer_type_details,1.0,HISTOPATHOLOGY,,,,,,,HISTOPATHOLOGY
+INTRAVASCULAR_TUMOR_THROMBUS,body_site|cancer_type|cancer_type_detailed,1,stage2,semantic,body_site,0.39,localized tumor,treatment_reason,0.3255,ablation embolization tx adjuvant,treatment_type,0.3255,ablation embolization tx adjuvant,cancer_type_details,0.2182,,cancer_type,0.2148,,INTRAVASCULAR_TUMOR_THROMBUS
+METASTATIC_NECROSIS,,99,stage2,semantic,treatment_reason,0.539,metastatic radiation therapy,treatment_type,0.539,metastatic radiation therapy,body_site,0.5018,metastatic site,treatment_name,0.4834,metastasectomy,age_at_metastasis,0.4337,,
+METASTATIC_PURITY,,99,stage2,semantic,body_site,0.622,metastatic site,treatment_reason,0.5466,metastatic radiation therapy,treatment_type,0.5466,metastatic radiation therapy,treatment_name,0.3863,metastasectomy,treatment_notes,0.3725,metastasectomy site,
+METASTATIC_STATUS,,99,stage2,semantic,body_site,0.7042,metastatic site,treatment_reason,0.6412,metastatic radiation therapy,treatment_type,0.6412,metastatic radiation therapy,cancer_status,0.5422,,treatment_name,0.5273,metastasectomy,
+NEUROLOGICAL_INVASION,,99,stage2,semantic,disease,0.4766,cns disease,body_site,0.3854,disease extent,cancer_type,0.3081,pathological diagnosis,disease_ontology_term_id,0.3032,,treatment_status,0.2891,prior therapy,
+PAIRED_STATUS,,99,stage2,semantic,vital_status,0.5599,status,treatment_status,0.4224,treatment status,cancer_status,0.2979,,vital_status_ontology_term_id,0.2705,,treatment_status_ontology_term_id,0.2703,,
+POSTOPERATIVE_THERAPY_WITH_TARGETED_AGENTS,treatment_name|treatment_type,1,stage3,ontology,treatment_name,1.0,POSTOPERATIVE_THERAPY_WITH_TARGETED_AGENTS,,,,,,,,,,,,,POSTOPERATIVE_THERAPY_WITH_TARGETED_AGENTS
+PREOPERATIVE_TREATMENT_EFFECT,,99,stage2,semantic,treatment_status,0.6447,treatment prior to surgery indicator,treatment_type,0.6447,treatment prior to surgery indicator,treatment_name,0.6447,treatment prior to surgery indicator,treatment_reason,0.5577,postoperative tx,treatment_dose,0.5252,prior treatment,
+PRETHERAPY,treatment_notes,99,stage2,semantic,treatment_status,0.7132,prior therapy,treatment_type,0.7096,first therapy,treatment_name,0.6791,therapy,treatment_number,0.6505,prior lines of therapy,treatment_dose,0.6245,prior treatment,PRETHERAPY
+PRETHERAPY_WITH_TARGETED_AGENTS,treatment_name|treatment_notes,99,stage2,semantic,treatment_type,0.7373,targeted therapy,treatment_status,0.604,prior therapy,treatment_number,0.5899,prior lines of therapy,treatment_dose,0.5781,prior treatment,treatment_duration,0.5781,prior treatment,PRETHERAPY_WITH_TARGETED_AGENTS
+PRIMARY_NECROSIS,,99,stage2,semantic,treatment_name,0.5274,primary surgery,treatment_status,0.5274,primary surgery,treatment_type,0.5274,primary surgery,cancer_type,0.5009,primary diagnosis,disease,0.4444,,
+PRIMARY_PURITY,,99,stage2,semantic,cancer_subtype,0.4654,primary type,treatment_name,0.3374,any line iodine,treatment_number,0.3288,number of cycles platinum,body_site,0.3255,primary site,treatment_status,0.3181,primary surgery,
+PROGRESSION,,99,stage2,semantic,treatment_dose,0.4575,induction,treatment_name,0.4575,induction,treatment_reason,0.4575,induction,sex,0.3793,,treatment_status,0.3666,cumulative treatment stages,
+PROGRESSION_SITE,body_site,99,stage3,value_std,sample_type,1.0,Relapse,,,,,,,,,,,,,PROGRESSION_SITE
+PROGRESSION_TIME,,99,stage2,numeric,treatment_duration,0.4289,,treatment_dose,0.3847,CUMULATIVE_TREATMENT_REGIMENS,treatment_frequency,0.313,,treatment_start,0.2569,,age_at_death_max,0.2498,,
+TNM,tumor_staging_tnm,99,invalid,stage_column,,,,,,,,,,,,,,,,TNM
+SUBTYPE,histological_subtype,99,stage1,alias_exact,cancer_subtype,1.0,SUBTYPE,,,,,,,,,,,,,SUBTYPE
+EXTRACAPSULAR_SPREAD,,99,stage2,semantic,treatment_dose,0.3306,formulation,treatment_name,0.3306,formulation,treatment_notes,0.3306,formulation,treatment_status,0.3306,formulation,cancer_type,0.3063,dx at inclusion,
+GRADE,tumor_staging_ajcc,99,stage2,semantic,disease,0.4755,who class,cancer_subtype,0.4285,lauren class,sex,0.4091,gender,age_at_diagnosis,0.4061,age d,treatment_name,0.3863,tx mm 141,GRADE
+IMMUNO_SUPPRESSIVE_TREATMENT,treatment_name|treatment_type,1,stage3,ontology,treatment_name,1.0,IMMUNO_SUPPRESSIVE_TREATMENT,,,,,,,,,,,,,IMMUNO_SUPPRESSIVE_TREATMENT
+NODAL_STAGE,tumor_staging_tnm,99,invalid,stage_column,,,,,,,,,,,,,,,,NODAL_STAGE
+PRIMARY_LOCATION,body_site,1,stage3,ontology,body_site,1.0,PRIMARY_LOCATION,,,,,,,,,,,,,PRIMARY_LOCATION
+PRIMARY_SITE,body_site,1,stage1,alias_exact,body_site,1.0,PRIMARY_SITE,,,,,,,,,,,,,PRIMARY_SITE
+PATIENT_DISPLAY_NAME,,99,stage2,semantic,body_site,0.4555,primary site patient,age_at_diagnosis,0.4353,patient age at diagnosis,treatment_name,0.4037,treatment name,cancer_type,0.38,cancer identification midlc,cancer_status,0.3769,person neoplasm cancer status,
+3_WEEK_CT_OVERALL_RESPONSE,,99,stage2,semantic,treatment_duration,0.5422,weeks on treatment,treatment_reason,0.466,adjuvant ct,treatment_type,0.466,adjuvant ct,treatment_status,0.4472,most recent treatment duration,treatment_name,0.4214,3l treatment,
+3_WEEK_CT_RESPONSE,,99,stage2,semantic,treatment_duration,0.5433,weeks on treatment,treatment_reason,0.4809,adjuvant ct,treatment_type,0.4809,adjuvant ct,treatment_status,0.4546,ifn tx 90 days prior to resection,treatment_start,0.4267,tx 90days post resection,
+9_WEEK_MATCHED_CTDNA_RECURRENCE,,99,stage2,semantic,age_at_procurement,0.3999,age at sequencing,treatment_status,0.3995,ifn tx 90 days prior to resection,treatment_type,0.3995,ifn tx 90 days prior to resection,cancer_type_details,0.3964,initial diagnosis of recurrent tumors,treatment_start,0.3843,tx 90days post resection,
+9_WEEK_MAXIMAL_LESION_DECLINE,,99,stage2,numeric,treatment_duration,0.5891,WEEKS_ON_TREATMENT,age_at_diagnosis_max,0.3867,,age_at_diagnosis_min,0.3731,,age_at_metastasis_max,0.3341,,treatment_start,0.3331,,
+9_WEEK_MINIMAL_LESION_DECLINE,,99,stage2,numeric,treatment_duration,0.5431,WEEKS_ON_TREATMENT,age_at_diagnosis,0.427,AGE_AT_INITIAL_PATHOLOGIC_DIAGNOSIS,age_at_diagnosis_min,0.4156,,treatment_start,0.3335,,age_at_metastasis_min,0.3303,,
+9_WEEK_MIXED_RESPONSE,,99,stage2,semantic,treatment_duration,0.5323,weeks on treatment,treatment_status,0.3461,ongoing treatment,treatment_reason,0.3381,most recent treatment duration,treatment_end,0.3069,crdb treatment end days,treatment_notes,0.3069,crdb treatment end days,
+9_WEEK_RECIST_RESPONSE,,99,stage2,semantic,treatment_duration,0.506,weeks on treatment,treatment_status,0.4517,ifn tx 90 days prior to resection,treatment_type,0.4517,ifn tx 90 days prior to resection,treatment_start,0.424,tx 90days post resection,treatment_end,0.3882,crdb treatment end days,
+BEST_RESPONSE_CATEGORY,,99,stage2,semantic,ancestry,0.3937,race category,ancestry_details,0.3937,race category,treatment_type,0.3869,treatment category,body_site,0.324,detailed primary site,treatment_group,0.2776,details first line comments,
+BRAIN_METASTASIS,body_site|disease_metastasic_site|disease_metastasis,5,stage2,semantic,treatment_name,0.6691,metastasectomy,treatment_type,0.6691,metastasectomy,age_at_metastasis,0.5841,,treatment_notes,0.5531,metastasectomy site,body_site,0.5422,diagnosis cancer loc brain,BRAIN_METASTASIS
+CTDNA_ERBB2_AT_PROGRESSION,,99,stage2,semantic,treatment_type,0.3641,nucleoside tx,cancer_subtype,0.3514,mutation phenotype,body_site,0.3465,diagnosis cancer loc other ln,cancer_type,0.3378,cancer identification idc,treatment_duration,0.3324,x2yr taxane,
+ESCAPE_LESION,disease_metastasis,99,stage2,semantic,treatment_name,0.452,surgery,treatment_type,0.452,surgery,disease,0.4013,extranodal disease,treatment_reason,0.3769,surgery indication,treatment_number,0.3737,treatment details,ESCAPE_LESION
+ESCAPE_LESION_SITE,disease_metastasic_site,99,stage3,ontology,body_site,0.8571,ESCAPE_LESION_SITE,,,,,,,,,,,,,ESCAPE_LESION_SITE
+HER2_STATUS,,99,stage2,semantic,vital_status,0.7826,her2 vital status,cancer_subtype,0.4635,hist subtype2,treatment_duration,0.3911,x2yr ais,treatment_name,0.3911,x2yr ais,treatment_status,0.3825,treatment status,
+MATCHED_CTDNA_MUTATION_3_WEEK_CHANGE,,99,stage2,semantic,cancer_subtype,0.5595,mutation phenotype,treatment_status,0.3651,treatment changed,age_at_procurement,0.3565,age at sequencing,treatment_type,0.3455,prior malignancy radiation tx,cancer_type_details,0.321,initial diagnosis of recurrent tumors,
+ON_POST_TREATMENT_ERBB2_AMP_BY_WES,,99,stage2,semantic,treatment_name,0.407,tx eribulin,treatment_reason,0.3977,2l treatment,treatment_status,0.3487,treatment,treatment_type,0.3487,treatment,treatment_number,0.3393,treatment details,
+ON_TREATMENT_POST_PROGRESSION_SIMPLIFIED_HER2_STATUS,,99,stage2,semantic,vital_status,0.6902,her2 vital status,treatment_name,0.5107,2l treatment,treatment_reason,0.5107,2l treatment,treatment_status,0.4844,treatment ongoing,treatment_type,0.4761,previous treatment,
+POD_6_MONTHS,,99,stage2,semantic,treatment_duration,0.4345,dot months,age_at_procurement,0.3776,age yrs,treatment_start,0.352,year of surgery,treatment_type,0.352,year of surgery,treatment_reason,0.3404,most recent treatment duration,
+POST_PROGRESSION_SIMPLIFIED_HER2_STATUS,,99,stage2,semantic,vital_status,0.6886,her2 vital status,cancer_subtype,0.4091,hist subtype2,treatment_name,0.3641,2l treatment,treatment_reason,0.3641,2l treatment,treatment_status,0.327,treatment ongoing,
+PRE_OR_POST_TREATMENT,treatment_notes,99,stage3,value_std,treatment_status,1.0,Post,,,,,,,,,,,,,PRE_OR_POST_TREATMENT
+PRE_TREATMENT_ERBB2_CTDNA,,99,stage2,semantic,body_site,0.3919,diagnosis cancer loc other ln,treatment_name,0.3909,tx eribulin,treatment_type,0.3881,prior malignancy radiation tx,treatment_status,0.3877,pre sample chemotherapy,treatment_notes,0.3817,tert other cytotoxic tx,
+PRE_TREATMENT_ERBB2_TUMOR_WES,,99,stage2,semantic,treatment_type,0.4707,treatment chemotherapy,treatment_status,0.4692,pre sample chemotherapy,treatment_name,0.4662,tx eribulin,treatment_reason,0.4275,neoadjuvant chemotherapy,body_site,0.4226,tumor tissue site patient,
+PRE_TREATMENT_HER2_CATEGORY,,99,stage2,semantic,treatment_type,0.5937,treatment category,vital_status,0.584,her2 vital status,treatment_status,0.5189,initial treatment,treatment_reason,0.5189,initial treatment,treatment_name,0.5032,treatment details,
+PRE_TREATMENT_PD_L1_CPS_CATEGORY,,99,stage2,semantic,treatment_type,0.6111,pd1 inhibitor started for pd,treatment_name,0.5883,pd1 inhibitor,treatment_status,0.558,drug and dose steroid during pd1,treatment_number,0.521,number of pd1 inhibitor injections,treatment_start_unit,0.3919,,
+RECEIVED_INDUCTION,,99,stage2,semantic,treatment_dose,0.7719,induction,treatment_name,0.7719,induction,treatment_reason,0.7719,induction,treatment_status,0.5873,type induction tx,treatment_type,0.5873,type induction tx,
+TISSUE_COLLECTION_SITE,body_site,1,stage3,ontology,body_site,1.0,TISSUE_COLLECTION_SITE,,,,,,,,,,,,,TISSUE_COLLECTION_SITE
+TUMOR_MATCHED_CTDNA_RECURRENCE,disease_metastasis,99,stage2,semantic,cancer_type_details,0.5391,initial diagnosis of recurrent tumors,treatment_reason,0.4826,tumor surgery number,treatment_type,0.4826,tumor surgery number,cancer_type,0.4197,cancer identification idc,cancer_subtype,0.4191,adenocarcinoma subtype who2015,TUMOR_MATCHED_CTDNA_RECURRENCE
+ALCOHOL_HISTORY_DOCUMENTED,,99,stage2,semantic,treatment_name,0.3628,pretreatment history,treatment_status,0.3628,pretreatment history,ancestry_details,0.3558,,treatment_type,0.3244,history hormonal contraceptives use,ancestry,0.2947,,
+CLIN_T_STAGE,tumor_staging_tnm,99,invalid,stage_column,,,,,,,,,,,,,,,,CLIN_T_STAGE
+CLIN_N_STAGE,tumor_staging_tnm,99,invalid,stage_column,,,,,,,,,,,,,,,,CLIN_N_STAGE
+INSTITUTE,,99,stage2,semantic,treatment_name,0.5646,ici,cancer_type_details,0.3579,dx org inst,location,0.34,,body_site,0.34,location,country,0.3321,country of procurement,
+GENDER,sex,1,stage1,alias_exact,sex,1.0,GENDER,,,,,,,,,,,,,GENDER
+STAGE_HIGHEST_RECORDED,,99,invalid,stage_column,,,,,,,,,,,,,,,,
+ARCHER,,99,stage2,semantic,treatment_dose,0.4258,agent,treatment_name,0.4258,agent,treatment_reason,0.3207,adj xrt,treatment_type,0.3207,adj xrt,sex,0.2584,gender,
+SMOKING_PREDICTIONS_3_CLASSES,,99,stage2,semantic,disease,0.4113,who class,sample_type,0.3974,sample class,specimen_type,0.3974,sample class,treatment_end,0.3197,drug start,treatment_start,0.3197,drug start,
+SEQUENCING_PLATFORM,,99,stage2,semantic,age_at_procurement,0.5659,age at sequencing,treatment_frequency,0.3269,alpelisib scheduling,treatment_name,0.3269,alpelisib scheduling,cancer_subtype,0.3191,mutation phenotype,treatment_status,0.303,chemo concurrent type,
+HORMONE_THERAPY_STATUS,treatment_type,99,stage3,ontology,cancer_type,1.0,HORMONE_THERAPY_STATUS,disease,1.0,HORMONE_THERAPY_STATUS,cancer_type_details,1.0,HORMONE_THERAPY_STATUS,,,,,,,HORMONE_THERAPY_STATUS
+LAST_TREATMENT_CATEGPORY,treatment_name|treatment_type,1,stage3,value_std,treatment_type,1.0,Chemotherapy,,,,,,,,,,,,,LAST_TREATMENT_CATEGPORY
+PRIOR_TREATMENTS,,99,stage1,alias_fuzzy,treatment_dose,0.9677,PRIOR_TREATMENT,treatment_duration,0.9677,PRIOR_TREATMENT,treatment_name,0.9677,PRIOR_TREATMENT,treatment_notes,0.9677,PRIOR_TREATMENT,treatment_number,0.9677,PRIOR_TREATMENT,
+TUMOR_SITE_GROUP,body_site|disease_metastasis,99,stage3,value_std,treatment_status,1.0,Primary,,,,,,,,,,,,,TUMOR_SITE_GROUP
+PRIMARY_GLEASON_SCORE,,99,stage2,semantic,cancer_type,0.3267,primary diagnosis,cancer_subtype,0.3089,primary type,ancestry,0.2835,ancestry primary,ancestry_details,0.2835,ancestry primary,cancer_type_details,0.2714,gyn diagnosis histology,
+COHORT,study_design,99,stage2,semantic,age_group,0.4561,age group,age_at_procurement,0.4561,age group,treatment_duration,0.3755,dot months,cancer_subtype,0.3742,subtype abbreviation,treatment_status,0.3575,pretreated,COHORT
+GLEASON_FIRST_REPORTED,,99,stage2,semantic,ancestry,0.3157,reported ethnicity,ancestry_details,0.3157,reported ethnicity,treatment_notes,0.3033,details first line comments,treatment_group,0.3033,details first line comments,treatment_name,0.3033,details first line comments,
+GLEASON_HIGHEST_REPORTED,,99,stage2,numeric,treatment_dose,0.3089,STEROIDS_GT_10MG_DAILY,treatment_frequency,0.3089,STEROIDS_GT_10MG_DAILY,treatment_number,0.2115,NUMBER_OF_CYCLES_PLATINUM,treatment_start,0.1914,DRUG_LAST_ADMIN,treatment_end,0.1914,DRUG_LAST_ADMIN,
+HISTOLOGIC_FEATURES,histological_subtype,99,stage2,semantic,cancer_type_details,0.7644,histological diagnosis,cancer_type,0.7005,histology diagnosis,cancer_subtype,0.6835,predominant histologic subtype,disease,0.3961,,disease_ontology_term_id,0.352,,HISTOLOGIC_FEATURES
+LINEAGE,cancer_type|cancer_type_detailed,99,stage3,ontology,body_site,1.0,LINEAGE,,,,,,,,,,,,,LINEAGE
+RADIATION,treatment_name|treatment_type,1,stage1,alias_exact,treatment_type,1.0,RADIATION,,,,,,,,,,,,,RADIATION
+SUBSET,,99,stage2,semantic,cancer_subtype,0.3958,subtype,treatment_dose,0.3252,induction,treatment_name,0.3252,induction,treatment_reason,0.3252,induction,disease,0.2921,diagnosis at inclusion,
+MSI_COMMENT,,99,stage2,semantic,treatment_group,0.4858,details first line comments,treatment_name,0.4858,details first line comments,treatment_notes,0.4858,details first line comments,treatment_reason,0.4858,details first line comments,treatment_type,0.3034,io tx,
+OTHER,,99,stage2,semantic,treatment_name,0.4954,chemo other,treatment_type,0.4954,chemo other,treatment_notes,0.3841,alternate therapy other,treatment_reason,0.3841,alternate therapy other,treatment_status,0.3841,alternate therapy other,
+ADRENAL_GLANDS,,99,stage2,semantic,treatment_name,0.4922,epinephrine,treatment_type,0.4709,endocrine therapy,treatment_notes,0.4013,prd hormone therapy,treatment_reason,0.3761,adjuvant hormone therapy,treatment_status,0.355,drug and dose steroid during pd1,
+BONE,,99,stage2,semantic,body_site,0.5571,diagnosis cancer bone,treatment_name,0.4609,surgery,treatment_type,0.4609,surgery,treatment_group,0.4265,treatment arm,sex,0.4074,,
+CNS_BRAIN,body_site|disease_type,2,stage2,semantic,disease,0.7777,cns disease,body_site,0.4249,diagnosis cancer loc brain,treatment_name,0.4241,dopamine,treatment_duration,0.2669,x2yr ais,vital_status_ontology_term_id,0.2165,,CNS_BRAIN
+ECOG_KPS,,99,stage2,semantic,treatment_name,0.3713,tx kpt 330,treatment_type,0.2703,kinase inhibitor,ancestry,0.2598,prd race,ancestry_details,0.2598,prd race,treatment_notes,0.2479,all tx at msk,
+HISTORY_OF_PDL1,,99,stage2,semantic,treatment_type,0.6356,pd1 inhibitor started for pd,treatment_name,0.5763,pd1 inhibitor,age_at_diagnosis,0.5266,age at pd1,treatment_status,0.4845,drug and dose steroid during pd1,treatment_number,0.4633,number of pd1 inhibitor injections,
+INTRA_ABDOMINAL,,99,stage2,semantic,treatment_type,0.5913,intravesical treatment,treatment_name,0.4442,prior intravesical chemotherapy,treatment_status,0.4442,prior intravesical chemotherapy,cancer_subtype,0.4059,intestinal type subclass,treatment_notes,0.3956,surgical approach at diagnosis,
+LIVER,body_site,3,stage2,semantic,disease,0.6186,fatty liver disease,treatment_name,0.4817,drug,body_site,0.4623,diagnosis cancer loc liver,treatment_type,0.438,hepatectomy,cancer_subtype,0.4255,chronic hepatitis any type,LIVER
+LUNG,body_site,1,stage2,semantic,body_site,0.5624,location lung parenchyma,treatment_name,0.4396,surgery,treatment_type,0.4396,surgery,disease,0.4126,,sex,0.3423,,LUNG
+LYMPH_NODES,body_site,1,stage2,semantic,body_site,0.4558,diagnosis cancer loc other ln,treatment_dose,0.4144,radiation dose pelvic nodes primary tumor,treatment_type,0.4144,radiation dose pelvic nodes primary tumor,treatment_reason,0.3926,radiation therapy dose paraaortic nodes,cancer_type_details,0.3685,gyn diagnosis histology,LYMPH_NODES
+NUM_ICDO_DX,,99,stage2,semantic,treatment_name,0.5413,ici,treatment_number,0.5187,num lines ntrk,treatment_type,0.5187,num lines ntrk,cancer_type_details,0.4771,dx org inst,treatment_notes,0.4724,dx type,
+PLEURA,,99,stage2,semantic,body_site,0.4494,diagnosis cancer loc pleural effusion,treatment_type,0.3056,steroids,disease,0.2757,,treatment_name,0.2694,ici,country,0.2572,,
+PRIOR_MED_TO_MSK,,99,stage2,semantic,treatment_notes,0.7647,treatment at msk,treatment_name,0.4539,ngs prior therapy,treatment_reason,0.4539,ngs prior therapy,treatment_type,0.4456,prior systemic therapies,treatment_status,0.4456,prior systemic therapies,
+REPRODUCTIVE_ORGANS,,99,stage2,semantic,body_site,0.4142,tissue site,sex,0.3859,gender,sex_ontology_term_id,0.3225,,body_site_ontology_term_id,0.2415,,vital_status,0.239,,
+HISTORY_OF_D_MMR,,99,stage2,semantic,treatment_name,0.4367,history immunosuppresive dx,treatment_status,0.4367,history immunosuppresive dx,treatment_type,0.4367,history immunosuppresive dx,sex,0.3578,dmets dx female genital,cancer_type_details,0.2999,dx org inst,

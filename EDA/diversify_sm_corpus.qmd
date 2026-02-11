@@ -1,0 +1,206 @@
+---
+title: "Untitled"
+format: html
+editor: visual
+---
+
+# Custom inputs
+
+## Training data
+
+All the samples with 661 source columns that were maually harmonized
+
+```{r message=FALSE}
+trainDir <- "~/OmicsMLRepo/MetaHarmonizer"
+train <- readr::read_csv("~/OmicsMLRepo/MetaHarmonizer/EDA/data/test.csv") # 183,610 x 661
+train_gold_standard <- readr::read_csv(file.path(trainDir, "data/schema_mapping_eval/truth.csv"))
+
+head(train)
+head(train_gold_standard)
+```
+
+```{r train_dict}
+## SchemaMapper corpus (i.e., harmonized attributes)
+curated_dict_path <- "data/schema/curated_fields.csv"
+curated_dict <- readr::read_csv(file.path(trainDir, curated_dict_path))
+head(curated_dict)
+```
+
+```{r train_alias}
+## Mannual mapping information
+alias_dict_path <- "data/schema/curated_fields_source_latest_with_flags.csv"
+alias_dict <- readr::read_csv(file.path(trainDir, alias_dict_path))
+head(alias_dict)
+```
+
+## New data
+
+```{r}
+test <- readr::read_csv("~/OmicsMLRepo/MetaHarmonizer_Test_Data/source/combined_origin_data.csv") # 4,077 x 246
+```
+
+## ALIAS_DICT
+
+**Prompt for Claude Sonnet 4.5**\
+The prompt below was used with the cBioPortal data dictionary ([Link](https://github.com/waldronlab/OmicsMLRepoData/blob/master/inst/extdata/cBioPortal_data_dictionary.csv) - commit: 179d8b4)
+
+### Version 1
+
+```         
+I'm designing a clinical metadata schema for a cancer genomics database. Here is the list of target/harmonized attributes and their information. Can you create a list of potential/heterogeneous attribute names for each target/harmonized attribute, that are likely to be observed during the clinical metadata collection?
+```
+
+This returns `heterogeneous_attribute_mapping.csv` with these columns:
+
+-   `field_name`: The standardized field name\
+-   `source`: The alias/source term\
+-   `is_numeric_field` (optional): Set to "yes" for numeric fields
+
+```{r}
+div1 <- readr::read_csv("data/heterogeneous_attribute_mapping_ver1.csv")
+```
+
+### Version 2
+
+```         
+I'm designing a clinical metadata schema for a cancer genomics database, MSKCC's cBioPortal. Here is the list of target/harmonized attributes and their information. Can you create a list of potential/heterogeneous attribute names for each target/harmonized attribute that are likely to be observed during the clinical metadata collection? Attributes can vary in their resolution; for example, some columns for harmonized treatment can be individual treatment names with boolean values. Please return the output in a three-column table, including the following columns: - field_name: The standardized field name    - source: The alias/source term    - is_numeric_field (optional): Set to "yes" for numeric fields
+```
+
+```{r}
+div2 <- readr::read_csv("data/heterogeneous_attribute_mapping_ver2.csv")
+```
+
+```{r}
+ALIAS_DICT_PATH = "~/OmicsMLRepo/MetaHarmonizer/EDA/data/heterogeneous_attribute_mapping_ver1.csv"
+alias_dict <- readr::read_csv(ALIAS_DICT_PATH)
+dim(alias_dict)
+head(alias_dict, 3)
+```
+
+```{r test_sm_alias_from_llm}
+CURATED_ALIAS_PATH = "~/OmicsMLRepo/MetaHarmonizer/EDA/data/heterogeneous_attribute_mapping_ver1.csv"
+curated_alias <- readr::read_csv(CURATED_ALIAS_PATH)
+dim(curated_alias)
+head(curated_alias, 3)
+```
+
+## CURATED_DICT
+
+```{r test_sm_corpus}
+CURATED_DICT_PATH = "~/OmicsMLRepo/MetaHarmonizer_Test_Data/source/curated_dict.csv"
+curated_dict <- readr::read_csv(CURATED_DICT_PATH)
+dim(curated_dict)
+head(curated_dict, 3)
+```
+
+# Evaluation
+
+## TRUTH
+
+```{r}
+truth <- readr::read_csv("~/OmicsMLRepo/MetaHarmonizer_Test_Data/source/truth_schema_mapper.csv")
+```
+
+# Run schema mapper
+
+## TRAIN
+
+```{python train, eval=FALSE}
+from src.models.schema_mapper import SchemaMapEngine
+file = "~/OmicsMLRepo/MetaHarmonizer/EDA/data/test.csv"
+engine = SchemaMapEngine(file, mode="manual", top_k=5)
+results = engine.run_schema_mapping()
+
+from evaluation import schema_mapping_evaluation
+metrics = schema_mapping_evaluation.compute_accuracy(
+     pred_file="~/OmicsMLRepo/MetaHarmonizer/EDA/output/test_auto.csv",
+     truth_file="~/OmicsMLRepo/MetaHarmonizer/data/schema_mapping_eval/truth.csv",
+     top_k=5,
+     save_eval=True,
+     out_dir="~/OmicsMLRepo/MetaHarmonizer/EDA/output"
+)
+```
+
+```{python}
+from evaluation import schema_mapping_evaluation
+metrics = schema_mapping_evaluation.compute_accuracy(
+     pred_file="~/OmicsMLRepo/MetaHarmonizer/EDA/output/train_identified_fields_wide.csv",
+     truth_file="~/OmicsMLRepo/MetaHarmonizer/data/schema_mapping_eval/truth.csv",
+     top_k=5,
+     save_eval=True,
+     out_dir="~/OmicsMLRepo/MetaHarmonizer/EDA/output"
+)
+```
+
+
+## TEST
+
+```{python test, eval=FALSE}
+from src.models.schema_mapper import SchemaMapEngine
+file = "/Users/sehyunoh/OmicsMLRepo/MetaHarmonizer_Test_Data/source/combined_origin_data.csv"
+engine = SchemaMapEngine(file, mode="auto", top_k=5)
+results = engine.run_schema_mapping()
+
+from evaluation import schema_mapping_evaluation
+metrics = schema_mapping_evaluation.compute_accuracy(
+     pred_file="~/OmicsMLRepo/MetaHarmonizer/EDA/output/combined_origin_data_manual.csv",
+     truth_file="~/OmicsMLRepo/MetaHarmonizer_Test_Data/source/truth_schema_mapper.csv",
+     top_k=5,
+     save_eval=True,
+     out_dir="~/OmicsMLRepo/MetaHarmonizer/EDA/output"
+)
+```
+
+## Visualize
+
+```{r}
+eda_output_dir <- "~/OmicsMLRepo/MetaHarmonizer/EDA/output"
+
+train_cbio_alias <- readr::read_csv(file.path(eda_output_dir, "train_cbio_alias_manual_eval.csv"))
+colnames(train_cbio_alias)[3] <- "rank"
+train_cbio_alias_sub <- train_cbio_alias %>% filter(!is.na(ref_match)) %>% filter(stage != "invalid")
+
+train_llm_alias <- readr::read_csv(file.path(eda_output_dir, "train_llm_alias_manual_eval.csv"))
+colnames(train_llm_alias)[3] <- "rank"
+train_llm_alias_sub <- train_llm_alias %>% filter(!is.na(ref_match)) %>% filter(stage != "invalid")
+
+train_llm_alias_auto <- readr::read_csv(file.path(eda_output_dir, "train_llm_alias_auto_eval.csv"))
+colnames(train_llm_alias_auto)[3] <- "rank"
+train_llm_alias_auto_sub <- train_llm_alias_auto %>% filter(!is.na(ref_match)) %>% filter(stage != "invalid")
+
+train_identified <- readr::read_csv(file.path(eda_output_dir, "train_identified_fields_wide_eval.csv"))
+colnames(train_identified)[3] <- "rank"
+train_identified_sub <- train_identified %>% filter(!is.na(ref_match)) %>% filter(stage != "invalid")
+
+train_no_alias <- readr::read_csv(file.path(eda_output_dir, "train_no_alias_manual_eval.csv"))
+colnames(train_no_alias)[3] <- "rank"
+train_no_alias_sub <- train_no_alias %>% filter(!is.na(ref_match)) %>% filter(stage != "invalid")
+
+test_cbio_alias <- readr::read_csv(file.path(eda_output_dir, "test_cbio_alias_manual_eval.csv"))
+colnames(test_cbio_alias)[3] <- "rank"
+test_cbio_alias_sub <- test_cbio_alias %>% filter(!is.na(ref_match)) %>% filter(stage != "invalid")
+
+test_no_alias <- readr::read_csv(file.path(eda_output_dir, "test_no_alias_manual_eval.csv"))
+colnames(test_no_alias)[3] <- "rank"
+test_no_alias_sub <- test_no_alias %>% filter(!is.na(ref_match)) %>% filter(stage != "invalid")
+
+# test_llm_alias <- readr::read_csv(file.path(eda_output_dir, "test_llm_alias_manual_eval.csv"))
+# colnames(test_llm_alias)[3] <- "rank"
+# test_llm_alias_sub <- test_llm_alias %>% filter(!is.na(ref_match)) %>% filter(stage != "invalid")
+```
+
+
+```{r}
+results_list <- list(
+    # "train_cbio_alias" = train_cbio_alias_sub, # 96.2
+    "train_llm_alias" = train_llm_alias_sub,
+    # "train_llm_alias_auto" = train_llm_alias_auto,
+    "train_identified" = train_identified,
+    "train_no_alias" = train_no_alias_sub
+    # "test_cbio_alias" = test_cbio_alias_sub,
+    # "test_no_alias" = test_no_alias_sub
+    # "test_llm_alias" = test_llm_alias_sub,
+)
+
+plot_multi_accuracy_by_match_position(results_list)
+```

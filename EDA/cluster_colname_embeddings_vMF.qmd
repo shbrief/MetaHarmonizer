@@ -1,0 +1,348 @@
+---
+title: "von Mises-Fisher Mixture Models (vMF) for embedding clustering"
+format: html
+editor: visual
+---
+
+```{r}
+embeddings <- as.matrix(read.csv("data/embeddings.csv", header = FALSE))
+unique_values <- readLines("data/unique_values.txt")
+rownames(embeddings) <- unique_values
+
+X <- embeddings
+```
+
+# Clustering
+
+```{r}
+library(movMF)
+
+# von Mises-Fisher mixture (proper cosine-based GMM)
+vmf_model <- movMF(X, k = 10, nruns = 20)
+
+# Cluster assignments
+clusters <- predict(vmf_model, X)
+
+# Soft probabilities
+probs <- predict(vmf_model, X, type = "memberships")
+
+# Model selection
+bic_values <- sapply(2:10, function(k) {
+  model <- movMF(X, k = k, nruns = 10)
+  # Note: movMF doesn't have built-in BIC, use log-likelihood
+  model$L  # log-likelihood
+})
+```
+
+# Visuazliation
+
+```{r}
+library(movMF)
+library(ggplot2)
+library(gridExtra)
+library(dplyr)
+library(tidyr)
+
+# Assume you have:
+# X: your original embedding matrix
+# vmf_final: fitted movMF model
+
+# Get results
+vmf_final <- vmf_model
+vmf_clusters <- predict(vmf_final, X)
+vmf_probs <- predict(vmf_final, X, type = "memberships")
+
+# ============================================
+# 1. PCA PROJECTION (Most Common)
+# ============================================
+
+# Normalize data
+X_normalized <- X / sqrt(rowSums(X^2))
+
+# PCA
+pca <- prcomp(X_normalized, center = TRUE, scale. = FALSE)
+pca_data <- as.data.frame(pca$x[, 1:2])
+pca_data$Cluster <- as.factor(vmf_clusters)
+pca_data$Confidence <- apply(vmf_probs, 1, max)
+
+# Basic cluster plot
+p1 <- ggplot(pca_data, aes(x = PC1, y = PC2, color = Cluster)) +
+  geom_point(size = 2, alpha = 0.6) +
+  theme_minimal() +
+  labs(title = "vMF Clustering Results (PCA Projection)",
+       subtitle = sprintf("%d clusters, %d samples", vmf_final$k, nrow(X))) +
+  theme(legend.position = "right")
+
+# Confidence-weighted plot
+p2 <- ggplot(pca_data, aes(x = PC1, y = PC2, color = Cluster)) +
+  geom_point(aes(size = Confidence, alpha = Confidence)) +
+  scale_size_continuous(range = c(1, 4)) +
+  scale_alpha_continuous(range = c(0.3, 0.9)) +
+  theme_minimal() +
+  labs(title = "vMF Clustering with Confidence",
+       subtitle = "Larger/darker points = higher confidence")
+
+# Explained variance
+var_explained <- summary(pca)$importance[2, 1:2] * 100
+p1 <- p1 + labs(x = sprintf("PC1 (%.1f%% variance)", var_explained[1]),
+                y = sprintf("PC2 (%.1f%% variance)", var_explained[2]))
+
+print(p1)
+print(p2)
+
+# ============================================
+# 2. t-SNE PROJECTION (Better for High-Dim)
+# ============================================
+
+library(Rtsne)
+
+set.seed(42)
+tsne_result <- Rtsne(X_normalized, dims = 2, perplexity = 30, 
+                     max_iter = 1000, check_duplicates = FALSE)
+
+tsne_data <- data.frame(
+  tSNE1 = tsne_result$Y[, 1],
+  tSNE2 = tsne_result$Y[, 2],
+  Cluster = as.factor(vmf_clusters),
+  Confidence = apply(vmf_probs, 1, max)
+)
+
+p3 <- ggplot(tsne_data, aes(x = tSNE1, y = tSNE2, color = Cluster)) +
+  geom_point(aes(alpha = Confidence), size = 2) +
+  theme_minimal() +
+  labs(title = "vMF Clustering (t-SNE Projection)")
+
+print(p3)
+
+# ============================================
+# 3. CLUSTER SIZE DISTRIBUTION
+# ============================================
+
+cluster_sizes <- as.data.frame(table(vmf_clusters))
+colnames(cluster_sizes) <- c("Cluster", "Count")
+
+p4 <- ggplot(cluster_sizes, aes(x = Cluster, y = Count, fill = Cluster)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = Count), vjust = -0.5) +
+  theme_minimal() +
+  labs(title = "Cluster Size Distribution",
+       y = "Number of Samples") +
+  theme(legend.position = "none")
+
+print(p4)
+
+# ============================================
+# 4. MEMBERSHIP PROBABILITY HEATMAP
+# ============================================
+
+# For a subset (first 100 samples or random sample)
+n_samples_to_show <- min(100, nrow(X))
+sample_idx <- sample(1:nrow(X), n_samples_to_show)
+
+# Prepare data for heatmap
+k <- nrow(vmf_final$theta)
+heatmap_data <- vmf_probs[sample_idx, ]
+rownames(heatmap_data) <- paste0("S", sample_idx)
+colnames(heatmap_data) <- paste0("C", 1:k)
+
+# Convert to long format for ggplot
+heatmap_long <- heatmap_data %>%
+  as.data.frame() %>%
+  mutate(Sample = rownames(.)) %>%
+  pivot_longer(cols = -Sample, names_to = "Cluster", values_to = "Probability") %>%
+  mutate(Sample = factor(Sample, levels = unique(Sample)))
+
+p5 <- ggplot(heatmap_long, aes(x = Cluster, y = Sample, fill = Probability)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "white", mid = "lightblue", high = "darkblue",
+                       midpoint = 0.5) +
+  theme_minimal() +
+  labs(title = sprintf("Membership Probabilities (n=%d samples)", n_samples_to_show)) +
+  theme(axis.text.y = element_blank(),
+        axis.ticks.y = element_blank())
+
+print(p5)
+
+# ============================================
+# 5. CONFIDENCE DISTRIBUTION
+# ============================================
+
+confidence_data <- data.frame(
+  Confidence = apply(vmf_probs, 1, max),
+  Cluster = as.factor(vmf_clusters)
+)
+
+p6 <- ggplot(confidence_data, aes(x = Confidence, fill = Cluster)) +
+  geom_histogram(bins = 30, alpha = 0.7, position = "identity") +
+  theme_minimal() +
+  labs(title = "Distribution of Assignment Confidence",
+       x = "Maximum Membership Probability",
+       y = "Count")
+
+p7 <- ggplot(confidence_data, aes(x = Cluster, y = Confidence, fill = Cluster)) +
+  geom_boxplot() +
+  theme_minimal() +
+  labs(title = "Confidence by Cluster",
+       y = "Maximum Membership Probability") +
+  theme(legend.position = "none")
+
+grid.arrange(p6, p7, ncol = 2)
+
+# ============================================
+# 6. UNCERTAINTY ANALYSIS
+# ============================================
+
+# Calculate entropy for each sample
+entropy_per_sample <- apply(vmf_probs, 1, function(p) {
+  -sum(p * log(p + 1e-10))
+})
+
+uncertainty_data <- data.frame(
+  Sample = 1:nrow(X),
+  Entropy = entropy_per_sample,
+  Cluster = as.factor(vmf_clusters),
+  MaxProb = apply(vmf_probs, 1, max)
+)
+
+p8 <- ggplot(uncertainty_data, aes(x = MaxProb, y = Entropy, color = Cluster)) +
+  geom_point(alpha = 0.6) +
+  theme_minimal() +
+  labs(title = "Uncertainty Analysis",
+       x = "Maximum Probability",
+       y = "Entropy") +
+  geom_vline(xintercept = 0.5, linetype = "dashed", color = "red")
+
+print(p8)
+
+# Identify most uncertain samples
+top_uncertain <- uncertainty_data %>%
+  arrange(desc(Entropy)) %>%
+  head(20)
+
+cat("\nTop 20 most uncertain samples:\n")
+print(top_uncertain[, c("Sample", "Entropy", "MaxProb", "Cluster")])
+
+# ============================================
+# 7. CLUSTER SEPARATION (SILHOUETTE)
+# ============================================
+
+library(cluster)
+
+# Cosine distance
+cos_dist <- as.dist(1 - X_normalized %*% t(X_normalized))
+sil <- silhouette(vmf_clusters, cos_dist)
+
+# Silhouette plot
+sil_data <- data.frame(
+  Sample = 1:nrow(X),
+  Cluster = as.factor(vmf_clusters),
+  SilhouetteWidth = sil[, 3]
+)
+
+p9 <- ggplot(sil_data, aes(x = reorder(Sample, SilhouetteWidth), 
+                           y = SilhouetteWidth, fill = Cluster)) +
+  geom_bar(stat = "identity") +
+  facet_wrap(~ Cluster, scales = "free_x") +
+  theme_minimal() +
+  labs(title = "Silhouette Plot by Cluster",
+       x = "Samples (ordered by silhouette width)",
+       y = "Silhouette Width") +
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        legend.position = "none")
+
+print(p9)
+
+# Average silhouette by cluster
+sil_summary <- sil_data %>%
+  group_by(Cluster) %>%
+  summarise(
+    AvgSilhouette = mean(SilhouetteWidth),
+    MinSilhouette = min(SilhouetteWidth),
+    Count = n()
+  )
+
+cat("\nSilhouette Summary by Cluster:\n")
+print(sil_summary)
+
+# # ============================================
+# # 8. MODEL PARAMETERS VISUALIZATION
+# # ============================================
+# 
+# # Cluster centers (normalized directions)
+# centers_data <- data.frame(
+#   Cluster = 1:k,
+#   Alpha = vmf_final$alpha,  # mixing proportions
+#   Kappa = vmf_final$kappa   # concentration parameters
+# )
+# 
+# p10 <- ggplot(centers_data, aes(x = as.factor(Cluster))) +
+#   geom_bar(aes(y = Alpha, fill = "Mixing Proportion"), 
+#            stat = "identity", alpha = 0.7) +
+#   geom_point(aes(y = Kappa/max(Kappa) * max(Alpha), color = "Concentration (scaled)"), 
+#              size = 4) +
+#   scale_y_continuous(
+#     name = "Mixing Proportion",
+#     sec.axis = sec_axis(~./max(centers_data$Alpha)*max(centers_data$Kappa), 
+#                         name = "Concentration Parameter (κ)")
+#   ) +
+#   theme_minimal() +
+#   labs(title = "Cluster Parameters",
+#        x = "Cluster") +
+#   scale_fill_manual(values = "steelblue") +
+#   scale_color_manual(values = "darkred") +
+#   theme(legend.title = element_blank())
+# 
+# print(p10)
+
+# # ============================================
+# # 9. PAIRWISE CLUSTER SIMILARITY
+# # ============================================
+# 
+# # Calculate cosine similarity between cluster centers
+# cluster_similarity <- vmf_final$theta %*% t(vmf_final$theta)
+# colnames(cluster_similarity) <- paste0("C", 1:vmf_final$k)
+# rownames(cluster_similarity) <- paste0("C", 1:vmf_final$k)
+# 
+# # Convert to long format
+# similarity_long <- as.data.frame(cluster_similarity) %>%
+#   mutate(Cluster1 = rownames(.)) %>%
+#   pivot_longer(cols = -Cluster1, names_to = "Cluster2", values_to = "Similarity")
+# 
+# p11 <- ggplot(similarity_long, aes(x = Cluster1, y = Cluster2, fill = Similarity)) +
+#   geom_tile() +
+#   geom_text(aes(label = sprintf("%.2f", Similarity)), size = 3) +
+#   scale_fill_gradient2(low = "blue", mid = "white", high = "red",
+#                        midpoint = 0, limits = c(-1, 1)) +
+#   theme_minimal() +
+#   labs(title = "Cosine Similarity Between Cluster Centers") +
+#   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+# 
+# print(p11)
+
+# ============================================
+# 10. COMBINED SUMMARY PLOT
+# ============================================
+
+# Create a comprehensive summary
+summary_plot <- grid.arrange(
+  p1,  # PCA with clusters
+  p4,  # Cluster sizes
+  p7,  # Confidence by cluster
+  # p10, # Cluster parameters
+  ncol = 2, nrow = 2,
+  top = "vMF Clustering Summary"
+)
+
+# ============================================
+# 11. SAVE VISUALIZATIONS
+# ============================================
+
+# ggsave("vmf_pca_projection.png", p1, width = 10, height = 7, dpi = 300)
+# ggsave("vmf_tsne_projection.png", p3, width = 10, height = 7, dpi = 300)
+# ggsave("vmf_cluster_sizes.png", p4, width = 8, height = 6, dpi = 300)
+# ggsave("vmf_silhouette.png", p9, width = 12, height = 8, dpi = 300)
+# ggsave("vmf_cluster_similarity.png", p11, width = 8, height = 7, dpi = 300)
+# 
+# cat("\nVisualizations saved!\n")
+```

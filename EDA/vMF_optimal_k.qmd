@@ -1,0 +1,722 @@
+---
+title: "Multi-Criteria Evaluation for Optimal K"
+format: html
+editor: visual
+---
+
+```{r}
+embeddings <- as.matrix(read.csv("data/embeddings.csv", header = FALSE))
+unique_values <- readLines("data/unique_values.txt")
+rownames(embeddings) <- unique_values
+
+X <- embeddings
+```
+
+```{r}
+library(movMF)
+library(mclust)
+library(cluster)
+library(ggplot2)
+library(dplyr)
+
+# ============================================
+# 1. COMPREHENSIVE K SELECTION FUNCTION
+# ============================================
+
+find_optimal_k <- function(X, k_range = 2:15, methods = c("vmf", "gmm", "fcm")) {
+  
+  # Normalize data
+  X_normalized <- X / sqrt(rowSums(X^2))
+  
+  # Storage for results
+  results <- data.frame()
+  
+  cat("Testing k from", min(k_range), "to", max(k_range), "...\n")
+  
+  for (k in k_range) {
+    cat(sprintf("k = %d... ", k))
+    
+    # Cosine distance matrix (compute once per k)
+    cos_dist <- as.dist(1 - X_normalized %*% t(X_normalized))
+    
+    # ---------------------
+    # vMF Mixture Model
+    # ---------------------
+    if ("vmf" %in% methods) {
+      vmf_model <- movMF(X, k = k, nruns = 10)
+      vmf_clusters <- predict(vmf_model, X)
+      vmf_probs <- predict(vmf_model, X, type = "memberships")
+      
+      # Metrics
+      vmf_sil <- mean(silhouette(vmf_clusters, cos_dist)[, 3])
+      vmf_loglik <- vmf_model$L
+      vmf_bic <- -2 * vmf_loglik + (k * ncol(X) + k - 1) * log(nrow(X))
+      vmf_aic <- -2 * vmf_loglik + 2 * (k * ncol(X) + k - 1)
+      vmf_entropy <- -mean(rowSums(vmf_probs * log(vmf_probs + 1e-10)))
+      vmf_ch <- calinski_harabasz(X_normalized, vmf_clusters)
+      vmf_db <- davies_bouldin(X_normalized, vmf_clusters)
+      
+      results <- rbind(results, data.frame(
+        k = k, method = "vMF",
+        silhouette = vmf_sil,
+        loglik = vmf_loglik,
+        BIC = vmf_bic,
+        AIC = vmf_aic,
+        entropy = vmf_entropy,
+        calinski_harabasz = vmf_ch,
+        davies_bouldin = vmf_db
+      ))
+    }
+    
+    # ---------------------
+    # GMM
+    # ---------------------
+    if ("gmm" %in% methods) {
+      gmm_model <- Mclust(X_normalized, G = k, modelNames = "VVI", verbose = FALSE)
+      gmm_clusters <- gmm_model$classification
+      gmm_probs <- gmm_model$z
+      
+      gmm_sil <- mean(silhouette(gmm_clusters, cos_dist)[, 3])
+      gmm_loglik <- gmm_model$loglik
+      gmm_bic <- gmm_model$bic
+      gmm_aic <- -2 * gmm_loglik + 2 * gmm_model$df
+      gmm_entropy <- -mean(rowSums(gmm_probs * log(gmm_probs + 1e-10)))
+      gmm_ch <- calinski_harabasz(X_normalized, gmm_clusters)
+      gmm_db <- davies_bouldin(X_normalized, gmm_clusters)
+      
+      results <- rbind(results, data.frame(
+        k = k, method = "GMM",
+        silhouette = gmm_sil,
+        loglik = gmm_loglik,
+        BIC = gmm_bic,
+        AIC = gmm_aic,
+        entropy = gmm_entropy,
+        calinski_harabasz = gmm_ch,
+        davies_bouldin = gmm_db
+      ))
+    }
+    
+    # ---------------------
+    # FCM
+    # ---------------------
+    if ("fcm" %in% methods) {
+      library(e1071)
+      fcm_model <- cmeans(X_normalized, centers = k, iter.max = 100, m = 2)
+      fcm_clusters <- fcm_model$cluster
+      fcm_probs <- fcm_model$membership
+      
+      fcm_sil <- mean(silhouette(fcm_clusters, cos_dist)[, 3])
+      fcm_entropy <- -mean(rowSums(fcm_probs * log(fcm_probs + 1e-10)))
+      fcm_ch <- calinski_harabasz(X_normalized, fcm_clusters)
+      fcm_db <- davies_bouldin(X_normalized, fcm_clusters)
+      
+      results <- rbind(results, data.frame(
+        k = k, method = "FCM",
+        silhouette = fcm_sil,
+        loglik = NA,
+        BIC = NA,
+        AIC = NA,
+        entropy = fcm_entropy,
+        calinski_harabasz = fcm_ch,
+        davies_bouldin = fcm_db
+      ))
+    }
+    
+    cat("done\n")
+  }
+  
+  return(results)
+}
+
+# Helper functions for metrics
+calinski_harabasz <- function(X, clusters) {
+  # Calinski-Harabasz index (higher is better)
+  n <- nrow(X)
+  k <- length(unique(clusters))
+  
+  overall_mean <- colMeans(X)
+  
+  # Between-cluster variance
+  BGSS <- 0
+  for (i in unique(clusters)) {
+    cluster_points <- X[clusters == i, , drop = FALSE]
+    n_i <- nrow(cluster_points)
+    cluster_mean <- colMeans(cluster_points)
+    BGSS <- BGSS + n_i * sum((cluster_mean - overall_mean)^2)
+  }
+  
+  # Within-cluster variance
+  WGSS <- 0
+  for (i in unique(clusters)) {
+    cluster_points <- X[clusters == i, , drop = FALSE]
+    cluster_mean <- colMeans(cluster_points)
+    WGSS <- WGSS + sum(apply(cluster_points, 1, function(x) sum((x - cluster_mean)^2)))
+  }
+  
+  CH <- (BGSS / (k - 1)) / (WGSS / (n - k))
+  return(CH)
+}
+
+davies_bouldin <- function(X, clusters) {
+  # Davies-Bouldin index (lower is better)
+  k <- length(unique(clusters))
+  cluster_ids <- unique(clusters)
+  
+  # Calculate centroids and dispersions
+  centroids <- matrix(0, nrow = k, ncol = ncol(X))
+  dispersions <- numeric(k)
+  
+  for (i in 1:k) {
+    cluster_points <- X[clusters == cluster_ids[i], , drop = FALSE]
+    centroids[i, ] <- colMeans(cluster_points)
+    dispersions[i] <- mean(sqrt(rowSums((sweep(cluster_points, 2, centroids[i, ]))^2)))
+  }
+  
+  # Calculate DB index
+  DB <- 0
+  for (i in 1:k) {
+    max_ratio <- 0
+    for (j in 1:k) {
+      if (i != j) {
+        d_ij <- sqrt(sum((centroids[i, ] - centroids[j, ])^2))
+        ratio <- (dispersions[i] + dispersions[j]) / d_ij
+        max_ratio <- max(max_ratio, ratio)
+      }
+    }
+    DB <- DB + max_ratio
+  }
+  
+  return(DB / k)
+}
+
+# ============================================
+# 2. RUN THE ANALYSIS
+# ============================================
+
+# Run for all three methods
+results_all <- find_optimal_k(X, k_range = 2:15, methods = c("vmf", "gmm", "fcm"))
+
+# ============================================
+# 3. ELBOW METHOD VISUALIZATION
+# ============================================
+
+# Normalize metrics to 0-1 scale for comparison
+normalize_metric <- function(x, higher_better = TRUE) {
+  if (higher_better) {
+    (x - min(x, na.rm = TRUE)) / (max(x, na.rm = TRUE) - min(x, na.rm = TRUE))
+  } else {
+    1 - (x - min(x, na.rm = TRUE)) / (max(x, na.rm = TRUE) - min(x, na.rm = TRUE))
+  }
+}
+
+# Create plotting data with normalized metrics
+plot_results <- results_all %>%
+  group_by(method) %>%
+  mutate(
+    silhouette_norm = normalize_metric(silhouette, TRUE),
+    BIC_norm = normalize_metric(BIC, TRUE),  # Higher BIC is better
+    AIC_norm = normalize_metric(AIC, TRUE),
+    CH_norm = normalize_metric(calinski_harabasz, TRUE),
+    DB_norm = normalize_metric(davies_bouldin, FALSE),  # Lower DB is better
+    entropy_norm = normalize_metric(entropy, FALSE)
+  )
+
+# Plot 1: Silhouette
+p1 <- ggplot(results_all, aes(x = k, y = silhouette, color = method, group = method)) +
+  geom_line(size = 1) +
+  geom_point(size = 3) +
+  theme_minimal() +
+  labs(title = "Silhouette Score (Higher = Better)",
+       x = "Number of Clusters (k)", y = "Silhouette Score") +
+  scale_x_continuous(breaks = unique(results_all$k))
+
+# Plot 2: BIC (for methods that have it)
+p2 <- ggplot(results_all %>% filter(!is.na(BIC)), 
+             aes(x = k, y = BIC, color = method, group = method)) +
+  geom_line(size = 1) +
+  geom_point(size = 3) +
+  theme_minimal() +
+  labs(title = "BIC (Higher = Better)",
+       x = "Number of Clusters (k)", y = "BIC") +
+  scale_x_continuous(breaks = unique(results_all$k))
+
+# Plot 3: Calinski-Harabasz
+p3 <- ggplot(results_all, aes(x = k, y = calinski_harabasz, color = method, group = method)) +
+  geom_line(size = 1) +
+  geom_point(size = 3) +
+  theme_minimal() +
+  labs(title = "Calinski-Harabasz Index (Higher = Better)",
+       x = "Number of Clusters (k)", y = "CH Index") +
+  scale_x_continuous(breaks = unique(results_all$k))
+
+# Plot 4: Davies-Bouldin
+p4 <- ggplot(results_all, aes(x = k, y = davies_bouldin, color = method, group = method)) +
+  geom_line(size = 1) +
+  geom_point(size = 3) +
+  theme_minimal() +
+  labs(title = "Davies-Bouldin Index (Lower = Better)",
+       x = "Number of Clusters (k)", y = "DB Index") +
+  scale_x_continuous(breaks = unique(results_all$k))
+
+# Plot 5: Entropy
+p5 <- ggplot(results_all, aes(x = k, y = entropy, color = method, group = method)) +
+  geom_line(size = 1) +
+  geom_point(size = 3) +
+  theme_minimal() +
+  labs(title = "Entropy (Lower = Better)",
+       x = "Number of Clusters (k)", y = "Entropy") +
+  scale_x_continuous(breaks = unique(results_all$k))
+
+# Combined plot
+library(gridExtra)
+grid.arrange(p1, p2, p3, p4, p5, ncol = 2)
+
+# ============================================
+# 4. COMPOSITE SCORE
+# ============================================
+
+# Calculate composite score (average of normalized metrics)
+composite_scores <- plot_results %>%
+  mutate(
+    composite = (silhouette_norm + CH_norm + DB_norm + entropy_norm) / 4
+  ) %>%
+  dplyr::select(k, method, composite, silhouette, calinski_harabasz, 
+         davies_bouldin, entropy)
+
+# Plot composite scores
+p6 <- ggplot(composite_scores, aes(x = k, y = composite, color = method, group = method)) +
+  geom_line(size = 1.2) +
+  geom_point(size = 4) +
+  theme_minimal() +
+  labs(title = "Composite Score (Higher = Better)",
+       subtitle = "Average of normalized Silhouette, CH, DB, and Entropy",
+       x = "Number of Clusters (k)", y = "Composite Score") +
+  scale_x_continuous(breaks = unique(composite_scores$k)) +
+  theme(legend.position = "bottom")
+
+print(p6)
+
+# ============================================
+# 5. IDENTIFY OPTIMAL K
+# ============================================
+
+# Best k by each metric
+optimal_k_summary <- results_all %>%
+  group_by(method) %>%
+  summarise(
+    k_by_silhouette = k[which.max(silhouette)],
+    k_by_BIC = k[which.max(BIC)],
+    k_by_CH = k[which.max(calinski_harabasz)],
+    k_by_DB = k[which.min(davies_bouldin)],
+    k_by_entropy = k[which.min(entropy)]
+  )
+
+cat("\n=== OPTIMAL K BY METRIC ===\n")
+print(optimal_k_summary)
+
+# Best k by composite score
+best_composite <- composite_scores %>%
+  group_by(method) %>%
+  slice_max(composite, n = 1)
+
+cat("\n=== OPTIMAL K BY COMPOSITE SCORE ===\n")
+print(best_composite)
+
+# ============================================
+# 6. ELBOW DETECTION (AUTOMATIC)
+# ============================================
+
+find_elbow <- function(x, y) {
+  # Find elbow using maximum distance from line
+  n <- length(x)
+  p1 <- c(x[1], y[1])
+  p2 <- c(x[n], y[n])
+  
+  distances <- numeric(n)
+  for (i in 1:n) {
+    p <- c(x[i], y[i])
+    # Distance from point to line
+    distances[i] <- abs((p2[2] - p1[2]) * p[1] - (p2[1] - p1[1]) * p[2] + 
+                          p2[1] * p1[2] - p2[2] * p1[1]) /
+      sqrt((p2[2] - p1[2])^2 + (p2[1] - p1[1])^2)
+  }
+  
+  return(x[which.max(distances)])
+}
+
+# Detect elbows
+elbow_results <- results_all %>%
+  group_by(method) %>%
+  summarise(
+    k_elbow_silhouette = find_elbow(k, silhouette),
+    k_elbow_CH = find_elbow(k, calinski_harabasz),
+    k_elbow_BIC = find_elbow(k, ifelse(is.na(BIC), 0, BIC))
+  )
+
+cat("\n=== ELBOW DETECTION ===\n")
+print(elbow_results)
+
+# ============================================
+# 7. GAP STATISTIC (Gold Standard)
+# ============================================
+
+library(cluster)
+
+gap_stat_vmf <- function(X, K.max = 15, B = 50) {
+  # Custom gap statistic for vMF
+  X_normalized <- X / sqrt(rowSums(X^2))
+  n <- nrow(X)
+  
+  W_k <- numeric(K.max)
+  W_kb <- matrix(0, nrow = K.max, ncol = B)
+  
+  for (k in 1:K.max) {
+    cat(sprintf("Gap statistic: k = %d\n", k))
+    
+    # Real data
+    vmf <- movMF(X, k = k, nruns = 5)
+    clusters <- predict(vmf, X)
+    
+    # Within-cluster dispersion (using cosine distance)
+    W_k[k] <- 0
+    for (i in unique(clusters)) {
+      cluster_points <- X_normalized[clusters == i, , drop = FALSE]
+      if (nrow(cluster_points) > 1) {
+        D <- as.matrix(dist(cluster_points, method = "euclidean"))
+        W_k[k] <- W_k[k] + sum(D^2) / (2 * nrow(cluster_points))
+      }
+    }
+    
+    # Reference distribution (uniform on sphere)
+    for (b in 1:B) {
+      # Generate random points on unit sphere
+      X_ref <- matrix(rnorm(n * ncol(X)), nrow = n)
+      X_ref <- X_ref / sqrt(rowSums(X_ref^2))
+      
+      vmf_ref <- movMF(X_ref, k = k, nruns = 3)
+      clusters_ref <- predict(vmf_ref, X_ref)
+      
+      W_kb[k, b] <- 0
+      for (i in unique(clusters_ref)) {
+        cluster_points <- X_ref[clusters_ref == i, , drop = FALSE]
+        if (nrow(cluster_points) > 1) {
+          D <- as.matrix(dist(cluster_points, method = "euclidean"))
+          W_kb[k, b] <- W_kb[k, b] + sum(D^2) / (2 * nrow(cluster_points))
+        }
+      }
+    }
+  }
+  
+  # Calculate gap statistic
+  log_W_k <- log(W_k)
+  log_W_kb <- log(W_kb)
+  gap <- rowMeans(log_W_kb) - log_W_k
+  se <- apply(log_W_kb, 1, sd) * sqrt(1 + 1/B)
+  
+  # Find optimal k (first k where gap(k) >= gap(k+1) - se(k+1))
+  optimal_k <- 1
+  for (k in 1:(K.max - 1)) {
+    if (gap[k] >= gap[k + 1] - se[k + 1]) {
+      optimal_k <- k
+      break
+    }
+  }
+  
+  list(
+    gap = gap,
+    se = se,
+    optimal_k = optimal_k,
+    gap_data = data.frame(k = 1:K.max, gap = gap, se = se)
+  )
+}
+
+# Run gap statistic (WARNING: This is slow!)
+cat("\nRunning Gap Statistic (this may take a while)...\n")
+gap_result <- gap_stat_vmf(X, K.max = 10, B = 20)  # Reduced B for speed
+
+# Plot gap statistic
+p7 <- ggplot(gap_result$gap_data, aes(x = k, y = gap)) +
+  geom_line(size = 1) +
+  geom_point(size = 3) +
+  geom_errorbar(aes(ymin = gap - se, ymax = gap + se), width = 0.2) +
+  geom_vline(xintercept = gap_result$optimal_k, linetype = "dashed", color = "red") +
+  theme_minimal() +
+  labs(title = "Gap Statistic",
+       subtitle = sprintf("Optimal k = %d", gap_result$optimal_k),
+       x = "Number of Clusters (k)", y = "Gap Statistic") +
+  scale_x_continuous(breaks = gap_result$gap_data$k)
+
+print(p7)
+
+# ============================================
+# 8. FINAL RECOMMENDATION
+# ============================================
+
+cat("\n=== FINAL RECOMMENDATION ===\n")
+cat(sprintf("Gap Statistic suggests: k = %d\n", gap_result$optimal_k))
+cat("\nConsensus from multiple metrics:\n")
+print(best_composite)
+
+# # Save all results
+# write.csv(results_all, "k_selection_results.csv", row.names = FALSE)
+# write.csv(optimal_k_summary, "optimal_k_summary.csv", row.names = FALSE)
+# 
+# cat("\nResults saved to CSV files.\n")
+```
+
+
+```{r}
+# Load required libraries
+library(movMF)
+library(mclust)
+library(cluster)
+library(ggplot2)
+library(dplyr)
+library(e1071) # Required for cmeans/FCM
+library(tidyr) # Required for pivot_longer
+
+# ============================================
+# 1. FUNCTION TO COLLECT MEMBERSHIP INFO
+# ============================================
+
+#' Retrieves and combines the membership (soft-assignment) probabilities 
+#' from vMF, GMM, and FCM models for a given number of clusters (k).
+#'
+#' @param X The input data matrix of embeddings (rows are observations, columns are dimensions).
+#' @param k The optimal number of clusters to use for the models.
+#' @param methods A character vector of models to run (default: c("vmf", "gmm", "fcm")).
+#' @return A long-format data frame containing Embedding_ID, Method, Cluster, and Membership_Value.
+get_optimal_k_memberships <- function(X, k, methods = c("vmf", "gmm", "fcm")) {
+
+  # Check for k validity
+  if (k < 2) stop("k must be greater than or equal to 2.")
+
+  cat(sprintf("Running clustering models for k = %d...\n", k))
+
+  # Normalize data (crucial for vMF and standard practice for text embeddings)
+  X_normalized <- X / sqrt(rowSums(X^2))
+
+  all_memberships <- list()
+  n_obs <- nrow(X)
+  
+  # ---------------------
+  # vMF Mixture Model (movMF)
+  # ---------------------
+  if ("vmf" %in% methods) {
+    cat("Fitting vMF...\n")
+    tryCatch({
+      # Run movMF on the original (un-normalized) data, as movMF handles normalization internally
+      vmf_model <- movMF(X, k = k, nruns = 10, control = list(maxiter = 100))
+      vmf_probs <- predict(vmf_model, X, type = "memberships")
+      
+      # Convert membership matrix to long format using tidyr::pivot_longer
+      vmf_df <- as.data.frame(vmf_probs)
+      names(vmf_df) <- paste0("vMF_C", 1:k)
+      vmf_df$Embedding_ID <- 1:n_obs
+      
+      all_memberships[['vMF']] <- vmf_df %>%
+        tidyr::pivot_longer(
+          cols = starts_with("vMF_C"),
+          names_to = "Cluster",
+          values_to = "Membership_Value"
+        ) %>%
+        mutate(
+          Method = "vMF",
+          Cluster = as.integer(gsub("vMF_C", "", Cluster))
+        )
+      
+    }, error = function(e) {
+      cat(paste("Error running vMF (k=", k, "):", e$message, "\n"))
+    })
+  }
+
+  # ---------------------
+  # GMM (Mclust)
+  # ---------------------
+  if ("gmm" %in% methods) {
+    cat("Fitting GMM...\n")
+    tryCatch({
+      # Run Mclust on the normalized data
+      gmm_model <- Mclust(X_normalized, G = k, modelNames = "VVI", verbose = FALSE)
+      gmm_probs <- gmm_model$z # $z contains the responsibilities (probabilities)
+      
+      gmm_df <- as.data.frame(gmm_probs)
+      names(gmm_df) <- paste0("GMM_C", 1:k)
+      gmm_df$Embedding_ID <- 1:n_obs
+      
+      all_memberships[['GMM']] <- gmm_df %>%
+        tidyr::pivot_longer(
+          cols = starts_with("GMM_C"),
+          names_to = "Cluster",
+          values_to = "Membership_Value"
+        ) %>%
+        mutate(
+          Method = "GMM",
+          Cluster = as.integer(gsub("GMM_C", "", Cluster))
+        )
+      
+    }, error = function(e) {
+      cat(paste("Error running GMM (k=", k, "):", e$message, "\n"))
+    })
+  }
+
+  # ---------------------
+  # Fuzzy C-Means (FCM)
+  # ---------------------
+  if ("fcm" %in% methods) {
+    cat("Fitting FCM...\n")
+    tryCatch({
+      # Run cmeans on the normalized data
+      fcm_model <- e1071::cmeans(X_normalized, centers = k, iter.max = 100, m = 2)
+      fcm_probs <- fcm_model$membership
+      
+      fcm_df <- as.data.frame(fcm_probs)
+      names(fcm_df) <- paste0("FCM_C", 1:k)
+      fcm_df$Embedding_ID <- 1:n_obs
+      
+      all_memberships[['FCM']] <- fcm_df %>%
+        tidyr::pivot_longer(
+          cols = starts_with("FCM_C"),
+          names_to = "Cluster",
+          values_to = "Membership_Value"
+        ) %>%
+        mutate(
+          Method = "FCM",
+          Cluster = as.integer(gsub("FCM_C", "", Cluster))
+        )
+      
+    }, error = function(e) {
+      cat(paste("Error running FCM (k=", k, "):", e$message, "\n"))
+    })
+  }
+  
+  # Combine all results into one comprehensive table
+  if (length(all_memberships) > 0) {
+    final_table <- bind_rows(all_memberships)
+    cat("\nClustering complete. Returning combined membership table.\n")
+    return(final_table)
+  } else {
+    warning("No clustering methods were successfully executed. Returning NULL.")
+    return(NULL)
+  }
+}
+
+# ============================================
+# 2. FUNCTION FOR HARD ASSIGNMENTS
+# ============================================
+
+#' Subsets the long-format membership table to include only the most-likely 
+#' cluster (hard assignment) for each embedding and method.
+#'
+#' @param membership_df The long-format data frame generated by 
+#'   get_optimal_k_memberships.
+#' @return A data frame containing Embedding_ID, Method, Cluster (the hard 
+#'   assignment), and the corresponding Membership_Value.
+get_hard_assignments <- function(membership_df) {
+  
+  if (is.null(membership_df) || nrow(membership_df) == 0) {
+    warning("Input membership data frame is empty or NULL.")
+    return(NULL)
+  }
+  
+  # Group by Embedding and Method, then select the row with the maximum 
+  # Membership_Value (i.e., the most likely cluster).
+  hard_assignments <- membership_df %>%
+    group_by(Embedding_ID, Method) %>%
+    # slice_max is used for convenience to pick the maximum value.
+    # We use n=1 to ensure only one cluster is picked per group.
+    slice_max(Membership_Value, n = 1, with_ties = FALSE) %>%
+    ungroup() %>%
+    dplyr::select(Embedding_ID, Method, Cluster, Max_Membership_Value = Membership_Value)
+  
+  return(hard_assignments)
+}
+
+
+# ============================================
+# 3. EXECUTION EXAMPLE
+# ============================================
+
+# --- SETUP DUMMY DATA ---
+# In a real scenario, X would be loaded from your data source.
+# Creating a sample matrix X (200 documents, 10-dimensional embeddings)
+set.seed(42)
+X <- matrix(rnorm(200 * 10), nrow = 200) 
+
+# --- DEFINE OPTIMAL K ---
+# Replace 5 with the optimal k value determined from your analysis (e.g., k_by_CH, best_composite)
+K_OPT <- 5
+
+# --- GET MEMBERSHIP TABLE (SOFT ASSIGNMENTS) ---
+membership_table <- get_optimal_k_memberships(X, k = K_OPT)
+
+# --- GET HARD ASSIGNMENTS ---
+hard_assignments_table <- NULL
+if (!is.null(membership_table)) {
+  hard_assignments_table <- get_hard_assignments(membership_table)
+}
+
+
+# ============================================
+# 4. DISPLAY RESULTS & VISUALIZATION
+# ============================================
+
+if (!is.null(membership_table)) {
+  
+  cat("\n=== Combined Membership Table (First 15 Rows) for Optimal k =", K_OPT, "===\n")
+  print(head(membership_table, 15)) 
+  
+  if (!is.null(hard_assignments_table)) {
+     cat("\n=== Hard Assignments Table (First 15 Rows) ===\n")
+     cat("This table shows the single most-likely cluster for each embedding and method.\n")
+     print(head(hard_assignments_table, 15))
+  }
+
+
+  # Visualization Example: Compare the soft assignments for the first embedding
+  embedding_1_memberships <- membership_table %>%
+    filter(Embedding_ID == 1) %>%
+    mutate(
+      Cluster_ID = factor(paste0("C", Cluster))
+    )
+
+  p_membership <- ggplot(embedding_1_memberships, aes(x = Cluster_ID, y = Membership_Value, fill = Method)) +
+    geom_bar(stat = "identity", position = position_dodge(width = 0.8), width = 0.7) +
+    facet_wrap(~ Method) +
+    theme_minimal(base_size = 14) +
+    labs(
+      title = paste("Membership Probabilities for Embedding ID 1 (k =", K_OPT, ")"),
+      subtitle = "Comparing vMF, GMM, and FCM soft assignments",
+      x = "Cluster ID",
+      y = "Membership / Probability"
+    ) +
+    scale_fill_manual(values = c("vMF" = "#3B82F6", "GMM" = "#10B981", "FCM" = "#F59E0B")) +
+    theme(legend.position = "bottom")
+
+  # Print the visualization
+  print(p_membership)
+}
+```
+
+```{r}
+X <- embeddings
+membership_table <- get_optimal_k_memberships(X, k = 10)
+hard_assignments_table <- get_hard_assignments(membership_table)
+```
+
+```{r}
+summary <- hard_assignments_table %>% 
+    filter(Method == "GMM") %>%   # only results from GMM
+    mutate(Column_Name = rownames(X)) %>%   # add the source column name for each embedding
+    group_by(Cluster) %>% 
+    summarise(min = min(Max_Membership_Value),   # minimum likelihood of an embedding in a given group/cluster
+              n = n(),   # the number of embeddings in each group/cluster
+              columns = paste(Column_Name, collapse = ";;"))   # column names for each group/cluster
+
+summary
+```
+
+```{r}
+write.csv(summary, "~/OmicsMLRepo/MetaHarmonizer/EDA/data/GMM_summary.csv", row.names = FALSE)
+```
+

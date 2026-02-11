@@ -1,0 +1,18 @@
+---
+title: "Untitled"
+format: html
+editor: visual
+---
+
+```{r}
+fname <- "data/fsvdb_v4/faiss_indexes/st_mt-sap-bert_disease.index"
+
+# Example for a comma-separated .index file
+data <- read.csv(fname, header = TRUE) 
+
+# Example for a tab-separated .index file
+data <- read.delim(fname, header = TRUE) 
+
+# Example for a more generic text file, adjusting parameters as needed
+data <- read.table(fname, sep = " ", header = FALSE) 
+```

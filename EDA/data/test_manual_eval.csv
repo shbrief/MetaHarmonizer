@@ -1,0 +1,662 @@
+original_column,curated_field,matched_rank,matched_stage,matched_stage_detail,match1_field,match1_score,match1_source,match2_field,match2_score,match2_source,match3_field,match3_score,match3_source,match4_field,match4_score,match4_source,match5_field,match5_score,match5_source,source
+2L_TREATMENT,treatment_name|treatment_reason,1,stage3,ncit,treatment_name,1.0,2L_TREATMENT,,,,,,,,,,,,,2L_TREATMENT
+3L_TREATMENT,treatment_name|treatment_reason,1,stage3,ncit,treatment_name,1.0,3L_TREATMENT,,,,,,,,,,,,,3L_TREATMENT
+ABLATION_EMBOLIZATION_TX_ADJUVANT,treatment_reason|treatment_type,1,stage2,alias,treatment_reason,1.0,ablation embolization tx adjuvant,treatment_type,1.0,ablation embolization tx adjuvant,treatment_status,0.4825,postoperative tx,treatment_name,0.428,pharm tx mitotane adjuvant,,,,ABLATION_EMBOLIZATION_TX_ADJUVANT
+ADC+IMMUNOTHERAPY,treatment_type,1,stage2,alias,treatment_type,1.0,adc immunotherapy,treatment_reason,0.8073,adjuvant immunotherapy,treatment_status,0.666,post sample immunotherapy,,,,,,,ADC+IMMUNOTHERAPY
+ADC_THERAPY,treatment_type,1,stage2,alias,treatment_type,1.0,adc therapy,treatment_reason,0.6231,adjuvant therapy,treatment_name,0.5359,adjuvant chemo,,,,,,,ADC_THERAPY
+ADENOCARCINOMA_SUBTYPE_WHO2015,cancer_subtype,1,stage2,alias,cancer_subtype,1.0,adenocarcinoma subtype who2015,cancer_type_details,0.5827,cancer type detailed,,,,,,,,,,ADENOCARCINOMA_SUBTYPE_WHO2015
+ADJ_XRT,treatment_reason|treatment_type,1,stage2,alias,treatment_reason,1.0,adj xrt,treatment_type,1.0,adj xrt,treatment_status,0.6091,post sample xrt,,,,,,,ADJ_XRT
+ADJUVANT,treatment_reason,1,stage2,alias,treatment_reason,1.0,adjuvant,treatment_type,0.8138,adjuvant targeted,treatment_name,0.8017,adjuvant chemo,,,,,,,ADJUVANT
+ADJUVANT_CHEMO,treatment_name|treatment_reason|treatment_type,1,stage2,alias,treatment_name,1.0,adjuvant chemo,treatment_reason,1.0,adjuvant chemo,treatment_type,1.0,adjuvant chemo,,,,,,,ADJUVANT_CHEMO
+ADJUVANT_CHEMO_REGIMEN,treatment_name|treatment_reason|treatment_type,1,stage3,ncit,treatment_name,1.0,ADJUVANT_CHEMO_REGIMEN,,,,,,,,,,,,,ADJUVANT_CHEMO_REGIMEN
+ADJUVANT_CHEMOTHERAPY,treatment_reason|treatment_type,1,stage2,alias,treatment_reason,1.0,adjuvant chemotherapy,treatment_type,1.0,adjuvant chemotherapy,treatment_name,0.8896,adjuvant chemo,,,,,,,ADJUVANT_CHEMOTHERAPY
+ADJUVANT_CT,treatment_reason|treatment_type,99,stage2,numeric,treatment_number,0.7872,TOTAL_CYCLES_NUM_NEOADJUVANT_ADJUVANT,treatment_dose,0.6992,RADIATION_THERAPY_DOSE_PARAAORTIC_NODES,,,,,,,,,,ADJUVANT_CT
+ADJUVANT_CYCLES_NUM,treatment_number,1,stage2,numeric,treatment_number,1.0,ADJUVANT_CYCLES_NUM,,,,,,,,,,,,,ADJUVANT_CYCLES_NUM
+ADJUVANT_HORMONE_THERAPY,treatment_name|treatment_reason|treatment_type,1,stage2,alias,treatment_name,1.0,adjuvant hormone therapy,treatment_reason,1.0,adjuvant hormone therapy,treatment_type,1.0,adjuvant hormone therapy,treatment_status,0.7216,radiation treatment adjuvant,,,,ADJUVANT_HORMONE_THERAPY
+ADJUVANT_IMMUNOTHERAPY,treatment_reason|treatment_type,1,stage2,alias,treatment_reason,1.0,adjuvant immunotherapy,treatment_type,1.0,adjuvant immunotherapy,,,,,,,,,,ADJUVANT_IMMUNOTHERAPY
+ADJUVANT_RADIATION_THERAPY,treatment_reason|treatment_type,1,stage2,alias,treatment_reason,1.0,adjuvant radiation therapy,treatment_type,1.0,adjuvant radiation therapy,treatment_name,0.9662,radiation treatment adjuvant,treatment_status,0.9662,radiation treatment adjuvant,,,,ADJUVANT_RADIATION_THERAPY
+ADJUVANT_TARGETED,treatment_reason|treatment_type,1,stage2,alias,treatment_reason,1.0,adjuvant targeted,treatment_type,1.0,adjuvant targeted,treatment_name,0.7047,adjuvant chemo,,,,,,,ADJUVANT_TARGETED
+ADJUVANT_THERAPY,treatment_reason,1,stage2,alias,treatment_reason,1.0,adjuvant therapy,treatment_type,0.8421,adjuvant radiation therapy,treatment_name,0.8269,adjuvant hormone therapy,,,,,,,ADJUVANT_THERAPY
+ADJUVANT_TX,treatment_reason|treatment_type,1,stage3,value,treatment_type,1.0,Radiation Therapy,treatment_status,0.5,Radiation Therapy,,,,,,,,,,ADJUVANT_TX
+ADJUVANT_XRT,treatment_reason|treatment_type,1,stage2,alias,treatment_reason,1.0,adjuvant xrt,treatment_type,1.0,adjuvant xrt,,,,,,,,,,ADJUVANT_XRT
+ADMINISTRATION_OF_DRUG_WEEKS,treatment_duration,1,stage2,numeric,treatment_duration,1.0,ADMINISTRATION_OF_DRUG_WEEKS,treatment_frequency,0.7769,TREATMENT_SCHEDULE,,,,,,,,,,ADMINISTRATION_OF_DRUG_WEEKS
+AGE,age_at_procurement,1,stage2,numeric,age_at_procurement,1.15,AGE,age_at_diagnosis,1.0294,AGE_D,,,,,,,,,,AGE
+AGE_AT_CHEMOTHERAPY_START,treatment_end|treatment_notes|treatment_start|treatment_type,1,stage2,numeric,treatment_start,1.0,AGE_AT_CHEMOTHERAPY_START,treatment_end,1.0,AGE_AT_CHEMOTHERAPY_START,age_at_metastasis,0.9886,age_at_metastasis,age_at_metastasis_min,0.9871,age_at_metastasis_min,age_at_metastasis_max,0.9852,age_at_metastasis_max,AGE_AT_CHEMOTHERAPY_START
+AGE_AT_CHEMOTHERAPY_STOP,treatment_end|treatment_notes|treatment_start|treatment_type,1,stage2,numeric,treatment_start,1.0,AGE_AT_CHEMOTHERAPY_STOP,treatment_end,1.0,AGE_AT_CHEMOTHERAPY_STOP,age_at_metastasis_max,0.9736,age_at_metastasis_max,age_at_metastasis,0.964,age_at_metastasis,,,,AGE_AT_CHEMOTHERAPY_STOP
+AGE_AT_DEATH,age_at_death,1,stage2,numeric,age_at_death,1.15,age_at_death,age_at_death_max,1.0693,age_at_death_max,age_at_death_min,1.0606,age_at_death_min,age_at_procurement,0.9619,AGE_RESECTED,,,,AGE_AT_DEATH
+AGE_AT_DERIVATION,age_at_procurement,1,stage2,numeric,age_at_procurement,1.15,AGE_AT_DERIVATION,age_at_death,0.9409,age_at_death,,,,,,,,,,AGE_AT_DERIVATION
+AGE_AT_DIAGNOSIS,age_at_diagnosis,1,stage2,numeric,age_at_diagnosis,1.15,AGE_AT_DIAGNOSIS,,,,,,,,,,,,,AGE_AT_DIAGNOSIS
+AGE_AT_DOS_BX,age_at_procurement,1,stage2,numeric,age_at_procurement,1.15,AGE_AT_DOS_BX,age_at_diagnosis,0.9939,AGE_AT_DX,,,,,,,,,,AGE_AT_DOS_BX
+AGE_AT_DX,age_at_diagnosis,1,stage2,numeric,age_at_diagnosis,1.15,AGE_AT_DX,age_at_procurement,0.9939,AGE_AT_DOS_BX,,,,,,,,,,AGE_AT_DX
+AGE_AT_EVIDENCE_OF_METS,age_at_metastasis,1,stage2,numeric,age_at_metastasis,1.15,AGE_AT_EVIDENCE_OF_METS,age_at_procurement,0.8866,AGE_RESECTED,,,,,,,,,,AGE_AT_EVIDENCE_OF_METS
+AGE_AT_INITIAL_DIAGNOSIS,age_at_diagnosis,1,stage2,numeric,age_at_diagnosis,1.15,AGE_AT_INITIAL_DIAGNOSIS,,,,,,,,,,,,,AGE_AT_INITIAL_DIAGNOSIS
+AGE_AT_INITIAL_PATHOLOGIC_DIAGNOSIS,age_at_diagnosis,1,stage2,numeric,age_at_diagnosis,1.15,AGE_AT_INITIAL_PATHOLOGIC_DIAGNOSIS,,,,,,,,,,,,,AGE_AT_INITIAL_PATHOLOGIC_DIAGNOSIS
+AGE_AT_MET,age_at_metastasis,1,stage2,numeric,age_at_metastasis,1.15,AGE_AT_MET,age_at_procurement,0.9362,AGE,age_at_diagnosis,0.9099,AGE_D,,,,,,,AGE_AT_MET
+AGE_AT_METS,age_at_metastasis,1,stage2,numeric,age_at_metastasis,1.15,AGE_AT_METS,age_at_procurement,0.8894,AGE_GROUP,,,,,,,,,,AGE_AT_METS
+AGE_AT_PD1,age_at_diagnosis,1,stage2,numeric,age_at_diagnosis,1.15,AGE_AT_PD1,,,,,,,,,,,,,AGE_AT_PD1
+AGE_AT_PROCUREMENT,age_at_procurement,1,stage2,numeric,age_at_procurement,1.15,age_at_procurement,age_at_procurement_min,1.1147,age_at_procurement_min,age_at_procurement_max,1.0993,age_at_procurement_max,,,,,,,AGE_AT_PROCUREMENT
+AGE_AT_RADIATION_START,treatment_end|treatment_notes|treatment_start|treatment_type,1,stage2,numeric,treatment_start,1.0,AGE_AT_RADIATION_START,treatment_end,1.0,AGE_AT_RADIATION_START,age_at_diagnosis,0.9322,AGE_AT_INITIAL_DIAGNOSIS,,,,,,,AGE_AT_RADIATION_START
+AGE_AT_RADIATION_STOP,treatment_end|treatment_notes|treatment_start|treatment_type,1,stage2,numeric,treatment_start,1.0,AGE_AT_RADIATION_STOP,treatment_end,1.0,AGE_AT_RADIATION_STOP,,,,,,,,,,AGE_AT_RADIATION_STOP
+AGE_AT_RESECTION,age_at_procurement,1,stage2,numeric,age_at_procurement,1.15,AGE_AT_RESECTION,age_at_diagnosis,0.9602,age_at_diagnosis,,,,,,,,,,AGE_AT_RESECTION
+AGE_AT_SAMPLE_COLLECTION,age_at_procurement,1,stage2,numeric,age_at_procurement,1.15,AGE_AT_SAMPLE_COLLECTION,,,,,,,,,,,,,AGE_AT_SAMPLE_COLLECTION
+AGE_AT_SAMPLING,age_at_procurement,1,stage2,numeric,age_at_procurement,1.15,AGE_AT_SAMPLING,,,,,,,,,,,,,AGE_AT_SAMPLING
+AGE_AT_SCC,age_at_procurement,1,stage2,numeric,age_at_procurement,1.15,AGE_AT_SCC,age_at_procurement_min,0.8943,age_at_procurement_min,,,,,,,,,,AGE_AT_SCC
+AGE_AT_SEQ_REPORT,age_at_procurement,1,stage2,numeric,age_at_procurement,1.15,AGE_AT_SEQ_REPORT,age_at_diagnosis,0.9417,AGE_AT_DIAGNOSIS_GROUP,,,,,,,,,,AGE_AT_SEQ_REPORT
+AGE_AT_SEQ_REPORTED_YEARS,age_at_procurement,1,stage2,numeric,age_at_procurement,1.15,AGE_AT_SEQ_REPORTED_YEARS,,,,,,,,,,,,,AGE_AT_SEQ_REPORTED_YEARS
+AGE_AT_SEQUENCING,age_at_procurement,1,stage2,numeric,age_at_procurement,1.15,AGE_AT_SEQUENCING,,,,,,,,,,,,,AGE_AT_SEQUENCING
+AGE_AT_SPECIMEN_ACQUISITION,age_at_procurement,1,stage2,numeric,age_at_procurement,1.15,AGE_AT_SPECIMEN_ACQUISITION,,,,,,,,,,,,,AGE_AT_SPECIMEN_ACQUISITION
+AGE_AT_TCGA_SPECIMEN,age_at_procurement,1,stage2,numeric,age_at_procurement,1.15,AGE_AT_TCGA_SPECIMEN,,,,,,,,,,,,,AGE_AT_TCGA_SPECIMEN
+AGE_D,age_at_diagnosis,1,stage2,numeric,age_at_diagnosis,1.15,AGE_D,age_at_procurement,1.0294,AGE,,,,,,,,,,AGE_D
+AGE_IN_DAYS,age_at_procurement,1,stage2,numeric,age_at_procurement,1.15,AGE_IN_DAYS,age_at_diagnosis,0.958,AGE_D,,,,,,,,,,AGE_IN_DAYS
+AGE_RESECTED,age_at_procurement,1,stage2,numeric,age_at_procurement,1.15,AGE_RESECTED,age_at_diagnosis,0.9722,AGE_D,,,,,,,,,,AGE_RESECTED
+AGE_START_IO,age_at_procurement,1,stage2,numeric,age_at_procurement,1.15,AGE_START_IO,treatment_start,0.7643,AGE_AT_RADIATION_START,,,,,,,,,,AGE_START_IO
+AGE_TESTING_YEARS,age_at_procurement,1,stage2,numeric,age_at_procurement,1.15,AGE_TESTING_YEARS,age_at_diagnosis,0.9735,AGE_AT_DIAGNOSIS,,,,,,,,,,AGE_TESTING_YEARS
+AGE_YRS,age_at_procurement,1,stage2,numeric,age_at_procurement,1.15,AGE_YRS,age_at_diagnosis,0.9745,AGE_D,,,,,,,,,,AGE_YRS
+AGENT,treatment_dose|treatment_name,1,stage3,ncit,treatment_name,1.0,AGENT,,,,,,,,,,,,,AGENT
+ALKYLATING_AGENT,treatment_type,1,stage2,alias,treatment_type,1.0,alkylating agent,treatment_duration,0.7775,x2yr alkylating agent,treatment_dose,0.4985,agent,treatment_name,0.4985,agent,,,,ALKYLATING_AGENT
+ALKYLATING_CHEMOTHERAPY,treatment_type,99,stage2,numeric,treatment_start,0.7574,AGE_AT_CHEMOTHERAPY_STOP,treatment_end,0.7574,AGE_AT_CHEMOTHERAPY_STOP,treatment_dose,0.7458,CHEMO_OTHER_CYCLES,,,,,,,ALKYLATING_CHEMOTHERAPY
+ALKYLATING_TX,treatment_type,1,stage2,alias,treatment_type,1.0,alkylating tx,treatment_number,0.5521,lines of tx,treatment_reason,0.5493,tx line,,,,,,,ALKYLATING_TX
+ALL_TX_AT_MSK,treatment_notes,1,stage2,alias,treatment_notes,1.0,all tx at msk,treatment_type,0.5958,targeted tx,treatment_name,0.5716,tx reg,,,,,,,ALL_TX_AT_MSK
+ALPELISIB_DOSE,treatment_dose|treatment_name,1,stage2,numeric,treatment_dose,1.15,ALPELISIB_DOSE,treatment_number,0.8091,CHEMO_CONCURRENT_DOSE,,,,,,,,,,ALPELISIB_DOSE
+ALPELISIB_SCHEDULING,treatment_frequency|treatment_name,1,stage2,alias,treatment_frequency,1.0,alpelisib scheduling,treatment_name,1.0,alpelisib scheduling,treatment_dose,0.4894,alpelisib dose,treatment_type,0.3424,alkylating agent,treatment_end,0.3053,timing other notes,ALPELISIB_SCHEDULING
+ALTERNATE_THERAPY,treatment_status|treatment_type,1,stage3,value,treatment_type,1.0,Chemotherapy,treatment_status,0.5,Surgery,,,,,,,,,,ALTERNATE_THERAPY
+ALTERNATE_THERAPY_OTHER,treatment_name|treatment_notes|treatment_reason|treatment_status|treatment_type,1,stage3,value,treatment_type,1.0,Vaccine,,,,,,,,,,,,,ALTERNATE_THERAPY_OTHER
+ANATOMICAL_SUBTYPE,body_site,1,stage2,alias,body_site,1.0,anatomical subtype,cancer_subtype,0.7095,histological subtype,,,,,,,,,,ANATOMICAL_SUBTYPE
+ANCESTRY_PRIMARY,ancestry|ancestry_details,1,stage2,alias,ancestry,1.0,ancestry primary,ancestry_details,1.0,ancestry primary,ancestry_ontology_term_id,0.652,ancestry ontology term id,ancestry_details_ontology_term_id,0.6422,ancestry details ontology term id,,,,ANCESTRY_PRIMARY
+ANDROGEN_DEPRIVATION_THERAPY,treatment_name|treatment_type,1,stage3,ncit,treatment_name,1.0,ANDROGEN_DEPRIVATION_THERAPY,,,,,,,,,,,,,ANDROGEN_DEPRIVATION_THERAPY
+ANTHRACYCLINE_TX,treatment_name,1,stage2,alias,treatment_name,1.0,anthracycline tx,treatment_duration,0.8066,x2yr anthracycline,treatment_type,0.5658,chemo tx,,,,,,,ANTHRACYCLINE_TX
+ANTIMETABOLITE_TX,treatment_type,1,stage2,alias,treatment_type,1.0,antimetabolite tx,treatment_name,0.553,tx lenolidamide,,,,,,,,,,ANTIMETABOLITE_TX
+ANY_LINE_CHEMO,treatment_type,1,stage2,alias,treatment_type,1.0,any line chemo,treatment_name,0.839,chemo first line,treatment_reason,0.839,chemo first line,treatment_status,0.839,chemo first line,treatment_number,0.7867,num lines chemo,ANY_LINE_CHEMO
+ANY_LINE_HORMONE,treatment_type,1,stage2,alias,treatment_type,1.0,any line hormone,treatment_number,0.8002,num lines hormone,,,,,,,,,,ANY_LINE_HORMONE
+ANY_LINE_IMMUNO,treatment_type,99,stage2,numeric,treatment_number,0.9097,NUM_LINES_IMMUNO,,,,,,,,,,,,,ANY_LINE_IMMUNO
+ANY_LINE_IODINE,treatment_name,1,stage2,alias,treatment_name,1.0,any line iodine,treatment_number,0.8482,num lines iodine,treatment_reason,0.6722,io line,treatment_type,0.6722,io line,,,,ANY_LINE_IODINE
+ANY_LINE_NTRK,treatment_type,1,stage2,alias,treatment_type,1.0,any line ntrk,treatment_number,0.6968,num lines ntrk,treatment_dose,0.6474,third line,treatment_name,0.6474,third line,treatment_reason,0.6474,third line,ANY_LINE_NTRK
+ANY_LINE_TARGETED,treatment_type,1,stage2,alias,treatment_type,1.0,any line targeted,treatment_number,0.7516,num lines targeted,,,,,,,,,,ANY_LINE_TARGETED
+ANY_THERAPY_2YRS,treatment_duration,1,stage2,alias,treatment_duration,1.0,any therapy 2yrs,treatment_status,0.752,alternate therapy,treatment_type,0.752,alternate therapy,treatment_name,0.7402,alternate therapy other,treatment_notes,0.7402,alternate therapy other,ANY_THERAPY_2YRS
+ANYTIME_CANCER_LOC_OVARY,sex,1,stage3,value,sex,1.0,Female,,,,,,,,,,,,,ANYTIME_CANCER_LOC_OVARY
+BIOPSY_SITE,body_site,1,stage3,ncit,body_site,1.0,BIOPSY_SITE,,,,,,,,,,,,,BIOPSY_SITE
+BIRTH_COUNTRY,country,1,stage3,value,country,1.0,Australia,,,,,,,,,,,,,BIRTH_COUNTRY
+BRACHYTHERAPY_TOTAL_DOSE_POINT_A,treatment_dose|treatment_notes|treatment_type,1,stage2,numeric,treatment_dose,1.15,BRACHYTHERAPY_TOTAL_DOSE_POINT_A,,,,,,,,,,,,,BRACHYTHERAPY_TOTAL_DOSE_POINT_A
+BRACHYTHERAPY_TYPE,treatment_name|treatment_type,1,stage2,alias,treatment_name,1.0,brachytherapy type,treatment_type,1.0,brachytherapy type,treatment_dose,0.7249,brachytherapy total dose point a,treatment_notes,0.7249,brachytherapy total dose point a,,,,BRACHYTHERAPY_TYPE
+BRACHYTHERAPY_TYPE_OTHER,treatment_name|treatment_type,1,stage2,alias,treatment_name,1.0,brachytherapy type other,treatment_type,1.0,brachytherapy type other,treatment_dose,0.6862,brachytherapy total dose point a,treatment_notes,0.6862,brachytherapy total dose point a,,,,BRACHYTHERAPY_TYPE_OTHER
+BREAST_SURGERY,treatment_name|treatment_type,1,stage3,value,treatment_type,1.0,Mastectomy,,,,,,,,,,,,,BREAST_SURGERY
+CALC_TREATMENT_NAIVE,treatment_notes|treatment_status,1,stage2,alias,treatment_notes,1.0,calc treatment naive,treatment_status,1.0,calc treatment naive,treatment_dose_unit,0.4567,treatment dose unit,treatment_dose,0.44,treatment dose,treatment_type,0.4397,cumulative treatment types,CALC_TREATMENT_NAIVE
+CANCER.TYPE,cancer_type,1,stage3,ncit,cancer_type,1.0,CANCER.TYPE,,,,,,,,,,,,,CANCER.TYPE
+CANCER_SUBTYPE_CURATED,cancer_subtype,99,stage3,ncit,cancer_type,1.0,CANCER_SUBTYPE_CURATED,,,,,,,,,,,,,CANCER_SUBTYPE_CURATED
+CANCER_TYPE,cancer_type,1,stage3,ncit,cancer_type,0.973,CANCER_TYPE,,,,,,,,,,,,,CANCER_TYPE
+CANCER_TYPE_DETAILED,cancer_type_details,99,stage3,ncit,cancer_type,0.9355,CANCER_TYPE_DETAILED,,,,,,,,,,,,,CANCER_TYPE_DETAILED
+CARBOPLATIN_TX,treatment_name,1,stage2,alias,treatment_name,1.0,carboplatin tx,,,,,,,,,,,,,CARBOPLATIN_TX
+CERVIX_SUV_RESULTS,sex,1,stage3,value,sex,1.0,Female,,,,,,,,,,,,,CERVIX_SUV_RESULTS
+CHEMO_CONCURRENT_COURSE,treatment_frequency|treatment_status|treatment_type,1,stage2,alias,treatment_frequency,1.0,chemo concurrent course,treatment_status,1.0,chemo concurrent course,treatment_type,1.0,chemo concurrent course,treatment_name,0.7443,chemo concurrent type,treatment_notes,0.7311,chemo concurrent reason not other,CHEMO_CONCURRENT_COURSE
+CHEMO_CONCURRENT_DOSE,treatment_dose|treatment_number|treatment_status|treatment_type,1,stage2,alias,treatment_dose,1.0,chemo concurrent dose,treatment_number,1.0,chemo concurrent dose,treatment_status,1.0,chemo concurrent dose,treatment_type,1.0,chemo concurrent dose,treatment_frequency,0.7246,chemo concurrent course,CHEMO_CONCURRENT_DOSE
+CHEMO_CONCURRENT_FRACTIONS_TOTAL,treatment_dose|treatment_number|treatment_status|treatment_type,1,stage2,alias,treatment_dose,1.0,chemo concurrent fractions total,treatment_number,1.0,chemo concurrent fractions total,treatment_status,1.0,chemo concurrent fractions total,treatment_type,1.0,chemo concurrent fractions total,treatment_name,0.6799,chemo concurrent type,CHEMO_CONCURRENT_FRACTIONS_TOTAL
+CHEMO_CONCURRENT_REASON_NOT_GIVEN,treatment_notes|treatment_type,1,stage2,alias,treatment_notes,1.0,chemo concurrent reason not given,treatment_type,1.0,chemo concurrent reason not given,treatment_name,0.7876,chemo concurrent type other,treatment_status,0.7876,chemo concurrent type other,treatment_frequency,0.7302,chemo concurrent course,CHEMO_CONCURRENT_REASON_NOT_GIVEN
+CHEMO_CONCURRENT_REASON_NOT_OTHER,treatment_notes|treatment_type,1,stage2,alias,treatment_notes,1.0,chemo concurrent reason not other,treatment_type,1.0,chemo concurrent reason not other,treatment_name,0.813,chemo concurrent type other,treatment_status,0.813,chemo concurrent type other,treatment_frequency,0.7311,chemo concurrent course,CHEMO_CONCURRENT_REASON_NOT_OTHER
+CHEMO_CONCURRENT_TYPE,treatment_name|treatment_status|treatment_type,1,stage3,value,treatment_type,1.0,Other,,,,,,,,,,,,,CHEMO_CONCURRENT_TYPE
+CHEMO_CONCURRENT_TYPE_OTHER,treatment_name|treatment_status|treatment_type,1,stage2,alias,treatment_name,1.0,chemo concurrent type other,treatment_status,1.0,chemo concurrent type other,treatment_type,1.0,chemo concurrent type other,treatment_notes,0.813,chemo concurrent reason not other,treatment_frequency,0.744,chemo concurrent course,CHEMO_CONCURRENT_TYPE_OTHER
+CHEMO_CYCLES,treatment_number|treatment_type,1,stage2,numeric,treatment_number,1.0,CHEMO_CYCLES,treatment_dose,0.9831,CHEMO_OTHER_CYCLES,treatment_duration,0.9831,CHEMO_OTHER_CYCLES,,,,,,,CHEMO_CYCLES
+CHEMO_DETAILS,treatment_name|treatment_type,1,stage2,alias,treatment_name,1.0,chemo details,treatment_type,1.0,chemo details,treatment_reason,0.7203,salvage chemo,,,,,,,CHEMO_DETAILS
+CHEMO_FIRST_LINE,treatment_name|treatment_reason|treatment_status|treatment_type,1,stage2,alias,treatment_name,1.0,chemo first line,treatment_reason,1.0,chemo first line,treatment_status,1.0,chemo first line,treatment_type,1.0,chemo first line,treatment_group,0.7992,firstline chemo group,CHEMO_FIRST_LINE
+CHEMO_OTHER,treatment_name|treatment_type,1,stage3,ncit,treatment_name,1.0,CHEMO_OTHER,,,,,,,,,,,,,CHEMO_OTHER
+CHEMO_OTHER_CYCLES,treatment_dose|treatment_duration|treatment_notes|treatment_number|treatment_type,1,stage2,alias,treatment_dose,1.0,chemo other cycles,treatment_duration,1.0,chemo other cycles,treatment_notes,1.0,chemo other cycles,treatment_number,1.0,chemo other cycles,treatment_type,1.0,chemo other cycles,CHEMO_OTHER_CYCLES
+CHEMO_REGIMEN_CATEGORY,treatment_group|treatment_name|treatment_notes|treatment_reason|treatment_type,1,stage3,ncit,treatment_name,1.0,CHEMO_REGIMEN_CATEGORY,,,,,,,,,,,,,CHEMO_REGIMEN_CATEGORY
+CHEMO_TX,treatment_type,1,stage2,alias,treatment_type,1.0,chemo tx,treatment_name,0.6738,chemo details,treatment_reason,0.6322,salvage chemo,,,,,,,CHEMO_TX
+CHEMOTHERAPY,treatment_name|treatment_type,1,stage3,ncit,treatment_name,1.0,CHEMOTHERAPY,,,,,,,,,,,,,CHEMOTHERAPY
+CHEMOTHERAPY+IMMUNOTHERAPY,treatment_type,1,stage2,alias,treatment_type,1.0,chemotherapy immunotherapy,treatment_name,0.7807,chemotherapy,treatment_notes,0.7305,chemotherapy type,,,,,,,CHEMOTHERAPY+IMMUNOTHERAPY
+CHEMOTHERAPY_AGENTS,treatment_name|treatment_type,1,stage3,value,treatment_type,1.0,Everolimus,,,,,,,,,,,,,CHEMOTHERAPY_AGENTS
+CHEMOTHERAPY_PRIOR_SAMPLE_ACQUIRED,treatment_name|treatment_type,1,stage3,ncit,treatment_name,1.0,CHEMOTHERAPY_PRIOR_SAMPLE_ACQUIRED,,,,,,,,,,,,,CHEMOTHERAPY_PRIOR_SAMPLE_ACQUIRED
+CHEMOTHERAPY_TYPE,treatment_notes|treatment_type,1,stage2,alias,treatment_notes,1.0,chemotherapy type,treatment_type,1.0,chemotherapy type,treatment_name,0.8965,chemotherapy,treatment_reason,0.7451,neoadjuvant chemotherapy,,,,CHEMOTHERAPY_TYPE
+CHRONIC_HEPATITIS_ANY_TYPE,cancer_subtype,1,stage2,alias,cancer_subtype,1.0,chronic hepatitis any type,disease,0.4068,fatty liver disease,treatment_type,0.4008,drug type,treatment_reason,0.3947,most recent treatment type,treatment_status,0.3947,most recent treatment type,CHRONIC_HEPATITIS_ANY_TYPE
+CISPLATIN_TX,treatment_name,1,stage2,alias,treatment_name,1.0,cisplatin tx,,,,,,,,,,,,,CISPLATIN_TX
+CLAUDIN_SUBTYPE,cancer_subtype,1,stage2,alias,cancer_subtype,1.0,claudin subtype,,,,,,,,,,,,,CLAUDIN_SUBTYPE
+CLINICAL_STATUS_AT_COLLECTION_EVENT,vital_status,1,stage3,value,vital_status,1.0,Alive,,,,,,,,,,,,,CLINICAL_STATUS_AT_COLLECTION_EVENT
+CNS_DISEASE,disease,1,stage2,alias,disease,1.0,cns disease,cancer_type,0.4164,pathological diagnosis,,,,,,,,,,CNS_DISEASE
+COMPLETED_RADIATION_DOSE,treatment_dose|treatment_status,99,stage3,value,treatment_type,1.0,"Radiotherapy, Conformal",,,,,,,,,,,,,COMPLETED_RADIATION_DOSE
+COMPLETED_TOTAL_RADIATION_DOSE,treatment_dose|treatment_status|treatment_type,1,stage2,alias,treatment_dose,1.0,completed total radiation dose,treatment_status,1.0,completed total radiation dose,treatment_type,1.0,completed total radiation dose,treatment_end,0.6908,dose of re irradiation,treatment_notes,0.6908,dose of re irradiation,COMPLETED_TOTAL_RADIATION_DOSE
+CONCURRENT_CHEMOTHERAPY,treatment_status|treatment_type,1,stage2,alias,treatment_status,1.0,concurrent chemotherapy,treatment_type,1.0,concurrent chemotherapy,treatment_name,0.8129,chemotherapy,treatment_dose,0.7995,chemo concurrent dose,treatment_number,0.7995,chemo concurrent dose,CONCURRENT_CHEMOTHERAPY
+COUNTRY,country,1,stage3,value,country,1.0,Romania,,,,,,,,,,,,,COUNTRY
+COUNTRY_OF_ORIGIN,country,1,stage3,value,country,1.0,China,,,,,,,,,,,,,COUNTRY_OF_ORIGIN
+COUNTRY_OF_PROCUREMENT,country,1,stage3,value,country,1.0,Germany,,,,,,,,,,,,,COUNTRY_OF_PROCUREMENT
+CRDB_PRIOR_RX,treatment_notes|treatment_status,1,stage2,alias,treatment_notes,1.0,crdb prior rx,treatment_status,1.0,crdb prior rx,treatment_dose,0.6424,subsequent rx,treatment_name,0.6424,subsequent rx,treatment_number,0.6424,subsequent rx,CRDB_PRIOR_RX
+CRDB_SURVIVAL_STATUS,vital_status,1,stage3,value,vital_status,1.0,Alive,,,,,,,,,,,,,CRDB_SURVIVAL_STATUS
+CRDB_TREATMENT_END_DAYS,treatment_end|treatment_notes,1,stage2,numeric,treatment_end,1.15,CRDB_TREATMENT_END_DAYS,treatment_duration,0.9565,DURATION_OF_THERAPY_DAYS,treatment_frequency,0.9498,TREATMENT_SCHEDULE,,,,,,,CRDB_TREATMENT_END_DAYS
+CRT_CHEMOAGENT,treatment_name|treatment_type,1,stage3,ncit,treatment_name,1.0,CRT_CHEMOAGENT,,,,,,,,,,,,,CRT_CHEMOAGENT
+CUMULATIVE_CHEMO,treatment_notes|treatment_type,1,stage2,alias,treatment_notes,1.0,cumulative chemo,treatment_type,1.0,cumulative chemo,treatment_dose,0.7066,chemo concurrent dose,treatment_number,0.7066,chemo concurrent dose,treatment_status,0.7066,chemo concurrent dose,CUMULATIVE_CHEMO
+CUMULATIVE_TREATMENT_REGIMEN_COUNT,treatment_notes|treatment_number,2,stage2,numeric,treatment_dose,1.1047,CUMULATIVE_TREATMENT_REGIMENS,treatment_number,1.1,CUMULATIVE_TREATMENT_REGIMEN_COUNT,treatment_frequency,0.8506,treatment_frequency,,,,,,,CUMULATIVE_TREATMENT_REGIMEN_COUNT
+CUMULATIVE_TREATMENT_REGIMENS,treatment_dose|treatment_name,1,stage3,ncit,treatment_name,1.0,CUMULATIVE_TREATMENT_REGIMENS,,,,,,,,,,,,,CUMULATIVE_TREATMENT_REGIMENS
+CUMULATIVE_TREATMENT_STAGE_COUNT,treatment_notes|treatment_number,99,invalid,stage_column,,,,,,,,,,,,,,,,CUMULATIVE_TREATMENT_STAGE_COUNT
+CUMULATIVE_TREATMENT_STAGES,treatment_reason|treatment_status,99,invalid,stage_column,,,,,,,,,,,,,,,,CUMULATIVE_TREATMENT_STAGES
+CUMULATIVE_TREATMENT_TYPE_COUNT,treatment_notes|treatment_number,1,stage2,numeric,treatment_number,1.0,CUMULATIVE_TREATMENT_TYPE_COUNT,treatment_dose,0.8878,CUMULATIVE_TREATMENT_REGIMENS,treatment_frequency,0.8209,treatment_frequency,,,,,,,CUMULATIVE_TREATMENT_TYPE_COUNT
+CUMULATIVE_TREATMENT_TYPES,treatment_type,1,stage3,value,treatment_type,1.0,Supportive Care,,,,,,,,,,,,,CUMULATIVE_TREATMENT_TYPES
+curated_cancer_type,sex,1,stage3,value,sex,1.0,Male,,,,,,,,,,,,,curated_cancer_type
+CURRENT_CYCLE,treatment_status,99,stage2,numeric,treatment_number,0.8476,CYCLES_COMPLETED,,,,,,,,,,,,,CURRENT_CYCLE
+CURRENT_REGIMEN,treatment_name|treatment_reason|treatment_status,99,stage3,value,treatment_type,1.0,Donor Lymphocyte Infusion,,,,,,,,,,,,,CURRENT_REGIMEN
+CYCLES_COMPLETED,treatment_number|treatment_status,1,stage2,numeric,treatment_number,1.0,CYCLES_COMPLETED,,,,,,,,,,,,,CYCLES_COMPLETED
+CYCLES_ON_THERAPY,treatment_notes|treatment_number,1,stage2,numeric,treatment_number,1.0,CYCLES_ON_THERAPY,treatment_frequency,0.822,TREATMENT_SCHEDULE,treatment_duration,0.8081,ANY_THERAPY_2YRS,,,,,,,CYCLES_ON_THERAPY
+CYTOLOGICAL_PHENOTYPE,cancer_subtype,99,stage3,ncit,body_site,1.0,CYTOLOGICAL_PHENOTYPE,,,,,,,,,,,,,CYTOLOGICAL_PHENOTYPE
+CYTOTOXIC_TREATMENT,treatment_type,1,stage2,alias,treatment_type,1.0,cytotoxic treatment,treatment_status,0.7686,prior treatment of cytotoxic chemotherapy,treatment_notes,0.672,other cytotoxic tx,,,,,,,CYTOTOXIC_TREATMENT
+CYTOTOXIC_TX,treatment_type,1,stage2,alias,treatment_type,1.0,cytotoxic tx,treatment_notes,0.9502,other cytotoxic tx,,,,,,,,,,CYTOTOXIC_TX
+DEFINITIVE_SURGICAL_PROCEDURE,treatment_name|treatment_type,1,stage3,value,treatment_type,1.0,Other,,,,,,,,,,,,,DEFINITIVE_SURGICAL_PROCEDURE
+DETAILED_CANCER_TYPE,cancer_type_details,99,stage3,ncit,cancer_type,0.9697,DETAILED_CANCER_TYPE,disease,0.0303,DETAILED_CANCER_TYPE,,,,,,,,,,DETAILED_CANCER_TYPE
+DETAILED_PRIMARY_SITE,body_site,1,stage3,ncit,body_site,0.9773,DETAILED_PRIMARY_SITE,,,,,,,,,,,,,DETAILED_PRIMARY_SITE
+DETAILS_FIRST_LINE_COMMENTS,treatment_group|treatment_name|treatment_notes|treatment_reason,99,stage3,value,treatment_type,1.0,Surveillance,,,,,,,,,,,,,DETAILS_FIRST_LINE_COMMENTS
+DFS_STATUS,vital_status,1,stage2,alias,vital_status,1.0,dfs status,,,,,,,,,,,,,DFS_STATUS
+DIABETES_DIAGNOSIS_INDICATOR,disease,1,stage2,alias,disease,1.0,diabetes diagnosis indicator,body_site,0.5306,disease multifocal indicator,treatment_name,0.4323,pharm tx mitotane indicator,treatment_type,0.4323,pharm tx mitotane indicator,treatment_status,0.4208,treatment prior to surgery indicator,DIABETES_DIAGNOSIS_INDICATOR
+DIAGNOSIS,disease,99,stage3,ncit,cancer_type,1.0,DIAGNOSIS,,,,,,,,,,,,,DIAGNOSIS
+DIAGNOSIS.AGE,age_at_diagnosis,1,stage2,numeric,age_at_diagnosis,1.15,DIAGNOSIS.AGE,,,,,,,,,,,,,DIAGNOSIS.AGE
+DIAGNOSIS_CANCER_BONE,body_site,1,stage2,alias,body_site,1.0,diagnosis cancer bone,cancer_type_details,0.5693,cancer type details,,,,,,,,,,DIAGNOSIS_CANCER_BONE
+DIAGNOSIS_CANCER_LOC_AXILLARY_LN,body_site,1,stage2,alias,body_site,1.0,diagnosis cancer loc axillary ln,,,,,,,,,,,,,DIAGNOSIS_CANCER_LOC_AXILLARY_LN
+DIAGNOSIS_CANCER_LOC_BRAIN,body_site,1,stage2,alias,body_site,1.0,diagnosis cancer loc brain,,,,,,,,,,,,,DIAGNOSIS_CANCER_LOC_BRAIN
+DIAGNOSIS_CANCER_LOC_BREAST,body_site,1,stage2,alias,body_site,1.0,diagnosis cancer loc breast,sex,0.7182,diagnosis cancer loc ovary,,,,,,,,,,DIAGNOSIS_CANCER_LOC_BREAST
+DIAGNOSIS_CANCER_LOC_CHEST_WALL,body_site,1,stage2,alias,body_site,1.0,diagnosis cancer loc chest wall,,,,,,,,,,,,,DIAGNOSIS_CANCER_LOC_CHEST_WALL
+DIAGNOSIS_CANCER_LOC_LIVER,body_site,1,stage2,alias,body_site,1.0,diagnosis cancer loc liver,,,,,,,,,,,,,DIAGNOSIS_CANCER_LOC_LIVER
+DIAGNOSIS_CANCER_LOC_LUNG,body_site,1,stage2,alias,body_site,1.0,diagnosis cancer loc lung,,,,,,,,,,,,,DIAGNOSIS_CANCER_LOC_LUNG
+DIAGNOSIS_CANCER_LOC_OTHER_LN,body_site,1,stage2,alias,body_site,1.0,diagnosis cancer loc other ln,,,,,,,,,,,,,DIAGNOSIS_CANCER_LOC_OTHER_LN
+DIAGNOSIS_CANCER_LOC_OVARY,body_site|sex,1,stage3,value,sex,1.0,Female,,,,,,,,,,,,,DIAGNOSIS_CANCER_LOC_OVARY
+DIAGNOSIS_CANCER_LOC_PLEURAL_EFFUSION,body_site,1,stage2,alias,body_site,1.0,diagnosis cancer loc pleural effusion,,,,,,,,,,,,,DIAGNOSIS_CANCER_LOC_PLEURAL_EFFUSION
+DIAGNOSIS_CANCER_LOC_SKIN,body_site,1,stage2,alias,body_site,1.0,diagnosis cancer loc skin,,,,,,,,,,,,,DIAGNOSIS_CANCER_LOC_SKIN
+DISEASE,disease,99,stage3,ncit,cancer_type,1.0,DISEASE,,,,,,,,,,,,,DISEASE
+DISEASE_CODE,disease,1,stage2,alias,disease,1.0,disease code,body_site,0.5946,disease extent,disease_ontology_term_id,0.5197,disease ontology term id,,,,,,,DISEASE_CODE
+DISEASE_EXTENT,body_site|disease,99,stage3,ncit,cancer_type,1.0,DISEASE_EXTENT,,,,,,,,,,,,,DISEASE_EXTENT
+DISEASE_MULTIFOCAL_INDICATOR,body_site,1,stage2,alias,body_site,1.0,disease multifocal indicator,disease,0.5306,diabetes diagnosis indicator,cancer_type,0.5037,primary diagnosis,,,,,,,DISEASE_MULTIFOCAL_INDICATOR
+DISEASE_ONTOLOGY,disease,99,stage3,ncit,cancer_type,1.0,DISEASE_ONTOLOGY,,,,,,,,,,,,,DISEASE_ONTOLOGY
+DMETS_DX_FEMALE_GENITAL,sex,1,stage3,value,sex,1.0,Female,,,,,,,,,,,,,DMETS_DX_FEMALE_GENITAL
+DMETS_DX_MALE_GENITAL,sex,1,stage3,value,sex,1.0,Male,,,,,,,,,,,,,DMETS_DX_MALE_GENITAL
+DMETS_DX_OVARY,sex,1,stage3,value,sex,1.0,Female,,,,,,,,,,,,,DMETS_DX_OVARY
+DOMINANT_HISTOLOGICAL_SUBTYPE,cancer_subtype,1,stage2,alias,cancer_subtype,1.0,dominant histological subtype,cancer_type_details,0.6725,histological type,,,,,,,,,,DOMINANT_HISTOLOGICAL_SUBTYPE
+DOPAMINE,treatment_name,1,stage2,alias,treatment_name,1.0,dopamine,treatment_type,0.4536,therapy,,,,,,,,,,DOPAMINE
+DOSE_MG_DAY_STEROID_DURING_PD1,treatment_dose|treatment_frequency|treatment_status|treatment_type,1,stage2,numeric,treatment_dose,1.1184,DOSE_MG_DAY_STEROID_DURING_PD1,treatment_frequency,0.9684,DOSE_MG_DAY_STEROID_DURING_PD1,,,,,,,,,,DOSE_MG_DAY_STEROID_DURING_PD1
+DOSE_MG_DAY_STEROID_PD1_START,treatment_dose|treatment_frequency|treatment_type,1,stage2,numeric,treatment_dose,1.1144,DOSE_MG_DAY_STEROID_PD1_START,treatment_frequency,0.9644,DOSE_MG_DAY_STEROID_PD1_START,,,,,,,,,,DOSE_MG_DAY_STEROID_PD1_START
+DOSE_OF_PEMBROLIZUMAB_PER_INJECTION (MG/KG),treatment_dose|treatment_name,1,stage2,alias,treatment_dose,1.0,dose of pembrolizumab per injection mg kg,treatment_name,1.0,dose of pembrolizumab per injection mg kg,treatment_number,0.6141,number of cycles pembrolizumab,treatment_dose_unit,0.5031,treatment dose unit,treatment_frequency,0.4887,dose mg day steroid during pd1,DOSE_OF_PEMBROLIZUMAB_PER_INJECTION (MG/KG)
+DOSE_OF_RE-IRRADIATION,treatment_dose|treatment_end|treatment_notes|treatment_number|treatment_start|treatment_status|treatment_type,1,stage2,alias,treatment_dose,1.0,dose of re irradiation,treatment_end,1.0,dose of re irradiation,treatment_notes,1.0,dose of re irradiation,treatment_number,1.0,dose of re irradiation,treatment_start,1.0,dose of re irradiation,DOSE_OF_RE-IRRADIATION
+DOT_MONTHS,treatment_duration,1,stage2,numeric,treatment_duration,1.15,DOT_MONTHS,age_at_diagnosis,0.6569,AGE_D,,,,,,,,,,DOT_MONTHS
+DRUG,treatment_name,1,stage3,ncit,treatment_name,1.0,DRUG,,,,,,,,,,,,,DRUG
+DRUG_AND_DOSE_STEROID_DURING_PD1,treatment_name|treatment_status|treatment_type,1,stage3,ncit,treatment_name,1.0,DRUG_AND_DOSE_STEROID_DURING_PD1,,,,,,,,,,,,,DRUG_AND_DOSE_STEROID_DURING_PD1
+DRUG_LAST_ADMIN,treatment_end|treatment_start,1,stage2,numeric,treatment_start,1.0,DRUG_LAST_ADMIN,treatment_end,1.0,DRUG_LAST_ADMIN,treatment_duration,0.755,ADMINISTRATION_OF_DRUG_WEEKS,,,,,,,DRUG_LAST_ADMIN
+DRUG_START,treatment_end|treatment_start,1,stage2,numeric,treatment_start,1.15,DRUG_START,treatment_end,1.15,DRUG_START,treatment_duration,0.9005,ADMINISTRATION_OF_DRUG_WEEKS,,,,,,,DRUG_START
+DRUG_TYPE,treatment_type,1,stage3,value,treatment_type,1.0,Anti-CTLA-4 Monoclonal Antibody,,,,,,,,,,,,,DRUG_TYPE
+DSS_STATUS,vital_status,99,stage3,ncit,cancer_type,1.0,DSS_STATUS,,,,,,,,,,,,,DSS_STATUS
+DURATION_OF_INDUCTION_TREATMENT,treatment_duration|treatment_reason,1,stage2,numeric,treatment_duration,1.15,DURATION_OF_INDUCTION_TREATMENT,treatment_dose,0.7856,CUMULATIVE_TREATMENT_REGIMENS,,,,,,,,,,DURATION_OF_INDUCTION_TREATMENT
+DURATION_OF_THERAPY_DAYS,treatment_duration,1,stage2,numeric,treatment_duration,1.15,DURATION_OF_THERAPY_DAYS,treatment_frequency,0.9735,TREATMENT_SCHEDULE,,,,,,,,,,DURATION_OF_THERAPY_DAYS
+DURATION_OF_THERAPY_WEEKS,treatment_duration,1,stage2,numeric,treatment_duration,1.15,DURATION_OF_THERAPY_WEEKS,,,,,,,,,,,,,DURATION_OF_THERAPY_WEEKS
+DX_AT_INCLUSION,cancer_type,1,stage3,ncit,cancer_type,1.0,DX_AT_INCLUSION,,,,,,,,,,,,,DX_AT_INCLUSION
+DX_ORG_INST,cancer_type_details,99,stage3,value,sample_type,1.0,Metastatic Neoplasm,,,,,,,,,,,,,DX_ORG_INST
+DX_TYPE,treatment_name|treatment_notes|treatment_type,1,stage3,value,treatment_type,1.0,Mastectomy,,,,,,,,,,,,,DX_TYPE
+ENDOCRINE_THERAPY,treatment_name|treatment_type,1,stage3,ncit,treatment_name,1.0,ENDOCRINE_THERAPY,,,,,,,,,,,,,ENDOCRINE_THERAPY
+EPINEPHRINE,treatment_name,1,stage2,alias,treatment_name,1.0,epinephrine,treatment_type,0.5309,endocrine therapy,,,,,,,,,,EPINEPHRINE
+ESOPHAGEAL_TUMOR_LOCATION_CENTERED,body_site,1,stage2,alias,body_site,1.0,esophageal tumor location centered,,,,,,,,,,,,,ESOPHAGEAL_TUMOR_LOCATION_CENTERED
+ESOPHAGEAL_TUMOR_LOCATION_INVOLVED,body_site,1,stage2,alias,body_site,1.0,esophageal tumor location involved,,,,,,,,,,,,,ESOPHAGEAL_TUMOR_LOCATION_INVOLVED
+ETHNICITY,ancestry|ancestry_details,1,stage3,value,ancestry_details,0.9643,Cuban,,,,,,,,,,,,,ETHNICITY
+ETHNICITY_SELF_IDENTIFY,ancestry|ancestry_details,1,stage3,value,ancestry_details,1.0,Filipino,,,,,,,,,,,,,ETHNICITY_SELF_IDENTIFY
+EXTRANODAL_DISEASE,disease,1,stage2,alias,disease,1.0,extranodal disease,cancer_type,0.4818,pathological diagnosis,,,,,,,,,,EXTRANODAL_DISEASE
+FAMILY_HISTORY_TESTICULAR_CANCER,sex,1,stage3,value,sex,1.0,Male,,,,,,,,,,,,,FAMILY_HISTORY_TESTICULAR_CANCER
+FIFTH_LINE,treatment_name|treatment_number|treatment_reason|treatment_status,1,stage3,ncit,treatment_name,1.0,FIFTH_LINE,,,,,,,,,,,,,FIFTH_LINE
+FIRST_LINE_MET_TX,treatment_name|treatment_reason,1,stage2,alias,treatment_name,1.0,first line met tx,treatment_reason,1.0,first line met tx,treatment_number,0.807,lines of tx,treatment_dose,0.5881,third line,treatment_type,0.5881,third line,FIRST_LINE_MET_TX
+FIRST_LINE_THERAPY,treatment_group|treatment_name|treatment_reason,99,stage3,value,treatment_type,1.0,Chemotherapy Not Received,,,,,,,,,,,,,FIRST_LINE_THERAPY
+FIRST_LINE_TREATMENT,treatment_name|treatment_reason,1,stage2,alias,treatment_name,1.0,first line treatment,treatment_reason,1.0,first line treatment,treatment_group,0.872,first line therapy,treatment_status,0.682,initial treatment,treatment_type,0.682,initial treatment,FIRST_LINE_TREATMENT
+FIRST_SURGICAL_PROCEDURE_OTHER,treatment_name|treatment_status|treatment_type,1,stage3,value,treatment_type,0.75,Excision,specimen_type,0.75,Resection,treatment_status,0.5,Resection,,,,,,,FIRST_SURGICAL_PROCEDURE_OTHER
+FIRST_THERAPY,treatment_status|treatment_type,1,stage3,value,treatment_type,1.0,Immunotherapy,,,,,,,,,,,,,FIRST_THERAPY
+FIRSTLINE_CHEMO_GROUP,treatment_group|treatment_name|treatment_type,1,stage2,alias,treatment_group,1.0,firstline chemo group,treatment_name,1.0,firstline chemo group,treatment_type,1.0,firstline chemo group,treatment_reason,0.7992,chemo first line,treatment_status,0.7992,chemo first line,FIRSTLINE_CHEMO_GROUP
+FOLIC_ACID_TX,treatment_name,1,stage2,alias,treatment_name,1.0,folic acid tx,treatment_type,0.423,chemo tx,,,,,,,,,,FOLIC_ACID_TX
+FORMULATION,treatment_dose|treatment_name|treatment_notes|treatment_status,1,stage2,alias,treatment_dose,1.0,formulation,treatment_name,1.0,formulation,treatment_notes,1.0,formulation,treatment_status,1.0,formulation,treatment_type,0.448,procedure,FORMULATION
+FOURTH_LINE,treatment_name|treatment_reason|treatment_type,1,stage3,value,treatment_type,1.0,Everolimus,,,,,,,,,,,,,FOURTH_LINE
+GASTRIC_CLASSIFICATION,cancer_subtype,99,stage3,ncit,cancer_type,1.0,GASTRIC_CLASSIFICATION,,,,,,,,,,,,,GASTRIC_CLASSIFICATION
+GENDER,sex,1,stage3,value,sex,1.0,Female,,,,,,,,,,,,,GENDER
+GYN_DIAGNOSIS_CHEMO_INTENT_DESCRIPTION,treatment_notes|treatment_type,99,stage3,value,treatment_status,1.0,Primary,,,,,,,,,,,,,GYN_DIAGNOSIS_CHEMO_INTENT_DESCRIPTION
+GYN_DIAGNOSIS_HISTOLOGY,cancer_type_details,1,stage2,alias,cancer_type_details,1.0,gyn diagnosis histology,cancer_type,0.8121,histology diagnosis,treatment_notes,0.6572,gyn diagnosis chemo intent description,treatment_type,0.6572,gyn diagnosis chemo intent description,,,,GYN_DIAGNOSIS_HISTOLOGY
+HAD_SURGERY,treatment_type,1,stage2,alias,treatment_type,1.0,had surgery,treatment_name,0.7472,surgery,treatment_status,0.5392,treatment,,,,,,,HAD_SURGERY
+HEPATECTOMY,treatment_name|treatment_type,1,stage3,value,treatment_type,1.0,Hepatectomy,,,,,,,,,,,,,HEPATECTOMY
+HER2_VITAL_STATUS,vital_status,1,stage2,alias,vital_status,1.0,her2 vital status,vital_status_ontology_term_id,0.4166,vital status ontology term id,cancer_type_details,0.3685,special histology,cancer_subtype,0.3647,hist subtype2,,,,HER2_VITAL_STATUS
+HISPANIC,ancestry|ancestry_details,1,stage2,alias,ancestry,1.0,hispanic,ancestry_details,1.0,hispanic,,,,,,,,,,HISPANIC
+HIST_SUBTYPE1,cancer_subtype,99,stage3,ncit,cancer_type,1.0,HIST_SUBTYPE1,,,,,,,,,,,,,HIST_SUBTYPE1
+HIST_SUBTYPE2,cancer_subtype,99,stage3,ncit,cancer_type,0.9091,HIST_SUBTYPE2,,,,,,,,,,,,,HIST_SUBTYPE2
+HISTOLOGICAL_DIAGNOSIS,cancer_type_details,99,stage3,value,treatment_type,1.0,Other,,,,,,,,,,,,,HISTOLOGICAL_DIAGNOSIS
+HISTOLOGICAL_SUBTYPE,cancer_subtype,99,stage3,ncit,cancer_type,1.0,HISTOLOGICAL_SUBTYPE,,,,,,,,,,,,,HISTOLOGICAL_SUBTYPE
+HISTOLOGICAL_TYPE,cancer_type_details,99,stage3,value,treatment_type,1.0,Other,,,,,,,,,,,,,HISTOLOGICAL_TYPE
+HISTOLOGY_DIAGNOSIS,cancer_type,1,stage3,ncit,cancer_type,1.0,HISTOLOGY_DIAGNOSIS,,,,,,,,,,,,,HISTOLOGY_DIAGNOSIS
+HISTOLOGY_SUBTYPE,cancer_subtype,99,stage3,value,treatment_type,1.0,Other,,,,,,,,,,,,,HISTOLOGY_SUBTYPE
+HISTORY_HORMONAL_CONTRACEPTIVES_USE,treatment_status|treatment_type,1,stage2,alias,treatment_status,1.0,history hormonal contraceptives use,treatment_type,1.0,history hormonal contraceptives use,treatment_duration,0.6174,oral contraception,treatment_name,0.4144,androgen deprivation therapy,,,,HISTORY_HORMONAL_CONTRACEPTIVES_USE
+HISTORY_IMMUNOSUPPRESIVE_DX,treatment_name|treatment_status|treatment_type,1,stage3,ncit,treatment_name,1.0,HISTORY_IMMUNOSUPPRESIVE_DX,,,,,,,,,,,,,HISTORY_IMMUNOSUPPRESIVE_DX
+HISTORY_IMMUNOSUPPRESSIVE_TX_OTHER,treatment_name|treatment_status|treatment_type,1,stage3,ncit,treatment_name,1.0,HISTORY_IMMUNOSUPPRESSIVE_TX_OTHER,,,,,,,,,,,,,HISTORY_IMMUNOSUPPRESSIVE_TX_OTHER
+HISTORY_IONIZING_RT_TO_HEAD,treatment_notes|treatment_status|treatment_type,1,stage2,alias,treatment_notes,1.0,history ionizing rt to head,treatment_status,1.0,history ionizing rt to head,treatment_type,1.0,history ionizing rt to head,treatment_reason,0.3906,rt tx reason not completed other,treatment_name,0.3029,pretreatment history,HISTORY_IONIZING_RT_TO_HEAD
+HISTORY_MENOPAUSAL_HORMONE_THERAPY,treatment_status|treatment_type,1,stage2,alias,treatment_status,1.0,history menopausal hormone therapy,treatment_type,1.0,history menopausal hormone therapy,treatment_name,0.6403,endocrine therapy,treatment_reason,0.6194,adjuvant hormone therapy,,,,HISTORY_MENOPAUSAL_HORMONE_THERAPY
+HISTORY_NEOADJUVANT_MEDICATION,treatment_reason|treatment_type,1,stage2,alias,treatment_reason,1.0,history neoadjuvant medication,treatment_type,1.0,history neoadjuvant medication,treatment_name,0.7828,neoadjuvant chemo,,,,,,,HISTORY_NEOADJUVANT_MEDICATION
+HISTORY_NEOADJUVANT_STEROID_TX,treatment_reason|treatment_type,1,stage2,alias,treatment_reason,1.0,history neoadjuvant steroid tx,treatment_type,1.0,history neoadjuvant steroid tx,,,,,,,,,,HISTORY_NEOADJUVANT_STEROID_TX
+HISTORY_NEOADJUVANT_TRTYN,treatment_reason|treatment_status|treatment_type,1,stage2,alias,treatment_reason,1.0,history neoadjuvant trtyn,treatment_status,1.0,history neoadjuvant trtyn,treatment_type,1.0,history neoadjuvant trtyn,,,,,,,HISTORY_NEOADJUVANT_TRTYN
+HISTORY_NEOADJUVANT_TX_TYPE,treatment_reason|treatment_type,1,stage3,value,treatment_type,1.0,Chemotherapy,,,,,,,,,,,,,HISTORY_NEOADJUVANT_TX_TYPE
+HISTORY_OF_UNDESCENDED_TESTIS,sex,1,stage3,value,sex,1.0,Male,,,,,,,,,,,,,HISTORY_OF_UNDESCENDED_TESTIS
+HISTORY_REFLUX_DISEASE_TREATMENT,treatment_notes|treatment_status|treatment_type,1,stage2,alias,treatment_notes,1.0,history reflux disease treatment,treatment_status,1.0,history reflux disease treatment,treatment_type,1.0,history reflux disease treatment,treatment_name,0.5909,previous treatment,treatment_reason,0.5909,previous treatment,HISTORY_REFLUX_DISEASE_TREATMENT
+HORMONE_THERAPY,treatment_type,1,stage2,alias,treatment_type,1.0,hormone therapy,treatment_status,0.7856,history menopausal hormone therapy,treatment_name,0.7678,endocrine therapy,treatment_notes,0.7252,prd hormone therapy,,,,HORMONE_THERAPY
+HYPERTENSION_DIAGNOSIS,disease,1,stage2,alias,disease,1.0,hypertension diagnosis,cancer_type,0.389,primary diagnosis,,,,,,,,,,HYPERTENSION_DIAGNOSIS
+HYSTERECTOMY_TYPE,treatment_name|treatment_type,1,stage3,value,treatment_type,1.0,Hysterectomy,,,,,,,,,,,,,HYSTERECTOMY_TYPE
+ICI,treatment_name,1,stage3,ncit,treatment_name,1.0,ICI,,,,,,,,,,,,,ICI
+IFN_TX_90_DAYS_PRIOR_TO_RESECTION,treatment_status|treatment_type,1,stage2,alias,treatment_status,1.0,ifn tx 90 days prior to resection,treatment_type,1.0,ifn tx 90 days prior to resection,treatment_start,0.6902,tx 90days post resection,treatment_reason,0.4702,postoperative tx,treatment_notes,0.4536,reason for tx discontinuation,IFN_TX_90_DAYS_PRIOR_TO_RESECTION
+IHC_SUBTYPE,cancer_subtype,1,stage2,alias,cancer_subtype,1.0,ihc subtype,,,,,,,,,,,,,IHC_SUBTYPE
+IMMUNE_TREATMENT,treatment_name|treatment_reason|treatment_type,1,stage3,ncit,treatment_name,1.0,IMMUNE_TREATMENT,,,,,,,,,,,,,IMMUNE_TREATMENT
+IMMUNOSUPPRESSION,treatment_name|treatment_type,1,stage2,alias,treatment_name,1.0,immunosuppression,treatment_type,1.0,immunosuppression,treatment_status,0.6847,post sample immunotherapy,,,,,,,IMMUNOSUPPRESSION
+IMMUNOTHERAPY,treatment_type,1,stage2,alias,treatment_type,1.0,immunotherapy,treatment_status,0.7958,post sample immunotherapy,treatment_reason,0.7842,adjuvant immunotherapy,treatment_name,0.7665,immunosuppression,,,,IMMUNOTHERAPY
+INCIDENTAL_PROSTATE_CANCER,cancer_type|sex,1,stage3,value,sex,1.0,Male,,,,,,,,,,,,,INCIDENTAL_PROSTATE_CANCER
+INDUCTION,treatment_name|treatment_reason,1,stage3,ncit,treatment_name,1.0,INDUCTION,,,,,,,,,,,,,INDUCTION
+INFERRED_ETHNICITY,ancestry|ancestry_details,1,stage3,value,ancestry_details,1.0,Eastern European,ancestry,0.6667,African Ancestry,,,,,,,,,,INFERRED_ETHNICITY
+INITIAL_DIAGNOSIS_OF_RECURRENT_TUMORS,cancer_type_details,99,stage3,ncit,cancer_type,1.0,INITIAL_DIAGNOSIS_OF_RECURRENT_TUMORS,,,,,,,,,,,,,INITIAL_DIAGNOSIS_OF_RECURRENT_TUMORS
+INITIAL_DIAGNOSIS_TYPE,disease,1,stage2,alias,disease,1.0,initial diagnosis type,cancer_type,0.668,primary diagnosis,,,,,,,,,,INITIAL_DIAGNOSIS_TYPE
+INITIAL_RX,treatment_dose|treatment_name|treatment_number|treatment_status,99,stage3,value,treatment_type,1.0,Whole-Brain Radiotherapy,,,,,,,,,,,,,INITIAL_RX
+INITIAL_TREATMENT,treatment_reason|treatment_status|treatment_type,1,stage3,value,treatment_type,1.0,Dissection,,,,,,,,,,,,,INITIAL_TREATMENT
+INTEGRATED_PHENOTYPE,cancer_subtype,1,stage2,alias,cancer_subtype,1.0,integrated phenotype,body_site,0.5313,anatomical subtype,,,,,,,,,,INTEGRATED_PHENOTYPE
+INTERFERON_ALPHA,treatment_name,99,stage2,numeric,treatment_duration,0.6766,X2YR_ANTIHER2,treatment_number,0.6571,NUM_LINES_IMMUNO,,,,,,,,,,INTERFERON_ALPHA
+INTESTINAL_TYPE_SUBCLASS,cancer_subtype,1,stage2,alias,cancer_subtype,1.0,intestinal type subclass,body_site,0.5837,anatomical subtype,,,,,,,,,,INTESTINAL_TYPE_SUBCLASS
+INTRAVESICAL_TREATMENT,treatment_type,99,stage2,numeric,treatment_number,0.7555,TREATMENT_DETAILS,treatment_dose,0.7374,PRIOR_TREATMENT,treatment_duration,0.7374,PRIOR_TREATMENT,,,,,,,INTRAVESICAL_TREATMENT
+INVASIVE_CARCINOMA_DX_AGE,age_at_diagnosis,1,stage2,numeric,age_at_diagnosis,1.15,INVASIVE_CARCINOMA_DX_AGE,age_at_metastasis,0.8922,age_at_metastasis,age_at_metastasis_max,0.8875,age_at_metastasis_max,treatment_start,0.7511,AGE_AT_CHEMOTHERAPY_START,,,,INVASIVE_CARCINOMA_DX_AGE
+IO_DRUG,treatment_name|treatment_type,1,stage3,ncit,treatment_name,1.0,IO_DRUG,,,,,,,,,,,,,IO_DRUG
+IO_LINE,treatment_reason|treatment_type,99,stage2,numeric,treatment_number,0.828,NUM_LINES_IODINE,age_at_procurement,0.7718,AGE_START_IO,,,,,,,,,,IO_LINE
+IO_REGIMEN_MONOTHERAPY_VS_COMBINATION,treatment_type,1,stage2,alias,treatment_type,1.0,io regimen monotherapy vs combination,treatment_name,0.7075,io therapy,treatment_notes,0.5177,other concurrent therapy,treatment_status,0.5177,other concurrent therapy,,,,IO_REGIMEN_MONOTHERAPY_VS_COMBINATION
+IO_THERAPY,treatment_name|treatment_type,1,stage3,ncit,treatment_name,1.0,IO_THERAPY,,,,,,,,,,,,,IO_THERAPY
+IO_TX,treatment_type,1,stage2,alias,treatment_type,1.0,io tx,treatment_reason,0.6946,io line,treatment_name,0.5991,tx ec1456,,,,,,,IO_TX
+IPCHEMO_FIRST_CRS,treatment_type,1,stage2,alias,treatment_type,1.0,ipchemo first crs,treatment_name,0.3963,crt chemoagent,treatment_reason,0.3558,chemo first line,treatment_status,0.3558,chemo first line,treatment_group,0.3373,firstline chemo group,IPCHEMO_FIRST_CRS
+KINASE_INHIBITOR,treatment_type,99,stage2,numeric,treatment_duration,0.7359,X2YR_VEGF_INHIBITOR,treatment_number,0.7197,NEOADJ_CHEMOCYCLES,,,,,,,,,,KINASE_INHIBITOR
+LAST_STATUS,vital_status,1,stage3,value,vital_status,1.0,Alive,,,,,,,,,,,,,LAST_STATUS
+LAUREN_CLASS,cancer_subtype,1,stage2,alias,cancer_subtype,1.0,lauren class,disease,0.6512,who class,sample_type,0.4265,sample class,specimen_type,0.4265,sample class,,,,LAUREN_CLASS
+LFS_STATUS,vital_status,1,stage2,alias,vital_status,1.0,lfs status,,,,,,,,,,,,,LFS_STATUS
+LINEAGE_SUB_SUBTYPE,cancer_subtype,99,stage3,ncit,cancer_type,0.5625,LINEAGE_SUB_SUBTYPE,,,,,,,,,,,,,LINEAGE_SUB_SUBTYPE
+LINEAGE_SUBTYPE,cancer_subtype,99,stage3,ncit,cancer_type,1.0,LINEAGE_SUBTYPE,,,,,,,,,,,,,LINEAGE_SUBTYPE
+LINES_OF_TX,treatment_number,1,stage2,numeric,treatment_number,1.0,LINES_OF_TX,treatment_dose,0.7722,THIRD_LINE,,,,,,,,,,LINES_OF_TX
+LINES_OF_TX_PRIOR_IMPACT,treatment_number,1,stage2,numeric,treatment_number,1.0,LINES_OF_TX_PRIOR_IMPACT,treatment_dose,0.673,RT_TX_TOTAL_DOSE_TO_PELVIS,,,,,,,,,,LINES_OF_TX_PRIOR_IMPACT
+LOCALIZED_TUMOR,body_site,1,stage2,alias,body_site,1.0,localized tumor,,,,,,,,,,,,,LOCALIZED_TUMOR
+LOCALIZED_VS_METS_AT_DX,body_site,99,stage3,value,sample_type,1.0,Metastatic Neoplasm,,,,,,,,,,,,,LOCALIZED_VS_METS_AT_DX
+LOCATION,body_site,1,stage3,ncit,body_site,1.0,LOCATION,,,,,,,,,,,,,LOCATION
+LOCATION_LUNG_PARENCHYMA,body_site,1,stage2,alias,body_site,1.0,location lung parenchyma,,,,,,,,,,,,,LOCATION_LUNG_PARENCHYMA
+LOCATION_RECURRED,body_site,1,stage3,ncit,body_site,0.9167,LOCATION_RECURRED,,,,,,,,,,,,,LOCATION_RECURRED
+MAINTENANCE_TX,treatment_reason,1,stage2,alias,treatment_reason,1.0,maintenance tx,treatment_name,0.598,tx reg,treatment_type,0.5537,io tx,,,,,,,MAINTENANCE_TX
+MARGINS_INVOLVED_HYSTERECTOMY,treatment_notes|treatment_type,1,stage2,alias,treatment_notes,1.0,margins involved hysterectomy,treatment_type,1.0,margins involved hysterectomy,treatment_name,0.7139,hysterectomy type,,,,,,,MARGINS_INVOLVED_HYSTERECTOMY
+MCRC_TYPE,cancer_subtype,1,stage2,alias,cancer_subtype,1.0,mcrc type,treatment_name,0.4084,dx type,treatment_notes,0.4084,dx type,treatment_type,0.4084,dx type,body_site,0.3996,source type,MCRC_TYPE
+MDS_TYPE,disease,99,stage3,value,treatment_status,1.0,Primary,,,,,,,,,,,,,MDS_TYPE
+MEDICATION,treatment_name,1,stage3,ncit,treatment_name,1.0,MEDICATION,,,,,,,,,,,,,MEDICATION
+METASTASECTOMY,treatment_name|treatment_type,99,stage2,numeric,age_at_metastasis,0.8305,age_at_metastasis,age_at_metastasis_min,0.801,age_at_metastasis_min,age_at_metastasis_max,0.79,age_at_metastasis_max,treatment_start,0.7102,YEAR_OF_SURGERY,treatment_number,0.6856,SURGERY NUMBER,METASTASECTOMY
+METASTASECTOMY_SITE,treatment_name|treatment_notes|treatment_type,99,stage3,value,sample_type,1.0,Locally Recurrent Disease,,,,,,,,,,,,,METASTASECTOMY_SITE
+METASTATIC_RADIATION_THERAPY,treatment_reason|treatment_type,1,stage2,alias,treatment_reason,1.0,metastatic radiation therapy,treatment_type,1.0,metastatic radiation therapy,treatment_status,0.6944,primary radiation therapy,,,,,,,METASTATIC_RADIATION_THERAPY
+METASTATIC_SITE,body_site,99,stage3,value,treatment_type,1.0,Other,,,,,,,,,,,,,METASTATIC_SITE
+METS_SITES_AT_METS_ABST_OVARY,sex,1,stage3,value,sex,1.0,Female,,,,,,,,,,,,,METS_SITES_AT_METS_ABST_OVARY
+METS_SITES_AT_METS_DX_OVARY,sex,1,stage3,value,sex,1.0,Female,,,,,,,,,,,,,METS_SITES_AT_METS_DX_OVARY
+MICROTUBULE_TX,treatment_type,1,stage2,alias,treatment_type,1.0,microtubule tx,treatment_name,0.4958,tx cytarabine,,,,,,,,,,MICROTUBULE_TX
+MONTHS_ON_TREATMENT,treatment_duration,1,stage2,numeric,treatment_duration,1.15,MONTHS_ON_TREATMENT,,,,,,,,,,,,,MONTHS_ON_TREATMENT
+MORPHOLOGY_SUBTYPE,cancer_subtype,1,stage2,alias,cancer_subtype,1.0,morphology subtype,body_site,0.7025,anatomical subtype,,,,,,,,,,MORPHOLOGY_SUBTYPE
+MOST_RECENT_TREATMENT_DURATION,treatment_duration|treatment_reason|treatment_status,1,stage2,numeric,treatment_duration,1.15,MOST_RECENT_TREATMENT_DURATION,,,,,,,,,,,,,MOST_RECENT_TREATMENT_DURATION
+MOST_RECENT_TREATMENT_TYPE,treatment_reason|treatment_status|treatment_type,1,stage3,value,treatment_type,1.0,Bone Marrow Transplantation,,,,,,,,,,,,,MOST_RECENT_TREATMENT_TYPE
+MULTIPLE_TUMOR_LOCATIONS,body_site,1,stage2,alias,body_site,1.0,multiple tumor locations,,,,,,,,,,,,,MULTIPLE_TUMOR_LOCATIONS
+MUTATION_PHENOTYPE,cancer_subtype,1,stage2,alias,cancer_subtype,1.0,mutation phenotype,,,,,,,,,,,,,MUTATION_PHENOTYPE
+NEOADJ_CHEMO,treatment_name|treatment_number|treatment_reason|treatment_type,1,stage2,alias,treatment_name,1.0,neoadj chemo,treatment_number,1.0,neoadj chemo,treatment_reason,1.0,neoadj chemo,treatment_type,1.0,neoadj chemo,,,,NEOADJ_CHEMO
+NEOADJ_CHEMOAGENT,treatment_name|treatment_reason|treatment_type,1,stage2,alias,treatment_name,1.0,neoadj chemoagent,treatment_reason,1.0,neoadj chemoagent,treatment_type,1.0,neoadj chemoagent,treatment_number,0.9094,neoadj chemo,,,,NEOADJ_CHEMOAGENT
+NEOADJ_CHEMOCYCLES,treatment_number|treatment_reason|treatment_type,1,stage2,numeric,treatment_number,1.0,NEOADJ_CHEMOCYCLES,treatment_dose,0.7956,CHEMO_OTHER_CYCLES,,,,,,,,,,NEOADJ_CHEMOCYCLES
+NEOADJUVANT,treatment_reason,1,stage2,alias,treatment_reason,1.0,neoadjuvant,treatment_type,0.8412,neoadjuvant xrt,treatment_name,0.823,neoadjuvant chemo,,,,,,,NEOADJUVANT
+NEOADJUVANT_CHEMO,treatment_name|treatment_reason|treatment_type,1,stage2,alias,treatment_name,1.0,neoadjuvant chemo,treatment_reason,1.0,neoadjuvant chemo,treatment_type,1.0,neoadjuvant chemo,,,,,,,NEOADJUVANT_CHEMO
+NEOADJUVANT_CHEMOTHERAPY,treatment_reason|treatment_type,1,stage2,alias,treatment_reason,1.0,neoadjuvant chemotherapy,treatment_type,1.0,neoadjuvant chemotherapy,treatment_name,0.8832,neoadjuvant chemo,,,,,,,NEOADJUVANT_CHEMOTHERAPY
+NEOADJUVANT_IMMUNOTHERAPY,treatment_reason|treatment_type,1,stage2,alias,treatment_reason,1.0,neoadjuvant immunotherapy,treatment_type,1.0,neoadjuvant immunotherapy,,,,,,,,,,NEOADJUVANT_IMMUNOTHERAPY
+NEOADJUVANT_TARGETED,treatment_reason|treatment_type,1,stage2,alias,treatment_reason,1.0,neoadjuvant targeted,treatment_type,1.0,neoadjuvant targeted,,,,,,,,,,NEOADJUVANT_TARGETED
+NEOADJUVANT_THERAPY,treatment_reason,1,stage2,alias,treatment_reason,1.0,neoadjuvant therapy,treatment_type,0.9299,neoadjuvant treatment details,treatment_name,0.8363,neoadjuvant chemo,,,,,,,NEOADJUVANT_THERAPY
+NEOADJUVANT_TREATMENT_DETAILS,treatment_reason|treatment_type,1,stage2,alias,treatment_reason,1.0,neoadjuvant treatment details,treatment_type,1.0,neoadjuvant treatment details,treatment_name,0.8039,neoadjuvant chemo,,,,,,,NEOADJUVANT_TREATMENT_DETAILS
+NEOADJUVANT_XRT,treatment_reason|treatment_type,1,stage2,alias,treatment_reason,1.0,neoadjuvant xrt,treatment_type,1.0,neoadjuvant xrt,,,,,,,,,,NEOADJUVANT_XRT
+NGS_PRIOR_THERAPY,treatment_name|treatment_reason,1,stage2,alias,treatment_name,1.0,ngs prior therapy,treatment_reason,1.0,ngs prior therapy,treatment_status,0.741,prior therapy,treatment_number,0.69,prior lines of therapy,treatment_dose,0.6587,prior treatment,NGS_PRIOR_THERAPY
+NONINVASIVE_BLADDER_CA_TX_TYPE,treatment_name|treatment_notes,1,stage2,alias,treatment_name,1.0,noninvasive bladder ca tx type,treatment_notes,1.0,noninvasive bladder ca tx type,treatment_type,0.4303,surgery type,treatment_dose,0.4156,rt tx total dose to pelvis,treatment_reason,0.4156,rt tx total dose to pelvis,NONINVASIVE_BLADDER_CA_TX_TYPE
+NOREPINEPHRINE,treatment_name,1,stage2,alias,treatment_name,1.0,norepinephrine,treatment_type,0.4576,endocrine therapy,,,,,,,,,,NOREPINEPHRINE
+NUCLEOSIDE_TX,treatment_type,1,stage2,alias,treatment_type,1.0,nucleoside tx,treatment_name,0.5145,cisplatin tx,,,,,,,,,,NUCLEOSIDE_TX
+NUM_LINES,treatment_notes|treatment_number,1,stage2,numeric,treatment_number,1.0,NUM_LINES,,,,,,,,,,,,,NUM_LINES
+NUM_LINES_CHEMO,treatment_number|treatment_type,1,stage2,numeric,treatment_number,1.0,NUM_LINES_CHEMO,,,,,,,,,,,,,NUM_LINES_CHEMO
+NUM_LINES_HORMONE,treatment_number|treatment_type,1,stage2,numeric,treatment_number,1.0,NUM_LINES_HORMONE,,,,,,,,,,,,,NUM_LINES_HORMONE
+NUM_LINES_IMMUNO,treatment_number|treatment_type,1,stage2,numeric,treatment_number,1.0,NUM_LINES_IMMUNO,,,,,,,,,,,,,NUM_LINES_IMMUNO
+NUM_LINES_IODINE,treatment_name|treatment_number,1,stage2,numeric,treatment_number,1.0,NUM_LINES_IODINE,,,,,,,,,,,,,NUM_LINES_IODINE
+NUM_LINES_NTRK,treatment_number|treatment_type,1,stage2,numeric,treatment_number,1.0,NUM_LINES_NTRK,,,,,,,,,,,,,NUM_LINES_NTRK
+NUM_LINES_TARGETED,treatment_number|treatment_type,1,stage2,numeric,treatment_number,1.0,NUM_LINES_TARGETED,,,,,,,,,,,,,NUM_LINES_TARGETED
+NUM_PRIOR_THERAPIES,treatment_status,99,stage2,numeric,treatment_dose,0.7944,PRIOR_TREATMENT,treatment_number,0.7944,PRIOR_TREATMENT,treatment_duration,0.7944,PRIOR_TREATMENT,,,,,,,NUM_PRIOR_THERAPIES
+NUMBER_OF_CYCLES_FLUORO-PYRIMIDINE,treatment_name|treatment_number,1,stage2,numeric,treatment_number,1.0,NUMBER_OF_CYCLES_FLUORO-PYRIMIDINE,treatment_dose,0.7254,CHEMO_OTHER_CYCLES,,,,,,,,,,NUMBER_OF_CYCLES_FLUORO-PYRIMIDINE
+NUMBER_OF_CYCLES_PEMBROLIZUMAB,treatment_name|treatment_number,1,stage2,numeric,treatment_number,1.0,NUMBER_OF_CYCLES_PEMBROLIZUMAB,treatment_dose,0.8071,DOSE_OF_PEMBROLIZUMAB_PER_INJECTION (MG/KG),,,,,,,,,,NUMBER_OF_CYCLES_PEMBROLIZUMAB
+NUMBER_OF_CYCLES_PLATINUM,treatment_name|treatment_number,1,stage2,numeric,treatment_number,1.0,NUMBER_OF_CYCLES_PLATINUM,,,,,,,,,,,,,NUMBER_OF_CYCLES_PLATINUM
+NUMBER_OF_CYCLES_TRASTUZUMAB,treatment_name|treatment_number,1,stage2,numeric,treatment_number,1.0,NUMBER_OF_CYCLES_TRASTUZUMAB,,,,,,,,,,,,,NUMBER_OF_CYCLES_TRASTUZUMAB
+NUMBER_OF_LINES_OF_TREATMENT_FOR_MET_DISEASE,treatment_number,1,stage2,numeric,treatment_number,1.0,NUMBER_OF_LINES_OF_TREATMENT_FOR_MET_DISEASE,treatment_duration,0.7393,MOST_RECENT_TREATMENT_DURATION,,,,,,,,,,NUMBER_OF_LINES_OF_TREATMENT_FOR_MET_DISEASE
+NUMBER_OF_PD1_INHIBITOR_INJECTIONS,treatment_number|treatment_type,1,stage2,numeric,treatment_number,1.0,NUMBER_OF_PD1_INHIBITOR_INJECTIONS,treatment_dose,0.7491,DOSE_MG_DAY_STEROID_DURING_PD1,treatment_frequency,0.7491,DOSE_MG_DAY_STEROID_DURING_PD1,,,,,,,NUMBER_OF_PD1_INHIBITOR_INJECTIONS
+OFF_TREATMENT,treatment_status,1,stage2,alias,treatment_status,1.0,off treatment,treatment_name,0.7369,treatment,treatment_type,0.7369,treatment,treatment_end,0.674,treatment end,,,,OFF_TREATMENT
+ON_TREATMENT,treatment_status,99,stage2,numeric,treatment_number,0.8812,TREATMENT_DETAILS,treatment_start,0.8343,treatment_start,treatment_duration,0.8305,WEEKS_ON_TREATMENT,treatment_dose,0.8267,PRIOR_TREATMENT,,,,ON_TREATMENT
+ONGOING_TREATMENT,treatment_status,1,stage2,alias,treatment_status,1.0,ongoing treatment,treatment_name,0.8145,treatment,treatment_type,0.8145,treatment,treatment_reason,0.8033,previous treatment,treatment_number,0.7415,treatment details,ONGOING_TREATMENT
+ORAL_CONTRACEPTION,treatment_duration|treatment_type,1,stage2,alias,treatment_duration,1.0,oral contraception,treatment_type,1.0,oral contraception,treatment_status,0.6174,history hormonal contraceptives use,sex,0.3143,sex,,,,ORAL_CONTRACEPTION
+ORIGINAL_DIAGNOSIS_AT_IMPLANT,cancer_type,1,stage3,ncit,cancer_type,1.0,ORIGINAL_DIAGNOSIS_AT_IMPLANT,,,,,,,,,,,,,ORIGINAL_DIAGNOSIS_AT_IMPLANT
+OS_FROM_PD1I_STATUS,vital_status,1,stage2,alias,vital_status,1.0,os from pd1i status,age_at_diagnosis,0.507,age at pd1,,,,,,,,,,OS_FROM_PD1I_STATUS
+OS_NEO_STATUS,vital_status,1,stage2,alias,vital_status,1.0,os neo status,,,,,,,,,,,,,OS_NEO_STATUS
+OS_STATUS,vital_status,1,stage2,alias,vital_status,1.0,os status,,,,,,,,,,,,,OS_STATUS
+OS_STATUS_DMT,vital_status,1,stage3,value,vital_status,1.0,Dead,,,,,,,,,,,,,OS_STATUS_DMT
+OS_STATUS_IO,vital_status,1,stage3,value,vital_status,1.0,Dead,,,,,,,,,,,,,OS_STATUS_IO
+OS_STATUS_SORAFENIB,vital_status,1,stage3,value,vital_status,1.0,Dead,,,,,,,,,,,,,OS_STATUS_SORAFENIB
+OTHER_CONCURRENT_THERAPY,treatment_notes|treatment_status,1,stage2,alias,treatment_notes,1.0,other concurrent therapy,treatment_status,1.0,other concurrent therapy,treatment_type,0.7538,alternate therapy,treatment_name,0.7471,alternate therapy other,treatment_reason,0.7471,alternate therapy other,OTHER_CONCURRENT_THERAPY
+OTHER_CYTOTOXIC_TX,treatment_notes|treatment_type,1,stage2,alias,treatment_notes,1.0,other cytotoxic tx,treatment_type,1.0,other cytotoxic tx,,,,,,,,,,OTHER_CYTOTOXIC_TX
+OTHER_HYSTERECTOMY_TYPE,treatment_name|treatment_type,1,stage2,alias,treatment_name,1.0,other hysterectomy type,treatment_type,1.0,other hysterectomy type,treatment_notes,0.6891,margins involved hysterectomy,treatment_reason,0.6054,type of surgery,,,,OTHER_HYSTERECTOMY_TYPE
+OXALIPLATIN_TX,treatment_name,1,stage2,alias,treatment_name,1.0,oxaliplatin tx,,,,,,,,,,,,,OXALIPLATIN_TX
+PAM50_SUBTYPE,cancer_subtype,99,stage3,ncit,cancer_type,1.0,PAM50_SUBTYPE,,,,,,,,,,,,,PAM50_SUBTYPE
+PARTICIPANT_COUNTRY,country|location,1,stage3,value,country,0.9091,China,,,,,,,,,,,,,PARTICIPANT_COUNTRY
+PATHOLOGICAL_DIAGNOSIS,cancer_type,1,stage3,ncit,cancer_type,1.0,PATHOLOGICAL_DIAGNOSIS,,,,,,,,,,,,,PATHOLOGICAL_DIAGNOSIS
+PATHOLOGY_CLASSIFICATION,cancer_subtype,99,stage3,ncit,cancer_type,1.0,PATHOLOGY_CLASSIFICATION,,,,,,,,,,,,,PATHOLOGY_CLASSIFICATION
+PATIENT_AGE_AT_DIAGNOSIS,age_at_diagnosis,1,stage2,numeric,age_at_diagnosis,1.15,PATIENT_AGE_AT_DIAGNOSIS,,,,,,,,,,,,,PATIENT_AGE_AT_DIAGNOSIS
+PATIENT_TO_UNDERGO_SURGERY,treatment_type,1,stage2,alias,treatment_type,1.0,patient to undergo surgery,treatment_name,0.756,surgery procedure,treatment_reason,0.6794,type of surgery,treatment_notes,0.6667,surgery type,,,,PATIENT_TO_UNDERGO_SURGERY
+PD1_INHIBITOR,treatment_name|treatment_type,1,stage3,ncit,treatment_name,1.0,PD1_INHIBITOR,,,,,,,,,,,,,PD1_INHIBITOR
+PD1_INHIBITOR_CONCURRENTLY_WITH_BCNU/CCNU,treatment_name|treatment_status,1,stage2,alias,treatment_name,1.0,pd1 inhibitor concurrently with bcnu ccnu,treatment_status,1.0,pd1 inhibitor concurrently with bcnu ccnu,treatment_type,0.7239,pd1 inhibitor started for pd,,,,,,,PD1_INHIBITOR_CONCURRENTLY_WITH_BCNU/CCNU
+PD1_INHIBITOR_CONCURRENTLY_WITH_BEV,treatment_name|treatment_status,1,stage2,alias,treatment_name,1.0,pd1 inhibitor concurrently with bev,treatment_status,1.0,pd1 inhibitor concurrently with bev,treatment_type,0.716,pd1 inhibitor started for pd,,,,,,,PD1_INHIBITOR_CONCURRENTLY_WITH_BEV
+PD1_INHIBITOR_CONCURRENTLY_WITH_DC_VAX,treatment_name|treatment_status,1,stage2,alias,treatment_name,1.0,pd1 inhibitor concurrently with dc vax,treatment_status,1.0,pd1 inhibitor concurrently with dc vax,treatment_type,0.7231,pd1 inhibitor,,,,,,,PD1_INHIBITOR_CONCURRENTLY_WITH_DC_VAX
+PD1_INHIBITOR_CONCURRENTLY_WITH_NOVO-TTF,treatment_name|treatment_status,1,stage2,alias,treatment_name,1.0,pd1 inhibitor concurrently with novo ttf,treatment_status,1.0,pd1 inhibitor concurrently with novo ttf,treatment_type,0.7106,pd1 inhibitor,,,,,,,PD1_INHIBITOR_CONCURRENTLY_WITH_NOVO-TTF
+PD1_INHIBITOR_CONCURRENTLY_WITH_RE-IRRADIATION,treatment_status|treatment_type,1,stage2,alias,treatment_status,1.0,pd1 inhibitor concurrently with re irradiation,treatment_type,1.0,pd1 inhibitor concurrently with re irradiation,treatment_name,0.717,pd1 inhibitor,,,,,,,PD1_INHIBITOR_CONCURRENTLY_WITH_RE-IRRADIATION
+PD1_INHIBITOR_CONCURRENTLY_WITH_TEMODAR,treatment_name|treatment_status,1,stage2,alias,treatment_name,1.0,pd1 inhibitor concurrently with temodar,treatment_status,1.0,pd1 inhibitor concurrently with temodar,treatment_type,0.8058,pd1 inhibitor,,,,,,,PD1_INHIBITOR_CONCURRENTLY_WITH_TEMODAR
+PD1_INHIBITOR_DRUG,treatment_name|treatment_type,1,stage3,ncit,treatment_name,1.0,PD1_INHIBITOR_DRUG,,,,,,,,,,,,,PD1_INHIBITOR_DRUG
+PD1_INHIBITOR_STARTED_FOR_PD,treatment_type,1,stage2,alias,treatment_type,1.0,pd1 inhibitor started for pd,treatment_name,0.9416,pd1 inhibitor,treatment_status,0.7983,pd1 inhibitor concurrently with temodar,,,,,,,PD1_INHIBITOR_STARTED_FOR_PD
+PD1_INHIBITOR_WITH_CELECOXIB,treatment_name|treatment_status,1,stage2,alias,treatment_name,1.0,pd1 inhibitor with celecoxib,treatment_status,1.0,pd1 inhibitor with celecoxib,treatment_type,0.7283,pd1 inhibitor drug,,,,,,,PD1_INHIBITOR_WITH_CELECOXIB
+PD1_INHIBITOR_WITH_IMATINIB,treatment_name|treatment_status,1,stage2,alias,treatment_name,1.0,pd1 inhibitor with imatinib,treatment_status,1.0,pd1 inhibitor with imatinib,treatment_type,0.7924,pd1 inhibitor,,,,,,,PD1_INHIBITOR_WITH_IMATINIB
+PERSON_NEOPLASM_CANCER_STATUS,cancer_status,1,stage3,value,cancer_status,1.0,Tumor Free,,,,,,,,,,,,,PERSON_NEOPLASM_CANCER_STATUS
+PFS_STATUS_IO,vital_status,1,stage2,alias,vital_status,1.0,pfs status io,,,,,,,,,,,,,PFS_STATUS_IO
+PFS_STATUS_SORAFENIB_TREATMENT,vital_status,1,stage2,alias,vital_status,1.0,pfs status sorafenib treatment,treatment_name,0.7675,sorafenib treatment,treatment_status,0.4679,treatment status,,,,,,,PFS_STATUS_SORAFENIB_TREATMENT
+PHARM_TX_MITOTANE_ADJUVANT,treatment_name|treatment_reason|treatment_type,1,stage2,alias,treatment_name,1.0,pharm tx mitotane adjuvant,treatment_reason,1.0,pharm tx mitotane adjuvant,treatment_type,1.0,pharm tx mitotane adjuvant,treatment_status,0.8376,pharmaceutical tx adjuvant,,,,PHARM_TX_MITOTANE_ADJUVANT
+PHARM_TX_MITOTANE_FOR_MACRO_DISEASE,treatment_name|treatment_reason|treatment_type,1,stage2,alias,treatment_name,1.0,pharm tx mitotane for macro disease,treatment_reason,1.0,pharm tx mitotane for macro disease,treatment_type,1.0,pharm tx mitotane for macro disease,treatment_notes,0.5464,other cytotoxic tx,,,,PHARM_TX_MITOTANE_FOR_MACRO_DISEASE
+PHARM_TX_MITOTANE_INDICATOR,treatment_name|treatment_type,1,stage2,alias,treatment_name,1.0,pharm tx mitotane indicator,treatment_type,1.0,pharm tx mitotane indicator,treatment_reason,0.689,pharm tx mitotane adjuvant,treatment_status,0.4458,pharmaceutical tx adjuvant,,,,PHARM_TX_MITOTANE_INDICATOR
+PHARMACEUTICAL_TX_ADJUVANT,treatment_reason|treatment_status|treatment_type,1,stage2,alias,treatment_reason,1.0,pharmaceutical tx adjuvant,treatment_status,1.0,pharmaceutical tx adjuvant,treatment_type,1.0,pharmaceutical tx adjuvant,treatment_name,0.8376,pharm tx mitotane adjuvant,,,,PHARMACEUTICAL_TX_ADJUVANT
+PLATINUM_OS_STATUS,vital_status,1,stage2,alias,vital_status,1.0,platinum os status,treatment_name,0.6122,platinum tx,treatment_number,0.5654,number of cycles platinum,,,,,,,PLATINUM_OS_STATUS
+PLATINUM_TX,treatment_name,1,stage2,alias,treatment_name,1.0,platinum tx,vital_status,0.6122,platinum os status,,,,,,,,,,PLATINUM_TX
+POAR_COMBINED_CTLA_PD1,treatment_type,1,stage2,alias,treatment_type,1.0,poar combined ctla pd1,treatment_name,0.5324,pd1 inhibitor,treatment_status,0.5258,pd1 inhibitor concurrently with temodar,,,,,,,POAR_COMBINED_CTLA_PD1
+POST_MAPK_TX,treatment_status|treatment_type,1,stage2,alias,treatment_status,1.0,post mapk tx,treatment_type,1.0,post mapk tx,treatment_notes,0.5105,all tx at msk,,,,,,,POST_MAPK_TX
+POST_SAMPLE_CHEMOTHERAPY,treatment_status|treatment_type,1,stage2,alias,treatment_status,1.0,post sample chemotherapy,treatment_type,1.0,post sample chemotherapy,treatment_name,0.7683,chemotherapy,,,,,,,POST_SAMPLE_CHEMOTHERAPY
+POST_SAMPLE_IMMUNOTHERAPY,treatment_status|treatment_type,1,stage2,alias,treatment_status,1.0,post sample immunotherapy,treatment_type,1.0,post sample immunotherapy,treatment_reason,0.6926,adjuvant immunotherapy,treatment_name,0.6847,immunosuppression,,,,POST_SAMPLE_IMMUNOTHERAPY
+POST_SAMPLE_TARGETED,treatment_status|treatment_type,1,stage2,alias,treatment_status,1.0,post sample targeted,treatment_type,1.0,post sample targeted,sample_type,0.5525,sample type,specimen_type,0.5525,sample type,,,,POST_SAMPLE_TARGETED
+POST_SAMPLE_TX,treatment_status,1,stage2,alias,treatment_status,1.0,post sample tx,treatment_type,0.6646,post sample targeted,,,,,,,,,,POST_SAMPLE_TX
+POST_SAMPLE_XRT,treatment_status|treatment_type,1,stage2,alias,treatment_status,1.0,post sample xrt,treatment_type,1.0,post sample xrt,treatment_reason,0.6091,adj xrt,,,,,,,POST_SAMPLE_XRT
+POSTOPERATIVE_TX,treatment_reason|treatment_status|treatment_type,1,stage3,value,treatment_type,1.0,Ionizing Radiation,,,,,,,,,,,,,POSTOPERATIVE_TX
+PRD_CHEMOTHERAPY,treatment_notes|treatment_type,1,stage2,alias,treatment_notes,1.0,prd chemotherapy,treatment_type,1.0,prd chemotherapy,treatment_name,0.7027,chemotherapy,,,,,,,PRD_CHEMOTHERAPY
+PRD_HISPANIC,ancestry|ancestry_details,1,stage2,alias,ancestry,1.0,prd hispanic,ancestry_details,1.0,prd hispanic,treatment_notes,0.5304,prd surgery,treatment_type,0.5304,prd surgery,treatment_name,0.513,tx pr 104,PRD_HISPANIC
+PRD_HORMONE_THERAPY,treatment_notes|treatment_type,1,stage2,alias,treatment_notes,1.0,prd hormone therapy,treatment_type,1.0,prd hormone therapy,,,,,,,,,,PRD_HORMONE_THERAPY
+PRD_OTHER_CANCER_RADIATION,treatment_notes|treatment_type,1,stage2,alias,treatment_notes,1.0,prd other cancer radiation,treatment_type,1.0,prd other cancer radiation,treatment_status,0.8124,prd radiation surgery,,,,,,,PRD_OTHER_CANCER_RADIATION
+PRD_OTHER_THERAPY,treatment_notes|treatment_type,1,stage2,alias,treatment_notes,1.0,prd other therapy,treatment_type,1.0,prd other therapy,treatment_status,0.7204,prd treated at enrollment,,,,,,,PRD_OTHER_THERAPY
+PRD_PROSTATECTOMY,sex|treatment_name|treatment_notes|treatment_type,1,stage3,value,sex,1.0,Male,,,,,,,,,,,,,PRD_PROSTATECTOMY
+PRD_RACE,ancestry|ancestry_details,1,stage3,value,ancestry_details,1.0,Chinese,country,1.0,China,,,,,,,,,,PRD_RACE
+PRD_RADIATION,treatment_notes|treatment_type,1,stage2,alias,treatment_notes,1.0,prd radiation,treatment_type,1.0,prd radiation,treatment_status,0.8036,prd radiation surgery,,,,,,,PRD_RADIATION
+PRD_RADIATION_SURGERY,treatment_notes|treatment_status|treatment_type,1,stage2,alias,treatment_notes,1.0,prd radiation surgery,treatment_status,1.0,prd radiation surgery,treatment_type,1.0,prd radiation surgery,sex,0.6966,prd prostatectomy,treatment_name,0.6966,prd prostatectomy,PRD_RADIATION_SURGERY
+PRD_SURGERY,treatment_notes|treatment_type,1,stage2,alias,treatment_notes,1.0,prd surgery,treatment_type,1.0,prd surgery,treatment_status,0.8486,prd radiation surgery,sex,0.791,prd prostatectomy,treatment_name,0.791,prd prostatectomy,PRD_SURGERY
+PRD_TREATED_AT_ENROLLMENT,treatment_notes|treatment_status,1,stage2,alias,treatment_notes,1.0,prd treated at enrollment,treatment_status,1.0,prd treated at enrollment,treatment_type,0.7204,prd other therapy,,,,,,,PRD_TREATED_AT_ENROLLMENT
+PRE_SAMPLE_CHEMOTHERAPY,treatment_status|treatment_type,1,stage2,alias,treatment_status,1.0,pre sample chemotherapy,treatment_type,1.0,pre sample chemotherapy,treatment_name,0.8003,chemotherapy prior sample acquired,,,,,,,PRE_SAMPLE_CHEMOTHERAPY
+PRE_SAMPLE_IMMUNOTHERAPY,treatment_status|treatment_type,1,stage2,alias,treatment_status,1.0,pre sample immunotherapy,treatment_type,1.0,pre sample immunotherapy,treatment_reason,0.6457,adjuvant immunotherapy,,,,,,,PRE_SAMPLE_IMMUNOTHERAPY
+PRE_SAMPLE_TARGETED,treatment_status|treatment_type,1,stage2,alias,treatment_status,1.0,pre sample targeted,treatment_type,1.0,pre sample targeted,,,,,,,,,,PRE_SAMPLE_TARGETED
+PRE_SAMPLE_TX,treatment_status,1,stage2,alias,treatment_status,1.0,pre sample tx,treatment_type,0.6846,pre sample targeted,,,,,,,,,,PRE_SAMPLE_TX
+PRE_SAMPLE_XRT,treatment_status|treatment_type,1,stage2,alias,treatment_status,1.0,pre sample xrt,treatment_type,1.0,pre sample xrt,treatment_reason,0.5733,adj xrt,,,,,,,PRE_SAMPLE_XRT
+PREDOM_HISTO_SUBTYPE,cancer_subtype,1,stage2,alias,cancer_subtype,1.0,predom histo subtype,,,,,,,,,,,,,PREDOM_HISTO_SUBTYPE
+PREDOMINANT_HISTOLOGIC_SUBTYPE,cancer_subtype,1,stage2,alias,cancer_subtype,1.0,predominant histologic subtype,cancer_type_details,0.7473,histological type,,,,,,,,,,PREDOMINANT_HISTOLOGIC_SUBTYPE
+PRETREATED,treatment_status,1,stage2,alias,treatment_status,1.0,pretreated,treatment_name,0.5152,pretreatment history,treatment_reason,0.4957,initial treatment,treatment_type,0.4957,initial treatment,treatment_dose,0.4534,prior treatment,PRETREATED
+PRETREATMENT_HISTORY,treatment_name|treatment_status,1,stage2,alias,treatment_name,1.0,pretreatment history,treatment_status,1.0,pretreatment history,treatment_reason,0.4352,history neoadjuvant trtyn,treatment_type,0.4352,history neoadjuvant trtyn,treatment_dose,0.3321,prior treatment,PRETREATMENT_HISTORY
+PREVIOUS_MAPKI,treatment_status|treatment_type,1,stage2,alias,treatment_status,1.0,previous mapki,treatment_type,1.0,previous mapki,treatment_name,0.3333,tx 17 dmag,,,,,,,PREVIOUS_MAPKI
+PREVIOUS_TREATMENT,treatment_name|treatment_reason|treatment_status|treatment_type,1,stage3,value,treatment_type,1.0,Farnesyl Transferase Inhibitor,,,,,,,,,,,,,PREVIOUS_TREATMENT
+PRIMARY_DIAGNOSIS,cancer_type,1,stage3,ncit,cancer_type,1.0,PRIMARY_DIAGNOSIS,,,,,,,,,,,,,PRIMARY_DIAGNOSIS
+PRIMARY_MELANOMA_SKIN_TYPE,cancer_subtype,99,stage3,ncit,body_site,1.0,PRIMARY_MELANOMA_SKIN_TYPE,,,,,,,,,,,,,PRIMARY_MELANOMA_SKIN_TYPE
+PRIMARY_RADIATION_THERAPY,treatment_status|treatment_type,1,stage2,alias,treatment_status,1.0,primary radiation therapy,treatment_type,1.0,primary radiation therapy,treatment_reason,0.6944,metastatic radiation therapy,,,,,,,PRIMARY_RADIATION_THERAPY
+PRIMARY_SITE,body_site,1,stage3,ncit,body_site,0.9231,PRIMARY_SITE,,,,,,,,,,,,,PRIMARY_SITE
+PRIMARY_SITE_PATIENT,body_site,1,stage3,ncit,body_site,1.0,PRIMARY_SITE_PATIENT,,,,,,,,,,,,,PRIMARY_SITE_PATIENT
+PRIMARY_SURGERY,treatment_name|treatment_status|treatment_type,1,stage2,alias,treatment_name,1.0,primary surgery,treatment_status,1.0,primary surgery,treatment_type,1.0,primary surgery,treatment_reason,0.6615,type of surgery,,,,PRIMARY_SURGERY
+PRIMARY_TUMOR_LOCALIZATION_TYPE,cancer_subtype,99,stage3,ncit,body_site,1.0,PRIMARY_TUMOR_LOCALIZATION_TYPE,,,,,,,,,,,,,PRIMARY_TUMOR_LOCALIZATION_TYPE
+PRIMARY_TUMOR_LOCATION,body_site,1,stage3,ncit,body_site,1.0,PRIMARY_TUMOR_LOCATION,,,,,,,,,,,,,PRIMARY_TUMOR_LOCATION
+PRIMARY_TYPE,cancer_subtype,99,stage3,ncit,body_site,1.0,PRIMARY_TYPE,,,,,,,,,,,,,PRIMARY_TYPE
+PRIOR_ADJUVANT_CHEMO,treatment_reason|treatment_type,1,stage2,alias,treatment_reason,1.0,prior adjuvant chemo,treatment_type,1.0,prior adjuvant chemo,treatment_name,0.8782,adjuvant chemo,,,,,,,PRIOR_ADJUVANT_CHEMO
+PRIOR_INTRAVESICAL_CHEMOTHERAPY,treatment_name|treatment_status|treatment_type,1,stage2,alias,treatment_name,1.0,prior intravesical chemotherapy,treatment_status,1.0,prior intravesical chemotherapy,treatment_type,1.0,prior intravesical chemotherapy,,,,,,,PRIOR_INTRAVESICAL_CHEMOTHERAPY
+PRIOR_LINES,treatment_number|treatment_status,1,stage2,numeric,treatment_number,1.0,PRIOR_LINES,treatment_dose,0.7641,THIRD_LINE,,,,,,,,,,PRIOR_LINES
+PRIOR_LINES_OF_THERAPY,treatment_number|treatment_status,1,stage2,numeric,treatment_number,1.0,PRIOR_LINES_OF_THERAPY,treatment_dose,0.8882,PRIOR_TREATMENT,treatment_duration,0.8882,PRIOR_TREATMENT,,,,,,,PRIOR_LINES_OF_THERAPY
+PRIOR_MALIGNANCY_RADIATION_TX,treatment_type,1,stage2,alias,treatment_type,1.0,prior malignancy radiation tx,treatment_dose,0.6416,radiation dose pelvic nodes primary tumor,treatment_reason,0.6052,treatment palliative radiation,,,,,,,PRIOR_MALIGNANCY_RADIATION_TX
+PRIOR_MAPK_TX,treatment_status|treatment_type,1,stage2,alias,treatment_status,1.0,prior mapk tx,treatment_type,1.0,prior mapk tx,treatment_number,0.538,lines of tx prior impact,,,,,,,PRIOR_MAPK_TX
+PRIOR_SYSTEMIC_THERAPIES,treatment_status|treatment_type,99,stage2,numeric,treatment_dose,0.8576,PRIOR_TREATMENT,treatment_number,0.8576,PRIOR_TREATMENT,treatment_duration,0.8576,PRIOR_TREATMENT,,,,,,,PRIOR_SYSTEMIC_THERAPIES
+PRIOR_THERAPY,treatment_status,1,stage2,alias,treatment_status,1.0,prior therapy,treatment_number,0.8967,prior lines of therapy,treatment_dose,0.8527,prior treatment,treatment_duration,0.8527,prior treatment,treatment_name,0.8527,prior treatment,PRIOR_THERAPY
+PRIOR_TREATMENT,treatment_dose|treatment_duration|treatment_name|treatment_notes|treatment_number|treatment_reason|treatment_status|treatment_type,1,stage3,value,treatment_status,1.0,Prior Therapy,treatment_type,0.5,Surgical Procedure,,,,,,,,,,PRIOR_TREATMENT
+PRIOR_TREATMENT_OF_CYTOTOXIC_CHEMOTHERAPY,treatment_status|treatment_type,99,stage2,numeric,treatment_dose,0.7714,PRIOR_TREATMENT,treatment_number,0.7714,PRIOR_TREATMENT,treatment_duration,0.7714,PRIOR_TREATMENT,,,,,,,PRIOR_TREATMENT_OF_CYTOTOXIC_CHEMOTHERAPY
+PRIOR_TX_TO_IMPACT_SAMPLE,treatment_type,1,stage3,value,treatment_type,1.0,Chemotherapy,,,,,,,,,,,,,PRIOR_TX_TO_IMPACT_SAMPLE
+PRIORRADIATIONFOROTHERCANCER,treatment_reason|treatment_status|treatment_type,1,stage2,alias,treatment_reason,1.0,priorradiationforothercancer,treatment_status,1.0,priorradiationforothercancer,treatment_type,1.0,priorradiationforothercancer,treatment_dose,0.5138,dose of re irradiation,treatment_end,0.5138,dose of re irradiation,PRIORRADIATIONFOROTHERCANCER
+PROCEDURE,treatment_notes|treatment_type,1,stage2,alias,treatment_notes,1.0,procedure,treatment_type,1.0,procedure,treatment_name,0.6924,procedure type,treatment_status,0.6529,surgical procedure first,,,,PROCEDURE
+PROCEDURE_TYPE,treatment_name|treatment_type,1,stage3,value,treatment_type,0.75,Resection,treatment_status,0.75,Resection,specimen_type,0.75,Resection,,,,,,,PROCEDURE_TYPE
+PROTOCOL_AND_TREATMENT_ARM,treatment_group|treatment_name,1,stage2,alias,treatment_group,1.0,protocol and treatment arm,treatment_name,1.0,protocol and treatment arm,treatment_status,0.6036,treatment status,treatment_number,0.5945,treatment details,treatment_type,0.5906,treatment,PROTOCOL_AND_TREATMENT_ARM
+R_CHOP_LIKE_CHEMO,treatment_type,1,stage2,alias,treatment_type,1.0,r chop like chemo,treatment_name,0.5875,chemo other,treatment_reason,0.5703,salvage chemo,,,,,,,R_CHOP_LIKE_CHEMO
+RACE,ancestry|ancestry_details,1,stage3,value,ancestry_details,0.8889,East Asian,,,,,,,,,,,,,RACE
+RACE_CATEGORIZED,ancestry|ancestry_details,1,stage2,alias,ancestry,1.0,race categorized,ancestry_details,1.0,race categorized,,,,,,,,,,RACE_CATEGORIZED
+RACE_CATEGORY,ancestry|ancestry_details,1,stage2,alias,ancestry,1.0,race category,ancestry_details,1.0,race category,,,,,,,,,,RACE_CATEGORY
+RADADJUVANTRX,treatment_name|treatment_reason|treatment_type,1,stage2,alias,treatment_name,1.0,radadjuvantrx,treatment_reason,1.0,radadjuvantrx,treatment_type,1.0,radadjuvantrx,,,,,,,RADADJUVANTRX
+RADIATION,treatment_type,1,stage2,alias,treatment_type,1.0,radiation,treatment_name,0.9067,radiation other,treatment_notes,0.8116,radiation type other,,,,,,,RADIATION
+RADIATION_DOSE,treatment_dose|treatment_type,1,stage2,numeric,treatment_dose,1.15,RADIATION_DOSE,,,,,,,,,,,,,RADIATION_DOSE
+RADIATION_DOSE_PELVIC_NODES_PRIMARY_TUMOR.,treatment_dose|treatment_type,1,stage2,alias,treatment_dose,1.0,radiation dose pelvic nodes primary tumor,treatment_type,1.0,radiation dose pelvic nodes primary tumor,treatment_reason,0.6698,radiation therapy dose paraaortic nodes,treatment_status,0.6657,primary radiation therapy,,,,RADIATION_DOSE_PELVIC_NODES_PRIMARY_TUMOR.
+RADIATION_OR_CHEMOTHERAPY,treatment_type,1,stage3,value,treatment_type,1.0,Chemotherapy,,,,,,,,,,,,,RADIATION_OR_CHEMOTHERAPY
+RADIATION_OTHER,treatment_name|treatment_type,1,stage2,alias,treatment_name,1.0,radiation other,treatment_type,1.0,radiation other,treatment_notes,0.881,radiation type other,,,,,,,RADIATION_OTHER
+RADIATION_SITE,treatment_notes|treatment_type,1,stage2,alias,treatment_notes,1.0,radiation site,treatment_type,1.0,radiation site,treatment_name,0.6399,radiation other,,,,,,,RADIATION_SITE
+RADIATION_THERAPY,treatment_type,99,stage3,value,treatment_status,1.0,Performed,,,,,,,,,,,,,RADIATION_THERAPY
+RADIATION_THERAPY_DOSE_PARAAORTIC_NODES,treatment_dose|treatment_reason|treatment_type,1,stage2,numeric,treatment_dose,1.15,RADIATION_THERAPY_DOSE_PARAAORTIC_NODES,treatment_number,0.9222,RADIOTHERAPY_FRACTIONS,,,,,,,,,,RADIATION_THERAPY_DOSE_PARAAORTIC_NODES
+RADIATION_THERAPY_XRT_TYPE,treatment_notes|treatment_type,1,stage2,alias,treatment_notes,1.0,radiation therapy xrt type,treatment_type,1.0,radiation therapy xrt type,treatment_status,0.6832,primary radiation therapy,,,,,,,RADIATION_THERAPY_XRT_TYPE
+RADIATION_TREATMENT_ADJUVANT,treatment_name|treatment_reason|treatment_status|treatment_type,1,stage3,value,treatment_status,1.0,Radiation Therapy,treatment_type,1.0,Radiation Therapy,,,,,,,,,,RADIATION_TREATMENT_ADJUVANT
+RADIATION_TYPE,treatment_notes|treatment_type,1,stage2,alias,treatment_notes,1.0,radiation type,treatment_type,1.0,radiation type,treatment_name,0.7846,radiation other,,,,,,,RADIATION_TYPE
+RADIATION_TYPE_OTHER,treatment_notes|treatment_type,1,stage2,alias,treatment_notes,1.0,radiation type other,treatment_type,1.0,radiation type other,treatment_name,0.881,radiation other,,,,,,,RADIATION_TYPE_OTHER
+RADIO_THERAPY,treatment_type,1,stage2,alias,treatment_type,1.0,radio therapy,,,,,,,,,,,,,RADIO_THERAPY
+RADIOTHERAPY,treatment_type,1,stage2,alias,treatment_type,1.0,radiotherapy,treatment_number,0.812,radiotherapy fractions,,,,,,,,,,RADIOTHERAPY
+RADIOTHERAPY_FRACTIONS,treatment_number|treatment_type,1,stage2,numeric,treatment_number,1.0,RADIOTHERAPY_FRACTIONS,treatment_dose,0.835,RADIATION_DOSE,,,,,,,,,,RADIOTHERAPY_FRACTIONS
+RADIOTHERAPY_TX,treatment_type,1,stage2,alias,treatment_type,1.0,radiotherapy tx,,,,,,,,,,,,,RADIOTHERAPY_TX
+REASON_FOR_TX_DISCONTINUATION,treatment_notes,99,stage3,value,treatment_status,1.0,On Treatment,,,,,,,,,,,,,REASON_FOR_TX_DISCONTINUATION
+RECEIVED_IO_AFTER_1ST_LINE,treatment_status|treatment_type,1,stage2,alias,treatment_status,1.0,received io after 1st line,treatment_type,1.0,received io after 1st line,treatment_reason,0.7129,io line,treatment_name,0.5127,num lines iodine,treatment_number,0.5127,num lines iodine,RECEIVED_IO_AFTER_1ST_LINE
+RECEIVED_TARGETED_TX,treatment_type,1,stage2,alias,treatment_type,1.0,received targeted tx,treatment_reason,0.5541,tx line,treatment_name,0.5332,tx 19d12,,,,,,,RECEIVED_TARGETED_TX
+REPORTED_ETHNICITY,ancestry|ancestry_details,1,stage3,value,ancestry_details,0.6667,Eastern European,ancestry,0.6667,European Ancestry,,,,,,,,,,REPORTED_ETHNICITY
+RESIDUAL_NODAL_DISEASE,disease,1,stage2,alias,disease,1.0,residual nodal disease,treatment_status,0.4149,treatment ongoing,cancer_type,0.4135,pathological diagnosis,,,,,,,RESIDUAL_NODAL_DISEASE
+RFS_STATUS,vital_status,1,stage2,alias,vital_status,1.0,rfs status,,,,,,,,,,,,,RFS_STATUS
+RT_TX_REASON_NOT_COMPLETED,treatment_notes|treatment_reason|treatment_status|treatment_type,1,stage2,alias,treatment_notes,1.0,rt tx reason not completed,treatment_reason,1.0,rt tx reason not completed,treatment_status,1.0,rt tx reason not completed,treatment_type,1.0,rt tx reason not completed,treatment_name,0.4754,tx tl32711,RT_TX_REASON_NOT_COMPLETED
+RT_TX_REASON_NOT_COMPLETED_OTHER,treatment_notes|treatment_reason|treatment_status|treatment_type,1,stage2,alias,treatment_notes,1.0,rt tx reason not completed other,treatment_reason,1.0,rt tx reason not completed other,treatment_status,1.0,rt tx reason not completed other,treatment_type,1.0,rt tx reason not completed other,treatment_name,0.4616,tx tl32711,RT_TX_REASON_NOT_COMPLETED_OTHER
+RT_TX_TOTAL_DOSE_TO_PELVIS,treatment_dose|treatment_reason|treatment_status|treatment_type,1,stage2,numeric,treatment_dose,1.15,RT_TX_TOTAL_DOSE_TO_PELVIS,,,,,,,,,,,,,RT_TX_TOTAL_DOSE_TO_PELVIS
+SALICYLATES,treatment_type,1,stage2,alias,treatment_type,1.0,salicylates,treatment_name,0.3648,chemotherapy agents,,,,,,,,,,SALICYLATES
+SALVAGE_CHEMO,treatment_reason|treatment_type,99,stage2,numeric,treatment_frequency,0.7865,CHEMO_CONCURRENT_COURSE,treatment_number,0.7748,NEOADJ_CHEMO,treatment_dose,0.7602,CHEMO_OTHER_CYCLES,,,,,,,SALVAGE_CHEMO
+SAMPLE_CLASS,sample_type|specimen_type,1,stage3,value,specimen_type,0.625,Organoid,,,,,,,,,,,,,SAMPLE_CLASS
+SAMPLE_TYPE,sample_type|specimen_type,1,stage3,value,sample_type,0.6667,Primary Neoplasm,,,,,,,,,,,,,SAMPLE_TYPE
+SECOND_LINE_TC_OR_SURGERY,treatment_name|treatment_number|treatment_reason|treatment_type,2,stage3,value,treatment_status,1.0,Surgery,treatment_type,1.0,Surgical Procedure,,,,,,,,,,SECOND_LINE_TC_OR_SURGERY
+SEX,sex,1,stage3,value,sex,1.0,Male,,,,,,,,,,,,,SEX
+SORAFENIB_TREATMENT,treatment_name,99,stage2,numeric,treatment_number,0.7552,TREATMENT_DETAILS,treatment_duration,0.7213,ANY_THERAPY_2YRS,treatment_dose,0.7149,treatment_dose,treatment_end,0.7139,treatment_end,treatment_start,0.7014,treatment_start,SORAFENIB_TREATMENT
+SOURCE_TYPE,body_site,1,stage3,ncit,body_site,1.0,SOURCE_TYPE,,,,,,,,,,,,,SOURCE_TYPE
+SPECIAL_HISTOLOGY,cancer_type_details,1,stage2,alias,cancer_type_details,1.0,special histology,cancer_type,0.8025,histology diagnosis,cancer_subtype,0.7615,histology subtype,,,,,,,SPECIAL_HISTOLOGY
+SPECIFIC_DX_AT_ACQUISITION_MDSMPN,cancer_type,1,stage2,alias,cancer_type,1.0,specific dx at acquisition mdsmpn,disease,0.7122,mdsmpn diagnosis at acquisition,,,,,,,,,,SPECIFIC_DX_AT_ACQUISITION_MDSMPN
+SPECIFIC_DX_AT_INCLUSION,disease,2,stage3,ncit,cancer_type,0.7778,SPECIFIC_DX_AT_INCLUSION,disease,0.0556,SPECIFIC_DX_AT_INCLUSION,,,,,,,,,,SPECIFIC_DX_AT_INCLUSION
+SPECIFIC_TUMOR_LOCATION,body_site,1,stage3,ncit,body_site,1.0,SPECIFIC_TUMOR_LOCATION,,,,,,,,,,,,,SPECIFIC_TUMOR_LOCATION
+SPECIMEN_TYPE,sample_type|specimen_type,1,stage3,value,specimen_type,0.75,Resection,,,,,,,,,,,,,SPECIMEN_TYPE
+STATUS,vital_status,1,stage3,value,vital_status,1.0,Dead,,,,,,,,,,,,,STATUS
+STEROIDS,treatment_type,1,stage2,alias,treatment_type,1.0,steroids,treatment_dose,0.6171,steroids gt 10mg daily,treatment_frequency,0.6171,steroids gt 10mg daily,treatment_name,0.6171,steroids gt 10mg daily,treatment_reason,0.5045,history neoadjuvant steroid tx,STEROIDS
+STEROIDS_GT_10MG_DAILY,treatment_dose|treatment_frequency|treatment_name|treatment_type,1,stage2,alias,treatment_dose,1.0,steroids gt 10mg daily,treatment_frequency,1.0,steroids gt 10mg daily,treatment_name,1.0,steroids gt 10mg daily,treatment_type,1.0,steroids gt 10mg daily,treatment_status,0.6377,dose mg day steroid during pd1,STEROIDS_GT_10MG_DAILY
+STEROIDS_WHEN_STARTED_PD1_INHIBITOR,treatment_type,1,stage2,alias,treatment_type,1.0,steroids when started pd1 inhibitor,treatment_name,0.8419,drug and dose steroid during pd1,treatment_status,0.8419,drug and dose steroid during pd1,,,,,,,STEROIDS_WHEN_STARTED_PD1_INHIBITOR
+STREOIDS_DURING_PD1_INHIBITOR,treatment_status|treatment_type,1,stage2,alias,treatment_status,1.0,streoids during pd1 inhibitor,treatment_type,1.0,streoids during pd1 inhibitor,treatment_name,0.7528,pd1 inhibitor,,,,,,,STREOIDS_DURING_PD1_INHIBITOR
+SUBSEQUENT_RX,treatment_dose|treatment_name|treatment_number|treatment_reason|treatment_type,1,stage3,value,treatment_type,1.0,Whole-Brain Radiotherapy,,,,,,,,,,,,,SUBSEQUENT_RX
+SUBTYPE,cancer_subtype,99,stage3,ncit,cancer_type,0.8696,SUBTYPE,,,,,,,,,,,,,SUBTYPE
+SUBTYPE_ABBREVIATION,cancer_subtype,99,stage3,ncit,cancer_type,1.0,SUBTYPE_ABBREVIATION,,,,,,,,,,,,,SUBTYPE_ABBREVIATION
+SUBTYPE_CONSENSUS,cancer_subtype,1,stage2,alias,cancer_subtype,1.0,subtype consensus,,,,,,,,,,,,,SUBTYPE_CONSENSUS
+SUBTYPE_DETAILS,cancer_subtype,99,stage3,ncit,cancer_type,0.75,SUBTYPE_DETAILS,,,,,,,,,,,,,SUBTYPE_DETAILS
+SUBTYPE_GROUP,cancer_subtype,1,stage2,alias,cancer_subtype,1.0,subtype group,,,,,,,,,,,,,SUBTYPE_GROUP
+SURGERY,treatment_name|treatment_type,1,stage3,value,treatment_type,1.0,Excision,,,,,,,,,,,,,SURGERY
+SURGERY NUMBER,treatment_number|treatment_type,1,stage2,numeric,treatment_number,1.0,SURGERY NUMBER,treatment_start,0.8161,YEAR_OF_SURGERY,treatment_duration,0.7594,SURGERY_DATE_RELATIVE_TO_DX_MONTHS,,,,,,,SURGERY NUMBER
+SURGERY_ADVANCED_DISEASE,treatment_status|treatment_type,1,stage2,alias,treatment_status,1.0,surgery advanced disease,treatment_type,1.0,surgery advanced disease,treatment_name,0.6108,surgery,treatment_notes,0.6075,surgery type,treatment_reason,0.5818,type of surgery,SURGERY_ADVANCED_DISEASE
+SURGERY_AT_DX,treatment_name|treatment_reason|treatment_status|treatment_type,1,stage3,value,treatment_type,1.0,Mastectomy,,,,,,,,,,,,,SURGERY_AT_DX
+SURGERY_DATE_RELATIVE_TO_DX_MONTHS,treatment_duration|treatment_notes|treatment_type,1,stage2,numeric,treatment_duration,1.15,SURGERY_DATE_RELATIVE_TO_DX_MONTHS,treatment_start,1.0052,YEAR_OF_SURGERY,treatment_number,0.7594,SURGERY NUMBER,age_at_diagnosis,0.7316,INVASIVE_CARCINOMA_DX_AGE,,,,SURGERY_DATE_RELATIVE_TO_DX_MONTHS
+SURGERY_FOR_POSITIVE_MARGINS,treatment_name|treatment_type,1,stage3,value,treatment_type,1.0,Lumpectomy,,,,,,,,,,,,,SURGERY_FOR_POSITIVE_MARGINS
+SURGERY_FOR_POSITIVE_MARGINS_OTHER,treatment_name|treatment_type,1,stage3,value,treatment_type,1.0,Mastectomy,specimen_type,0.5,Resection,treatment_status,0.5,Resection,treatment_group,0.5,Resected,,,,SURGERY_FOR_POSITIVE_MARGINS_OTHER
+SURGERY_INDICATION,treatment_reason|treatment_type,2,stage3,value,sample_type,0.5,Clinical Relapse,treatment_type,0.5,Therapeutic Procedure,,,,,,,,,,SURGERY_INDICATION
+SURGERY_PROCEDURE,treatment_name|treatment_type,1,stage2,alias,treatment_name,1.0,surgery procedure,treatment_type,1.0,surgery procedure,treatment_status,0.8286,surgical procedure first,treatment_reason,0.8141,type of surgery,,,,SURGERY_PROCEDURE
+SURGERY_TYPE,treatment_name|treatment_notes|treatment_type,1,stage2,alias,treatment_name,1.0,surgery type,treatment_notes,1.0,surgery type,treatment_type,1.0,surgery type,treatment_reason,0.9392,type of surgery,,,,SURGERY_TYPE
+SURGICAL_APPROACH_AT_DIAGNOSIS,treatment_notes|treatment_status|treatment_type,1,stage2,alias,treatment_notes,1.0,surgical approach at diagnosis,treatment_status,1.0,surgical approach at diagnosis,treatment_type,1.0,surgical approach at diagnosis,treatment_name,0.759,definitive surgical procedure,treatment_reason,0.6542,surgery indication,SURGICAL_APPROACH_AT_DIAGNOSIS
+SURGICAL_PROCEDURE_FIRST,treatment_name|treatment_status|treatment_type,1,stage3,value,treatment_type,1.0,Lumpectomy,,,,,,,,,,,,,SURGICAL_PROCEDURE_FIRST
+SURVIVAL_STATUS,vital_status,1,stage3,value,vital_status,1.0,Alive,,,,,,,,,,,,,SURVIVAL_STATUS
+SYSTEMIC_CHEMO,treatment_type,99,stage2,numeric,treatment_dose,0.8036,CHEMO_OTHER_CYCLES,treatment_number,0.8036,CHEMO_OTHER_CYCLES,treatment_duration,0.8036,CHEMO_OTHER_CYCLES,,,,,,,SYSTEMIC_CHEMO
+SYSTEMIC_THERAPY,treatment_type,1,stage2,alias,treatment_type,1.0,systemic therapy,treatment_name,0.9148,systemic treatment,treatment_status,0.7331,prior systemic therapies,,,,,,,SYSTEMIC_THERAPY
+SYSTEMIC_TREATMENT,treatment_name|treatment_type,1,stage3,ncit,treatment_name,1.0,SYSTEMIC_TREATMENT,,,,,,,,,,,,,SYSTEMIC_TREATMENT
+TARGET_THERAPY,treatment_type,1,stage2,alias,treatment_type,1.0,target therapy,treatment_name,0.7209,therapy,treatment_status,0.6679,alternate therapy,,,,,,,TARGET_THERAPY
+TARGETED_MOLECULAR_THERAPY,treatment_type,1,stage2,alias,treatment_type,1.0,targeted molecular therapy,treatment_reason,0.499,neoadjuvant targeted,,,,,,,,,,TARGETED_MOLECULAR_THERAPY
+TARGETED_THERAPY,treatment_type,1,stage2,alias,treatment_type,1.0,targeted therapy,treatment_name,0.6421,therapy,,,,,,,,,,TARGETED_THERAPY
+TARGETED_TX,treatment_type,1,stage2,alias,treatment_type,1.0,targeted tx,treatment_reason,0.626,tx line,treatment_name,0.6025,tx 17 dmag,,,,,,,TARGETED_TX
+TAXANE_TX,treatment_type,1,stage2,alias,treatment_type,1.0,taxane tx,treatment_notes,0.6532,tx location,treatment_name,0.6412,tx pr 104,,,,,,,TAXANE_TX
+TERT_ALKYLATING_TX,treatment_type,1,stage2,alias,treatment_type,1.0,tert alkylating tx,treatment_name,0.6628,tert cisplatin tx,,,,,,,,,,TERT_ALKYLATING_TX
+TERT_ANTHRACYCLINE_TX,treatment_name,1,stage2,alias,treatment_name,1.0,tert anthracycline tx,treatment_duration,0.6822,x2yr anthracycline,treatment_type,0.6691,tert cytotoxic tx,,,,,,,TERT_ANTHRACYCLINE_TX
+TERT_ANTIMETABOLITE_TX,treatment_type,1,stage2,alias,treatment_type,1.0,tert antimetabolite tx,treatment_name,0.6145,tert anthracycline tx,,,,,,,,,,TERT_ANTIMETABOLITE_TX
+TERT_CARBOLATIN_TX,treatment_name,1,stage2,alias,treatment_name,1.0,tert carbolatin tx,treatment_type,0.6625,tert taxane tx,,,,,,,,,,TERT_CARBOLATIN_TX
+TERT_CISPLATIN_TX,treatment_name,1,stage2,alias,treatment_name,1.0,tert cisplatin tx,,,,,,,,,,,,,TERT_CISPLATIN_TX
+TERT_CYTOTOXIC_TX,treatment_type,1,stage2,alias,treatment_type,1.0,tert cytotoxic tx,treatment_notes,0.9617,tert other cytotoxic tx,treatment_name,0.6752,tert oxaliplatin tx,,,,,,,TERT_CYTOTOXIC_TX
+TERT_IO_TX,treatment_type,1,stage2,alias,treatment_type,1.0,tert io tx,treatment_name,0.6639,tert platinum tx,,,,,,,,,,TERT_IO_TX
+TERT_MICROTUBULE_TX,treatment_type,1,stage2,alias,treatment_type,1.0,tert microtubule tx,treatment_name,0.6406,tert cisplatin tx,,,,,,,,,,TERT_MICROTUBULE_TX
+TERT_OTHER_CYTOTOXIC_TX,treatment_notes|treatment_type,1,stage2,alias,treatment_notes,1.0,tert other cytotoxic tx,treatment_type,1.0,tert other cytotoxic tx,,,,,,,,,,TERT_OTHER_CYTOTOXIC_TX
+TERT_OXALIPLATIN_TX,treatment_name,1,stage2,alias,treatment_name,1.0,tert oxaliplatin tx,treatment_type,0.6752,tert cytotoxic tx,,,,,,,,,,TERT_OXALIPLATIN_TX
+TERT_PLATINUM_TX,treatment_name,1,stage2,alias,treatment_name,1.0,tert platinum tx,,,,,,,,,,,,,TERT_PLATINUM_TX
+TERT_TARGETED_TX,treatment_type,1,stage2,alias,treatment_type,1.0,tert targeted tx,treatment_name,0.6853,tert platinum tx,,,,,,,,,,TERT_TARGETED_TX
+TERT_TAXANE_TX,treatment_type,1,stage2,alias,treatment_type,1.0,tert taxane tx,treatment_name,0.6737,tert platinum tx,,,,,,,,,,TERT_TAXANE_TX
+TERT_TOPO_I_INH_TX,treatment_name,1,stage2,alias,treatment_name,1.0,tert topo i inh tx,,,,,,,,,,,,,TERT_TOPO_I_INH_TX
+TERT_TOPO_II_INH_TX,treatment_name,1,stage2,alias,treatment_name,1.0,tert topo ii inh tx,,,,,,,,,,,,,TERT_TOPO_II_INH_TX
+TESTES_SITE_OF_RELAPSE,sex,1,stage3,value,sex,1.0,Male,,,,,,,,,,,,,TESTES_SITE_OF_RELAPSE
+TESTICULAR_INVOLVEMENT,sex,1,stage3,value,sex,1.0,Male,,,,,,,,,,,,,TESTICULAR_INVOLVEMENT
+TESTIS_TUMOR_MACROEXTENT,sex,1,stage3,value,sex,1.0,Male,,,,,,,,,,,,,TESTIS_TUMOR_MACROEXTENT
+THERAPIES,treatment_type,1,stage2,alias,treatment_type,1.0,therapies,treatment_name,0.6503,therapy,treatment_status,0.6377,prior systemic therapies,,,,,,,THERAPIES
+THERAPY,treatment_name|treatment_type,1,stage3,value,treatment_type,1.0,Alkylating Agent,,,,,,,,,,,,,THERAPY
+THERAPY_PRIOR_TO_DERIVATION,treatment_name|treatment_status,1,stage3,ncit,treatment_name,1.0,THERAPY_PRIOR_TO_DERIVATION,,,,,,,,,,,,,THERAPY_PRIOR_TO_DERIVATION
+THIRD_LINE,treatment_dose|treatment_name|treatment_number|treatment_reason|treatment_type,1,stage3,ncit,treatment_name,1.0,THIRD_LINE,,,,,,,,,,,,,THIRD_LINE
+TIMING_OTHER_NOTES,treatment_end|treatment_frequency|treatment_name|treatment_notes,1,stage2,alias,treatment_end,1.0,timing other notes,treatment_frequency,1.0,timing other notes,treatment_name,1.0,timing other notes,treatment_notes,1.0,timing other notes,treatment_type,0.3345,chemo concurrent reason not other,TIMING_OTHER_NOTES
+TISSUE_SITE,body_site,99,stage3,value,specimen_type,1.0,Peripheral Blood,,,,,,,,,,,,,TISSUE_SITE
+TISSUE_SITE_OF_DERIVATION,body_site,1,stage3,ncit,body_site,1.0,TISSUE_SITE_OF_DERIVATION,,,,,,,,,,,,,TISSUE_SITE_OF_DERIVATION
+TISSUE_TYPE,body_site,1,stage3,ncit,body_site,1.0,TISSUE_TYPE,,,,,,,,,,,,,TISSUE_TYPE
+TKI_TREATMENT,treatment_type,1,stage2,alias,treatment_type,1.0,tki treatment,treatment_name,0.6147,tmz treatment,treatment_status,0.5076,treatment,treatment_number,0.4793,treatment details,,,,TKI_TREATMENT
+TMZ_CYCLES,treatment_name|treatment_number,1,stage2,numeric,treatment_number,1.0,TMZ_CYCLES,,,,,,,,,,,,,TMZ_CYCLES
+TMZ_TREATMENT,treatment_name,1,stage2,alias,treatment_name,1.0,tmz treatment,treatment_number,0.6763,tmz cycles,treatment_type,0.6147,tki treatment,treatment_status,0.5426,treatment,treatment_reason,0.5191,previous treatment,TMZ_TREATMENT
+TOPO_I_TX,treatment_name,1,stage2,alias,treatment_name,1.0,topo i tx,,,,,,,,,,,,,TOPO_I_TX
+TOPO_II_TX,treatment_name,1,stage2,alias,treatment_name,1.0,topo ii tx,,,,,,,,,,,,,TOPO_II_TX
+TOTAL_CYCLES_NUM_NEOADJUVANT_ADJUVANT,treatment_notes|treatment_number|treatment_reason,1,stage2,numeric,treatment_number,1.0,TOTAL_CYCLES_NUM_NEOADJUVANT_ADJUVANT,,,,,,,,,,,,,TOTAL_CYCLES_NUM_NEOADJUVANT_ADJUVANT
+TOTAL_TIME_PERIOD_MONTHS,treatment_duration,1,stage2,numeric,treatment_duration,1.15,TOTAL_TIME_PERIOD_MONTHS,,,,,,,,,,,,,TOTAL_TIME_PERIOD_MONTHS
+TRANSPLANT_TYPE,treatment_name|treatment_type,1,stage2,alias,treatment_name,1.0,transplant type,treatment_type,1.0,transplant type,treatment_notes,0.6101,surgery type,treatment_reason,0.5538,type of surgery,body_site,0.5225,tissue type,TRANSPLANT_TYPE
+TREATED_WITH_ICI,treatment_type,1,stage2,alias,treatment_type,1.0,treated with ici,treatment_name,0.6957,ici,treatment_number,0.5196,treatment details,treatment_status,0.5073,treatment,treatment_not_provided,0.5052,treatment not provided,TREATED_WITH_ICI
+TREATMENT,treatment_name|treatment_status|treatment_type,1,stage3,value,treatment_type,1.0,Immunotherapy,,,,,,,,,,,,,TREATMENT
+TREATMENT_ARM,treatment_group,1,stage2,alias,treatment_group,1.0,treatment arm,treatment_name,0.8419,protocol and treatment arm,treatment_status,0.6443,treatment,treatment_type,0.6443,treatment,treatment_number,0.6221,treatment details,TREATMENT_ARM
+TREATMENT_AT_MSK,treatment_notes,1,stage2,alias,treatment_notes,1.0,treatment at msk,treatment_name,0.5505,treatment,treatment_status,0.5505,treatment,treatment_type,0.5505,treatment,treatment_no,0.5249,treatment no,TREATMENT_AT_MSK
+TREATMENT_CATEGORY,treatment_type,1,stage2,alias,treatment_type,1.0,treatment category,treatment_name,0.7582,treatment type,treatment_dose,0.7382,treatment group,treatment_group,0.7382,treatment group,treatment_reason,0.7382,treatment group,TREATMENT_CATEGORY
+TREATMENT_CHANGED,treatment_status,1,stage2,alias,treatment_status,1.0,treatment changed,treatment_name,0.8317,previous treatment,treatment_reason,0.8317,previous treatment,treatment_type,0.8317,previous treatment,,,,TREATMENT_CHANGED
+TREATMENT_CHEMOTHERAPY,treatment_type,1,stage2,alias,treatment_type,1.0,treatment chemotherapy,treatment_name,0.9511,chemotherapy,treatment_notes,0.8692,chemotherapy type,treatment_status,0.8193,concurrent chemotherapy,,,,TREATMENT_CHEMOTHERAPY
+TREATMENT_DETAIL_BEFORE_PDX,treatment_name,1,stage3,ncit,treatment_name,1.0,TREATMENT_DETAIL_BEFORE_PDX,,,,,,,,,,,,,TREATMENT_DETAIL_BEFORE_PDX
+TREATMENT_DETAILS,treatment_name|treatment_number,1,stage2,alias,treatment_name,1.0,treatment details,treatment_number,1.0,treatment details,treatment_status,0.8477,treatment,treatment_type,0.8477,treatment,,,,TREATMENT_DETAILS
+TREATMENT_GROUP,treatment_dose|treatment_group|treatment_reason,1,stage3,value,treatment_group,1.0,Unresected,specimen_type,0.5,Resection,treatment_status,0.5,Resection,treatment_type,0.5,Resection,,,,TREATMENT_GROUP
+TREATMENT_HORMONE_THERAPY,treatment_type,1,stage2,alias,treatment_type,1.0,treatment hormone therapy,treatment_name,0.7526,endocrine therapy,treatment_status,0.7503,history menopausal hormone therapy,treatment_notes,0.7124,prd hormone therapy,,,,TREATMENT_HORMONE_THERAPY
+TREATMENT_ONGOING,treatment_status,1,stage2,alias,treatment_status,1.0,treatment ongoing,treatment_name,0.7922,treatment,treatment_type,0.7922,treatment,treatment_reason,0.782,previous treatment,treatment_number,0.7359,treatment details,TREATMENT_ONGOING
+TREATMENT_PALLIATIVE_RADIATION,treatment_reason|treatment_type,1,stage2,alias,treatment_reason,1.0,treatment palliative radiation,treatment_type,1.0,treatment palliative radiation,,,,,,,,,,TREATMENT_PALLIATIVE_RADIATION
+TREATMENT_PRIOR_TO_RESECTION,treatment_status|treatment_type,1,stage3,value,treatment_type,1.0,Interferon Therapy,,,,,,,,,,,,,TREATMENT_PRIOR_TO_RESECTION
+TREATMENT_PRIOR_TO_SURGERY_INDICATOR,treatment_name|treatment_status|treatment_type,1,stage2,alias,treatment_name,1.0,treatment prior to surgery indicator,treatment_status,1.0,treatment prior to surgery indicator,treatment_type,1.0,treatment prior to surgery indicator,treatment_reason,0.7353,surgery indication,treatment_dose,0.5605,prior treatment,TREATMENT_PRIOR_TO_SURGERY_INDICATOR
+TREATMENT_PROSTATECTOMY,treatment_name|treatment_type,1,stage2,alias,treatment_name,1.0,treatment prostatectomy,treatment_type,1.0,treatment prostatectomy,sex,0.7679,prd prostatectomy,treatment_notes,0.7679,prd prostatectomy,cancer_type,0.6759,incidental prostate cancer,TREATMENT_PROSTATECTOMY
+TREATMENT_RADIATION,treatment_type,1,stage2,alias,treatment_type,1.0,treatment radiation,treatment_status,0.7773,primary radiation therapy,,,,,,,,,,TREATMENT_RADIATION
+TREATMENT_SCHEDULE,treatment_frequency,1,stage2,numeric,treatment_frequency,1.0,TREATMENT_SCHEDULE,treatment_duration,0.8534,WEEKS_ON_TREATMENT,treatment_dose,0.8292,CUMULATIVE_TREATMENT_REGIMENS,treatment_start,0.8261,treatment_start,,,,TREATMENT_SCHEDULE
+TREATMENT_STATUS,treatment_status,1,stage3,value,treatment_status,1.0,Post-Therapy,,,,,,,,,,,,,TREATMENT_STATUS
+TREATMENT_TYPE,treatment_name|treatment_type,1,stage3,value,treatment_type,1.0,Proton Pump Inhibitor,,,,,,,,,,,,,TREATMENT_TYPE
+TUMOR_LATERALITY,body_site,1,stage2,alias,body_site,1.0,tumor laterality,,,,,,,,,,,,,TUMOR_LATERALITY
+TUMOR_LEVEL,body_site,1,stage3,ncit,body_site,1.0,TUMOR_LEVEL,,,,,,,,,,,,,TUMOR_LEVEL
+TUMOR_LOCATION,body_site,1,stage3,ncit,body_site,1.0,TUMOR_LOCATION,,,,,,,,,,,,,TUMOR_LOCATION
+TUMOR_LOCATION_CONDENSED,body_site,1,stage3,ncit,body_site,1.0,TUMOR_LOCATION_CONDENSED,,,,,,,,,,,,,TUMOR_LOCATION_CONDENSED
+TUMOR_MEGASITE,body_site,1,stage3,ncit,body_site,1.0,TUMOR_MEGASITE,,,,,,,,,,,,,TUMOR_MEGASITE
+TUMOR_SAMPLE_PROCUREMENT_COUNTRY,country|location,1,stage3,value,location,0.5625,North Carolina,,,,,,,,,,,,,TUMOR_SAMPLE_PROCUREMENT_COUNTRY
+TUMOR_SITE,body_site,1,stage3,ncit,body_site,1.0,TUMOR_SITE,,,,,,,,,,,,,TUMOR_SITE
+TUMOR_SITE_CURATED,body_site,1,stage3,ncit,body_site,1.0,TUMOR_SITE_CURATED,,,,,,,,,,,,,TUMOR_SITE_CURATED
+TUMOR_SITE_DETAIL,body_site,1,stage3,ncit,body_site,1.0,TUMOR_SITE_DETAIL,,,,,,,,,,,,,TUMOR_SITE_DETAIL
+TUMOR_SITE_SAMPLE,body_site,1,stage3,ncit,body_site,1.0,TUMOR_SITE_SAMPLE,,,,,,,,,,,,,TUMOR_SITE_SAMPLE
+TUMOR_SUBSITE,body_site,1,stage3,ncit,body_site,1.0,TUMOR_SUBSITE,,,,,,,,,,,,,TUMOR_SUBSITE
+TUMOR_SUPERSITE,body_site,1,stage3,ncit,body_site,1.0,TUMOR_SUPERSITE,,,,,,,,,,,,,TUMOR_SUPERSITE
+TUMOR_SURGERY_NUMBER,treatment_reason|treatment_type,99,stage2,numeric,treatment_number,0.9109,SURGERY NUMBER,treatment_start,0.7436,YEAR_OF_SURGERY,age_at_diagnosis,0.7203,INVASIVE_CARCINOMA_DX_AGE,treatment_dose,0.713,RADIATION_DOSE_PELVIC_NODES_PRIMARY_TUMOR.,,,,TUMOR_SURGERY_NUMBER
+TUMOR_TISSUE_ORIGIN,body_site,1,stage3,ncit,body_site,1.0,TUMOR_TISSUE_ORIGIN,,,,,,,,,,,,,TUMOR_TISSUE_ORIGIN
+TUMOR_TISSUE_SITE,body_site,1,stage3,ncit,body_site,1.0,TUMOR_TISSUE_SITE,,,,,,,,,,,,,TUMOR_TISSUE_SITE
+TUMOR_TISSUE_SITE_PATIENT,body_site,1,stage3,ncit,body_site,1.0,TUMOR_TISSUE_SITE_PATIENT,,,,,,,,,,,,,TUMOR_TISSUE_SITE_PATIENT
+TX_17-DMAG,treatment_name,99,stage2,numeric,treatment_number,0.7671,LINES_OF_TX,treatment_start,0.6891,TX_90DAYS_POST_RESECTION,age_at_diagnosis,0.6833,AGE_AT_DX,treatment_dose,0.6807,RT_TX_TOTAL_DOSE_TO_PELVIS,,,,TX_17-DMAG
+TX_19D12,treatment_name,99,stage2,numeric,treatment_number,0.7849,LINES_OF_TX,treatment_start,0.726,TX_90DAYS_POST_RESECTION,age_at_diagnosis,0.6555,AGE_D,treatment_duration,0.6503,X2YR_CDK46,,,,TX_19D12
+TX_90DAYS_POST_RESECTION,treatment_start|treatment_status,1,stage2,alias,treatment_start,1.0,tx 90days post resection,treatment_status,1.0,tx 90days post resection,treatment_type,0.6902,ifn tx 90 days prior to resection,treatment_name,0.4957,tx pr 104,,,,TX_90DAYS_POST_RESECTION
+TX_ABRAXANE,treatment_name,99,stage2,numeric,treatment_number,0.7264,LINES_OF_TX,treatment_dose,0.6796,RT_TX_TOTAL_DOSE_TO_PELVIS,treatment_duration,0.6787,X2YR_CAPECITABINE,,,,,,,TX_ABRAXANE
+TX_ABT-199,treatment_name,99,stage2,numeric,treatment_number,0.7503,LINES_OF_TX,treatment_start,0.7123,TX_90DAYS_POST_RESECTION,treatment_dose,0.658,RT_TX_TOTAL_DOSE_TO_PELVIS,,,,,,,TX_ABT-199
+TX_ABT-263,treatment_name,99,stage2,numeric,treatment_number,0.7397,LINES_OF_TX,treatment_start,0.6804,TX_90DAYS_POST_RESECTION,,,,,,,,,,TX_ABT-263
+TX_ACTINOMYCIN D,treatment_name,99,stage2,numeric,treatment_dose,0.6888,ALPELISIB_DOSE,treatment_number,0.6887,LINES_OF_TX,treatment_start,0.6609,DRUG_START,,,,,,,TX_ACTINOMYCIN D
+TX_APLIDIN,treatment_name,99,stage2,numeric,treatment_number,0.7497,LINES_OF_TX,treatment_dose,0.687,RT_TX_TOTAL_DOSE_TO_PELVIS,treatment_start,0.6733,TX_90DAYS_POST_RESECTION,,,,,,,TX_APLIDIN
+TX_AZD-2171,treatment_name,99,stage2,numeric,treatment_number,0.7298,LINES_OF_TX,treatment_start,0.6945,TX_90DAYS_POST_RESECTION,,,,,,,,,,TX_AZD-2171
+TX_AZD-6244,treatment_name,99,stage2,numeric,treatment_number,0.7402,LINES_OF_TX,treatment_start,0.7012,TX_90DAYS_POST_RESECTION,,,,,,,,,,TX_AZD-6244
+TX_AZD1480,treatment_name,99,stage2,numeric,treatment_number,0.738,LINES_OF_TX,treatment_start,0.6875,TX_90DAYS_POST_RESECTION,treatment_duration,0.67,X2YR_CDK46,,,,,,,TX_AZD1480
+TX_AZD8055,treatment_name,99,stage2,numeric,treatment_number,0.7214,LINES_OF_TX,treatment_duration,0.6731,X2YR_CDK46,treatment_start,0.6586,TX_90DAYS_POST_RESECTION,treatment_dose,0.6469,RT_TX_TOTAL_DOSE_TO_PELVIS,,,,TX_AZD8055
+TX_BAL101553,treatment_name,99,stage2,numeric,treatment_number,0.7599,LINES_OF_TX,treatment_start,0.6774,TX_90DAYS_POST_RESECTION,treatment_duration,0.6521,X2YR_CDK46,,,,,,,TX_BAL101553
+TX_BET_PRI_MET_SAMPLE_COLLECTION,treatment_type,1,stage3,value,treatment_type,1.0,Chemotherapy,,,,,,,,,,,,,TX_BET_PRI_MET_SAMPLE_COLLECTION
+TX_BI6727 (VOLASERTIB),treatment_name,99,stage2,numeric,treatment_number,0.6847,LINES_OF_TX,treatment_start,0.6612,TX_90DAYS_POST_RESECTION,treatment_duration,0.6336,X2YR_CDK46,treatment_dose,0.6288,RT_TX_TOTAL_DOSE_TO_PELVIS,,,,TX_BI6727 (VOLASERTIB)
+TX_BMN-673,treatment_name,99,stage2,numeric,treatment_number,0.7604,LINES_OF_TX,treatment_start,0.6987,TX_90DAYS_POST_RESECTION,treatment_dose,0.6538,RT_TX_TOTAL_DOSE_TO_PELVIS,,,,,,,TX_BMN-673
+TX_BMS-354825,treatment_name,99,stage2,numeric,treatment_number,0.7391,LINES_OF_TX,treatment_start,0.6587,TX_90DAYS_POST_RESECTION,age_at_procurement,0.6539,AGE_AT_DOS_BX,,,,,,,TX_BMS-354825
+TX_BMS-754807,treatment_name,99,stage2,numeric,treatment_number,0.7386,LINES_OF_TX,treatment_start,0.6693,TX_90DAYS_POST_RESECTION,,,,,,,,,,TX_BMS-754807
+TX_BORTEZOMIB,treatment_name,99,stage2,numeric,treatment_number,0.7214,LINES_OF_TX,treatment_start,0.6587,TX_90DAYS_POST_RESECTION,treatment_dose,0.6538,RT_TX_TOTAL_DOSE_TO_PELVIS,treatment_duration,0.6369,X2YR_CAPECITABINE,,,,TX_BORTEZOMIB
+TX_CABOZANTINIB (XL-148),treatment_name,99,stage2,numeric,treatment_number,0.7407,LINES_OF_TX,treatment_start,0.6654,TX_90DAYS_POST_RESECTION,treatment_duration,0.6453,X2YR_CDK46,,,,,,,TX_CABOZANTINIB (XL-148)
+TX_CBL0137,treatment_name,99,stage2,numeric,treatment_number,0.7527,LINES_OF_TX,treatment_duration,0.714,X2YR_CDK46,treatment_start,0.6747,TX_90DAYS_POST_RESECTION,,,,,,,TX_CBL0137
+TX_CDX-011 (GLEMBATUMUMAB),treatment_name,99,stage2,numeric,treatment_duration,0.7482,X2YR_CDK46,treatment_number,0.6743,LINES_OF_TX,treatment_dose,0.6704,DOSE_MG_DAY_STEROID_PD1_START,treatment_frequency,0.6704,DOSE_MG_DAY_STEROID_PD1_START,,,,TX_CDX-011 (GLEMBATUMUMAB)
+TX_CGC(PG)-11047,treatment_name,99,stage2,numeric,treatment_number,0.726,LINES_OF_TX,treatment_duration,0.7037,X2YR_CDK46,treatment_start,0.678,TX_90DAYS_POST_RESECTION,age_at_procurement,0.6476,AGE_AT_TCGA_SPECIMEN,,,,TX_CGC(PG)-11047
+TX_CISPLATIN,treatment_name,99,stage2,numeric,treatment_number,0.7332,LINES_OF_TX,treatment_dose,0.7132,RT_TX_TOTAL_DOSE_TO_PELVIS,treatment_duration,0.688,X2YR_TAXANE,treatment_start,0.6766,TX_90DAYS_POST_RESECTION,,,,TX_CISPLATIN
+TX_CPX351,treatment_name,99,stage2,numeric,treatment_number,0.7338,LINES_OF_TX,treatment_duration,0.6877,X2YR_CDK46,treatment_start,0.6717,TX_90DAYS_POST_RESECTION,treatment_dose,0.6544,INITIAL_RX,,,,TX_CPX351
+TX_CX-5461 (POL1),treatment_name,99,stage2,numeric,treatment_number,0.7175,LINES_OF_TX,treatment_duration,0.6938,X2YR_CDK46,treatment_start,0.6746,TX_90DAYS_POST_RESECTION,treatment_dose,0.6552,INITIAL_RX,,,,TX_CX-5461 (POL1)
+TX_CYCLOPHOSPHAMIDE,treatment_name,99,stage2,numeric,treatment_duration,0.6886,X2YR_ANTHRACYCLINE,treatment_dose,0.672,RT_TX_TOTAL_DOSE_TO_PELVIS,treatment_number,0.6615,NEOADJ_CHEMOCYCLES,,,,,,,TX_CYCLOPHOSPHAMIDE
+TX_CYTARABINE,treatment_name,99,stage2,numeric,treatment_number,0.7161,LINES_OF_TX,treatment_dose,0.7079,RT_TX_TOTAL_DOSE_TO_PELVIS,treatment_duration,0.6789,X2YR_TAMOXIFEN,treatment_start,0.6645,DRUG_START,,,,TX_CYTARABINE
+TX_E7438/EPZ6438,treatment_name,99,stage2,numeric,treatment_number,0.6754,LINES_OF_TX,treatment_duration,0.6647,X2YR_CDK46,treatment_start,0.6515,TX_90DAYS_POST_RESECTION,treatment_dose,0.6152,RT_TX_TOTAL_DOSE_TO_PELVIS,,,,TX_E7438/EPZ6438
+TX_EC1456,treatment_name,99,stage2,numeric,treatment_number,0.7437,LINES_OF_TX,treatment_start,0.6963,TX_90DAYS_POST_RESECTION,treatment_duration,0.6775,X2YR_CDK46,,,,,,,TX_EC1456
+TX_ERIBULIN,treatment_name,99,stage2,numeric,treatment_number,0.7349,LINES_OF_TX,treatment_dose,0.6716,RT_TX_TOTAL_DOSE_TO_PELVIS,treatment_duration,0.6317,X2YR_CAPECITABINE,treatment_start,0.6308,TX_90DAYS_POST_RESECTION,,,,TX_ERIBULIN
+TX_FENRETINIDE,treatment_name,99,stage2,numeric,treatment_number,0.7153,LINES_OF_TX,treatment_duration,0.6796,X2YR_TAXANE,treatment_dose,0.661,RT_TX_TOTAL_DOSE_TO_PELVIS,,,,,,,TX_FENRETINIDE
+TX_GENZ-644282,treatment_name,99,stage2,numeric,treatment_number,0.7325,LINES_OF_TX,treatment_start,0.6854,TX_90DAYS_POST_RESECTION,treatment_duration,0.68,X2YR_CDK46,,,,,,,TX_GENZ-644282
+TX_GS-9820,treatment_name,99,stage2,numeric,treatment_number,0.7406,LINES_OF_TX,treatment_start,0.6723,TX_90DAYS_POST_RESECTION,treatment_duration,0.6405,X2YR_CDK46,treatment_dose,0.6313,RT_TX_TOTAL_DOSE_TO_PELVIS,,,,TX_GS-9820
+TX_GSK690693,treatment_name,99,stage2,numeric,treatment_number,0.7106,LINES_OF_TX,treatment_duration,0.705,X2YR_CDK46,treatment_start,0.6594,TX_90DAYS_POST_RESECTION,,,,,,,TX_GSK690693
+TX_GSK923295A,treatment_name,99,stage2,numeric,treatment_number,0.7084,LINES_OF_TX,treatment_duration,0.6882,X2YR_CDK46,treatment_start,0.6662,TX_90DAYS_POST_RESECTION,,,,,,,TX_GSK923295A
+TX_HGS-ETR1,treatment_name,99,stage2,numeric,treatment_number,0.7435,LINES_OF_TX,treatment_start,0.6534,TX_90DAYS_POST_RESECTION,treatment_dose,0.65,RT_TX_TOTAL_DOSE_TO_PELVIS,,,,,,,TX_HGS-ETR1
+TX_IMC-A12,treatment_name,99,stage2,numeric,treatment_number,0.717,LINES_OF_TX,treatment_duration,0.6857,X2YR_AIS,,,,,,,,,,TX_IMC-A12
+TX_INDUCTION_COURSES_INDICATOR,treatment_reason,1,stage2,alias,treatment_reason,1.0,tx induction courses indicator,treatment_status,0.6072,type induction tx,treatment_type,0.6072,type induction tx,treatment_dose,0.4536,induction,treatment_name,0.4536,induction,TX_INDUCTION_COURSES_INDICATOR
+TX_INK128-1110-028,treatment_name,99,stage2,numeric,treatment_number,0.7186,LINES_OF_TX,treatment_start,0.6617,TX_90DAYS_POST_RESECTION,treatment_duration,0.6576,X2YR_CDK46,,,,,,,TX_INK128-1110-028
+TX_JNJ26481585,treatment_name,99,stage2,numeric,treatment_number,0.7474,LINES_OF_TX,treatment_start,0.6935,TX_90DAYS_POST_RESECTION,treatment_duration,0.6578,X2YR_CDK46,,,,,,,TX_JNJ26481585
+TX_JNJ26854165,treatment_name,99,stage2,numeric,treatment_number,0.7371,LINES_OF_TX,treatment_start,0.6909,TX_90DAYS_POST_RESECTION,treatment_duration,0.6662,X2YR_CDK46,,,,,,,TX_JNJ26854165
+TX_KPT-330,treatment_name,99,stage2,numeric,treatment_number,0.7052,LINES_OF_TX,treatment_start,0.6605,TX_90DAYS_POST_RESECTION,treatment_duration,0.6585,X2YR_CDK46,treatment_dose,0.6552,RT_TX_TOTAL_DOSE_TO_PELVIS,,,,TX_KPT-330
+TX_LAPATINIB,treatment_name,99,stage2,numeric,treatment_number,0.7183,LINES_OF_TX,treatment_dose,0.6566,RT_TX_TOTAL_DOSE_TO_PELVIS,treatment_duration,0.6552,X2YR_CAPECITABINE,treatment_start,0.6255,TX_90DAYS_POST_RESECTION,,,,TX_LAPATINIB
+TX_LENOLIDAMIDE,treatment_name,99,stage2,numeric,treatment_number,0.7066,LINES_OF_TX,treatment_dose,0.6917,RT_TX_TOTAL_DOSE_TO_PELVIS,treatment_frequency,0.6782,DOSE_MG_DAY_STEROID_PD1_START,,,,,,,TX_LENOLIDAMIDE
+TX_LINE,treatment_reason,99,stage2,numeric,treatment_number,0.9776,LINES_OF_TX,treatment_dose,0.7924,THIRD_LINE,,,,,,,,,,TX_LINE
+TX_LOCATION,treatment_notes,1,stage2,alias,treatment_notes,1.0,tx location,treatment_name,0.7066,tx reg,treatment_reason,0.6596,tx line,,,,,,,TX_LOCATION
+TX_LY 2606368,treatment_name,99,stage2,numeric,treatment_number,0.733,LINES_OF_TX,treatment_duration,0.6764,X2YR_CDK46,treatment_start,0.6727,TX_90DAYS_POST_RESECTION,,,,,,,TX_LY 2606368
+TX_MAINTENANCE_COURSES_INDICATOR,treatment_reason,1,stage2,alias,treatment_reason,1.0,tx maintenance courses indicator,treatment_name,0.4433,tx reg,treatment_type,0.4188,pharm tx mitotane indicator,,,,,,,TX_MAINTENANCE_COURSES_INDICATOR
+TX_MK-2206,treatment_name,99,stage2,numeric,treatment_number,0.7418,LINES_OF_TX,treatment_start,0.6847,TX_90DAYS_POST_RESECTION,treatment_duration,0.6651,X2YR_CDK46,treatment_dose,0.6294,RT_TX_TOTAL_DOSE_TO_PELVIS,,,,TX_MK-2206
+TX_MK-8242,treatment_name,99,stage2,numeric,treatment_number,0.7281,LINES_OF_TX,treatment_start,0.6764,TX_90DAYS_POST_RESECTION,treatment_duration,0.6699,X2YR_CDK46,treatment_dose,0.6382,RT_TX_TOTAL_DOSE_TO_PELVIS,,,,TX_MK-8242
+TX_MLN4924,treatment_name,99,stage2,numeric,treatment_number,0.7238,LINES_OF_TX,treatment_duration,0.6682,X2YR_CDK46,treatment_start,0.6589,TX_90DAYS_POST_RESECTION,,,,,,,TX_MLN4924
+TX_MLN8237,treatment_name,99,stage2,numeric,treatment_number,0.7332,LINES_OF_TX,treatment_start,0.6553,TX_90DAYS_POST_RESECTION,treatment_duration,0.649,X2YR_CDK46,,,,,,,TX_MLN8237
+TX_MM-141,treatment_name,99,stage2,numeric,treatment_number,0.7563,LINES_OF_TX,treatment_dose,0.7003,RT_TX_TOTAL_DOSE_TO_PELVIS,treatment_start,0.6968,TX_90DAYS_POST_RESECTION,treatment_duration,0.6737,DOT_MONTHS,,,,TX_MM-141
+TX_NSC750854,treatment_name,99,stage2,numeric,treatment_number,0.7341,LINES_OF_TX,treatment_duration,0.6876,X2YR_CDK46,treatment_start,0.6811,TX_90DAYS_POST_RESECTION,,,,,,,TX_NSC750854
+TX_PCI-32765,treatment_name,99,stage2,numeric,treatment_number,0.7113,LINES_OF_TX,treatment_duration,0.6763,X2YR_CDK46,treatment_start,0.6687,TX_90DAYS_POST_RESECTION,treatment_dose,0.6634,RT_TX_TOTAL_DOSE_TO_PELVIS,,,,TX_PCI-32765
+TX_PF-03084014,treatment_name,99,stage2,numeric,treatment_number,0.7626,LINES_OF_TX,treatment_start,0.6745,TX_90DAYS_POST_RESECTION,treatment_duration,0.6697,X2YR_CDK46,,,,,,,TX_PF-03084014
+TX_PIXANTRONE,treatment_name,99,stage2,numeric,treatment_number,0.7114,LINES_OF_TX,treatment_dose,0.6816,RT_TX_TOTAL_DOSE_TO_PELVIS,treatment_duration,0.6626,X2YR_TAMOXIFEN,,,,,,,TX_PIXANTRONE
+TX_PR-104,treatment_name,99,stage2,numeric,treatment_number,0.7508,LINES_OF_TX,treatment_start,0.7479,TX_90DAYS_POST_RESECTION,treatment_dose,0.6911,RT_TX_TOTAL_DOSE_TO_PELVIS,,,,,,,TX_PR-104
+TX_RAPAMYCIN,treatment_name,99,stage2,numeric,treatment_dose,0.7054,RT_TX_TOTAL_DOSE_TO_PELVIS,treatment_number,0.693,LINES_OF_TX,,,,,,,,,,TX_RAPAMYCIN
+TX_REG,treatment_name,1,stage2,alias,treatment_name,1.0,tx reg,treatment_notes,0.7066,tx location,,,,,,,,,,TX_REG
+TX_RG7112,treatment_name,99,stage2,numeric,treatment_number,0.7529,LINES_OF_TX,treatment_duration,0.706,X2YR_CDK46,treatment_start,0.6972,TX_90DAYS_POST_RESECTION,treatment_dose,0.6697,INITIAL_RX,,,,TX_RG7112
+TX_RO4929097,treatment_name,99,stage2,numeric,treatment_number,0.7287,LINES_OF_TX,treatment_start,0.6923,TX_90DAYS_POST_RESECTION,treatment_duration,0.658,X2YR_CDK46,,,,,,,TX_RO4929097
+TX_RUXOLITINIB,treatment_name,99,stage2,numeric,treatment_number,0.6876,LINES_OF_TX,treatment_duration,0.6762,X2YR_TAMOXIFEN,treatment_dose,0.666,SUBSEQUENT_RX,,,,,,,TX_RUXOLITINIB
+TX_SAHA,treatment_name,99,stage2,numeric,treatment_number,0.7523,LINES_OF_TX,treatment_start,0.6907,TX_90DAYS_POST_RESECTION,age_at_procurement,0.6459,AGE_AT_SCC,treatment_dose,0.6194,RT_TX_TOTAL_DOSE_TO_PELVIS,,,,TX_SAHA
+TX_SAR3419,treatment_name,99,stage2,numeric,treatment_number,0.738,LINES_OF_TX,treatment_start,0.6853,TX_90DAYS_POST_RESECTION,treatment_duration,0.6643,X2YR_CDK46,,,,,,,TX_SAR3419
+TX_SB-715992,treatment_name,99,stage2,numeric,treatment_number,0.736,LINES_OF_TX,treatment_start,0.683,TX_90DAYS_POST_RESECTION,treatment_duration,0.6364,X2YR_CDK46,,,,,,,TX_SB-715992
+TX_SCH 727965,treatment_name,99,stage2,numeric,treatment_number,0.7361,LINES_OF_TX,treatment_start,0.7015,TX_90DAYS_POST_RESECTION,age_at_procurement,0.6306,AGE_AT_SCC,,,,,,,TX_SCH 727965
+TX_SETTING,treatment_reason,1,stage2,alias,treatment_reason,1.0,tx setting,treatment_notes,0.6451,tx location,treatment_name,0.6135,tx reg,treatment_type,0.5979,targeted tx,,,,TX_SETTING
+TX_SGI-1776,treatment_name,99,stage2,numeric,treatment_number,0.7296,LINES_OF_TX,treatment_start,0.6937,TX_90DAYS_POST_RESECTION,treatment_dose,0.6305,INITIAL_RX,,,,,,,TX_SGI-1776
+TX_SGN-CD19A,treatment_name,99,stage2,numeric,treatment_duration,0.7071,X2YR_CDK46,treatment_number,0.7059,LINES_OF_TX,treatment_start,0.6744,TX_90DAYS_POST_RESECTION,age_at_procurement,0.6481,AGE_AT_SCC,,,,TX_SGN-CD19A
+TX_SORAFENIB,treatment_name,99,stage2,numeric,treatment_number,0.7237,LINES_OF_TX,treatment_start,0.657,TX_90DAYS_POST_RESECTION,treatment_duration,0.6545,X2YR_CAPECITABINE,,,,,,,TX_SORAFENIB
+TX_STA9090 (GANETESPIB),treatment_name,99,stage2,numeric,treatment_number,0.6869,LINES_OF_TX,treatment_start,0.6753,TX_90DAYS_POST_RESECTION,treatment_duration,0.5998,X2YR_CDK46,treatment_frequency,0.5989,ALPELISIB_SCHEDULING,,,,TX_STA9090 (GANETESPIB)
+TX_STF-118804,treatment_name,99,stage2,numeric,treatment_number,0.7562,LINES_OF_TX,treatment_start,0.724,TX_90DAYS_POST_RESECTION,,,,,,,,,,TX_STF-118804
+TX_SU11248,treatment_name,99,stage2,numeric,treatment_number,0.7431,LINES_OF_TX,treatment_start,0.7021,TX_90DAYS_POST_RESECTION,treatment_duration,0.6631,X2YR_CDK46,,,,,,,TX_SU11248
+TX_SVV-001,treatment_name,99,stage2,numeric,treatment_number,0.7165,LINES_OF_TX,treatment_duration,0.6593,X2YR_CDK46,treatment_dose,0.6413,RT_TX_TOTAL_DOSE_TO_PELVIS,,,,,,,TX_SVV-001
+TX_TAK-701,treatment_name,99,stage2,numeric,treatment_number,0.7365,LINES_OF_TX,treatment_start,0.7159,TX_90DAYS_POST_RESECTION,treatment_dose,0.6725,RT_TX_TOTAL_DOSE_TO_PELVIS,,,,,,,TX_TAK-701
+TX_TB-403,treatment_name,99,stage2,numeric,treatment_start,0.7141,TX_90DAYS_POST_RESECTION,treatment_number,0.7048,LINES_OF_TX,treatment_dose,0.6817,RT_TX_TOTAL_DOSE_TO_PELVIS,age_at_procurement,0.6268,AGE_AT_TCGA_SPECIMEN,,,,TX_TB-403
+TX_TL32711,treatment_name,99,stage2,numeric,treatment_number,0.7176,LINES_OF_TX,treatment_dose,0.6773,RT_TX_TOTAL_DOSE_TO_PELVIS,treatment_start,0.6735,TX_90DAYS_POST_RESECTION,treatment_duration,0.6377,X2YR_CDK46,,,,TX_TL32711
+TX_TOPOTECAN,treatment_name,99,stage2,numeric,treatment_number,0.7536,LINES_OF_TX,treatment_start,0.6634,TX_90DAYS_POST_RESECTION,treatment_dose,0.6508,RT_TX_TOTAL_DOSE_TO_PELVIS,treatment_duration,0.6462,X2YR_CAPECITABINE,,,,TX_TOPOTECAN
+TX_TRISENOX(ATO),treatment_name,99,stage2,numeric,treatment_number,0.6898,LINES_OF_TX,treatment_duration,0.6434,X2YR_CAPECITABINE,treatment_dose,0.6359,RT_TX_TOTAL_DOSE_TO_PELVIS,,,,,,,TX_TRISENOX(ATO)
+TX_VINCRISTINE,treatment_name,99,stage2,numeric,treatment_number,0.704,LINES_OF_TX,treatment_duration,0.681,X2YR_TAXANE,treatment_dose,0.6733,RT_TX_TOTAL_DOSE_TO_PELVIS,,,,,,,TX_VINCRISTINE
+TX_VS-4718,treatment_name,99,stage2,numeric,treatment_number,0.7436,LINES_OF_TX,treatment_start,0.6879,TX_90DAYS_POST_RESECTION,treatment_dose,0.6834,RT_TX_TOTAL_DOSE_TO_PELVIS,age_at_diagnosis,0.6369,AGE_AT_DX,,,,TX_VS-4718
+TX_XL147,treatment_name,99,stage2,numeric,treatment_number,0.7697,LINES_OF_TX,treatment_start,0.6867,TX_90DAYS_POST_RESECTION,treatment_duration,0.6827,X2YR_CDK46,,,,,,,TX_XL147
+TYPE,cancer_subtype,99,stage3,ncit,body_site,1.0,TYPE,,,,,,,,,,,,,TYPE
+TYPE_INDUCTION_TREATMENT,treatment_reason|treatment_type,1,stage3,value,treatment_type,1.0,Supportive Care,,,,,,,,,,,,,TYPE_INDUCTION_TREATMENT
+TYPE_INDUCTION_TX,treatment_reason|treatment_status|treatment_type,1,stage3,value,treatment_type,1.0,Supportive Care,,,,,,,,,,,,,TYPE_INDUCTION_TX
+TYPE_OF_SURGERY,treatment_name|treatment_reason|treatment_type,1,stage3,value,treatment_type,1.0,Mastectomy,,,,,,,,,,,,,TYPE_OF_SURGERY
+TYPE_REFINED,cancer_subtype,99,stage3,ncit,body_site,0.52,TYPE_REFINED,,,,,,,,,,,,,TYPE_REFINED
+UV_RATE,treatment_dose|treatment_type,1,stage2,numeric,treatment_dose,1.0,UV_RATE,treatment_number,0.7048,DOSE_OF_RE-IRRADIATION,treatment_start,0.7048,DOSE_OF_RE-IRRADIATION,treatment_end,0.7048,DOSE_OF_RE-IRRADIATION,,,,UV_RATE
+VITAL_STATUS,vital_status,1,stage3,value,vital_status,1.0,Alive,,,,,,,,,,,,,VITAL_STATUS
+WEEKS_ON_STUDY,treatment_duration,1,stage2,numeric,treatment_duration,1.0,WEEKS_ON_STUDY,,,,,,,,,,,,,WEEKS_ON_STUDY
+WEEKS_ON_TREATMENT,treatment_duration,1,stage2,numeric,treatment_duration,1.0,WEEKS_ON_TREATMENT,treatment_frequency,0.8534,TREATMENT_SCHEDULE,,,,,,,,,,WEEKS_ON_TREATMENT
+WHO_CLASS,disease,99,stage3,ncit,cancer_type,1.0,WHO_CLASS,,,,,,,,,,,,,WHO_CLASS
+WHO_CLASSIFICATION,disease,99,stage3,ncit,cancer_type,1.0,WHO_CLASSIFICATION,,,,,,,,,,,,,WHO_CLASSIFICATION
+X2YR_AIS,treatment_duration|treatment_name,1,stage2,alias,treatment_duration,1.0,x2yr ais,treatment_name,1.0,x2yr ais,treatment_type,0.6086,x2yr taxane,,,,,,,X2YR_AIS
+X2YR_ALKYLATING_AGENT,treatment_duration|treatment_type,1,stage2,alias,treatment_duration,1.0,x2yr alkylating agent,treatment_type,1.0,x2yr alkylating agent,treatment_name,0.6566,x2yr antiher2,,,,,,,X2YR_ALKYLATING_AGENT
+X2YR_ANTHRACYCLINE,treatment_duration|treatment_name,1,stage2,alias,treatment_duration,1.0,x2yr anthracycline,treatment_name,1.0,x2yr anthracycline,treatment_type,0.6652,x2yr taxane,,,,,,,X2YR_ANTHRACYCLINE
+X2YR_ANTIHER2,treatment_duration|treatment_name,1,stage2,alias,treatment_duration,1.0,x2yr antiher2,treatment_name,1.0,x2yr antiher2,treatment_type,0.7129,x2yr taxane,,,,,,,X2YR_ANTIHER2
+X2YR_CAPECITABINE,treatment_duration|treatment_name,1,stage2,alias,treatment_duration,1.0,x2yr capecitabine,treatment_name,1.0,x2yr capecitabine,treatment_type,0.6803,x2yr taxane,,,,,,,X2YR_CAPECITABINE
+X2YR_CDK46,treatment_duration|treatment_name,1,stage2,alias,treatment_duration,1.0,x2yr cdk46,treatment_name,1.0,x2yr cdk46,treatment_type,0.6352,x2yr taxane,,,,,,,X2YR_CDK46
+X2YR_FULVESTRANT,treatment_duration|treatment_name,1,stage2,alias,treatment_duration,1.0,x2yr fulvestrant,treatment_name,1.0,x2yr fulvestrant,treatment_type,0.7007,x2yr taxane,,,,,,,X2YR_FULVESTRANT
+X2YR_TAMOXIFEN,treatment_duration|treatment_name,1,stage2,alias,treatment_duration,1.0,x2yr tamoxifen,treatment_name,1.0,x2yr tamoxifen,treatment_type,0.6088,x2yr taxane,,,,,,,X2YR_TAMOXIFEN
+X2YR_TAXANE,treatment_duration|treatment_type,1,stage2,alias,treatment_duration,1.0,x2yr taxane,treatment_type,1.0,x2yr taxane,treatment_name,0.7129,x2yr antiher2,,,,,,,X2YR_TAXANE
+X2YR_VEGF_INHIBITOR,treatment_duration|treatment_type,1,stage2,alias,treatment_duration,1.0,x2yr vegf inhibitor,treatment_type,1.0,x2yr vegf inhibitor,treatment_name,0.5588,x2yr tamoxifen,,,,,,,X2YR_VEGF_INHIBITOR
+XRT_TX,treatment_type,1,stage2,alias,treatment_type,1.0,xrt tx,treatment_reason,0.6364,adj xrt,treatment_status,0.6101,post sample xrt,,,,,,,XRT_TX
+YEAR_OF_SURGERY,treatment_start|treatment_type,1,stage2,numeric,treatment_start,1.15,YEAR_OF_SURGERY,treatment_duration,1.0052,SURGERY_DATE_RELATIVE_TO_DX_MONTHS,treatment_number,0.8161,SURGERY NUMBER,age_at_procurement,0.7729,AGE_AT_RESECTION,,,,YEAR_OF_SURGERY

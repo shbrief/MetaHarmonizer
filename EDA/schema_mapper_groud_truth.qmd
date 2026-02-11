@@ -1,0 +1,135 @@
+---
+title: "cBioPortal schema mapping ground truth"
+author: "Sehyun Oh"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+format:
+    html:
+        fontsize: 14pxs
+        toc: true
+        top-depth: 3
+abstract: "This vignette creates a through merging schema, including both already-harmonized and not-yet-harmonized columns for cBioPortal's clinical metadata"
+---
+
+```{r}
+cbio_all <- readRDS("~/OmicsMLRepo/OmicsMLRepoData/cBioPortalData/source/cBioPortal_all_clinicalData_combined_2023-05-18.rds")
+```
+
+Merging schema for already-harmonized columns
+```{r message=FALSE}
+library(tidyr)
+ms <- readr::read_csv("~/OmicsMLRepo/OmicsMLRepoData/inst/extdata/cBioPortal_merging_schema.csv")
+expanded_ms <- ms %>%
+    select(curated_field, original_field) %>%
+    separate_rows(original_field, sep = ";")
+```
+
+```{r}
+missing_ind <- which(!expanded_ms$original_field %in% colnames(cbio_all))
+length(missing_ind)
+
+## Missing columns are manually-corrected name, secondary harmonization, and
+## newly-introduced columns (i.e., `study_design` and `target_condition`)
+expanded_ms$original_field[missing_ind]
+```
+
+
+Plans for non-treatment columns - this is a less-reliable version because it
+shows the plan at the very beginning (we've been updated our schema throughout).
+
+```{r message=FALSE}
+url <- "https://docs.google.com/spreadsheets/d/1RJVhnkytalIH0xCnk4lniC7kP62aHGTQmYz0G_9DTfo/edit?usp=sharing"
+ss <- googledrive::as_id(url)
+plan1 <- googlesheets4::read_sheet(ss, sheet = "Sheet1") 
+expanded_plan1 <- plan1 %>%
+    select(curation_category, original_columns) %>%
+    separate_rows(original_columns, sep = ";")
+```
+
+Only parts of planned source columns were harmonized 
+```{r}
+cols <- c("disease", "cancer_type", "cancer_type_details", "cancer_subtype")
+expanded_ms %>%
+    filter(curated_field %in% cols) %>%
+    group_by(curated_field) %>%
+    summarise(n = n())
+```
+
+Also, there are over a dozen of columns not existing (?) in the source data.
+```{r}
+missing_ind <- which(!expanded_plan1$original_columns %in% colnames(cbio_all))
+length(missing_ind)
+
+expanded_plan1$original_columns[missing_ind]
+```
+
+# Claude
+Sonnet 4.5 Prompt:   
+```
+I'm working on harmonizing/standardizing clinical metadata. Based on 3,533 column names from cBioPortal, can you design a merging/standardizing schema? Please output in csv files with three columns - 'curated_column' (harmonized/standardized column name), 'description' (a brief description of 'curated_column'), and 'source_column' (a list of source columns concatenated with semi-colon delimiter). Allow many-to-many mapping if needed.
+```
+
+```{r}
+res <- readr::read_csv("data/cbio_harmonization_schema.csv")
+merged <- res %>% filter(source_column_num != 1) # 425 curated_columns
+write.csv(merged, "data/cbio_harmonization_schema_merged.csv", row.names = FALSE)
+```
+
+One-to-many mapping cases
+```{r}
+expanded_res <- res %>%
+    select(curated_column, source_column) %>%
+    separate_rows(source_column, sep = ";") 
+
+dup_sources <- expanded_res$source_column[duplicated(expanded_res$source_column)]
+one_to_many <- expanded_res %>%
+    filter(source_column %in% dup_sources) %>%
+    group_by(source_column) %>%
+    summarise(curated_to = paste(curated_column, collapse = ";"),
+              curated_col_num = n()) %>%
+    arrange(desc(curated_col_num))
+```
+
+Sonnet 4.5 Prompt: 
+```
+Can you create harmonization schema for age-related attributes with 
+higher resolution (e.g., age_at_diagnosis, age_at_death, etc.)?
+```
+
+```{r}
+ages <- readr::read_csv("data/age_harmonization_high_resolution.csv")
+```
+
+Sonnet 4.5 Prompt: 
+```
+Can you update the overall schema with the updated age-related harmonization?
+```
+
+```{r}
+res_v2 <- readr::read_csv("data/cbio_harmonization_schema_v2.csv")
+merged_v2 <- res_v2 %>% filter(source_column_num != 1) # 435 curated_columns
+write.csv(merged_v2, "data/cbio_harmonization_schema_v2_merged.csv", row.names = FALSE) 
+```
+
+```{r echo=FALSE, eval=FALSE}
+## Double-check before updating the suggested schema in Google Sheet
+colnames(merged_v2)[4] <- "source_column_num_v2"
+compare <- full_join(merged[c("curated_column", "source_column_num")], 
+                     merged_v2[c("curated_column", "source_column_num_v2")], 
+                     by = "curated_column")
+
+compare[is.na(compare[,2]),] # introduced in the new version
+compare[is.na(compare[,3]),] # removed in the new version
+compare[which(compare[,2] != compare[,3]),] # changed
+```
+
+
+
+
+# Rule-based merging schema
+## Patterns
+### `DMETS_DX_`
+ 
+```{r}
+
+```
+

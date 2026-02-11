@@ -1,0 +1,18 @@
+curated_column,description,source_column,source_column_num
+age,Patient age in years at unspecified reference timepoint,AGE,1
+age_at_allergy,Patient age in years at documented allergy occurrence,ANIMAL_INSECT_ALLERGY_AGE;FOOD_ALLERGY_AGE,2
+age_at_death,Patient age in years at time of death,AGE_AT_DEATH,1
+age_at_diagnosis,Patient age in years at initial cancer diagnosis,AGE_AT_DIAGNOSIS;AGE_AT_DIAGNOSIS_GROUP;AGE_AT_DX;AGE_AT_INITIAL_DIAGNOSIS;AGE_AT_INITIAL_PATHOLOGIC_DIAGNOSIS;AGE_AT_SPECIMEN_DIAGNOSIS;DIAGNOSIS AGE;DX_BX_M_STAGE;DX_BX_N_STAGE;DX_BX_T_STAGE;DX_PSTAGE;DX_STAGE;INVASIVE_CARCINOMA_DX_AGE;M_STAGE_AT_DIAGNOSIS_COMPLEX;M_STAGE_AT_DIAGNOSIS_SIMPLE;N_STAGE_AT_DIAGNOSIS_COMPLEX;N_STAGE_AT_DIAGNOSIS_SIMPLE;PATIENT_AGE_AT_DIAGNOSIS;STAGE_AT_DIAGNOSIS;T_STAGE_AT_DIAGNOSIS_COMPLEX;T_STAGE_AT_DIAGNOSIS_SIMPLE,21
+age_at_last_followup,Patient age in years at last clinical follow-up contact,AGE_AT_LAST_CONTACT;AGE_AT_LAST_FOLLOWUP;AGE_AT_LAST_KNOWN_CLINICAL_STATUS,3
+age_at_metastasis,Patient age in years at metastasis detection or occurrence,AGE_AT_EVIDENCE_OF_METS;AGE_AT_MET;AGE_AT_METS,3
+age_at_pregnancy,Patient age related to pregnancy count or miscarriage,PREGNANCIES_COUNT_MISCARRIAGE,1
+age_at_progression,Patient age in years at disease progression event,AGE_AT_PD1,1
+age_at_sample_collection,Patient age in years at specimen collection or procurement,AGE_AT_DERIVATION;AGE_AT_PROCUREMENT;AGE_AT_SAMPLE_COLLECTION;AGE_AT_SAMPLING;AGE_AT_SPECIMEN_ACQUISITION;AGE_AT_TCGA_SPECIMEN;SPECIMEN_STAGE,7
+age_at_sequencing,Patient age in years at genomic sequencing or molecular testing,AGE_AT_SEQUENCING;AGE_AT_SEQ_REPORT;AGE_AT_SEQ_REPORTED_YEARS,3
+age_at_surgery,Patient age in years at surgical procedure or resection,AGE_AT_RESECTION;AGE_AT_SURGERY;AGE_RESECTED;PRIMARY_SURGERY_M_STAGE;PRIMARY_SURGERY_N_STAGE;PRIMARY_SURGERY_T_STAGE,6
+age_at_testing,Patient age in years at clinical testing or examination,AGE_TESTING_YEARS,1
+age_at_testis_correction,Patient age in years at undescended testis correction,UNDESCENDED_TESTIS_CORRECTED_AGE,1
+age_at_treatment_start,Patient age in years at treatment initiation or therapy start,AGE_START_IO,1
+age_current,Patient current age in years at data collection,AGE_CURRENT;CURRENT_STAGE,2
+age_group,Categorical age group or binned age classification,AGE_CLASS;AGE_GROUP,2
+age_in_days,Patient age measured in days rather than years,AGE_IN_DAYS,1

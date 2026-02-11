@@ -1,0 +1,40 @@
+---
+title: "Untitled"
+format: html
+editor: visual
+---
+
+## SchemaIdentifier - Suggest
+```{r}
+pd <- import("pandas")
+new_ls <- pd$read_pickle("~/OmicsMLRepo/MetaHarmonizer/EDA/output/train_suggested_fields.pkl")
+```
+
+```{r}
+new_df <- as.data.frame(matrix(nrow = length(new_ls), ncol = 3))
+colnames(new_df) <- c("curated_field", "origin_field", "confidence")
+
+new_attrs <- names(new_ls)
+for (i in seq_along(new_attrs)) {
+    new_df$curated_field[i] = new_attrs[i]
+    new_df$origin_field[i] = paste(new_ls[[i]]$source_columns, collapse = ";")
+    new_df$confidence[i] = new_ls[[i]]$confidence
+}
+```
+
+
+## SchemaIdentifier - Identify
+```{r eval=FALSE}
+## Low performance is confirmed and decided to exclude rule/embedding/value-based identifier
+si <- readr::read_csv("~/OmicsMLRepo/MetaHarmonizer/EDA/output/train_identified_fields.csv")
+si_wide <- readr::read_csv("~/OmicsMLRepo/MetaHarmonizer/EDA/output/train_identified_fields_wide.csv")
+```
+
+
+
+## Schema Mapper
+```{r}
+sm <- readr::read_csv("~/OmicsMLRepo/MetaHarmonizer/EDA/output/train_llm_alias_manual.csv")
+sm_eval <- readr::read_csv("~/OmicsMLRepo/MetaHarmonizer/EDA/output/train_llm_alias_manual_eval.csv")
+```
+

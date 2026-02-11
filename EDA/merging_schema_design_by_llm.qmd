@@ -1,0 +1,51 @@
+---
+title: "Untitled"
+format: html
+editor: visual
+---
+
+```{r}
+library(dplyr)
+```
+
+# Merging Schema design by Claude
+
+Use Claude Sonnet 4.5 Prompt:
+
+```         
+The attached file (unique_values.txt) is the table of 673 original, unstandardized metadata column names. Can you design a harmonization/standardization plan? In other words, I want a 'merging schema' that consolidates the same/similar information dispersed across multiple columns. If needed, you can use many-to-many mapping. Please return the output as a table with the following columns - ColName (i.e., harmonized/standardized target column name), ColClass (numeric vs. string), Description, original_field (separated by semicolon), and original_field_num.
+```
+
+Initially, it returns with 70 harmonized columns
+
+```{r}
+output70 <- readr::read_csv("~/OmicsMLRepo/MetaHarmonizer/EDA/data/harmonization_schema_70.csv")
+```
+
+I requested further consolidation to below 50 columns:
+
+```{r}
+output38 <- readr::read_csv("~/OmicsMLRepo/MetaHarmonizer/EDA/data/harmonization_schema_38.csv")
+```
+
+Both of them missed a handful of original fields from harmonization.
+
+
+# Compare with manual merging schema
+```{r message=FALSE}
+ms <- readr::read_csv("~/OmicsMLRepo/OmicsMLRepoData/inst/extdata/cBioPortal_merging_schema.csv")
+dict <- readr::read_csv("~/OmicsMLRepo/OmicsMLRepoData/inst/extdata/cBioPortal_data_dictionary.csv")
+```
+
+```{r}
+ms_sub <- ms %>% select(curated_field, original_field, original_field_num) %>% rename(ColName = curated_field)
+dict_sub <- dict %>% select(ColName, ColClass, Description)
+
+all <- left_join(dict_sub, ms_sub, by = "ColName")
+write.csv(all, "~/OmicsMLRepo/MetaHarmonizer/EDA/data/harmonization_schema_manual.csv", row.names = FALSE)
+```
+
+```
+These are two versions of the metadata harmonization/standardization schema. Can you compare them? FYI, ColName, ColClass, Description are about the target (i.e., harmonized/standardized) columns and original_field, original_field_num are about the original/source columns. FYI, many-to-many mappings are allowed.
+```
+

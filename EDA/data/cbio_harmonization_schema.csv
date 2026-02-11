@@ -1,0 +1,1462 @@
+curated_column,description,source_column,source_column_num
+1p19q_status,Clinical or pathological status for 1p19q status,1P19Q_STATUS,1
+2l_treatment,Clinical or molecular attribute related to 2l treatment,2L_TREATMENT,1
+3l_treatment,Clinical or molecular attribute related to 3l treatment,3L_TREATMENT,1
+8q_arm,Clinical or molecular attribute related to 8q arm,8Q_ARM,1
+a_c,Clinical or molecular attribute related to a c,A_C,1
+a_g,Clinical or molecular attribute related to a g,A_G,1
+a_t,Clinical or molecular attribute related to a t,A_T,1
+aberrant_cell_fraction,"Percentage, fraction, or ratio for aberrant cell fraction",ABERRANT_CELL_FRACTION,1
+abi_enza_exposure_status,Clinical or pathological status for abi enza exposure status,ABI_ENZA_EXPOSURE_STATUS,1
+abnormal_lymphocyte_percent,"Percentage, fraction, or ratio for abnormal lymphocyte percent",ABNORMAL_LYMPHOCYTE_PERCENT,1
+absolute_related,"ABSOLUTE-related percentage, fraction, or proportion measurement",ABSOLUTE_CANCER_DNA_FRACTION;ABSOLUTE_EXTRACT_PLOIDY;ABSOLUTE_GENOME_DOUBLINGS,3
+access,Clinical or molecular attribute related to access,ACCESS,1
+access_timepoints,Temporal measurement or date for access timepoints,ACCESS_TIMEPOINTS,1
+acgh_data,Clinical or molecular attribute related to acgh data,ACGH_DATA,1
+achieved_6_months,Temporal measurement or date for achieved 6 months,ACHIEVED_6_MONTHS,1
+acinar_fraction,"Percentage, fraction, or ratio for acinar fraction",ACINAR_FRACTION,1
+acquired_related,"ACQUIRED-related treatment, therapy, or medication information",ACQUIRED_AFTER_ALKALATOR_TREATMENT;ACQUIRED_AFTER_ANY_SYSTEMIC_TREATMENT,2
+actionable_related,ACTIONABLE-related genetic mutations or molecular alterations,ACTIONABLE_ALTERATIONS;ACTIONABLE_LESION1,2
+additional_pathologic_findings,Clinical or molecular attribute related to additional pathologic findings,ADDITIONAL_PATHOLOGIC_FINDINGS,1
+adenocarcinoma_subtype_who2015,Classification or category for adenocarcinoma subtype who2015,ADENOCARCINOMA_SUBTYPE_WHO2015,1
+adjuvant_treatment,Post-surgical adjuvant therapy to reduce recurrence risk,ABLATION_EMBOLIZATION_TX_ADJUVANT;ADJUVANT;ADJUVANT_CT;ADJUVANT_CYCLES_NUM;ADJUVANT_TARGETED;ADJUVANT_TX;HISTORY_NEOADJUVANT_MEDICATION;HISTORY_NEOADJUVANT_STEROID_TX;HISTORY_NEOADJUVANT_TRTYN;HISTORY_NEOADJUVANT_TX_TYPE;NEOADJUVANT;NEOADJUVANT_TARGETED;NEOADJUVANT_TREATMENT_DETAILS;PHARM_TX_MITOTANE_ADJUVANT;RADADJUVANTRX;TOTAL_CYCLES_NUM_NEOADJUVANT_ADJUVANT,16
+adrenal_related,ADRENAL-related temporal information or time measurements,ADRENAL_MONTHS;ADRENAL_STATUS,2
+afp_related,"AFP-related clinical, molecular, or pathological attributes",AFP_AT_PROCUREMENT;AFP_NORM_RANGE_LOWER;AFP_NORM_RANGE_UPPER;AFP_UG_L,4
+age,"Patient age in years at diagnosis, sequencing, or surgery",AGE;AGE_AT_DIAGNOSIS;AGE_AT_DIAGNOSIS_GROUP;AGE_AT_SEQUENCING;AGE_AT_SEQ_REPORT;AGE_AT_SEQ_REPORTED_YEARS;AGE_AT_SURGERY;AJCC_CLINICAL_TUMOR_STAGE;AJCC_PATHOLOGIC_TUMOR_STAGE;AML_IN_SKIN_PERCENTAGE;ANIMAL_INSECT_ALLERGY_AGE;BCLC_STAGE;BEST_RESPONSE_PERCENTAGE;BM_BLAST_PERCENTAGE;BONE_MARROW_LEUKEMIC_BLAST_PERCENTAGE;CLINICAL_STAGE;CLIN_M_STAGE;CLIN_N_STAGE;CLIN_T_STAGE;COLLAPSED_FRAGMENT_MEAN_COVERAGE;COLLAPSED_MEAN_COVERAGE;CONVERTED_STAGE;COVERAGE;CSTAGE;CURRENT_STAGE;DIAGNOSIS AGE;DISEASE_STAGE;DOSAGE;DX_BX_M_STAGE;DX_BX_N_STAGE;DX_BX_T_STAGE;DX_PSTAGE;DX_STAGE;ESTIMATED_LEUKOCYTE_PERCENTAGE;FIGO_STAGE;FOOD_ALLERGY_AGE;HIGHEST_RECORDED_CLINICAL_TNM_STAGE;IGCCCG_STAGE;INITIAL_FIGO_STAGE;INITIAL_STAGE;INITIAL_TNM_STAGE;INSS_STAGE;INTESTINAL_PERCENTAGE;INVASIVE_CARCINOMA_DX_AGE;IPI_AGE;IPI_ANNARBOR_STAGE;IPI_STAGE;LIFE_STAGE;LINEAGE;LOSS_OF_HETEROZYOSITY_PERCENTAGE;MEAN_COVERAGE;MEDIAN_COVERAGE;M_STAGE;M_STAGE_AT_DIAGNOSIS_COMPLEX;M_STAGE_AT_DIAGNOSIS_SIMPLE;NODAL_STAGE;NORMAL_GENOME_COVERAGE;N_STAGE;N_STAGE_AT_DIAGNOSIS_COMPLEX;N_STAGE_AT_DIAGNOSIS_SIMPLE;PATHOLOGIC_PRIMARY_TUMOR_STAGE;PATHOLOGIC_STAGE;PATHOLOGY_N_STAGE;PATHOLOGY_T_STAGE;PATH_M_STAGE;PATH_N_STAGE;PATH_T_STAGE;PATIENT_AGE_AT_DIAGNOSIS;PB_BASOPHILS_PERCENTAGE;PB_BLAST_PERCENTAGE;PB_EOSINOPHILS_PERCENTAGE;PB_IMMATURE_GRANULOCYTES_PERCENTAGE;PB_LYMPHOCYTES_PERCENTAGE;PB_MONOCYTES_PERCENTAGE;PB_NEUTROPHILS_PERCENTAGE;PB_NUCLEATED_RBC_PERCENTAGE;PERIPHERAL_BLASTS_PERCENTAGE;PRECRT_CLINICAL_MSTAGE;PRECRT_CLINICAL_NSTAGE;PRECRT_CLINICAL_T_STAGE;PREGNANCIES_COUNT_MISCARRIAGE;PRIMARY_SURGERY_M_STAGE;PRIMARY_SURGERY_N_STAGE;PRIMARY_SURGERY_T_STAGE;PSTAGE;RALP_M_STAGE;RALP_N_STAGE;RALP_T_STAGE;RESPONSE_AT_3_WEEKS_PERCENTAGE;SAMPLE_COVERAGE;SPECIMEN_STAGE;STAGE;STAGE_AT_DIAGNOSIS;SURGIVAL_STAGE;SX_STAGE;S_STAGE;TNMSTAGE;TNM_STAGE;TUMOR_GENOME_COVERAGE;TUMOR_MORPHOLOGY_PERCENTAGE;TUMOR_STAGE;T_STAGE;T_STAGE_AT_DIAGNOSIS_COMPLEX;T_STAGE_AT_DIAGNOSIS_SIMPLE;UICC_TUMOR_STAGE;UNCOLLAPSED_MEAN_COVERAGE;UNDESCENDED_TESTIS_CORRECTED_AGE,107
+age_related,"AGE-related clinical, molecular, or pathological attributes",AGE_AT_DEATH;AGE_AT_DERIVATION;AGE_AT_DOS_BX;AGE_AT_DX;AGE_AT_EVIDENCE_OF_METS;AGE_AT_INITIAL_DIAGNOSIS;AGE_AT_INITIAL_PATHOLOGIC_DIAGNOSIS;AGE_AT_LAST_CONTACT;AGE_AT_LAST_FOLLOWUP;AGE_AT_LAST_KNOWN_CLINICAL_STATUS;AGE_AT_MET;AGE_AT_METS;AGE_AT_PD1;AGE_AT_PROCUREMENT;AGE_AT_RESECTION;AGE_AT_SAMPLE_COLLECTION;AGE_AT_SAMPLING;AGE_AT_SCC;AGE_AT_SPECIMEN_ACQUISITION;AGE_AT_SPECIMEN_DIAGNOSIS;AGE_AT_TCGA_SPECIMEN;AGE_CLASS;AGE_CURRENT;AGE_D;AGE_GROUP;AGE_GT_MEDIAN;AGE_IN_DAYS;AGE_RESECTED;AGE_START_IO;AGE_TESTING_YEARS;AGE_YRS,31
+agent,Clinical or molecular attribute related to agent,AGENT,1
+ajcc_edition,AJCC Cancer Staging Manual edition year used,AJCC_STAGING_EDITION,1
+ajcc_related,"AJCC-related clinical, molecular, or pathological attributes",AJCC_7;AJCC_8;AJCC_INCIDENTAL_PROSTATE_CANCER,3
+akt1_mutation,Genetic mutation or variant information for akt1 mutation,AKT1_MUTATION,1
+alb_g_dl,Clinical or molecular attribute related to alb g dl,ALB_G_DL,1
+albumin,Clinical or molecular attribute related to albumin,ALBUMIN,1
+alcohol,Clinical or molecular attribute related to alcohol,ALCOHOL,1
+alcohol_related,"ALCOHOL-related clinical, molecular, or pathological attributes",ALCOHOL_CONSUMPTION;ALCOHOL_CONSUMPTION_FREQUENCY;ALCOHOL_EXPOSURE_INTENSITY;ALCOHOL_HISTORY_DOCUMENTED;ALCOHOL_HISTORY_INTENSITY,5
+aliquot_related,"ALIQUOT-related clinical, molecular, or pathological attributes",ALIQUOT_BARCODE;ALIQUOT_ID,2
+alk_related,"ALK-related clinical, molecular, or pathological attributes",ALK_ANALYSIS_TYPE;ALK_DRIVER;ALK_FUSION;ALK_PROTEIN;ALK_TRANSLOCATION_STATUS,5
+alkylating_related,"ALKYLATING-related clinical, molecular, or pathological attributes",ALKYLATING_AGENT;ALKYLATING_TX,2
+all_related,"ALL-related clinical, molecular, or pathological attributes",ALL_MUTS;ALL_SYNS;ALL_TX_AT_MSK,3
+allele_frequency_cellularity,Clinical or molecular attribute related to allele frequency cellularity,ALLELE_FREQUENCY_CELLULARITY,1
+allelic_ratio,"Percentage, fraction, or ratio for allelic ratio",ALLELIC_RATIO,1
+allen_and_lisa_type,Classification or category for allen and lisa type,ALLEN_AND_LISA_TYPE,1
+alp_u_l,Clinical or molecular attribute related to alp u l,ALP_U_L,1
+alpelisib_related,"ALPELISIB-related clinical, molecular, or pathological attributes",ALPELISIB_DOSE;ALPELISIB_SCHEDULING,2
+alpha_fetoprotien_at_procurement,Clinical or molecular attribute related to alpha fetoprotien at procurement,ALPHA_FETOPROTIEN_AT_PROCUREMENT,1
+alt_type,Classification or category for alt type,ALT_TYPE,1
+aml_fab,Clinical or molecular attribute related to aml fab,AML_FAB,1
+amp_related,"AMP-related clinical, molecular, or pathological attributes",AMP_12Q15_CDK4;AMP_12Q15_DDIT3;AMP_12Q15_FRS2;AMP_12Q15_HMGA2;AMP_12Q15_MDM2,5
+amplification_status,Clinical or pathological status for amplification status,AMPLIFICATION_STATUS,1
+analysis_id,Clinical or molecular attribute related to analysis id,ANALYSIS_ID,1
+anatomic_region,Clinical or molecular attribute related to anatomic region,ANATOMIC_REGION,1
+anc,Clinical or molecular attribute related to anc,ANC,1
+ancestry_primary,Clinical or molecular attribute related to ancestry primary,ANCESTRY_PRIMARY,1
+aneuploidy_score,Quantitative measure of chromosomal copy number aberrations,ANEUPLOIDY_AMP_SCORE;ANEUPLOIDY_DEL_SCORE;ANEUPLOIDY_SCORE;PERCENT_ANEUPLOIDY,4
+angiolymphatic_invasion,Clinical or molecular attribute related to angiolymphatic invasion,ANGIOLYMPHATIC_INVASION,1
+animal_insect_allergy_hist,Clinical or molecular attribute related to animal insect allergy hist,ANIMAL_INSECT_ALLERGY_HIST,1
+annotation_source,Clinical or molecular attribute related to annotation source,ANNOTATION_SOURCE,1
+anthracycline_tx,Clinical or molecular attribute related to anthracycline tx,ANTHRACYCLINE_TX,1
+anti_related,"ANTI-related clinical, molecular, or pathological attributes",ANTI-HCV;ANTI_INTEGRIN;ANTI_O_VIVERRINI_IGG,3
+antimetabolite_tx,Temporal measurement or date for antimetabolite tx,ANTIMETABOLITE_TX,1
+any_related,"ANY-related clinical, molecular, or pathological attributes",ANY_COO;ANY_LINE_HORMONE;ANY_LINE_IMMUNO;ANY_LINE_IODINE;ANY_LINE_NTRK;ANY_LINE_TARGETED;ANY_SYSTX,7
+anytime_related,ANYTIME-related temporal information or time measurements,ANYTIME_CANCER_LOC_ASCITES;ANYTIME_CANCER_LOC_AXILLARY_LYMPH_NODE;ANYTIME_CANCER_LOC_BONE;ANYTIME_CANCER_LOC_BRAIN;ANYTIME_CANCER_LOC_BREAST;ANYTIME_CANCER_LOC_CHEST_WALL;ANYTIME_CANCER_LOC_LIVER;ANYTIME_CANCER_LOC_LUNG;ANYTIME_CANCER_LOC_OTHER_LYMPH_NODE;ANYTIME_CANCER_LOC_OVARY;ANYTIME_CANCER_LOC_PLEURAL_EFFUSION;ANYTIME_CANCER_LOC_SKIN,12
+apc_related,"APC-related clinical, molecular, or pathological attributes",APC_CLUSTER;APC_GROUP;APC_GROUPS,3
+apobec_signature,Clinical or molecular attribute related to apobec signature,APOBEC_SIGNATURE,1
+ar_capture_score,Calculated score or index for ar capture score,AR_CAPTURE_SCORE,1
+ar_mrna,Clinical or molecular attribute related to ar mrna,AR_MRNA,1
+ar_polya_score,Calculated score or index for ar polya score,AR_POLYA_SCORE,1
+ar_protein,Clinical or molecular attribute related to ar protein,AR_PROTEIN,1
+ar_score,Calculated score or index for ar score,AR_SCORE,1
+ar_v7_presence,Clinical or molecular attribute related to ar v7 presence,AR_V7_PRESENCE,1
+ar_v7_ratio,"Percentage, fraction, or ratio for ar v7 ratio",AR_V7_RATIO,1
+ar_v7_reads,Clinical or molecular attribute related to ar v7 reads,AR_V7_READS,1
+araf_related,ARAF-related genetic mutations or molecular alterations,ARAF_MUTATION;ARAF_MUTATION_STATUS,2
+archer,Clinical or molecular attribute related to archer,ARCHER,1
+area,Clinical or molecular attribute related to area,AREA,1
+arhgap26_arhgap6_cldn18_rearrangement,Clinical or molecular attribute related to arhgap26 arhgap6 cldn18 rearrangement,ARHGAP26_ARHGAP6_CLDN18_REARRANGEMENT,1
+arid1a_related,"ARID1A-related clinical, molecular, or pathological attributes",ARID1A_DRIVER;ARID1A_MUTATION;ARID1A_PROTEIN;ARID1A_PROTEIN_CODING,4
+arm_scna_cluster,Clinical or molecular attribute related to arm scna cluster,ARM_SCNA_CLUSTER,1
+armdriver_cn,Clinical or molecular attribute related to armdriver cn,ARMDRIVER_CN,1
+ascn_related,"ASCN-related clinical, molecular, or pathological attributes",ASCN_PLOIDY;ASCN_VERSION;ASCN_WGD,3
+asct_consolidation,Clinical or molecular attribute related to asct consolidation,ASCT_CONSOLIDATION,1
+associated_adenoma,Clinical or molecular attribute related to associated adenoma,ASSOCIATED_ADENOMA,1
+asthma_related,"ASTHMA-related clinical, molecular, or pathological attributes",ASTHMA_ECZEMA_ALLERGY_FIRST_DIAGNOSIS;ASTHMA_HISTORY,2
+asxl1,Clinical or molecular attribute related to asxl1,ASXL1,1
+atm_mut,Clinical or molecular attribute related to atm mut,ATM_MUT,1
+atra_exposure,Clinical or molecular attribute related to atra exposure,ATRA_EXPOSURE,1
+atrx_related,"ATRX-related clinical, molecular, or pathological attributes",ATRX_DELETION;ATRX_STATUS,2
+atypical_mitotic_figures,Clinical or molecular attribute related to atypical mitotic figures,ATYPICAL_MITOTIC_FIGURES,1
+ave_ploidy,Clinical or molecular attribute related to ave ploidy,AVE_PLOIDY,1
+avg_cn_12q13_15,Clinical or molecular attribute related to avg cn 12q13 15,AVG_CN_12Q13_15,1
+b_cell_genotype_method,Classification or category for b cell genotype method,B_CELL_GENOTYPE_METHOD,1
+b_symptoms_at_diagnosis,Clinical or molecular attribute related to b symptoms at diagnosis,B_SYMPTOMS_AT_DIAGNOSIS,1
+barretts_esophagus,Clinical or molecular attribute related to barretts esophagus,BARRETTS_ESOPHAGUS,1
+baseline_related,"BASELINE-related clinical, molecular, or pathological attributes",BASELINE_ECOG;BASELINE_ERBB2_ANY_NGS;BASELINE_ERBB2_PLASMA_NGS;BASELINE_ERBB2_TISSUE_NGS;BASELINE_EXTERNAL_HER2_IHC_FISH;BASELINE_INTERNAL_HER2_IHC_FISH;BASELINE_MSK_ERBB2_STATUS_IHC_FISH_OR_TISSUE_PLASMA_NGS;BASELINE_PD_L1_STATUS;BASELINE_RTK_RAS_ALTERED,9
+basophils_count,Numeric count or quantity for basophils count,BASOPHILS_COUNT,1
+batch_number,Numeric count or quantity for batch number,BATCH_NUMBER,1
+bcl2_related,"BCL2-related clinical, molecular, or pathological attributes",BCL2_BA;BCL2_FISH_STATUS,2
+bcl6_related,"BCL6-related clinical, molecular, or pathological attributes",BCL6_BA;BCL6_FISH_STATUS,2
+bclc,Clinical or molecular attribute related to bclc,BCLC,1
+bcr_related,"BCR-related clinical status, score, or measurement",BCR_ABL1_STATUS;BCR_STATUS,2
+best_related,"BEST-related clinical, molecular, or pathological attributes",BEST_ORR;BEST_OVERALL_RESPONSE;BEST_OVERALL_RESPONSE_BOR;BEST_RANO_RESPONSE;BEST_RESPONSE;BEST_RESPONSE_ADC;BEST_RESPONSE_TO_PD1_INHIBITOR(RANO),7
+bev_failure_ before_pd1 inhibitor,Clinical or molecular attribute related to bev failure  before pd1 inhibitor,BEV_FAILURE_ BEFORE_PD1 INHIBITOR,1
+bhcg,Clinical or molecular attribute related to bhcg,BHCG,1
+bilateral,Clinical or molecular attribute related to bilateral,BILATERAL,1
+bilateral_diagnosis_timing_type,Classification or category for bilateral diagnosis timing type,BILATERAL_DIAGNOSIS_TIMING_TYPE,1
+bilirubin_related,"BILIRUBIN-related clinical, molecular, or pathological attributes",BILIRUBIN_TOTAL;BILIRUBIN_TOTAL_NORM_RANGE_LOWER;BILIRUBIN_TOTAL_NORM_RANGE_UPPER,3
+binding_neoantigens_per_mb,Clinical or molecular attribute related to binding neoantigens per mb,BINDING_NEOANTIGENS_PER_MB,1
+biochemical_testing,Clinical or molecular attribute related to biochemical testing,BIOCHEMICAL_TESTING,1
+biopsy_related,"BIOPSY-related clinical, molecular, or pathological attributes",BIOPSY_CONTAINS_MIP;BIOPSY_CONTAINS_SOLID;BIOPSY_CONTEXT;BIOPSY_GLEASON_SCORE;BIOPSY_GLEASON_SCORE_1;BIOPSY_GLEASON_SCORE_2;BIOPSY_OBTAINED;BIOPSY_SITE;BIOPSY_SITE_CATEG;BIOPSY_TIME,10
+birth_country,Numeric count or quantity for birth country,BIRTH_COUNTRY,1
+bladder_neck_invasion,Clinical or molecular attribute related to bladder neck invasion,BLADDER_NECK_INVASION,1
+blast_count,Numeric count or quantity for blast count,BLAST_COUNT,1
+block_related,"BLOCK-related clinical, molecular, or pathological attributes",BLOCK_ACCESSION;BLOCK_ID,2
+bm_blast,Clinical or molecular attribute related to bm blast,BM_BLAST,1
+bm_day_15,Temporal measurement or date for bm day 15,BM_DAY_15,1
+bm_day_29,Temporal measurement or date for bm day 29,BM_DAY_29,1
+bm_day_43,Temporal measurement or date for bm day 43,BM_DAY_43,1
+bm_day_8,Temporal measurement or date for bm day 8,BM_DAY_8,1
+bmi,Body mass index calculated from weight and height,BMI;BMI_CLASS;BMI_DELTA_DAYS;BMI_DELTA_VALUE;FINAL_BMI_CLASS;FINAL_BMI_NUMBER;INITIAL_BMI_NUMBER;SUBMITTED_TUMOR_DX_DAYS_TO,8
+body_site,Clinical or molecular attribute related to body site,BODY_SITE,1
+bone,Clinical or molecular attribute related to bone,BONE,1
+bone_related,"BONE-related clinical, molecular, or pathological attributes",BONE_FSM;BONE_MARROW_BIOPSY_PERFORMED;BONE_MARROW_INVOLVEMENT;BONE_MARROW_POS;BONE_MARROW_SITE_OF_RELAPSE;BONE_MONTHS;BONE_SCAN_RESULT;BONE_STATUS;BONE_TIME_INTERVAL,9
+bor,Clinical or molecular attribute related to bor,BOR,1
+borr,Clinical or molecular attribute related to borr,BORR,1
+br,Clinical or molecular attribute related to br,BR,1
+braf_related,"BRAF-related clinical, molecular, or pathological attributes",BRAF_DRIVER;BRAF_GENE_ANALYSIS_INDICATOR;BRAF_GENE_ANALYSIS_RESULT;BRAF_KIAA1549_FUSION;BRAF_MUTATION;BRAF_MUTATION_STATUS;BRAF_PROTEIN;BRAF_RELA_STATUS;BRAF_STATUS;BRAF_STATUS2;BRAF_V600E_STATUS,11
+brafv600e_related,"BRAFV600E-related clinical status, score, or measurement",BRAFV600E_RAF_SCORE;BRAFV600E_RAS,2
+brain_mets,Clinical or molecular attribute related to brain mets,BRAIN_METS,1
+brca1_related,"BRCA1-related clinical, molecular, or pathological attributes",BRCA1_CNA;BRCA1_GERMLINE_MUT;BRCA1_MUTATION,3
+brca2_related,"BRCA2-related clinical, molecular, or pathological attributes",BRCA2_CNA;BRCA2_GERMLINE_MUT;BRCA2_MUTATION,3
+breast_surgery,Clinical or molecular attribute related to breast surgery,BREAST_SURGERY,1
+breslow,Clinical or molecular attribute related to breslow,BRESLOW,1
+breslow_depth,Clinical or molecular attribute related to breslow depth,BRESLOW_DEPTH,1
+bubble_group,Clinical or molecular attribute related to bubble group,BUBBLE_GROUP,1
+buffa_hypoxia_score,Calculated score or index for buffa hypoxia score,BUFFA_HYPOXIA_SCORE,1
+bx_dcis,Clinical or molecular attribute related to bx dcis,BX_DCIS,1
+bx_epithelioid,Clinical or molecular attribute related to bx epithelioid,BX_EPITHELIOID,1
+bx_er,Clinical or molecular attribute related to bx er,BX_ER,1
+bx_extraprostatic_extension,Clinical or molecular attribute related to bx extraprostatic extension,BX_EXTRAPROSTATIC_EXTENSION,1
+bx_gleason_combo,Clinical or molecular attribute related to bx gleason combo,BX_GLEASON_COMBO,1
+bx_gleason_primary,Clinical or molecular attribute related to bx gleason primary,BX_GLEASON_PRIMARY,1
+bx_gleason_secondary,Clinical or molecular attribute related to bx gleason secondary,BX_GLEASON_SECONDARY,1
+bx_her2fish,Clinical or molecular attribute related to bx her2fish,BX_HER2FISH,1
+bx_her2ihc,Clinical or molecular attribute related to bx her2ihc,BX_HER2IHC,1
+bx_her2overall,Clinical or molecular attribute related to bx her2overall,BX_HER2OVERALL,1
+bx_ki67,Clinical or molecular attribute related to bx ki67,BX_KI67,1
+bx_lcis,Clinical or molecular attribute related to bx lcis,BX_LCIS,1
+bx_location,Clinical or molecular attribute related to bx location,BX_LOCATION,1
+bx_lymphovascular,Clinical or molecular attribute related to bx lymphovascular,BX_LYMPHOVASCULAR,1
+bx_margin,Clinical or molecular attribute related to bx margin,BX_MARGIN,1
+bx_notes,Clinical or molecular attribute related to bx notes,BX_NOTES,1
+bx_percent_er,"Percentage, fraction, or ratio for bx percent er",BX_PERCENT_ER,1
+bx_percent_pr,"Percentage, fraction, or ratio for bx percent pr",BX_PERCENT_PR,1
+bx_perineural_invasion,Clinical or molecular attribute related to bx perineural invasion,BX_PERINEURAL_INVASION,1
+bx_pr,Clinical or molecular attribute related to bx pr,BX_PR,1
+bx_seminal_vesicles,Clinical or molecular attribute related to bx seminal vesicles,BX_SEMINAL_VESICLES,1
+bx_sidedness_breast,Clinical or molecular attribute related to bx sidedness breast,BX_SIDEDNESS_BREAST,1
+bx_spindle_cell,Clinical or molecular attribute related to bx spindle cell,BX_SPINDLE_CELL,1
+bx_time_days,Temporal measurement or date for bx time days,BX_TIME_DAYS,1
+bx_type,Classification or category for bx type,BX_TYPE,1
+bx_vasoformative,Clinical or molecular attribute related to bx vasoformative,BX_VASOFORMATIVE,1
+bxcep17_copy,Clinical or molecular attribute related to bxcep17 copy,BXCEP17_COPY,1
+bxher2_related,"BXHER2-related clinical, molecular, or pathological attributes",BXHER2_COPY;BXHER2_RATIO,2
+c_a,Clinical or molecular attribute related to c a,C_A,1
+c_g,Clinical or molecular attribute related to c g,C_G,1
+c_t,Clinical or molecular attribute related to c t,C_T,1
+ca19,Clinical or molecular attribute related to ca19,CA19,1
+ca19_related,"CA19-related clinical, molecular, or pathological attributes",CA19_9_U_ML;CA19_HIGH,2
+ca_125,Clinical or molecular attribute related to ca 125,CA_125,1
+calc_related,"CALC-related clinical, molecular, or pathological attributes",CALC_MET_SETTING;CALC_TIME_TO_METS_DX_DAYS;CALC_TIME_TO_METS_DX_MONTHS;CALC_TIME_TO_RALP;CALC_TREATMENT_NAIVE,5
+cancer_related,"CANCER-related percentage, fraction, or proportion measurement",CANCER_DNA_FRACTION;CANCER_IDENTIFICATION_IDC;CANCER_IDENTIFICATION_ILC;CANCER_IDENTIFICATION_MIDLC;CANCER_PREDISPOSITIONS;CANCER_PROCUREMENT_STATE_PROVINCE;CANCER_SUBTYPE_CURATED;CANCER_TYPE_ACRONYM,8
+cancer_type,Primary cancer type or disease category classification,CANCER TYPE;CANCER_TYPE;DETAILED_CANCER_TYPE;FAMILY_HISTORY_CANCER_TYPE;ONCOTREE_CODE_CANCER_TYPE;OTHER_CANCER_TYPE;PRD_OTHER_CANCER_TYPE;PRIMARY_DIAGNOSIS,8
+cancer_type_detailed,Detailed cancer histological subtype or molecular classification,BONE_MARROW_SAMPLE_HISTOLOGY;BX_HISTOLOGY;CANCER_TYPE_DETAILED;CANCER_TYPE_DETAILED_CODE;CANCER_TYPE_HISTOLOGY;DX_BX_HISTOLOGY;DX_HISTOLOGY;GYN_DIAGNOSIS_HISTOLOGY;HISTOLOGICAL_TYPE;HISTOLOGICAL_TYPE_OTHER;HISTOLOGY;ICD_O_3_HISTOLOGY;INITIAL_HISTOLOGY;OVERALL_PATIENT_HISTOLOGY;PRIMARY_HISTOLOGY;PRIMARY_SURGERY_HISTOLOGY;PRIMARY_SURGERY_VARIENT_HISTOLOGY;SHORT_HISTOLOGY;SPECIAL_HISTOLOGY;TUMOR_SAMPLE_HISTOLOGY;VARIANT_HISTOLOGY,21
+caner_type_detailed,Classification or category for caner type detailed,CANER_TYPE_DETAILED,1
+capsular_invasion,Clinical or molecular attribute related to capsular invasion,CAPSULAR_INVASION,1
+capsule_formation,Clinical or molecular attribute related to capsule formation,CAPSULE_FORMATION,1
+capture_related,"CAPTURE-related clinical, molecular, or pathological attributes",CAPTURE_ARV7_SRPM;CAPTURE_BAIT_SET,2
+carbon_monoxide_diffusion_dlco,Clinical or molecular attribute related to carbon monoxide diffusion dlco,CARBON_MONOXIDE_DIFFUSION_DLCO,1
+carboplatin_tx,Clinical or molecular attribute related to carboplatin tx,CARBOPLATIN_TX,1
+carcinomatosis,Clinical or molecular attribute related to carcinomatosis,CARCINOMATOSIS,1
+case_project,Clinical or molecular attribute related to case project,CASE_PROJECT,1
+category_sample,Classification or category for category sample,CATEGORY_SAMPLE,1
+cause_related,"CAUSE-related clinical, molecular, or pathological attributes",CAUSE_OF_DEATH;CAUSE_OF_DEATH_SOURCE,2
+caval_vein_invasion,Clinical or molecular attribute related to caval vein invasion,CAVAL_VEIN_INVASION,1
+cbest_related,"CBEST-related clinical, molecular, or pathological attributes",CBEST_B_MEM;CBEST_B_NAIVE;CBEST_DENDRITIC_ACT;CBEST_DENDRITIC_REST;CBEST_EOSINOPHILS;CBEST_MACRO_M0;CBEST_MACRO_M1;CBEST_MACRO_M2;CBEST_MAST_ACT;CBEST_MAST_REST;CBEST_MONO;CBEST_NEUTROPHILS;CBEST_NK_ACT;CBEST_NK_REST;CBEST_PLASMA;CBEST_T_CD4_MEM_ACT;CBEST_T_CD4_MEM_REST;CBEST_T_CD4_NAIVE;CBEST_T_CD8;CBEST_T_FOLLI_HEL;CBEST_T_G_D;CBEST_T_REG,22
+cbft2a3_glis,Clinical or molecular attribute related to cbft2a3 glis,CBFT2A3_GLIS,1
+cbioportal_sample_class,Classification or category for cbioportal sample class,CBIOPORTAL_SAMPLE_CLASS,1
+cc_tt,Clinical or molecular attribute related to cc tt,CC_TT,1
+ccc,Clinical or molecular attribute related to ccc,CCC,1
+ccr,Clinical or molecular attribute related to ccr,CCR,1
+cd3_related,"CD3-related clinical, molecular, or pathological attributes",CD3_TILS_COUNTS;CD3_TILS_STATUS,2
+cdh1_status,Clinical or pathological status for cdh1 status,CDH1_STATUS,1
+cdk12_related,"CDK12-related clinical, molecular, or pathological attributes",CDK12_CNA;CDK12_MUT,2
+cdkn1b_related,"CDKN1B-related clinical, molecular, or pathological attributes",CDKN1B_CNA;CDKN1B_MUT,2
+cdkn2a_related,"CDKN2A-related clinical, molecular, or pathological attributes",CDKN2A_MET;CDKN2A_PATHWAY_ALTERATION_STATUS;CDKN2A_SILENCING,3
+cebpa_related,"CEBPA-related clinical, molecular, or pathological attributes",CEBPA_BIALLELIC;CEBPA_BIALLELIC_MUTATION;CEBPA_MUTATION,3
+cell_related,"CELL-related clinical, molecular, or pathological attributes",CELL_CYCLE;CELL_DIFFERENTIATION;CELL_LINE_SOURCE;CELL_MEMBRANE_PDL1_0PERCENT;CELL_MEMBRANE_PDL1_1PLUS_PERCENT;CELL_MEMBRANE_PDL1_2PLUS_PERCENT;CELL_MEMBRANE_PDL1_3PLUS_PERCENT;CELL_OF_ORIGIN;CELL_TYPE,9
+cellularity,Clinical or molecular attribute related to cellularity,CELLULARITY,1
+censored,Clinical or molecular attribute related to censored,CENSORED,1
+censoring,Clinical or molecular attribute related to censoring,CENSORING,1
+cent17_copy_number,Numeric count or quantity for cent17 copy number,CENT17_COPY_NUMBER,1
+center,Clinical or molecular attribute related to center,CENTER,1
+center_id,Clinical or molecular attribute related to center id,CENTER_ID,1
+central,Clinical or molecular attribute related to central,CENTRAL,1
+cervix_suv_results,Clinical or molecular attribute related to cervix suv results,CERVIX_SUV_RESULTS,1
+cfdna_input_ng,Clinical or molecular attribute related to cfdna input ng,CFDNA_INPUT_NG,1
+cg_1p,Clinical or molecular attribute related to cg 1p,CG_1P,1
+cga,Clinical or molecular attribute related to cga,CGA,1
+cgh,Clinical or molecular attribute related to cgh,CGH,1
+channel,Clinical or molecular attribute related to channel,CHANNEL,1
+characteristics,Clinical or molecular attribute related to characteristics,CHARACTERISTICS,1
+chd1_related,"CHD1-related clinical, molecular, or pathological attributes",CHD1_CNA;CHD1_MUTATION,2
+child,Clinical or molecular attribute related to child,CHILD,1
+child_pugh_classification,Classification or category for child pugh classification,CHILD_PUGH_CLASSIFICATION,1
+chloroma,Clinical or molecular attribute related to chloroma,CHLOROMA,1
+chloroma_relapse_site,Clinical or molecular attribute related to chloroma relapse site,CHLOROMA_RELAPSE_SITE,1
+cholecystolithiasis,Clinical or molecular attribute related to cholecystolithiasis,CHOLECYSTOLITHIASIS,1
+choledocholithiasis,Clinical or molecular attribute related to choledocholithiasis,CHOLEDOCHOLITHIASIS,1
+cholelithiasis,Clinical or molecular attribute related to cholelithiasis,CHOLELITHIASIS,1
+chor_inv,Clinical or molecular attribute related to chor inv,CHOR_INV,1
+chr_related,"CHR-related clinical, molecular, or pathological attributes",CHR_19_20_CO_GAIN;CHR_7_GAIN_CHR_10_LOSS;CHR_TP53_LOCUS,3
+chromosome_instability_index_cin_,Calculated score or index for chromosome instability index cin ,CHROMOSOME_INSTABILITY_INDEX_CIN_,1
+chromotrypsis_v2,Clinical or molecular attribute related to chromotrypsis v2,CHROMOTRYPSIS_V2,1
+chronic_hepatitis_any_type,Classification or category for chronic hepatitis any type,CHRONIC_HEPATITIS_ANY_TYPE,1
+cibersort_related,"CIBERSORT-related clinical, molecular, or pathological attributes",CIBERSORT_ABSOLUTE;CIBERSORT_ABSOLUTE _SCORE;CIBERSORT_ABSOLUTESCORE;CIBERSORT_ABSOLUTE_SCORE;CIBERSORT_B _CELLS _MEMORY;CIBERSORT_B _CELLS _NAIVE;CIBERSORT_CORRELATION;CIBERSORT_DENDRITIC _CELLS _ACTIVATED;CIBERSORT_DENDRITIC _CELLS _RESTING;CIBERSORT_EOSINOPHILS;CIBERSORT_MACROPHAGES _M0;CIBERSORT_MACROPHAGES _M1;CIBERSORT_MACROPHAGES _M2;CIBERSORT_MAST _CELLS _ACTIVATED;CIBERSORT_MAST _CELLS _RESTING;CIBERSORT_MONOCYTES;CIBERSORT_NEUTROPHILS;CIBERSORT_NK _CELLS _ACTIVATED;CIBERSORT_NK _CELLS _RESTING;CIBERSORT_P;CIBERSORT_PLASMA _CELLS;CIBERSORT_RMSE;CIBERSORT_T _CELLS _CD4 _MEMORY _ACTIVATED;CIBERSORT_T _CELLS _CD4 _MEMORY _RESTING;CIBERSORT_T _CELLS _CD4 _NAIVE;CIBERSORT_T _CELLS _CD8;CIBERSORT_T _CELLS _FOLLICULAR _HELPER;CIBERSORT_T _CELLS _GAMMA _DELTA;CIBERSORT_T _CELLS _REGULATORY _(TREGS),29
+cigarette_hx,Clinical or molecular attribute related to cigarette hx,CIGARETTE_HX,1
+cigarettes_per_day,Temporal measurement or date for cigarettes per day,CIGARETTES_PER_DAY,1
+cimp_related,"CIMP-related clinical, molecular, or pathological attributes",CIMP_CATEGORY;CIMP_STATUS;CIMP_STATUS_METH,3
+cin,Clinical or molecular attribute related to cin,CIN,1
+cirrhosis,Clinical or molecular attribute related to cirrhosis,CIRRHOSIS,1
+cis,Clinical or molecular attribute related to cis,CIS,1
+cisplatin_tx,Clinical or molecular attribute related to cisplatin tx,CISPLATIN_TX,1
+city_of_procurement,Clinical or molecular attribute related to city of procurement,CITY_OF_PROCUREMENT,1
+ckit_related,CKIT-related genetic mutations or molecular alterations,CKIT_EXON_17_MUTATION;CKIT_EXON_8_MUTATION,2
+clark_level_at_diagnosis,Clinical or molecular attribute related to clark level at diagnosis,CLARK_LEVEL_AT_DIAGNOSIS,1
+clin_psc,Clinical or molecular attribute related to clin psc,CLIN_PSC,1
+clinical_related,"CLINICAL-related clinical, molecular, or pathological attributes",CLINICAL_ASSESSMENT;CLINICAL_ASSOCIATION;CLINICAL_BENEFIT;CLINICAL_GLEASON;CLINICAL_GLEASON_CATEGORY;CLINICAL_GLEASON_SUM;CLINICAL_LN_POSITIVE;CLINICAL_ONSET_AML;CLINICAL_PDL1_SCORE;CLINICAL_STATE;CLINICAL_STATUS_AT_COLLECTION_EVENT;CLINICAL_STATUS_WITHIN_3_MTHS_SURGERY;CLINICAL_TRIAL;CLINICAL_TRIAL_1L;CLINICAL_TRIAL_2L;CLINICAL_TRIAL_3L,16
+clinically_aggressive,Clinical or molecular attribute related to clinically aggressive,CLINICALLY_AGGRESSIVE,1
+clonal_related,"CLONAL-related clinical, molecular, or pathological attributes",CLONAL_LABEL;CLONAL_STRONG_BINDING_NEOANTIGENS_PER_MB,2
+clonality,Clinical or molecular attribute related to clonality,CLONALITY,1
+cluster,Clinical or molecular attribute related to cluster,CLUSTER,1
+cms,Clinical or molecular attribute related to cms,CMS,1
+cn_category,Classification or category for cn category,CN_CATEGORY,1
+cn_cluster,Clinical or molecular attribute related to cn cluster,CN_CLUSTER,1
+cn_status,Clinical or pathological status for cn status,CN_STATUS,1
+cna_related,"CNA-related clinical, molecular, or pathological attributes",CNA_CLUSTER_K4;CNA_DATA;CNA_PROP,3
+cnacs_related,"CNACS-related clinical, molecular, or pathological attributes",CNACS_CHRARM_GAIN;CNACS_CHRARM_LOSS;CNACS_CHRARM_UPD;CNACS_GENE_GAIN;CNACS_GENE_LOSS;CNACS_GENE_UPD,6
+cne,Clinical or molecular attribute related to cne,CNE,1
+cns,Clinical or molecular attribute related to cns,CNS,1
+cns_related,"CNS-related clinical, molecular, or pathological attributes",CNS_DISEASE;CNS_INVOLVEMENT;CNS_MONTHS;CNS_RELAPSE;CNS_SITE_OF_RELAPSE;CNS_STATUS,6
+cnv_related,"CNV-related clinical, molecular, or pathological attributes",CNV_1Q_AMP;CNV_1Q_DEL;CNV_3Q_AMP;CNV_3Q_DEL;CNV_4Q_AMP;CNV_4Q_DEL;CNV_AMP;CNV_CLASS;CNV_DEL;CNV_IDX,10
+collab_id,Clinical or molecular attribute related to collab id,COLLAB_ID,1
+collection_indicator,Prospective or retrospective sample collection indicator,PROSPECTIVE_COLLECTION;RETROSPECTIVE_COLLECTION;TISSUE_PROSPECTIVE_COLLECTION_INDICATOR;TISSUE_RETROSPECTIVE_COLLECTION_INDICATOR,4
+columnar_metaplasia_goblet_cell_indicator,Clinical or molecular attribute related to columnar metaplasia goblet cell indicator,COLUMNAR_METAPLASIA_GOBLET_CELL_INDICATOR,1
+comments,Clinical or molecular attribute related to comments,COMMENTS,1
+complete_related,"COMPLETE-related clinical, molecular, or pathological attributes",COMPLETE_DATA;COMPLETE_TCGA_ID,2
+complex_karyotype,Classification or category for complex karyotype,COMPLEX_KARYOTYPE,1
+concomitant_cis,Clinical or molecular attribute related to concomitant cis,CONCOMITANT_CIS,1
+concurrent_tmz,Clinical or molecular attribute related to concurrent tmz,CONCURRENT_TMZ,1
+congenital_abnormality,Clinical or molecular attribute related to congenital abnormality,CONGENITAL_ABNORMALITY,1
+consensus_related,"CONSENSUS-related clinical status, score, or measurement",CONSENSUS_HR_STATUS;CONSENSUS_SIGNATURE,2
+contiguous_related,"CONTIGUOUS-related clinical, molecular, or pathological attributes",CONTIGUOUS_ORGAN_INVADED;CONTIGUOUS_ORGAN_RESECTION;CONTIGUOUS_ORGAN_RESECTION_OTHER,3
+control_site,Clinical or molecular attribute related to control site,CONTROL_SITE,1
+coo_related,"COO-related clinical, molecular, or pathological attributes",COO_GEP;COO_LYMPH2CX,2
+copy_related,"COPY-related clinical, molecular, or pathological attributes",COPY_NUMBER;COPY_NUMBER_CLUSTER,2
+corpus_involvement,Clinical or molecular attribute related to corpus involvement,CORPUS_INVOLVEMENT,1
+cosmic_aging,Clinical or molecular attribute related to cosmic aging,COSMIC_AGING,1
+country,Numeric count or quantity for country,COUNTRY,1
+country_related,"COUNTRY-related clinical, molecular, or pathological attributes",COUNTRY_OF_ORIGIN;COUNTRY_OF_PROCUREMENT,2
+covered_bases,Clinical or molecular attribute related to covered bases,COVERED_BASES,1
+cr_status_at_end_of_course_1,Clinical or pathological status for cr status at end of course 1,CR_STATUS_AT_END_OF_COURSE_1,1
+cr_status_at_end_of_course_2,Clinical or pathological status for cr status at end of course 2,CR_STATUS_AT_END_OF_COURSE_2,1
+crdb_related,"CRDB-related clinical, molecular, or pathological attributes",CRDB_ADJ_TXT;CRDB_BRAINMET;CRDB_CONSENT_DATE_DAYS;CRDB_ECOG;CRDB_NOSYSTXT;CRDB_OFF_STUDY_DAYS;CRDB_PRIOR_RX;CRDB_SURVIVAL_STATUS;CRDB_TREATMENT_END_DAYS,9
+creatinine_related,"CREATININE-related clinical, molecular, or pathological attributes",CREATININE_LEVEL_PRERESECTION;CREATININE_NORM_RANGE_LOWER;CREATININE_NORM_RANGE_UPPER,3
+criteria,Clinical or molecular attribute related to criteria,CRITERIA,1
+crs_number,Numeric count or quantity for crs number,CRS_NUMBER,1
+cstage_category,Classification or category for cstage category,CSTAGE_CATEGORY,1
+ct_category,Classification or category for ct category,CT_CATEGORY,1
+ct_scan_ab_pelvis_indicator,Clinical or molecular attribute related to ct scan ab pelvis indicator,CT_SCAN_AB_PELVIS_INDICATOR,1
+ct_scan_ab_pelvis_results,Clinical or molecular attribute related to ct scan ab pelvis results,CT_SCAN_AB_PELVIS_RESULTS,1
+ct_scan_preop_results,Clinical or molecular attribute related to ct scan preop results,CT_SCAN_PREOP_RESULTS,1
+ct_scan_type,Classification or category for ct scan type,CT_SCAN_TYPE,1
+ct_size,Clinical or molecular attribute related to ct size,CT_SIZE,1
+ct_slice_spacing,Clinical or molecular attribute related to ct slice spacing,CT_SLICE_SPACING,1
+ctdna_related,"CTDNA-related percentage, fraction, or proportion measurement",CTDNA_FRACTION;CTDNA_INDUCTION_RESPONSE,2
+ctnnb1_related,CTNNB1-related genetic mutations or molecular alterations,CTNNB1_MUTATION;CTNNB1_STATUS,2
+cumulative_related,"CUMULATIVE-related treatment, therapy, or medication information",CUMULATIVE_TREATMENT_REGIMENS;CUMULATIVE_TREATMENT_REGIMEN_COUNT,2
+current_related,"CURRENT-related clinical, molecular, or pathological attributes",CURRENT_CYCLE;CURRENT_REGIMEN,2
+cut_subq_met,Clinical or molecular attribute related to cut subq met,CUT_SUBQ_MET,1
+cycles_completed,Clinical or molecular attribute related to cycles completed,CYCLES_COMPLETED,1
+cyst_size,Clinical or molecular attribute related to cyst size,CYST_SIZE,1
+cyt_score,Calculated score or index for cyt score,CYT_SCORE,1
+cyto_ipssr,Clinical or molecular attribute related to cyto ipssr,CYTO_IPSSR,1
+cytogenetic_related,"CYTOGENETIC-related clinical, molecular, or pathological attributes",CYTOGENETIC_ABNORMALITY_TYPE;CYTOGENETIC_CODE_OTHER;CYTOGENETIC_COMPLEXITY;CYTOGENETIC_RELAPSE_SITE;CYTOGENETIC_RESPONSE;CYTOGENETIC_RISK,6
+cytogenetics,Clinical or molecular attribute related to cytogenetics,CYTOGENETICS,1
+cytogenetics_other,Clinical or molecular attribute related to cytogenetics other,CYTOGENETICS_OTHER,1
+cytological_phenotype,Classification or category for cytological phenotype,CYTOLOGICAL_PHENOTYPE,1
+cytology_fixation_type,Classification or category for cytology fixation type,CYTOLOGY_FIXATION_TYPE,1
+cytolytic_score,Calculated score or index for cytolytic score,CYTOLYTIC_SCORE,1
+cytoplasm_presence_less_than_equal_25_percent,"Percentage, fraction, or ratio for cytoplasm presence less than equal 25 percent",CYTOPLASM_PRESENCE_LESS_THAN_EQUAL_25_PERCENT,1
+cytotoxic_related,"CYTOTOXIC-related treatment, therapy, or medication information",CYTOTOXIC_TREATMENT;CYTOTOXIC_TX,2
+daily_alcohol,Clinical or molecular attribute related to daily alcohol,DAILY_ALCOHOL,1
+dark,Clinical or molecular attribute related to dark,DARK,1
+dark_zone_stat,Clinical or molecular attribute related to dark zone stat,DARK_ZONE_STAT,1
+data,Clinical or molecular attribute related to data,DATA,1
+data_related,"DATA-related clinical, molecular, or pathological attributes",DATA_CORE_SAMPLE;DATA_SOURCE,2
+date_added,Temporal measurement or date for date added,DATE_ADDED,1
+daxx_status,Clinical or pathological status for daxx status,DAXX_STATUS,1
+days_related,"DAYS-related clinical, molecular, or pathological attributes",DAYS_FROM_SURGERY_TO_LAST_FOLLOWUP;DAYS_TO_BILATERAL_TUMOR_DX;DAYS_TO_BONE_SCAN_PERFORMED;DAYS_TO_CT_SCAN_AB_PELVIS;DAYS_TO_DIAGNOSTIC_COMPUTED_TOMOGRAPHY_PERFORMED;DAYS_TO_DIAGNOSTIC_MRI_PERFORMED;DAYS_TO_EVENT;DAYS_TO_EVENT_AGGRESSIVE_DISEASE;DAYS_TO_FDG_OR_CT_PET_PERFORMED;DAYS_TO_INITIAL_PATHOLOGIC_DIAGNOSIS;DAYS_TO_MRI;DAYS_TO_PERFORMANCE_STATUS_ASSESSMENT;DAYS_TO_POST_ORCHI_SERUM_TEST;DAYS_TO_PRE_ORCHI_SERUM_TEST;DAYS_TO_PSA,15
+days_to_birth,Days from reference date to birth (negative age),DAYS_TO_BIRTH,1
+days_to_collection,Days from diagnosis or surgery to sample collection,DAYS_TO_COLLECTION,1
+days_to_death,Days from index date to patient death,DAYS_TO_DEATH;TCGA_DAYS_TO_DEATH_OR_LAST_FU,2
+days_to_last_followup,Days from index date to last clinical follow-up,DAYS_LAST_FOLLOWUP;DAYS_TO_LAST_FOLLOWUP,2
+dbsnp_mutation_density,Genetic mutation or variant information for dbsnp mutation density,DBSNP_MUTATION_DENSITY,1
+dcis_sx_bx,Clinical or molecular attribute related to dcis sx bx,DCIS_SX_BX,1
+dcr,Clinical or molecular attribute related to dcr,DCR,1
+de_novo_start_outofframe,Clinical or molecular attribute related to de novo start outofframe,DE_NOVO_START_OUTOFFRAME,1
+death,Clinical or molecular attribute related to death,DEATH,1
+death_related,DEATH-related temporal information or time measurements,DEATH_DATE;DEATH_FROM_DISEASE;DEATH_REASON,3
+definitive_surgical_procedure,Clinical or molecular attribute related to definitive surgical procedure,DEFINITIVE_SURGICAL_PROCEDURE,1
+del_related,"DEL-related clinical, molecular, or pathological attributes",DEL_5Q;DEL_7Q;DEL_9Q,3
+denovo_metastatsis,Clinical or molecular attribute related to denovo metastatsis,DENOVO_METASTATSIS,1
+depmapid,Clinical or molecular attribute related to depmapid,DEPMAPID,1
+detailed_sample_histology_category,Classification or category for detailed sample histology category,DETAILED_SAMPLE_HISTOLOGY_CATEGORY,1
+details_first_line_comments,Clinical or molecular attribute related to details first line comments,DETAILS_FIRST_LINE_COMMENTS,1
+dfs_months,Disease-free survival duration in months without recurrence or progression,DFS_MONTHS,1
+dfs_related,"DFS-related clinical, molecular, or pathological attributes",DFS_EVENT;DFS_FROM_NEO_MONTHS;DFS_FROM_NEO_STATUS;DFS_FROM_SURGERY_MONTHTS,4
+dfs_status,Disease-free survival status indicating recurrence or disease-free state,DAYS_FROM_SURGERY_TO_RECURRENCE;DFS_STATUS;DISTAL_RECURRENCE;DISTANT_RECURRENCE;FIRST_RECURRENCE;LOCAL_RECURRENCE;LOCAL_REGIONAL_RECURRENCE;MONTHS_TO_DISTANT_RECURRENCE;PRIOR_LOCAL_RECURRENCE;RECURRENCE;SITE_FIRST_RECURRENCE;SITE_OF_RECURRENCE;TIME_TO_DISTANT_RECURRENCE;TIME_TO_FIRST_RECURRENCE,14
+diabetes,Clinical or molecular attribute related to diabetes,DIABETES,1
+diabetes_related,"DIABETES-related clinical, molecular, or pathological attributes",DIABETES_DIAGNOSIS_DAYS_TO;DIABETES_DIAGNOSIS_INDICATOR;DIABETES_STATUS,3
+diagnosed_by_screening,Clinical or molecular attribute related to diagnosed by screening,DIAGNOSED_BY_SCREENING,1
+diagnosis,Clinical or molecular attribute related to diagnosis,DIAGNOSIS,1
+diagnosis_related,"DIAGNOSIS-related clinical, molecular, or pathological attributes",DIAGNOSIS_AT_INCLUSION;DIAGNOSIS_CANCER_BONE;DIAGNOSIS_CANCER_LOC_ASCITES;DIAGNOSIS_CANCER_LOC_AXILLARY_LN;DIAGNOSIS_CANCER_LOC_BRAIN;DIAGNOSIS_CANCER_LOC_BREAST;DIAGNOSIS_CANCER_LOC_CHEST_WALL;DIAGNOSIS_CANCER_LOC_LIVER;DIAGNOSIS_CANCER_LOC_LUNG;DIAGNOSIS_CANCER_LOC_OTHER_LN;DIAGNOSIS_CANCER_LOC_OVARY;DIAGNOSIS_CANCER_LOC_PLEURAL_EFFUSION;DIAGNOSIS_CANCER_LOC_SKIN,13
+diagnostic_related,"DIAGNOSTIC-related clinical, molecular, or pathological attributes",DIAGNOSTIC_CATEGORY;DIAGNOSTIC_MRI_RESULT,2
+differentiation,Clinical or molecular attribute related to differentiation,DIFFERENTIATION,1
+differentiation_score,Calculated score or index for differentiation score,DIFFERENTIATION_SCORE,1
+diffuse_architecture,Clinical or molecular attribute related to diffuse architecture,DIFFUSE_ARCHITECTURE,1
+discontinuous_lesions_count,Numeric count or quantity for discontinuous lesions count,DISCONTINUOUS_LESIONS_COUNT,1
+disease,Clinical or molecular attribute related to disease,DISEASE,1
+disease_related,"DISEASE-related clinical, molecular, or pathological attributes",DISEASE_AT_DIAGNOSIS;DISEASE_CODE;DISEASE_DETECTED_ON_SCREENING;DISEASE_EXTENT;DISEASE_MULTIFOCAL_INDICATOR;DISEASE_ONTOLOGY;DISEASE_STAGE_AT_SPECIMEN_COLLECTION,7
+distance_from_av_cm,Clinical or molecular attribute related to distance from av cm,DISTANCE_FROM_AV_CM,1
+distant_related,"DISTANT-related clinical, molecular, or pathological attributes",DISTANT_ANATOMIC_SITE;DISTANT_METS;DISTANT_METS_SITE,3
+dlco,Clinical or molecular attribute related to dlco,DLCO,1
+dm_at_presentation,Clinical or molecular attribute related to dm at presentation,DM_AT_PRESENTATION,1
+dmets_related,"DMETS-related clinical, molecular, or pathological attributes",DMETS_DX_ADRENAL_GLAND;DMETS_DX_BILIARY_TRACT;DMETS_DX_BLADDER_UT;DMETS_DX_BONE;DMETS_DX_BOWEL;DMETS_DX_BREAST;DMETS_DX_CNS_BRAIN;DMETS_DX_DIST_LN;DMETS_DX_FEMALE_GENITAL;DMETS_DX_HEAD_NECK;DMETS_DX_INTRA_ABDOMINAL;DMETS_DX_KIDNEY;DMETS_DX_LIVER;DMETS_DX_LUNG;DMETS_DX_MALE_GENITAL;DMETS_DX_MEDIASTINUM;DMETS_DX_OVARY;DMETS_DX_PLEURA;DMETS_DX_PNS;DMETS_DX_SKIN;DMETS_DX_UNSPECIFIED,21
+dna_related,"DNA-related clinical, molecular, or pathological attributes",DNA_INDEX;DNA_INPUT;DNA_METHYLATION_CLUSTER_EC;DNA_METHYLATION_CLUSTER_GEA;DNA_METHYLATION_CLUSTER_GEA_CIN;DNA_METHYLATION_CLUSTER_SCC;DNA_REPAIR_STATUS,7
+dnlr,Clinical or molecular attribute related to dnlr,DNLR,1
+dnmt3a_mutation,Genetic mutation or variant information for dnmt3a mutation,DNMT3A_MUTATION,1
+dnp_related,"DNP-related clinical, molecular, or pathological attributes",DNP_COUNT;DNP_COUNT_GG_TO_TT_OR_CC_TO_AA;DNP_GG_TO_TT_OR_CC_TO_AA_COUNT_WGS,3
+dob_related,DOB-related temporal information or time measurements,DOB_LASTFU_TIME_YRS;DOB_PROG_START_TIME_YRS;DOB_PROG_TIME_YRS;DOB_RECUR_START_TIME_YRS;DOB_RECUR_TIME_YRS;DOB_REPORT_TIME_YRS;DOB_TISSUE_TIME_YRS,7
+domain,Clinical or molecular attribute related to domain,DOMAIN,1
+dopamine,Clinical or molecular attribute related to dopamine,DOPAMINE,1
+dor_related,DOR-related temporal information or time measurements,DOR_MONTHS;DOR_STATUS,2
+dose_related,"DOSE-related clinical, molecular, or pathological attributes",DOSE_MG_DAY_STEROID_DURING_PD1;DOSE_OF_PEMBROLIZUMAB_PER_INJECTION (MG/KG);DOSE_REDUCTION,3
+dot_months,Temporal measurement or date for dot months,DOT_MONTHS,1
+doubling_related,DOUBLING-related temporal information or time measurements,DOUBLING_TIME;DOUBLING_TIME_FROM_VENDOR,2
+drinker,Clinical or molecular attribute related to drinker,DRINKER,1
+driver1_related,"DRIVER1-related clinical, molecular, or pathological attributes",DRIVER1_AI;DRIVER1_CCF;DRIVER1_CELLULAR_FRACTION;DRIVER1_CLONAL_CALL;DRIVER1_EXPECTED_MUTANT_COPIES;DRIVER1_FACETS_PLOIDY_CALL;DRIVER1_LCN;DRIVER1_MUTATION;DRIVER1_TCN,9
+driver2_related,"DRIVER2-related clinical, molecular, or pathological attributes",DRIVER2_AI;DRIVER2_CCF;DRIVER2_CELLULAR_FRACTION;DRIVER2_CLONAL_CALL;DRIVER2_EXPECTED_MUTANT_COPIES;DRIVER2_FACETS_PLOIDY_CALL;DRIVER2_LCN;DRIVER2_MUTATION;DRIVER2_TCN,9
+driver_related,"DRIVER-related clinical, molecular, or pathological attributes",DRIVER_CLASS;DRIVER_MUTATIONS;DRIVER_MUTATION_DENSITY,3
+dss_months,Disease-specific survival duration in months from diagnosis to death,DSS_MONTHS,1
+dss_status,Disease-specific survival status indicating death from disease or alive,DSS_STATUS,1
+duct_type,Classification or category for duct type,DUCT_TYPE,1
+durable_clinical_benefit,Clinical or molecular attribute related to durable clinical benefit,DURABLE_CLINICAL_BENEFIT,1
+duration_related,"DURATION-related clinical, molecular, or pathological attributes",DURATION_IBD_AT_DX_10_20_YEARS;DURATION_IBD_AT_DX_10_YEARS;DURATION_OF_INDUCTION_TREATMENT,3
+dx_at_inclusion,Clinical or molecular attribute related to dx at inclusion,DX_AT_INCLUSION,1
+dx_biopsy_location,Clinical or molecular attribute related to dx biopsy location,DX_BIOPSY_LOCATION,1
+dx_breastfeeding,Clinical or molecular attribute related to dx breastfeeding,DX_BREASTFEEDING,1
+dx_bx_gleason_combo,Clinical or molecular attribute related to dx bx gleason combo,DX_BX_GLEASON_COMBO,1
+dx_bx_gleason_pri,Clinical or molecular attribute related to dx bx gleason pri,DX_BX_GLEASON_PRI,1
+dx_bx_gleason_sec,Clinical or molecular attribute related to dx bx gleason sec,DX_BX_GLEASON_SEC,1
+dx_bx_num_core,Numeric count or quantity for dx bx num core,DX_BX_NUM_CORE,1
+dx_bx_perc_core,Clinical or molecular attribute related to dx bx perc core,DX_BX_PERC_CORE,1
+dx_bx_tot_cores,Clinical or molecular attribute related to dx bx tot cores,DX_BX_TOT_CORES,1
+dx_cep17_copy,Clinical or molecular attribute related to dx cep17 copy,DX_CEP17_COPY,1
+dx_cep17_copy_number,Numeric count or quantity for dx cep17 copy number,DX_CEP17_COPY_NUMBER,1
+dx_er,Clinical or molecular attribute related to dx er,DX_ER,1
+dx_her2_copy,Clinical or molecular attribute related to dx her2 copy,DX_HER2_COPY,1
+dx_her2_copy_number,Numeric count or quantity for dx her2 copy number,DX_HER2_COPY_NUMBER,1
+dx_her2_ratio,"Percentage, fraction, or ratio for dx her2 ratio",DX_HER2_RATIO,1
+dx_her2fish,Clinical or molecular attribute related to dx her2fish,DX_HER2FISH,1
+dx_her2ihc,Clinical or molecular attribute related to dx her2ihc,DX_HER2IHC,1
+dx_her2overall,Clinical or molecular attribute related to dx her2overall,DX_HER2OVERALL,1
+dx_location,Clinical or molecular attribute related to dx location,DX_LOCATION,1
+dx_org_inst,Clinical or molecular attribute related to dx org inst,DX_ORG_INST,1
+dx_percent_er,"Percentage, fraction, or ratio for dx percent er",DX_PERCENT_ER,1
+dx_percent_pr,"Percentage, fraction, or ratio for dx percent pr",DX_PERCENT_PR,1
+dx_pr,Clinical or molecular attribute related to dx pr,DX_PR,1
+dx_pregnant,Clinical or molecular attribute related to dx pregnant,DX_PREGNANT,1
+dx_sidedness,Clinical or molecular attribute related to dx sidedness,DX_SIDEDNESS,1
+dx_type,Classification or category for dx type,DX_TYPE,1
+dysplasia,Clinical or molecular attribute related to dysplasia,DYSPLASIA,1
+dz_extent,Clinical or molecular attribute related to dz extent,DZ_EXTENT,1
+dz_volume,Clinical or molecular attribute related to dz volume,DZ_VOLUME,1
+early_resistance,Clinical or molecular attribute related to early resistance,EARLY_RESISTANCE,1
+ebv_related,"EBV-related clinical, molecular, or pathological attributes",EBV_POSITIVE;EBV_POSITIVE_MALIGNANT_CELLS_PERCENT;EBV_PRESENT;EBV_STATUS;EBV_STATUS_MALIGNANT_CELLS_METHOD;EBV_TESTED,6
+ec,Clinical or molecular attribute related to ec,EC,1
+ece,Clinical or molecular attribute related to ece,ECE,1
+ece_binary,Clinical or molecular attribute related to ece binary,ECE_BINARY,1
+ecog,Clinical or molecular attribute related to ecog,ECOG,1
+ecog_related,"ECOG-related clinical, molecular, or pathological attributes",ECOG_BIN;ECOG_GT_2;ECOG_PERFORMANCE_STATUS;ECOG_SCORE;ECOG_STATUS,5
+ecsmg,Clinical or molecular attribute related to ecsmg,ECSMG,1
+eczema_history,Clinical or molecular attribute related to eczema history,ECZEMA_HISTORY,1
+edmondson,Clinical or molecular attribute related to edmondson,EDMONDSON,1
+efs_related,EFS-related temporal information or time measurements,EFS_MONTHS;EFS_STATUS;EFS_TIME,3
+efscens,Clinical or molecular attribute related to efscens,EFSCENS,1
+egfr_related,"EGFR-related clinical, molecular, or pathological attributes",EGFR_DRIVER;EGFR_MUTATION;EGFR_MUTATION_STATUS;EGFR_PROTEIN,4
+eln2017,Clinical or molecular attribute related to eln2017,ELN2017,1
+eln_related,"ELN-related clinical, molecular, or pathological attributes",ELN_2008;ELN_2017,2
+endocrine_toxicities,Clinical or molecular attribute related to endocrine toxicities,ENDOCRINE_TOXICITIES,1
+enets_related,"ENETS-related clinical, molecular, or pathological attributes",ENETS_STAGING;ENETS_T_STAGING,2
+enhancing,Clinical or molecular attribute related to enhancing,ENHANCING,1
+ependymoma_rela_status,Clinical or pathological status for ependymoma rela status,EPENDYMOMA_RELA_STATUS,1
+epic_related,"EPIC-related clinical, molecular, or pathological attributes",EPIC_BCELLS;EPIC_CAFS;EPIC_CD4_TCELLS;EPIC_CD8_TCELLS;EPIC_ENDOTHELIAL;EPIC_MACROPHAGES;EPIC_NKCELLS;EPIC_OTHERCELLS,8
+epigenetic,Clinical or molecular attribute related to epigenetic,EPIGENETIC,1
+epinephrine,Clinical or molecular attribute related to epinephrine,EPINEPHRINE,1
+epithelial,Clinical or molecular attribute related to epithelial,EPITHELIAL,1
+eqd_tertiles,Clinical or molecular attribute related to eqd tertiles,EQD_TERTILES,1
+er,Clinical or molecular attribute related to er,ER,1
+er_esr1,Clinical or molecular attribute related to er esr1,ER_ESR1,1
+er_ihc,Clinical or molecular attribute related to er ihc,ER_IHC,1
+er_pct_primary,Clinical or molecular attribute related to er pct primary,ER_PCT_PRIMARY,1
+er_positivity_scale_other,Clinical or molecular attribute related to er positivity scale other,ER_POSITIVITY_SCALE_OTHER,1
+er_positivity_scale_used,Clinical or molecular attribute related to er positivity scale used,ER_POSITIVITY_SCALE_USED,1
+er_pr_status,Clinical or pathological status for er pr status,ER_PR_STATUS,1
+er_status,Clinical or pathological status for er status,ER_STATUS,1
+er_status_by_ihc,Clinical or pathological status for er status by ihc,ER_STATUS_BY_IHC,1
+er_status_ihc_percent_positive,Clinical or pathological status for er status ihc percent positive,ER_STATUS_IHC_PERCENT_POSITIVE,1
+er_status_primary,Clinical or pathological status for er status primary,ER_STATUS_PRIMARY,1
+er_updated_clinical_status,Clinical or pathological status for er updated clinical status,ER_UPDATED_CLINICAL_STATUS,1
+erbb2_related,"ERBB2-related clinical, molecular, or pathological attributes",ERBB2_AMP_MSKIMPACT;ERBB2_DRIVER;ERBB2_GENE_AMPLIFIED;ERBB2_MUTATION;ERBB2_MUTATION_STATUS;ERBB2_PROTEIN;ERBB2_PROTEOGENOMIC_STATUS;ERBB2_UPDATED_CLINICAL_STATUS,8
+erbb_pathway_mutation,Genetic mutation or variant information for erbb pathway mutation,ERBB_PATHWAY_MUTATION,1
+erg,Clinical or molecular attribute related to erg,ERG,1
+erg_related,"ERG-related clinical, molecular, or pathological attributes",ERG_FISH_RESULT;ERG_FUS;ERG_FUSION_ACGH;ERG_FUSION_GEX;ERG_STATUS,5
+erk_score,Calculated score or index for erk score,ERK_SCORE,1
+error_percent,"Percentage, fraction, or ratio for error percent",ERROR_PERCENT,1
+erythrocyte_sedimentation_rate,Clinical or molecular attribute related to erythrocyte sedimentation rate,ERYTHROCYTE_SEDIMENTATION_RATE,1
+esoph_related,"ESOPH-related clinical, molecular, or pathological attributes",ESOPH_COLUMNAR_METAPLASIA_INDICATOR;ESOPH_NON_CA_DEGREE_OF_DYSPLASIA,2
+esophageal_related,"ESOPHAGEAL-related clinical, molecular, or pathological attributes",ESOPHAGEAL_TUMOR_LOCATION_CENTERED;ESOPHAGEAL_TUMOR_LOCATION_INVOLVED,2
+estimate_related,"ESTIMATE-related clinical status, score, or measurement",ESTIMATE IMMUNESCORE;ESTIMATE STROMALSCORE;ESTIMATE_COMBINED_SCORE;ESTIMATE_ESTIMATESCORE;ESTIMATE_IMMUNESCORE;ESTIMATE_IMMUNE_SCORE;ESTIMATE_SCORE;ESTIMATE_STROMALSCORE;ESTIMATE_STROMAL_SCORE,9
+estimatescore,Calculated score or index for estimatescore,ESTIMATESCORE,1
+estrogen_related,"ESTROGEN-related clinical, molecular, or pathological attributes",ESTROGEN_RECEPTOR;ESTROGEN_RECEPTOR_%,2
+ethnicity,"Patient ethnic background, including Hispanic or Latino origin",ETHNICITY;ETHNICITY_SELF_IDENTIFY;HISPANIC;INFERRED_ETHNICITY;PRD_HISPANIC;REPORTED_ETHNICITY,6
+etiology,Clinical or molecular attribute related to etiology,ETIOLOGY,1
+ets,Clinical or molecular attribute related to ets,ETS,1
+ets_related,"ETS-related clinical, molecular, or pathological attributes",ETS_FUSION_DETAILS;ETS_FUSION_SEQ;ETS_RAF_SPINK1_STATUS;ETS_STATUS,4
+etv1_status,Clinical or pathological status for etv1 status,ETV1_STATUS,1
+etv4_status,Clinical or pathological status for etv4 status,ETV4_STATUS,1
+etv6_runx1_fusion_status,Clinical or pathological status for etv6 runx1 fusion status,ETV6_RUNX1_FUSION_STATUS,1
+evaluable_related,"EVALUABLE-related clinical, molecular, or pathological attributes",EVALUABLE_FOR_PET;EVALUABLE_FOR_RECIST,2
+event_related,"EVENT-related clinical, molecular, or pathological attributes",EVENT_DETAILS;EVENT_TYPE,2
+ever_related,"EVER-related clinical, molecular, or pathological attributes",EVER_METS_SITES;EVER_MET_SITE_ADRENAL;EVER_MET_SITE_BONE;EVER_MET_SITE_CNS;EVER_MET_SITE_LIVER_BILIARY_TRACT;EVER_MET_SITE_LN;EVER_MET_SITE_LUNG;EVER_MET_SITE_PLEURA,8
+exclude_from_dfs_1_exclude,Clinical or molecular attribute related to exclude from dfs 1 exclude,EXCLUDE_FROM_DFS_1_EXCLUDE,1
+excluded_in_downstream_analysis,Clinical or molecular attribute related to excluded in downstream analysis,EXCLUDED_IN_DOWNSTREAM_ANALYSIS,1
+exome,Clinical or molecular attribute related to exome,EXOME,1
+exome_related,"EXOME-related clinical, molecular, or pathological attributes",EXOME_CAPTURE;EXOME_DATA;EXOME_SEQ;EXOME_SEQUENCED_IN_BARBIERI_ET_AL_2012;EXOME_SEQ_ANALYSIS,5
+exon_imbalance_score,Calculated score or index for exon imbalance score,EXON_IMBALANCE_SCORE,1
+exp,Clinical or molecular attribute related to exp,EXP,1
+experiment,Clinical or molecular attribute related to experiment,EXPERIMENT,1
+expert_related,"EXPERT-related clinical, molecular, or pathological attributes",EXPERT_PATH_REVIEW;EXPERT_PATH_REVIEW_DETAILS;EXPERT_PATH_REVIEW_NUM_SEGMENTS,3
+expression,Clinical or molecular attribute related to expression,EXPRESSION,1
+extensive_local_invasion,Clinical or molecular attribute related to extensive local invasion,EXTENSIVE_LOCAL_INVASION,1
+extent_related,"EXTENT-related clinical, molecular, or pathological attributes",EXTENT_OF_RESECTION;EXTENT_OF_TUMOR_RESECTION,2
+extra_panc_spread,Clinical or molecular attribute related to extra panc spread,EXTRA_PANC_SPREAD,1
+extracapsular_related,"EXTRACAPSULAR-related clinical, molecular, or pathological attributes",EXTRACAPSULAR_EXTENSION;EXTRACAPSULAR_EXTENSION_PRESENT;EXTRACAPSULAR_SPREAD;EXTRACAPSULAR_SPREAD_PATHOLOGIC,4
+extranocular_nodule_size,Clinical or molecular attribute related to extranocular nodule size,EXTRANOCULAR_NODULE_SIZE,1
+extranodal_related,"EXTRANODAL-related clinical, molecular, or pathological attributes",EXTRANODAL_DISEASE;EXTRANODAL_INVOLVEMENT;EXTRANODAL_INVOLVMENT_OTHER;EXTRANODAL_LYMPHOMATOUS_INVOLVEMENT,4
+extraprostatic_extension,Clinical or molecular attribute related to extraprostatic extension,EXTRAPROSTATIC_EXTENSION,1
+extrapulmonary,Clinical or molecular attribute related to extrapulmonary,EXTRAPULMONARY,1
+extrascleral_extension,Clinical or molecular attribute related to extrascleral extension,EXTRASCLERAL_EXTENSION,1
+extrathyroidal_extension,Clinical or molecular attribute related to extrathyroidal extension,EXTRATHYROIDAL_EXTENSION,1
+extravascular_matrix_patterns,Clinical or molecular attribute related to extravascular matrix patterns,EXTRAVASCULAR_MATRIX_PATTERNS,1
+eye_color,Clinical or molecular attribute related to eye color,EYE_COLOR,1
+fab,Clinical or molecular attribute related to fab,FAB,1
+fab_blast_morphology,Clinical or molecular attribute related to fab blast morphology,FAB_BLAST_MORPHOLOGY,1
+facets,Clinical or molecular attribute related to facets,FACETS,1
+facets_related,"FACETS-related clinical, molecular, or pathological attributes",FACETS_REVIEW;FACETS_WGD,2
+fam175a_cna,Clinical or molecular attribute related to fam175a cna,FAM175A_CNA,1
+familial_syndrome,Clinical or molecular attribute related to familial syndrome,FAMILIAL_SYNDROME,1
+family_related,"FAMILY-related clinical, molecular, or pathological attributes",FAMILY_HISTORY_CANCER_NUMBER_RELATIVES;FAMILY_HISTORY_CANCER_RELATIONSHIP;FAMILY_HISTORY_ESOPH_GASTIC_CANCER;FAMILY_HISTORY_OF_CANCER;FAMILY_HISTORY_OF_PRIMARY_BRAIN_TUMOR;FAMILY_HISTORY_OF_STOMACH_CANCER;FAMILY_HISTORY_OTHER_CANCER;FAMILY_HISTORY_PRAD;FAMILY_HISTORY_TESTICULAR_CANCER,9
+fancc_related,"FANCC-related clinical, molecular, or pathological attributes",FANCC_CNA;FANCC_MUT,2
+fancd2_related,"FANCD2-related clinical, molecular, or pathological attributes",FANCD2_CNA;FANCD2_MUT,2
+fat_fraction,"Percentage, fraction, or ratio for fat fraction",FAT_FRACTION,1
+fatty_liver_disease,Clinical or molecular attribute related to fatty liver disease,FATTY_LIVER_DISEASE,1
+fedpet_or_ct_results,Clinical or molecular attribute related to fedpet or ct results,FEDPET_OR_CT_RESULTS,1
+fev1,Clinical or molecular attribute related to fev1,FEV1,1
+fev1_related,"FEV1-related clinical, molecular, or pathological attributes",FEV1_FVC_RATIO_POSTBRONCHOLIATOR;FEV1_FVC_RATIO_PREBRONCHOLIATOR;FEV1_PERCENT_REF_POSTBRONCHOLIATOR;FEV1_PERCENT_REF_PREBRONCHOLIATOR,4
+fgfr1_mutation,Genetic mutation or variant information for fgfr1 mutation,FGFR1_MUTATION,1
+fgfr3_tacc3_fusion,Clinical or molecular attribute related to fgfr3 tacc3 fusion,FGFR3_TACC3_FUSION,1
+fifth_line,Clinical or molecular attribute related to fifth line,FIFTH_LINE,1
+first_related,"FIRST-related clinical, molecular, or pathological attributes",FIRST_EVENT;FIRST_LINE_MET_TX;FIRST_LINE_TREATMENT;FIRST_PRESENTING_SYMPTOM;FIRST_SITE_OF_METS;FIRST_SURGICAL_PROCEDURE_OTHER;FIRST_SYMPTOM_LONGEST_DURATION;FIRST_TREATMENT_SUCCESS,8
+fish_translocation,Clinical or molecular attribute related to fish translocation,FISH_TRANSLOCATION,1
+fli1_status,Clinical or pathological status for fli1 status,FLI1_STATUS,1
+flt3_related,"FLT3-related clinical, molecular, or pathological attributes",FLT3_ITD;FLT3_ITD_ALLELIC_RATIO;FLT3_ITD_CONSENSUS_CALL;FLT3_ITD_POSITIVE;FLT3_NEGATIVE;FLT3_PM,6
+focal_related,"FOCAL-related clinical, molecular, or pathological attributes",FOCAL_DRIVER_CN;FOCAL_LESIONS_AT_RELAPSE,2
+folic_acid_tx,Clinical or molecular attribute related to folic acid tx,FOLIC_ACID_TX,1
+follicular_component_percent,"Percentage, fraction, or ratio for follicular component percent",FOLLICULAR_COMPONENT_PERCENT,1
+follow_related,FOLLOW-related temporal information or time measurements,FOLLOW_UP_DATE;FOLLOW_UP_DAYS;FOLLOW_UP_PERIOD;FOLLOW_UP_TIME_MONTHS,4
+followup_related,"FOLLOWUP-related clinical, molecular, or pathological attributes",FOLLOWUP_LENGTH;FOLLOWUP_YEARS,2
+food_related,"FOOD-related clinical, molecular, or pathological attributes",FOOD_ALLERGY_HISTORY;FOOD_ALLERGY_TYPES,2
+form_completion_date,Date when clinical data form was completed,FORM_COMPLETION_DATE,1
+formulation,Clinical or molecular attribute related to formulation,FORMULATION,1
+fourth_line,Clinical or molecular attribute related to fourth line,FOURTH_LINE,1
+foxa1_mutation,Genetic mutation or variant information for foxa1 mutation,FOXA1_MUTATION,1
+fpsa_psa,Clinical or molecular attribute related to fpsa psa,FPSA_PSA,1
+fraction_genome_altered,Proportion of genome with copy number alterations or losses,FACETS_FGA;FGA;FGA_FACETS;FGA_REPORTED;FRACTION_GENOME_ALTERED;FRACTION_GENOME_ALTERED_REPORTED;GENOMIC_ALTERATIONS,7
+fraction_related,"FRACTION-related percentage, fraction, or proportion measurement",FRACTION_CNA;FRACTION_LOH;FRACTION_OF_CLONAL_MUTATIONS_WITH_BINDING_NEOANTIGENS;FRACTION_OF_GENOME_ALTERED_ON_WES;FRACTION_OF_MUTATIONS_WITH_BINDING_NEOANTIGENS;FRACTION_OF_MUTATIONS_WITH_STRONG_BINDING_NEOANTIGENS;FRACTION_OF_MUTATIONS_WITH_WEAK_BINDING_NEOANTIGENS,7
+frameshift_related,"FRAMESHIFT-related clinical, molecular, or pathological attributes",FRAMESHIFT_DELETION;FRAMESHIFT_INDELS;FRAMESHIFT_INSERTION,3
+freezing_medium,Clinical or molecular attribute related to freezing medium,FREEZING_MEDIUM,1
+fu_2yrs,Clinical or molecular attribute related to fu 2yrs,FU_2YRS,1
+functional,Clinical or molecular attribute related to functional,FUNCTIONAL,1
+fusion,Clinical or molecular attribute related to fusion,FUSION,1
+fusion_related,"FUSION-related clinical, molecular, or pathological attributes",FUSION_BY_RNA_PCR;FUSION_OTHER;FUSION_STATUS,3
+g_cimp_methylation,Clinical or molecular attribute related to g cimp methylation,G_CIMP_METHYLATION,1
+gain_1q,Clinical or molecular attribute related to gain 1q,GAIN_1Q,1
+gallbladder_stones,Clinical or molecular attribute related to gallbladder stones,GALLBLADDER_STONES,1
+gastric_classification,Classification or category for gastric classification,GASTRIC_CLASSIFICATION,1
+gdna(ng),Clinical or molecular attribute related to gdna(ng),GDNA(NG),1
+gea,Clinical or molecular attribute related to gea,GEA,1
+gea_related,"GEA-related clinical, molecular, or pathological attributes",GEA_CIN_INTEGRATED_CLUSTER_COCA;GEA_CIN_INTEGRATED_CLUSTER_CONSENSUS;GEA_CIN_INTEGRATED_CLUSTER_ICLUSTER;GEA_CIN_INTEGRATED_CLUSTER_MKL_KNN_4;GEA_CIN_INTEGRATED_CLUSTER_MKL_KNN_7;GEA_CIN_INTEGRATED_CLUSTER_SUPERCLUSTER;GEA_CIN_INTEGRATED_CLUSTER_VOTING,7
+geacin,Clinical or molecular attribute related to geacin,GEACIN,1
+geacinsmg,Clinical or molecular attribute related to geacinsmg,GEACINSMG,1
+geagej,Clinical or molecular attribute related to geagej,GEAGEJ,1
+geasmg,Clinical or molecular attribute related to geasmg,GEASMG,1
+gej_category,Classification or category for gej category,GEJ_CATEGORY,1
+gene,Clinical or molecular attribute related to gene,GENE,1
+gene_panel,Gene panel or targeted sequencing platform used,GENE_PANEL;MSK_IMPACT_PANEL;UBIQUITOUS_ASSAY_PANEL,3
+gene_related,"GENE-related clinical, molecular, or pathological attributes",GENE_EXPRESSION_CLUSTER;GENE_EXPRESSION_CLUSTER_GEA_CIN;GENE_EXPRESSION_PROFILE,3
+genetic_related,"GENETIC-related clinical, molecular, or pathological attributes",GENETIC_ABNORMALITY_METHOD_OTHER;GENETIC_ABNORMALITY_RESULTS;GENETIC_ABNORMALITY_TESTED;GENETIC_ABNORMALITY_TESTED_OTHER,4
+genome_related,"GENOME-related clinical, molecular, or pathological attributes",GENOME_DOUBLED;GENOME_DOUBLINGS,2
+genomic_related,"GENOMIC-related clinical, molecular, or pathological attributes",GENOMIC_BURDEN;GENOMIC_QC,2
+geographic_distribution,Clinical or molecular attribute related to geographic distribution,GEOGRAPHIC_DISTRIBUTION,1
+germline_related,"GERMLINE-related clinical, molecular, or pathological attributes",GERMLINE_CONTROL;GERMLINE_MUTKNOWN_BRCA1;GERMLINE_MUTKNOWN_BRCA2;GERMLINE_MUTKNOWN_PALB2;GERMLINE_MUT_GENES_VARIANT;GERMLINE_TYPE,6
+gleason_related,"GLEASON-related clinical, molecular, or pathological attributes",GLEASON_PATTERN_PRIMARY;GLEASON_PATTERN_SECONDARY;GLEASON_PATTERN_TERTIARY;GLEASON_PR;GLEASON_SCORE;GLEASON_SCORE_1;GLEASON_SCORE_2;GLEASON_SCORE_PERCENT_4_AND_5;GLEASON_SE;GLEASON_SU,10
+gorlin_sporadic,Clinical or molecular attribute related to gorlin sporadic,GORLIN_SPORADIC,1
+grade_tier_system,Clinical or molecular attribute related to grade tier system,GRADE_TIER_SYSTEM,1
+graph_id,Clinical or molecular attribute related to graph id,GRAPH_ID,1
+greater_than_3_sites,Clinical or molecular attribute related to greater than 3 sites,GREATER_THAN_3_SITES,1
+group,Clinical or molecular attribute related to group,GROUP,1
+group_no,Clinical or molecular attribute related to group no,GROUP_NO,1
+growth_related,"GROWTH-related clinical, molecular, or pathological attributes",GROWTH_MEDIUM;GROWTH_PATTERN,2
+gtf2i_mutation_status,Clinical or pathological status for gtf2i mutation status,GTF2I_MUTATION_STATUS,1
+guessed_ploidy,Clinical or molecular attribute related to guessed ploidy,GUESSED_PLOIDY,1
+gyn_fsm,Clinical or molecular attribute related to gyn fsm,GYN_FSM,1
+h3f3a_ctnnb1_status,Clinical or pathological status for h3f3a ctnnb1 status,H3F3A_CTNNB1_STATUS,1
+h_pylori,Clinical or molecular attribute related to h pylori,H_PYLORI,1
+h_pylori_infection,Clinical or molecular attribute related to h pylori infection,H_PYLORI_INFECTION,1
+had_surgery,Clinical or molecular attribute related to had surgery,HAD_SURGERY,1
+haic,Clinical or molecular attribute related to haic,HAIC,1
+halo_tumor_quality,Clinical or molecular attribute related to halo tumor quality,HALO_TUMOR_QUALITY,1
+has_related,"HAS-related clinical, molecular, or pathological attributes",HAS_ANY_DNA;HAS_MSK_IMPACT;HAS_OTHER_CANCER;HAS_OTHER_KIDNEY_CONDITION;HAS_RNASEQ;HAS_WES,6
+hay_fever_history,Clinical or molecular attribute related to hay fever history,HAY_FEVER_HISTORY,1
+hb,Clinical or molecular attribute related to hb,HB,1
+hbeag,Clinical or molecular attribute related to hbeag,HBEAG,1
+hbsag,Clinical or molecular attribute related to hbsag,HBSAG,1
+hbv,Clinical or molecular attribute related to hbv,HBV,1
+hbv_related,"HBV-related clinical, molecular, or pathological attributes",HBV_DNA_IU_ML;HBV_SEROPOSITIVE,2
+hcv,Clinical or molecular attribute related to hcv,HCV,1
+headache_history,Clinical or molecular attribute related to headache history,HEADACHE_HISTORY,1
+heavy_chain,Clinical or molecular attribute related to heavy chain,HEAVY_CHAIN,1
+height,Patient height in centimeters or inches,HEIGHT,1
+hematocrit_level,Clinical or molecular attribute related to hematocrit level,HEMATOCRIT_LEVEL,1
+hemoglobin_level,Clinical or molecular attribute related to hemoglobin level,HEMOGLOBIN_LEVEL,1
+hep_related,"HEP-related clinical, molecular, or pathological attributes",HEP_B;HEP_C,2
+hepatectomy,Clinical or molecular attribute related to hepatectomy,HEPATECTOMY,1
+hepatic_related,"HEPATIC-related clinical, molecular, or pathological attributes",HEPATIC_INFLAMMATION_ADJ_TISSUE;HEPATIC_SEGMENTS;HEPATIC_VEIN_INVASION,3
+hepatitis,Clinical or molecular attribute related to hepatitis,HEPATITIS,1
+hepatolithiasis,Clinical or molecular attribute related to hepatolithiasis,HEPATOLITHIASIS,1
+her2,Clinical or molecular attribute related to her2,HER2,1
+her2_related,"HER2-related clinical status, score, or measurement",HER2_AMPLIFICATION_STATUS;HER2_AND_CENT17_CELLS_COUNT;HER2_AND_CENT17_SCALE_OTHER;HER2_CENT17_RATIO;HER2_COPY_NUMBER;HER2_FISH;HER2_FISH_METHOD;HER2_FISH_RATIO;HER2_FISH_RATIO_PRIMARY;HER2_FISH_STATUS;HER2_IHC_OR_FISH;HER2_IHC_PERCENT_POSITIVE;HER2_IHC_PRIMARY;HER2_IHC_SCORE;HER2_IHC_STATUS;HER2_IHC_VALUE_PRIMARY;HER2_IMPACT;HER2_IMPACT_FOLD_CHANGE;HER2_IMPACT_LR;HER2_POSITIVE;HER2_POSITIVITY_METHOD_TEXT;HER2_POSITIVITY_SCALE_OTHER;HER2_RESPONSE;HER2_SNP6;HER2_STATUS;HER2_STATUS_PRIMARY;HER2_STATUS_REPORTED;HER2_TTP_ON_1ST_LINE_MONTHS;HER2_TX_STATUS,29
+hered_disorder,Clinical or molecular attribute related to hered disorder,HERED_DISORDER,1
+heterogeneity,Clinical or molecular attribute related to heterogeneity,HETEROGENEITY,1
+hgb_g_dl,Clinical or molecular attribute related to hgb g dl,HGB_G_DL,1
+hgg_h3f3a_status,Clinical or pathological status for hgg h3f3a status,HGG_H3F3A_STATUS,1
+highest_related,"HIGHEST-related clinical status, score, or measurement",HIGHEST_CPS_SCORE_AT_BASELINE;HIGHEST_LEVEL_ONCOKB;HIGHEST_ONCOKB_LEVEL,3
+hippo,Clinical or molecular attribute related to hippo,HIPPO,1
+hist,Clinical or molecular attribute related to hist,HIST,1
+hist_related,"HIST-related clinical, molecular, or pathological attributes",HIST_SUBTYPE1;HIST_SUBTYPE2;HIST_SUBTYPE3,3
+histologic_related,"HISTOLOGIC-related percentage, fraction, or proportion measurement",HISTOLOGIC_DIAGNOSIS_PERCENT;HISTOLOGIC_GRADE_FIGO;HISTOLOGIC_TYPE,3
+histological_diagnosis,Clinical or molecular attribute related to histological diagnosis,HISTOLOGICAL_DIAGNOSIS,1
+histology_related,"HISTOLOGY-related clinical, molecular, or pathological attributes",HISTOLOGY_ABBREVIATION;HISTOLOGY_COMPONENT;HISTOLOGY_DIAGNOSIS;HISTOLOGY_TIER1;HISTOLOGY_TIER2;HISTOLOGY_TIER3;HISTOLOGY_TIER4,7
+histopathology,Clinical or molecular attribute related to histopathology,HISTOPATHOLOGY,1
+history_related,"HISTORY-related clinical, molecular, or pathological attributes",HISTORY_ADRENAL_HORMONE_EXCESS;HISTORY_ASBESTOS_EXPOSURE;HISTORY_BARRETTS_ESOPHAGEAL_INDICATOR;HISTORY_BASIS_ADRENAL_HORMONE_DX;HISTORY_CHRONIC_PANCREATITIS;HISTORY_CHRONIC_PANCREATITIS_DAYS_TO;HISTORY_COLORECTAL_CANCER;HISTORY_FERTILITY;HISTORY_HEPATO_CARCINOMA_RISK_FACTORS;HISTORY_HORMONAL_CONTRACEPTIVES_USE;HISTORY_HYPOSPADIAS;HISTORY_IF_BARRETTS_GOBLET_CELL_INDICATOR;HISTORY_IMMUNOLOGICAL_DISEASE;HISTORY_IMMUNOLOGICAL_DISEASE_OTHER;HISTORY_IMMUNOSUPPRESIVE_DX;HISTORY_IMMUNOSUPPRESSIVE_DISEASE;HISTORY_IMMUNOSUPPRESSIVE_TX_OTHER;HISTORY_IONIZING_RT_TO_HEAD;HISTORY_LGG_DX_OF_BRAIN_TISSUE;HISTORY_OF_UNDESCENDED_TESTIS;HISTORY_PHEO_OR_PARA_ANATOMIC_SITE;HISTORY_PHEO_OR_PARA_INCLUDE_BENIGN;HISTORY_REFLUX_DISEASE_TREATMENT;HISTORY_RELEVANT_INFECTIOUS_DX;HISTORY_TAMOXIFEN_USE,25
+hiv_status,Clinical or pathological status for hiv status,HIV_STATUS,1
+hla_related,"HLA-related clinical, molecular, or pathological attributes",HLA_A;HLA_A1_ALLELE;HLA_A2_ALLELES;HLA_B;HLA_B1_ALLELES;HLA_B2_ALLELES;HLA_C;HLA_C1_ALLELES;HLA_C2_ALLELES;HLA_DPA1;HLA_DPB1;HLA_DQA1;HLA_DQB1;HLA_DRB1;HLA_LOH,15
+hm27,Clinical or molecular attribute related to hm27,HM27,1
+hm450,Clinical or molecular attribute related to hm450,HM450,1
+hormone_receptor_status,Clinical or pathological status for hormone receptor status,HORMONE_RECEPTOR_STATUS,1
+hpv_related,"HPV-related clinical, molecular, or pathological attributes",HPV_ISH;HPV_PATHSEQ;HPV_PCR;HPV_STATUS;HPV_STATUS_ISH;HPV_STATUS_P16;HPV_TYPES_OTHER;HPV_TYPES_POSITIVE;HPV_TYPING_METHOD;HPV_TYPING_METHOD_OTHER,10
+hr_positive,Clinical or molecular attribute related to hr positive,HR_POSITIVE,1
+hr_status,Clinical or pathological status for hr status,HR_STATUS,1
+hras_mutation,Genetic mutation or variant information for hras mutation,HRAS_MUTATION,1
+hrd_related,"HRD-related clinical, molecular, or pathological attributes",HRD_BRCA1;HRD_BRCA1_OR_BRCA2;HRD_BRCA2;HRD_LOH;HRD_SCORE,5
+hyperdiploid,Clinical or molecular attribute related to hyperdiploid,HYPERDIPLOID,1
+hypermutated,Clinical or molecular attribute related to hypermutated,HYPERMUTATED,1
+hypermutation_status,Clinical or pathological status for hypermutation status,HYPERMUTATION_STATUS,1
+hypertension_diagnosis,Clinical or molecular attribute related to hypertension diagnosis,HYPERTENSION_DIAGNOSIS,1
+hypodiploid,Clinical or molecular attribute related to hypodiploid,HYPODIPLOID,1
+hysterectomy_type,Classification or category for hysterectomy type,HYSTERECTOMY_TYPE,1
+ibd,Clinical or molecular attribute related to ibd,IBD,1
+ibd_status_at_diagnosis,Clinical or pathological status for ibd status at diagnosis,IBD_STATUS_AT_DIAGNOSIS,1
+icd10,ICD-10 International Classification of Diseases diagnosis code,ICD_10,1
+icd_0_3_t,Clinical or molecular attribute related to icd 0 3 t,ICD_0_3_T,1
+icd_o_histology,ICD-O-3 morphology code indicating tumor histology and behavior,ICD_O_3_HISTOLOGY,1
+icd_o_site,ICD-O-3 topography code indicating primary anatomical site,ICD_O_3_SITE,1
+icdo,Clinical or molecular attribute related to icdo,ICDO,1
+icdo_snomed_description,Clinical or molecular attribute related to icdo snomed description,ICDO_SNOMED_DESCRIPTION,1
+ici,Clinical or molecular attribute related to ici,ICI,1
+ici_related,"ICI-related clinical, molecular, or pathological attributes",ICI_BEST_RESPONSE;ICI_DURABLE_CLINICAL_BENEFIT;ICI_MUTATION_CATEGORY,3
+icluster,Clinical or molecular attribute related to icluster,ICLUSTER,1
+idc,Clinical or molecular attribute related to idc,IDC,1
+idh1_related,IDH1-related genetic mutations or molecular alterations,IDH1_MUTATION;IDH1_MUTATION_TEST_INDICATOR;IDH1_MUTATION_TEST_METHOD,3
+idh2_negative,Clinical or molecular attribute related to idh2 negative,IDH2_NEGATIVE,1
+idh_related,"IDH-related clinical, molecular, or pathological attributes",IDH_LEVEL;IDH_SPECIFIC_DNA_METHYLATION_CLUSTER;IDH_SPECIFIC_RNA_EXPRESSION_CLUSTER;IDH_STATUS,4
+if_extracapsular_spread_present,Clinical or molecular attribute related to if extracapsular spread present,IF_EXTRACAPSULAR_SPREAD_PRESENT,1
+ifn_tx_90_days_prior_to_resection,Temporal measurement or date for ifn tx 90 days prior to resection,IFN_TX_90_DAYS_PRIOR_TO_RESECTION,1
+igh_genotype_result,Classification or category for igh genotype result,IGH_GENOTYPE_RESULT,1
+ighv_related,"IGHV-related clinical, molecular, or pathological attributes",IGHV_GENE;IGHV_IDENTITY;IGHV_MUTATED,3
+igk_genotype_result,Classification or category for igk genotype result,IGK_GENOTYPE_RESULT,1
+igo_project,Clinical or molecular attribute related to igo project,IGO_PROJECT,1
+ihc_related,"IHC-related clinical, molecular, or pathological attributes",IHC_BASAL;IHC_CK5_6;IHC_DETAIL;IHC_EGFR;IHC_HER2;IHC_SCORE,6
+imaging,Clinical or molecular attribute related to imaging,IMAGING,1
+immune_related,"IMMUNE-related clinical, molecular, or pathological attributes",IMMUNE_CLUSTER;IMMUNE_SCORE;IMMUNE_STATUS;IMMUNE_TREATMENT,4
+immunecluster,Clinical or molecular attribute related to immunecluster,IMMUNECLUSTER,1
+immuno_survival,Clinical or molecular attribute related to immuno survival,IMMUNO_SURVIVAL,1
+immunohistochemistry,Clinical or molecular attribute related to immunohistochemistry,IMMUNOHISTOCHEMISTRY,1
+immunophenotypic_related,"IMMUNOPHENOTYPIC-related clinical, molecular, or pathological attributes",IMMUNOPHENOTYPIC_ANALYSIS_METHOD;IMMUNOPHENOTYPIC_ANALYSIS_RESULTS;IMMUNOPHENOTYPIC_ANALYSIS_TESTED,3
+immunosuppression,Clinical or molecular attribute related to immunosuppression,IMMUNOSUPPRESSION,1
+impact,Clinical or molecular attribute related to impact,IMPACT,1
+impact_related,"IMPACT-related clinical, molecular, or pathological attributes",IMPACT_1P19Q;IMPACT_DATA;IMPACT_PDL1_SAME;IMPACT_PRE_POST;IMPACT_PRIMARY_GROUP,5
+imsig_related,"IMSIG-related clinical, molecular, or pathological attributes",IMSIG_B_CELLS;IMSIG_INTERFERON;IMSIG_MACROPHAGES;IMSIG_MONOCYTES;IMSIG_NEUTROPHILS;IMSIG_NK_CELLS;IMSIG_PLASMA_CELLS;IMSIG_PROLIFERATION;IMSIG_TRANSLATION;IMSIG_T_CELLS,10
+in_frame_deletion,Clinical or molecular attribute related to in frame deletion,IN_FRAME_DELETION,1
+in_frame_insertion,Clinical or molecular attribute related to in frame insertion,IN_FRAME_INSERTION,1
+in_matched,Clinical or molecular attribute related to in matched,IN_MATCHED,1
+in_pancanpathways_freeze,Clinical or molecular attribute related to in pancanpathways freeze,IN_PANCANPATHWAYS_FREEZE,1
+in_transit,Clinical or molecular attribute related to in transit,IN_TRANSIT,1
+incidental_prostate_cancer,Clinical or pathological status for incidental prostate cancer,INCIDENTAL_PROSTATE_CANCER,1
+indel,Clinical or molecular attribute related to indel,INDEL,1
+induction,Clinical or molecular attribute related to induction,INDUCTION,1
+induction_response,Treatment response or clinical outcome for induction response,INDUCTION_RESPONSE,1
+inferred_related,"INFERRED-related clinical, molecular, or pathological attributes",INFERRED_GENOMIC_REARRANGEMENT;INFERRED_MENOPAUSAL_STATE,2
+infiltration_nomination,"Percentage, fraction, or ratio for infiltration nomination",INFILTRATION_NOMINATION,1
+inflammation_fraction,"Percentage, fraction, or ratio for inflammation fraction",INFLAMMATION_FRACTION,1
+inflammatory,Clinical or molecular attribute related to inflammatory,INFLAMMATORY,1
+inflammatory_status,Clinical or pathological status for inflammatory status,INFLAMMATORY_STATUS,1
+informed_consent,Informed consent verification status for study participation,INFORMED_CONSENT_VERIFIED,1
+inherited_related,"INHERITED-related clinical, molecular, or pathological attributes",INHERITED_GENETIC_SYNDROME_INDICATOR;INHERITED_GENETIC_SYNDROME_SPECIFIED,2
+initial_related,"INITIAL-related clinical, molecular, or pathological attributes",INITIAL_CNS_TUMOR_DIAGNOSIS_RELATED_TO_OS;INITIAL_DIAGNOSIS_ESOPHAGEAL_CA_TYPE;INITIAL_DIAGNOSIS_OF_RECURRENT_TUMORS;INITIAL_DIAGNOSIS_TYPE;INITIAL_PATHOLOGIC_DIAGNOSIS_METHOD;INITIAL_RX;INITIAL_SAMPLE_WEIGHT_GRAMS;INITIAL_TREATMENT;INITIAL_TX_RESPONSE,9
+institute,Clinical or molecular attribute related to institute,INSTITUTE,1
+intclust,Clinical or molecular attribute related to intclust,INTCLUST,1
+integrated_related,"INTEGRATED-related clinical, molecular, or pathological attributes",INTEGRATED_CLUSTERS_NO_EXP;INTEGRATED_CLUSTERS_UNSUP_EXP;INTEGRATED_CLUSTERS_WITH_PAM50;INTEGRATED_PHENOTYPE,4
+interferon_alpha,Clinical or molecular attribute related to interferon alpha,INTERFERON_ALPHA,1
+interstitial_related,"INTERSTITIAL-related clinical, molecular, or pathological attributes",INTERSTITIAL_AI_MEAN_SIZE;INTERSTITIAL_LOH_MEAN_SIZE,2
+interval_related,"INTERVAL-related clinical, molecular, or pathological attributes",INTERVAL_FROM_INDEX_LESION_TO_PRESENT_LESION;INTERVAL_FROM_LAST_COLONOSCOPY_TO_CAC_DX;INTERVAL_FROM_LAST_LESION_TO_STUDY;INTERVAL_MONTHS,4
+intestinal_type_subclass,Classification or category for intestinal type subclass,INTESTINAL_TYPE_SUBCLASS,1
+intratubular_germ_cell_neoplasm,Clinical or molecular attribute related to intratubular germ cell neoplasm,INTRATUBULAR_GERM_CELL_NEOPLASM,1
+intravesical_treatment,Clinical or molecular attribute related to intravesical treatment,INTRAVESICAL_TREATMENT,1
+inv_16,Clinical or molecular attribute related to inv 16,INV_16,1
+invade_related,"INVADE-related clinical, molecular, or pathological attributes",INVADE_BONE;INVADE_LARGER_THAN_SUBCUTANEOUS_TISSUE;INVADE_PAROTID;INVADE_SKULL_BASE,4
+invasion_depth,Clinical or molecular attribute related to invasion depth,INVASION_DEPTH,1
+invasive_related,"INVASIVE-related clinical, molecular, or pathological attributes",INVASIVE_ADENOCARCINOMA_INDICATOR;INVASIVE_CARCINOMA_DX_TIME,2
+io_ebv_tested,Clinical or molecular attribute related to io ebv tested,IO_EBV_TESTED,1
+io_line,Clinical or molecular attribute related to io line,IO_LINE,1
+io_mut_groups,Clinical or molecular attribute related to io mut groups,IO_MUT_GROUPS,1
+io_pdl1_tested,Clinical or molecular attribute related to io pdl1 tested,IO_PDL1_TESTED,1
+io_response,Treatment response or clinical outcome for io response,IO_RESPONSE,1
+io_tx,Clinical or molecular attribute related to io tx,IO_TX,1
+ipi,Clinical or molecular attribute related to ipi,IPI,1
+ipi_related,"IPI-related clinical, molecular, or pathological attributes",IPI_ECOG;IPI_EXBM;IPI_EXTRANODAL_SITES;IPI_LDH,4
+ipss_related,"IPSS-related clinical, molecular, or pathological attributes",IPSS_MDS;IPSS_SCORE,2
+ipssm,Clinical or molecular attribute related to ipssm,IPSSM,1
+ipssm_score,Calculated score or index for ipssm score,IPSSM_SCORE,1
+ipssr,Clinical or molecular attribute related to ipssr,IPSSR,1
+ipssr_score,Calculated score or index for ipssr score,IPSSR_SCORE,1
+ipt,Clinical or molecular attribute related to ipt,IPT,1
+irb,Clinical or molecular attribute related to irb,IRB,1
+is_crpc,Clinical or molecular attribute related to is crpc,IS_CRPC,1
+is_denovo,Clinical or molecular attribute related to is denovo,IS_DENOVO,1
+is_dist_met_mapped,Clinical or molecular attribute related to is dist met mapped,IS_DIST_MET_MAPPED,1
+is_relapse,Clinical or molecular attribute related to is relapse,IS_RELAPSE,1
+is_this_patient_lost_to_follow_up,Clinical or molecular attribute related to is this patient lost to follow up,IS_THIS_PATIENT_LOST_TO_FOLLOW_UP,1
+is_transformed,Clinical or molecular attribute related to is transformed,IS_TRANSFORMED,1
+is_wgd,Clinical or molecular attribute related to is wgd,IS_WGD,1
+ischemia_time_in_minutes,Temporal measurement or date for ischemia time in minutes,ISCHEMIA_TIME_IN_MINUTES,1
+iscn,Clinical or molecular attribute related to iscn,ISCN,1
+ishak_fibrosis_score,Calculated score or index for ishak fibrosis score,ISHAK_FIBROSIS_SCORE,1
+islet_fraction,"Percentage, fraction, or ratio for islet fraction",ISLET_FRACTION,1
+isup,Clinical or molecular attribute related to isup,ISUP,1
+jak1_related,"JAK1-related clinical, molecular, or pathological attributes",JAK1_MS_INDEL;JAK1_MUTATION,2
+jak2_negative,Clinical or molecular attribute related to jak2 negative,JAK2_NEGATIVE,1
+jaundice,Clinical or molecular attribute related to jaundice,JAUNDICE,1
+jewish_religion_heritage_indicator,Clinical or molecular attribute related to jewish religion heritage indicator,JEWISH_RELIGION_HERITAGE_INDICATOR,1
+js_pdl1_score,Calculated score or index for js pdl1 score,JS_PDL1_SCORE,1
+karnofsky_performance_score,Calculated score or index for karnofsky performance score,KARNOFSKY_PERFORMANCE_SCORE,1
+karyotype,Classification or category for karyotype,KARYOTYPE,1
+karyotype_sample_acquisition_interval_difference,Classification or category for karyotype sample acquisition interval difference,KARYOTYPE_SAMPLE_ACQUISITION_INTERVAL_DIFFERENCE,1
+katabi_path,Clinical or molecular attribute related to katabi path,KATABI_PATH,1
+kbase_id,Clinical or molecular attribute related to kbase id,KBASE_ID,1
+kdm6a_mutation,Genetic mutation or variant information for kdm6a mutation,KDM6A_MUTATION,1
+keap1_related,KEAP1-related genetic mutations or molecular alterations,KEAP1_MUTATION;KEAP1_MUTATION_STATUS,2
+keratinization_squamous_cell,Clinical or molecular attribute related to keratinization squamous cell,KERATINIZATION_SQUAMOUS_CELL,1
+ki_67,Clinical or molecular attribute related to ki 67,KI_67,1
+kinase_inhibitor,Clinical or molecular attribute related to kinase inhibitor,KINASE_INHIBITOR,1
+kit_negative,Clinical or molecular attribute related to kit negative,KIT_NEGATIVE,1
+kmt2a_mutation,Genetic mutation or variant information for kmt2a mutation,KMT2A_MUTATION,1
+kmt2c_mut,Clinical or molecular attribute related to kmt2c mut,KMT2C_MUT,1
+kmt2d_mutation,Genetic mutation or variant information for kmt2d mutation,KMT2D_MUTATION,1
+known_molecular_classifier,Classification or category for known molecular classifier,KNOWN_MOLECULAR_CLASSIFIER,1
+kps,Clinical or molecular attribute related to kps,KPS,1
+kras_related,"KRAS-related clinical, molecular, or pathological attributes",KRAS_GENE_ANALYSIS_INDICATOR;KRAS_MUTATION;KRAS_MUTATION_IDENTIFIED_TYPE;KRAS_MUTATION_STATUS;KRAS_PROTEIN_CODING,5
+kyryotype,Classification or category for kyryotype,KYRYOTYPE,1
+larc_related,"LARC-related clinical, molecular, or pathological attributes",LARC_CRT_OUTCOME_CASES_DFS;LARC_CRT_OUTCOME_CASES_RESPONSE,2
+last_related,"LAST-related clinical, molecular, or pathological attributes",LAST_CONTACT_DAYS_TO;LAST_FOLLOWUP_STATUS;LAST_FOLLOWUP_YEAR;LAST_STATUS,4
+laterality,Clinical or molecular attribute related to laterality,LATERALITY,1
+lauren_class,Classification or category for lauren class,LAUREN_CLASS,1
+laurens_classification,Classification or category for laurens classification,LAURENS_CLASSIFICATION,1
+lcis_sx_bx,Clinical or molecular attribute related to lcis sx bx,LCIS_SX_BX,1
+lcm,Clinical or molecular attribute related to lcm,LCM,1
+ldh,Clinical or molecular attribute related to ldh,LDH,1
+ldh_related,"LDH-related clinical, molecular, or pathological attributes",LDH_ABNL;LDH_ELEVATED;LDH_LEVEL;LDH_NORM_RANGE_UPPER;LDH_RATIO;LDH_U_L,6
+leiomyo_major_vessel_involvement,Clinical or molecular attribute related to leiomyo major vessel involvement,LEIOMYO_MAJOR_VESSEL_INVOLVEMENT,1
+leiomyosarcoma_uterine_involvement,Clinical or molecular attribute related to leiomyosarcoma uterine involvement,LEIOMYOSARCOMA_UTERINE_INVOLVEMENT,1
+leukemia_type,Classification or category for leukemia type,LEUKEMIA_TYPE,1
+leukocyte_related,"LEUKOCYTE-related percentage, fraction, or proportion measurement",LEUKOCYTE_FRACTION;LEUKOCYTE_INDEX_METHYLATION,2
+level_of_non_descent,Clinical or molecular attribute related to level of non descent,LEVEL_OF_NON_DESCENT,1
+lfs_related,LFS-related temporal information or time measurements,LFS_MONTHS;LFS_STATUS,2
+lgg_braf_status,Clinical or pathological status for lgg braf status,LGG_BRAF_STATUS,1
+light_chain,Clinical or molecular attribute related to light chain,LIGHT_CHAIN,1
+line1_related,"LINE1-related clinical, molecular, or pathological attributes",LINE1_BR_NOTRK;LINE1_BR_NOTRK_G,2
+line_related,"LINE-related clinical, molecular, or pathological attributes",LINE_OBR_IMMUNO;LINE_OBR_IMMUNO_G;LINE_OBR_NOTRK;LINE_OBR_NOTRK_G;LINE_OBR_NTRK;LINE_OBR_NTRK_G;LINE_OBR_TARGETED;LINE_OBR_TARGETED_G,8
+lines_related,"LINES-related clinical, molecular, or pathological attributes",LINES_OF_TX;LINES_OF_TX_PRIOR_IMPACT,2
+liver_related,"LIVER-related clinical, molecular, or pathological attributes",LIVER_DISFUNCTION;LIVER_FIBROSIS;LIVER_FLUKE_STATUS;LIVER_FSM;LIVER_INVOLVEMENT;LIVER_METS;LIVER_MONTHS;LIVER_SCHISTOSOMIASIS;LIVER_STATUS;LIVER_TIME_INTERVAL;LIVER_VISC_MET,11
+ln_fsm,Clinical or molecular attribute related to ln fsm,LN_FSM,1
+ln_met,Clinical or molecular attribute related to ln met,LN_MET,1
+ln_months,Temporal measurement or date for ln months,LN_MONTHS,1
+ln_status,Clinical or pathological status for ln status,LN_STATUS,1
+lni,Clinical or molecular attribute related to lni,LNI,1
+local_related,"LOCAL-related clinical, molecular, or pathological attributes",LOCAL_REGIONAL_DISEASE_AT_DIAGNOSIS;LOCAL_TEST,2
+localized_related,"LOCALIZED-related clinical, molecular, or pathological attributes",LOCALIZED_TUMOR;LOCALIZED_VS_METS_AT_DX,2
+location,Clinical or molecular attribute related to location,LOCATION,1
+location_related,"LOCATION-related clinical, molecular, or pathological attributes",LOCATION_LUNG_PARENCHYMA;LOCATION_RECURRED,2
+log2_related,"LOG2-related clinical, molecular, or pathological attributes",LOG2_INDEL_PER_MBP;LOG2_INDEL_TOTAL;LOG2_SNP_PER_MBP;LOG2_SNP_TOTAL;LOG2_VARIANT_PER_MBP;LOG2_VARIANT_TOTAL,6
+loh_related,"LOH-related clinical, molecular, or pathological attributes",LOH_16Q;LOH_CHROMOSOMES,2
+longest_dimension,Clinical or molecular attribute related to longest dimension,LONGEST_DIMENSION,1
+lost_to_follow_up,Clinical or molecular attribute related to lost to follow up,LOST_TO_FOLLOW_UP,1
+low_tumor_content,Clinical or molecular attribute related to low tumor content,LOW_TUMOR_CONTENT,1
+lowpass,Clinical or molecular attribute related to lowpass,LOWPASS,1
+lst,Clinical or molecular attribute related to lst,LST,1
+lung,Clinical or molecular attribute related to lung,LUNG,1
+lung_related,"LUNG-related clinical, molecular, or pathological attributes",LUNG_FSM;LUNG_MET;LUNG_MONTHS;LUNG_STATUS;LUNG_TIME_INTERVAL,5
+lvi,Clinical or molecular attribute related to lvi,LVI,1
+lvsi,Clinical or molecular attribute related to lvsi,LVSI,1
+lymph_related,"LYMPH-related clinical, molecular, or pathological attributes",LYMPH_NODES_AORTIC_EXAMINED_COUNT;LYMPH_NODES_AORTIC_POS_BY_HE;LYMPH_NODES_AORTIC_POS_BY_IHC;LYMPH_NODES_AORTIC_POS_TOTAL;LYMPH_NODES_EXAMINED;LYMPH_NODES_EXAMINED_HE_COUNT;LYMPH_NODES_EXAMINED_IHC_COUNT;LYMPH_NODES_EXAMINED_POSITIVE;LYMPH_NODES_PELVIC_EXAMINED_COUNT;LYMPH_NODES_PELVIC_POS_BY_HE;LYMPH_NODES_PELVIC_POS_BY_IHC;LYMPH_NODES_PELVIC_POS_TOTAL;LYMPH_NODES_SUPRACLAVICULAR;LYMPH_NODE_DISSECTION_METHOD;LYMPH_NODE_EXAMINED_COUNT;LYMPH_NODE_INVOLVEMENT_SITE;LYMPH_NODE_NECK_DISSECTION_INDICATOR;LYMPH_NODE_SPRD_RADIOGRAPH_EVIDENCE;LYMPH_NODE_STATUS;LYMPH_VASCULAR_INVASION,20
+lymphovascular_related,"LYMPHOVASCULAR-related clinical, molecular, or pathological attributes",LYMPHOVASCULAR_INVASION_INDICATOR;LYMPHOVASCULAR_INVASION_PRESENT;LYMPHOVASCULAR_INVOLVEMENT,3
+macis_score,Calculated score or index for macis score,MACIS_SCORE,1
+maf_data,Clinical or molecular attribute related to maf data,MAF_DATA,1
+main_vs_branch_duct,Clinical or molecular attribute related to main vs branch duct,MAIN_VS_BRANCH_DUCT,1
+maintenance_tx,Clinical or molecular attribute related to maintenance tx,MAINTENANCE_TX,1
+major_anatomic_site,Clinical or molecular attribute related to major anatomic site,MAJOR_ANATOMIC_SITE,1
+manual_annotation,Clinical or molecular attribute related to manual annotation,MANUAL_ANNOTATION,1
+mapk_pathway_alteration,"Percentage, fraction, or ratio for mapk pathway alteration",MAPK_PATHWAY_ALTERATION,1
+margin_related,"MARGIN-related clinical status, score, or measurement",MARGIN_STATUS;MARGIN_STATUS_REEXCISION,2
+margins_involved_hysterectomy,Clinical or molecular attribute related to margins involved hysterectomy,MARGINS_INVOLVED_HYSTERECTOMY,1
+matched_related,"MATCHED-related clinical, molecular, or pathological attributes",MATCHED_GE_ACGH;MATCHED_NORMAL_ID;MATCHED_NORMAL_TISSUE;MATCHED_STATUS,4
+math_score,Calculated score or index for math score,MATH_SCORE,1
+max_tumor_change,Clinical or molecular attribute related to max tumor change,MAX_TUMOR_CHANGE,1
+maximum_tumor_bulk_anatomic_site,Clinical or molecular attribute related to maximum tumor bulk anatomic site,MAXIMUM_TUMOR_BULK_ANATOMIC_SITE,1
+mb_cov,Clinical or molecular attribute related to mb cov,MB_COV,1
+mcrc_type,Classification or category for mcrc type,MCRC_TYPE,1
+mdr,Clinical or molecular attribute related to mdr,MDR,1
+mds_related,MDS-related temporal information or time measurements,MDS_TWO_MONTHS_PRIOR_AML;MDS_TYPE,2
+mdsmpn_related,"MDSMPN-related clinical, molecular, or pathological attributes",MDSMPN_DIAGNOSIS_AT_ACQUISITION;MDSMPN_TWO_MONTHS_PRIOR_AML,2
+mean_corpuscular_volume,Clinical or molecular attribute related to mean corpuscular volume,MEAN_CORPUSCULAR_VOLUME,1
+measurable_disease,Clinical or molecular attribute related to measurable disease,MEASURABLE_DISEASE,1
+med12_mutation,Genetic mutation or variant information for med12 mutation,MED12_MUTATION,1
+medical_related,"MEDICAL-related clinical, molecular, or pathological attributes",MEDICAL_CONDITION;MEDICAL_CONDITIONS,2
+medication,Clinical or molecular attribute related to medication,MEDICATION,1
+meld,Clinical or molecular attribute related to meld,MELD,1
+menopausal_related,"MENOPAUSAL-related clinical status, score, or measurement",MENOPAUSAL_STATUS_AT_DIAGNOSIS;MENOPAUSAL_STATUS_DX,2
+menopause_status,Clinical or pathological status for menopause status,MENOPAUSE_STATUS,1
+merkel_cell,Clinical or molecular attribute related to merkel cell,MERKEL_CELL,1
+met_related,"MET-related clinical, molecular, or pathological attributes",MET_BONE;MET_BRAIN;MET_COUNT;MET_DRIVER;MET_LIVER;MET_LOCATION;MET_LUNG;MET_PERITONEUM;MET_PROTEIN;MET_SITE_COUNT;MET_SKIPPED_EXONS_18_AND_19;MET_SKIPPED_EXON_2,12
+metabolic_tumor_vol,Clinical or molecular attribute related to metabolic tumor vol,METABOLIC_TUMOR_VOL,1
+metanephrine,Clinical or molecular attribute related to metanephrine,METANEPHRINE,1
+metastasectomy,Clinical or molecular attribute related to metastasectomy,METASTASECTOMY,1
+metastasectomy_site,Clinical or molecular attribute related to metastasectomy site,METASTASECTOMY_SITE,1
+metastases_related,"METASTASES-related clinical, molecular, or pathological attributes",METASTASES_SITE_FIRST_BONE;METASTASES_SITE_FIRST_BRAIN;METASTASES_SITE_FIRST_GYN;METASTASES_SITE_FIRST_LIVER;METASTASES_SITE_FIRST_LN;METASTASES_SITE_FIRST_LUNG;METASTASES_SITE_FIRST_PELVIS;METASTASES_SITE_FIRST_PERITONEUM_OMENTUM_ABDOMEN,8
+metastasis_related,"METASTASIS-related clinical, molecular, or pathological attributes",METASTASIS_BONE;METASTASIS_CODED;METASTASIS_LIVER;METASTASIS_LUNG;METASTASIS_OTHER;METASTASIS_SITE_CODE,6
+metastasis_status,Presence or absence of distant metastatic disease,CLINICALLY_AGRESSIVE_AND_OR_METASTATIC;EXTRAHEPATIC_METASTASIS;IMPACT_METASTATIC_LESION;LYMPHATIC_METASTASIS;LYMPH_NODE_METASTASIS;METASTASIS;METASTATIC;METASTATIC_AT_DX;METASTATIC_BIOPSY_SITE;METASTATIC_BURDEN;METASTATIC_DISEASE;METASTATIC_DISEASE_CONFIRMED;METASTATIC_DX;METASTATIC_DX_CONFIRMED_BY;METASTATIC_DX_CONFIRMED_BY_OTHER;METASTATIC_DZ_FUP;METASTATIC_RECURRENCE_TIME_MONTHS;METASTATIC_TUMOR_INDICATOR;RECURRENT_METASTATIC_DISEASE,19
+method_related,"METHOD-related clinical, molecular, or pathological attributes",METHOD_OF_INITIAL_PATH_DIAGNOSIS;METHOD_OF_INITIAL_PATH_DIAGNOSIS_OTHER;METHOD_OF_INITIAL_SAMPLE_PROCUREMENT;METHOD_OF_INITIAL_SAMPLE_PROCUREMENT_OTHER;METHOD_OF_SAMPLE_PROCUREMENT,5
+methoxytyramine,Clinical or molecular attribute related to methoxytyramine,METHOXYTYRAMINE,1
+methylation_related,"METHYLATION-related clinical, molecular, or pathological attributes",METHYLATION_AVAILABLE;METHYLATION_CLUSTER;METHYLATION_QUALITY;METHYLATION_STATUS,4
+mets_related,METS-related temporal information or time measurements,METS_FREE_TIME_MONTHS;METS_SITES_AT_DX;METS_SITES_AT_METS_ABST;METS_SITES_AT_METS_ABST_ADRENAL_GLAND;METS_SITES_AT_METS_ABST_ASCITES;METS_SITES_AT_METS_ABST_BLADDER;METS_SITES_AT_METS_ABST_BONE;METS_SITES_AT_METS_ABST_BRAIN_CNS;METS_SITES_AT_METS_ABST_CHEST_WALL;METS_SITES_AT_METS_ABST_DIST_LYMPH;METS_SITES_AT_METS_ABST_INTRA_ABDOMINAL;METS_SITES_AT_METS_ABST_LIVER;METS_SITES_AT_METS_ABST_LUNG;METS_SITES_AT_METS_ABST_LYMPH_NODES;METS_SITES_AT_METS_ABST_OTHER;METS_SITES_AT_METS_ABST_OVARY;METS_SITES_AT_METS_ABST_PLEURAL_EFFUSION;METS_SITES_AT_METS_ABST_REG_LYMPH;METS_SITES_AT_METS_ABST_SKIN;METS_SITES_AT_METS_ABST_SOFT_TISSUE;METS_SITES_AT_METS_ABST_UNKNOWN;METS_SITES_AT_METS_DX;METS_SITES_AT_METS_DX_ADRENAL_GLAND;METS_SITES_AT_METS_DX_ALL;METS_SITES_AT_METS_DX_ASCITES;METS_SITES_AT_METS_DX_BLADDER;METS_SITES_AT_METS_DX_BONE;METS_SITES_AT_METS_DX_BRAIN_CNS;METS_SITES_AT_METS_DX_CHEST_WALL;METS_SITES_AT_METS_DX_DIST_LYMPH;METS_SITES_AT_METS_DX_INTRA_ABDOMINAL;METS_SITES_AT_METS_DX_LIVER;METS_SITES_AT_METS_DX_LUNG;METS_SITES_AT_METS_DX_LYMPH;METS_SITES_AT_METS_DX_OTHER;METS_SITES_AT_METS_DX_OVARY;METS_SITES_AT_METS_DX_PLEURAL_EFFUSION;METS_SITES_AT_METS_DX_REG_LYMPH;METS_SITES_AT_METS_DX_SKIN;METS_SITES_AT_METS_DX_SOFT_TISSUE;METS_SITES_AT_METS_DX_UNKNOWN,41
+mgmt_related,"MGMT-related clinical, molecular, or pathological attributes",MGMT_METHYLATION;MGMT_METHYLATION_METHOD;MGMT_PROMOTER_STATUS;MGMT_STATUS,4
+mib_1_positive_percent_range,"Percentage, fraction, or ratio for mib 1 positive percent range",MIB_1_POSITIVE_PERCENT_RANGE,1
+micro_related,"MICRO-related clinical, molecular, or pathological attributes",MICRO_RNA_CLUSTER;MICRO_RNA_SCORE,2
+micromet_detection_by_ihc,Clinical or molecular attribute related to micromet detection by ihc,MICROMET_DETECTION_BY_IHC,1
+microrna_related,"MICRORNA-related clinical, molecular, or pathological attributes",MICRORNA_DATA;MICRORNA_EXPRESSION_CLUSTER,2
+microtubule_tx,Clinical or molecular attribute related to microtubule tx,MICROTUBULE_TX,1
+microvascular_invasion,Clinical or molecular attribute related to microvascular invasion,MICROVASCULAR_INVASION,1
+mimm_score,Calculated score or index for mimm score,MIMM_SCORE,1
+minus_related,"MINUS-related clinical, molecular, or pathological attributes",MINUS_X;MINUS_Y,2
+mirna_related,"MIRNA-related clinical, molecular, or pathological attributes",MIRNA_CLUSTER;MIRNA_EXPRESSION_CLUSTER_EC;MIRNA_EXPRESSION_CLUSTER_GEA;MIRNA_EXPRESSION_CLUSTER_GEA_CIN;MIRNA_EXPRESSION_CLUSTER_SCC,5
+missense_mutations,Genetic mutation or variant information for missense mutations,MISSENSE_MUTATIONS,1
+missing_from_baseline_clinical,Clinical or molecular attribute related to missing from baseline clinical,MISSING_FROM_BASELINE_CLINICAL,1
+mitoses_per_50_hpf,Clinical or molecular attribute related to mitoses per 50 hpf,MITOSES_PER_50_HPF,1
+mitotic_related,"MITOTIC-related clinical, molecular, or pathological attributes",MITOTIC_COUNT;MITOTIC_RATE;MITOTIC_SCORE,3
+mki,Clinical or molecular attribute related to mki,MKI,1
+mlh1,Clinical or molecular attribute related to mlh1,MLH1,1
+mlh1_related,"MLH1-related clinical, molecular, or pathological attributes",MLH1_METHYLATION;MLH1_PROMOTER_HYPERMETHYLATION;MLH1_SILENCING,3
+mlh2,Clinical or molecular attribute related to mlh2,MLH2,1
+mll,Clinical or molecular attribute related to mll,MLL,1
+mll_related,"MLL-related clinical, molecular, or pathological attributes",MLL_PTD;MLL_STATUS,2
+mmrd_related,"MMRD-related clinical, molecular, or pathological attributes",MMRD_IHC;MMRD_MECHANISM,2
+mnp_classification,Classification or category for mnp classification,MNP_CLASSIFICATION,1
+modified_capra_s_score_without_including_surgical_margins,Calculated score or index for modified capra s score without including surgical margins,MODIFIED_CAPRA_S_SCORE_WITHOUT_INCLUDING_SURGICAL_MARGINS,1
+mold_or_dust_allergy_history,Clinical or molecular attribute related to mold or dust allergy history,MOLD_OR_DUST_ALLERGY_HISTORY,1
+molecular_related,"MOLECULAR-related clinical, molecular, or pathological attributes",MOLECULAR_GROUP;MOLECULAR_STUDIES_OTHERS_PERFORMED;MOLECULAR_TEST_RESULT,3
+mono_related,"MONO-related clinical, molecular, or pathological attributes",MONO_COMBO;MONO_MULTIFOCAL,2
+monocytes,Clinical or molecular attribute related to monocytes,MONOCYTES,1
+monosomy_related,"MONOSOMY-related clinical, molecular, or pathological attributes",MONOSOMY_5;MONOSOMY_7,2
+month_added,Temporal measurement or date for month added,MONTH_ADDED,1
+months_related,MONTHS-related temporal information or time measurements,MONTHS_FROM_MATCHED_PRIM;MONTHS_ON_STUDY;MONTHS_ON_TREATMENT,3
+morphologic_response,Treatment response or clinical outcome for morphologic response,MORPHOLOGIC_RESPONSE,1
+morphology,Clinical or molecular attribute related to morphology,MORPHOLOGY,1
+morphology_other_features,Clinical or molecular attribute related to morphology other features,MORPHOLOGY_OTHER_FEATURES,1
+most_recent_treatment_duration,"Percentage, fraction, or ratio for most recent treatment duration",MOST_RECENT_TREATMENT_DURATION,1
+mpn_two_months_prior_aml,Temporal measurement or date for mpn two months prior aml,MPN_TWO_MONTHS_PRIOR_AML,1
+mpnst_related,"MPNST-related clinical, molecular, or pathological attributes",MPNST_NF1_GENETIC_TESTING_INDICATOR;MPNST_NF1_MUTATIONS_IDENTIFIED;MPNST_NF_FAMILIAL_OR_SPORADIC;MPNST_NF_INDICATOR;MPNST_PLEXIFORM_NEUROFIBROMA_SITE,5
+mrd_related,"MRD-related clinical, molecular, or pathological attributes",MRD_AT_END_OF_COURSE_1;MRD_AT_END_OF_COURSE_2;MRD_END_CONSOLIDATION;MRD_END_CONSOLIDATION_SENSITIVITY;MRD_PERCENTAGE_AT_END_OF_COURSE_1;MRD_PERCENTAGE_AT_END_OF_COURSE_2;MRD_PERCENT_DAY_29;MRD_PERCENT_DAY_29_SENSITIVITY;MRD_PERCENT_DAY_43;MRD_PERCENT_DAY_8;MRD_PERCENT_DAY_8_SENSITIVITY,11
+mri_results,Clinical or molecular attribute related to mri results,MRI_RESULTS,1
+mrna_related,"MRNA-related clinical, molecular, or pathological attributes",MRNA_CLUSTER;MRNA_DATA;MRNA_EXPRESSION_CLUSTER;MRNA_EXPRESSION_CLUSTER_EC;MRNA_EXPRESSION_CLUSTER_GEA;MRNA_EXPRESSION_CLUSTER_SCC;MRNA_EXPRESSION_SUBTYPE_TCGA;MRNA_STEMNESS_INDEX,8
+msh6,Clinical or molecular attribute related to msh6,MSH6,1
+msi,Clinical or molecular attribute related to msi,MSI,1
+msi_related,"MSI-related clinical, molecular, or pathological attributes",MSI_COMMENT;MSI_PREDICTION_SCORE;MSI_SOMATIC_SITES;MSI_TOTAL_SITES;MSI_YN,5
+msi_score,Quantitative microsatellite instability score from molecular testing,MSI_SCORE;MSI_SCORE_MANTIS;MSI_SENSOR_SCORE,3
+msi_status,"Microsatellite instability status: MSI-High, MSI-Low, or microsatellite stable",MSI_STATUS;MSI_STATUS_5_MARKER_CALL;MSI_STATUS_7_MARKER_CALL;MSI_TYPE,4
+msk_related,"MSK-related clinical, molecular, or pathological attributes",MSK_IMPACT_BEYOND_FIRST_RELAPSE_BIOPSY;MSK_IMPACT_ON_DIAGNOSTIC_BIOPSY;MSK_IMPACT_ON_FIRST_RELAPSE_BIOPSY;MSK_SLIDE_ID,4
+multi_erbb2,Clinical or molecular attribute related to multi erbb2,MULTI_ERBB2,1
+multiple_related,"MULTIPLE-related clinical, molecular, or pathological attributes",MULTIPLE_CANCER_PREDISPOSITIONS;MULTIPLE_HN_CSCC;MULTIPLE_MEDICAL_CONDITIONS;MULTIPLE_TUMORS;MULTIPLE_TUMOR_LOCATIONS,5
+muscle_fraction,"Percentage, fraction, or ratio for muscle fraction",MUSCLE_FRACTION,1
+mut_related,"MUT-related clinical, molecular, or pathological attributes",MUT_CANCER_GENE_CENSUS_PROTEIN_CHANGE;MUT_CLINDX_TX_GENE_PROTEIN_CHANGE;MUT_DNAREPAIR_GENE_PROTEIN_CHANGE;MUT_DRIVER_PROTEIN_CHANGE;MUT_EPIGENETIC_PROTEIN_CHANGE;MUT_OTHER_PROTEIN_CHANGE;MUT_RARE_DRIVER_PROTEIN_CHANGE;MUT_TUMORPORTAL_GENE_PROTEIN_CHANGE,8
+mutation_count,Total number of somatic mutations detected in sample,MUTATION_COUNT;MUTATION_COUNT_341;MUTATION_COUNT_EXCLUDINGINDELS;MUTATION_COUNT_EXCLUDINGINDELS_WGS;MUTATION_COUNT_EXCLUDING_SILENT;NONSYNONYMOUS_MUTATION_COUNT;TOTAL_MUTATIONS;TOTAL_MUTATION_COUNT;TOTAL_MUTATION_COUNT_PER_MB;TOTAL_MUTATION_COUNT_WGS,10
+mutation_related,MUTATION-related genetic mutations or molecular alterations,MUTATION_DENSITY;MUTATION_LOAD;MUTATION_PHENOTYPE;MUTATION_RATE;MUTATION_RATE_341;MUTATION_RATE_CLUSTER;MUTATION_SIGNATURE_ACTIVITY_W1_COSMIC5;MUTATION_SIGNATURE_ACTIVITY_W2_COSMIC4;MUTATION_SIGNATURE_ACTIVITY_W3_COSMIC2;MUTATION_SIGNATURE_C>A;MUTATION_SIGNATURE_C>G;MUTATION_SIGNATURE_C>T;MUTATION_SIGNATURE_T>A;MUTATION_SIGNATURE_T>C;MUTATION_SIGNATURE_T>G;MUTATION_STATUS;MUTATION_TYPE,17
+mutations,Genetic mutation or variant information for mutations,MUTATIONS,1
+mutations_per_megabase,Genetic mutation or variant information for mutations per megabase,MUTATIONS_PER_MEGABASE,1
+mutiple_nodules,Clinical or molecular attribute related to mutiple nodules,MUTIPLE_NODULES,1
+muts_related,"MUTS-related clinical, molecular, or pathological attributes",MUTS_CLONAL;MUTS_SUBCLONAL;MUTS_SUBCLONAL_RATIO;MUTS_UNEVAL,4
+mvi,Clinical or molecular attribute related to mvi,MVI,1
+myb_related,"MYB-related clinical, molecular, or pathological attributes",MYB_ACTIVATION;MYB_MYBL1_FUSION;MYB_MYBL1_FUSION_METHOD;MYB_NFIB_CNA;MYB_NFIB_FISH;MYB_NFIB_NONSYNONYMOUS_COUNT;MYB_NFIB_REARRANGEMENT;MYB_NFIB_TRANSLOCATION;MYB_VALIDATION,9
+myc_related,"MYC-related clinical, molecular, or pathological attributes",MYC_BA;MYC_FISH;MYC_PATH,3
+mycn,Clinical or molecular attribute related to mycn,MYCN,1
+mycn_amp,Clinical or molecular attribute related to mycn amp,MYCN_AMP,1
+myometrial_invasion_specify,Clinical or molecular attribute related to myometrial invasion specify,MYOMETRIAL_INVASION_SPECIFY,1
+myriad_related,"MYRIAD-related clinical status, score, or measurement",MYRIAD_GIS_SCORE;MYRIAD_SIGNATURE,2
+name,Clinical or molecular attribute related to name,NAME,1
+ncentromeric_related,"NCENTROMERIC-related clinical, molecular, or pathological attributes",NCENTROMERIC_AI;NCENTROMERIC_LOH,2
+necrosis,Clinical or molecular attribute related to necrosis,NECROSIS,1
+neoadjuvant_treatment,Pre-surgical neoadjuvant therapy to shrink tumor before surgery,HISTORY_NEOADJUVANT_MEDICATION;HISTORY_NEOADJUVANT_STEROID_TX;HISTORY_NEOADJUVANT_TRTYN;HISTORY_NEOADJUVANT_TX_TYPE;NEOADJUVANT;NEOADJUVANT_TARGETED;NEOADJUVANT_TREATMENT_DETAILS;TOTAL_CYCLES_NUM_NEOADJUVANT_ADJUVANT,8
+neoagcnt,Clinical or molecular attribute related to neoagcnt,NEOAGCNT,1
+neoantigen_burden,Clinical or molecular attribute related to neoantigen burden,NEOANTIGEN_BURDEN,1
+neoplastic_cellularity,Clinical or molecular attribute related to neoplastic cellularity,NEOPLASTIC_CELLULARITY,1
+nepc_related,"NEPC-related clinical status, score, or measurement",NEPC_CAPTURE_SCORE;NEPC_POLYA_SCORE;NEPC_SCORE,3
+nervous_system_involvement,Clinical or molecular attribute related to nervous system involvement,NERVOUS_SYSTEM_INVOLVEMENT,1
+nestin_staining_score,Calculated score or index for nestin staining score,NESTIN_STAINING_SCORE,1
+neuroendocrine_features,Clinical or molecular attribute related to neuroendocrine features,NEUROENDOCRINE_FEATURES,1
+new_tumor_event,"New tumor occurrence, recurrence, or progression after treatment",BIOCHEMICAL_RECURRENCE_INDICATOR;DAYS_TO_BIOCHEMICAL_RECURRENCE_FIRST;DAYS_TO_NEW_TUMOR_EVENT;DISEASE_RECURRENCE_OR_PERSISTENCE;DISTANT_RECURRENCE_NUM;DISTANT_RECURRENCE_SITE;LOCAL_RECURRENCE_MONTHS;LOCAL_RECURRENCE_NUM;LOCAL_REGIONAL_RECURRENCE_LOCATION;LOCOREGIONAL_RECURRENCE_INDICATOR;METASTATIC_RECURRENCE_TIME_MONTHS;NEW_TUMOR_EVENT_AFTER_INITIAL_TREATMENT;NEW_TUMOR_EVENT_DX_INDICATOR;NEW_TUMOR_EVENT_MELANOMA_COUNT;NEW_TUMOR_EVENT_OTHER_SITE;NEW_TUMOR_EVENT_PRIOR_TO_BCR_TUMOR;NEW_TUMOR_EVENT_SITE;NEW_TUMOR_EVENT_TYPE;NUMBER_OF_PRIOR_RECURRENCES;POST_PROGRESSION;PROGRESSION_OF_DISEASE;PROGRESSION_STATUS;SOURCE_OF_RECURRENCE_TISSUE;TIME_TO_LOCAL_RECURRENCE_STATUS;TIME_TO_PROGRESSION_OF_DISEASE;TIME_TO_RECURRENCE_MONTHS,26
+nf1_related,"NF1-related clinical, molecular, or pathological attributes",NF1_GENOTYPE;NF1_MUTATION,2
+nf2_genotype,Classification or category for nf2 genotype,NF2_GENOTYPE,1
+nfib_fusion_other,Clinical or molecular attribute related to nfib fusion other,NFIB_FUSION_OTHER,1
+ngs_related,NGS-related temporal information or time measurements,NGS_SAMPLE_COLLECTION_TIME;NGS_TEST;NGS_TYPE,3
+ninterstitial_related,"NINTERSTITIAL-related clinical, molecular, or pathological attributes",NINTERSTITIAL_AI;NINTERSTITIAL_LOH,2
+nlr,Clinical or molecular attribute related to nlr,NLR,1
+nlr_greater_than_4_dot_73,Clinical or molecular attribute related to nlr greater than 4 dot 73,NLR_GREATER_THAN_4_DOT_73,1
+nmf_related,"NMF-related clinical, molecular, or pathological attributes",NMF_CLUSTER;NMF_CLUSTER_MEMBERSHIP;NMF_CLUSTER_MEMBERSHIP_SCORE;NMF_CONSENSUS;NMF_SUBTYPE_CORE;NMF_SUBTYPE_MEMBERSHIP_SCORE,6
+no_of_mutations,Genetic mutation or variant information for no of mutations,NO_OF_MUTATIONS,1
+no_of_mutations_with_strong_binding_neoantigens,Genetic mutation or variant information for no of mutations with strong binding neoantigens,NO_OF_MUTATIONS_WITH_STRONG_BINDING_NEOANTIGENS,1
+nodal_status,Clinical or pathological status for nodal status,NODAL_STATUS,1
+node_coded,Clinical or molecular attribute related to node coded,NODE_CODED,1
+nodes,Clinical or molecular attribute related to nodes,NODES,1
+nodule_related,"NODULE-related clinical, molecular, or pathological attributes",NODULE_NUMBER;NODULE_SIZE,2
+non_related,"NON-related clinical, molecular, or pathological attributes",NON_AML_MDSMPN_DIAGNOSIS_AT_ACQUISITION;NON_AML_MDSMPN_SPECIFIC_DX_AT_ACQUISITION;NON_NEOPLASTIC_DUCT;NON_SILENT_MUTATION;NON_SILENT_MUT_TP53_ATRX_CIC_FUBP1;NON_TARGET_PROG_ONLY;NON_VIRAL,7
+noninvasive_related,"NONINVASIVE-related clinical, molecular, or pathological attributes",NONINVASIVE_BLADDER_CA_TX_TYPE;NONINVASIVE_BLADDER_HISTORY,2
+nonsense_mutation,Genetic mutation or variant information for nonsense mutation,NONSENSE_MUTATION,1
+nonsilent_related,"NONSILENT-related clinical, molecular, or pathological attributes",NONSILENT_DENSITY_AGE_FIT;NONSILENT_MUTATION_DENSITY;NONSILENT_PER_MB;NONSILENT_RATE,4
+nonstop_mutation,Genetic mutation or variant information for nonstop mutation,NONSTOP_MUTATION,1
+nonsynonymous_mutation_rate,Genetic mutation or variant information for nonsynonymous mutation rate,NONSYNONYMOUS_MUTATION_RATE,1
+nonsyns_related,"NONSYNS-related clinical, molecular, or pathological attributes",NONSYNS_CLONAL;NONSYNS_SUBCLONAL;NONSYNS_UNEVAL,3
+norepinephrine,Clinical or molecular attribute related to norepinephrine,NOREPINEPHRINE,1
+normal_related,"NORMAL-related clinical, molecular, or pathological attributes",NORMAL_EXOME_DEPTH;NORMAL_GENOME_LIBRARY;NORMAL_SITE,3
+normals_use,Clinical or molecular attribute related to normals use,NORMALS_USE,1
+normetanephrine,Clinical or molecular attribute related to normetanephrine,NORMETANEPHRINE,1
+notch,Clinical or molecular attribute related to notch,NOTCH,1
+note,Clinical or molecular attribute related to note,NOTE,1
+npi,Clinical or molecular attribute related to npi,NPI,1
+npm1,Clinical or molecular attribute related to npm1,NPM1,1
+npm1_consensus_call,Clinical or molecular attribute related to npm1 consensus call,NPM1_CONSENSUS_CALL,1
+npm_mutation,Genetic mutation or variant information for npm mutation,NPM_MUTATION,1
+nras_related,NRAS-related genetic mutations or molecular alterations,NRAS_MUTATION;NRAS_STATUS,2
+nrf2,Clinical or molecular attribute related to nrf2,NRF2,1
+nrpcc,Clinical or molecular attribute related to nrpcc,NRPCC,1
+nt_responder,Clinical or molecular attribute related to nt responder,NT_RESPONDER,1
+nte_related,"NTE-related clinical, molecular, or pathological attributes",NTE_CENT_17_HER2_RATIO;NTE_ER_IHC_INTENSITY_SCORE;NTE_ER_STATUS;NTE_ER_STATUS_IHC_POSITIVE;NTE_ER_STATUS_IHC__POSITIVE;NTE_HER2_FISH_STATUS;NTE_HER2_POSITIVITY_IHC_SCORE;NTE_HER2_STATUS;NTE_HER2_STATUS_IHC_POSITIVE;NTE_HER2_STATUS_IHC__POSITIVE;NTE_LESION_PATHOLOGIC_DEPTH;NTE_LESION_PATHOLOGIC_LENGTH;NTE_LESION_PATHOLOGIC_WIDTH;NTE_LESION_RADIOLOGIC_DEPTH;NTE_LESION_RADIOLOGIC_LENGTH;NTE_LESION_RADIOLOGIC_WIDTH;NTE_PR_IHC_INTENSITY_SCORE;NTE_PR_STATUS_BY_IHC;NTE_PR_STATUS_IHC_POSITIVE;NTE_PR_STATUS_IHC__POSITIVE,20
+ntelomeric_related,"NTELOMERIC-related clinical, molecular, or pathological attributes",NTELOMERIC_AI;NTELOMERIC_AI_SIZE;NTELOMERIC_LOH,3
+nuclear_grade_iii_iv,Clinical or molecular attribute related to nuclear grade iii iv,NUCLEAR_GRADE_III_IV,1
+nucleoside_tx,Clinical or molecular attribute related to nucleoside tx,NUCLEOSIDE_TX,1
+num_related,NUM-related genetic mutations or molecular alterations,NUM_DBSNP_MUTATIONS;NUM_DRIVER_SCNA;NUM_DRIVER_SV;NUM_EXTRANODAL_SITES;NUM_FULL_TERM_PREGNANCIES;NUM_LINES;NUM_LINES_HORMONE;NUM_LINES_IMMUNO;NUM_LINES_IODINE;NUM_LINES_NTRK;NUM_LINES_TARGETED;NUM_MUT_APOBEC;NUM_MUT_CPGT;NUM_MUT_DBSNP;NUM_NONSILENT_MUTATION;NUM_PRIOR_THERAPIES;NUM_PROTEIN_ALTERING_MUTATIONS;NUM_SAMPLES_CAPTURE_MULTIPLEX;NUM_SILENT_MUTATION;NUM_SOMATIC_MUTATION;NUM_TCRB_CLONES;NUM_TCRB_TEMPLATE,22
+number_related,NUMBER-related genetic mutations or molecular alterations,NUMBER_OF_CLONAL_MUTATIONS_WITH_BINDING_NEOANTIGENS;NUMBER_OF_CYCLES_FLUORO-PYRIMIDINE;NUMBER_OF_CYCLES_PEMBROLIZUMAB;NUMBER_OF_CYCLES_PLATINUM;NUMBER_OF_CYCLES_TRASTUZUMAB;NUMBER_OF_LINES_OF_TREATMENT_FOR_MET_DISEASE;NUMBER_OF_LYMPHNODES_POSITIVE;NUMBER_OF_LYMPH_NODES_EXAMINED;NUMBER_OF_LYMPH_NODES_POSITIVE_FOR_TUMOR;NUMBER_OF_MUTATIONS;NUMBER_OF_MUTATIONS_WITH_BINDING_NEOANTIGENS;NUMBER_OF_MUTATIONS_WITH_WEAK_BINDING_NEOANTIGENS;NUMBER_OF_NON_SYNONYMOUS_MUTATIONS;NUMBER_OF_PD1_INHIBITOR_INJECTIONS;NUMBER_OF_RELATIVES_DIAGNOSED;NUMBER_OF_RELATIVES_WITH_STOMACH_CANCER;NUMBER_OF_SITES;NUMBER_OF_TUMORS;NUMBER_SOMATIC_MUTATIONS,19
+nup98_nsd1,Clinical or molecular attribute related to nup98 nsd1,NUP98_NSD1,1
+occupation_related,"OCCUPATION-related clinical, molecular, or pathological attributes",OCCUPATION_CURRENT;OCCUPATION_PRIMARY;OCCUPATION_PRIMARY_CHEMICAL_EXPOSURE;OCCUPATION_PRIMARY_INDUSTRY;OCCUPATION_PRIMARY_YEARS_WORKED,5
+off_related,"OFF-related clinical, molecular, or pathological attributes",OFF_ARSI;OFF_STUDY_REASON;OFF_TREATMENT,3
+official_path,Clinical or molecular attribute related to official path,OFFICIAL_PATH,1
+on_study,Clinical or molecular attribute related to on study,ON_STUDY,1
+on_treatment,Clinical or molecular attribute related to on treatment,ON_TREATMENT,1
+oncoprint,Clinical or molecular attribute related to oncoprint,ONCOPRINT,1
+oncotree_code,OncoTree standardized code for tumor type classification,ONCOTREE CODE;ONCOTREE_CODE;ONCOTREE_CODE_CANCER_TYPE;ONCOTREE_PATIENT,4
+ongoing_related,"ONGOING-related clinical status, score, or measurement",ONGOING_STATUS;ONGOING_TREATMENT,2
+optic_nerve_inv,Clinical or molecular attribute related to optic nerve inv,OPTIC_NERVE_INV,1
+or_time,Temporal measurement or date for or time,OR_TIME,1
+oral_contraception,Clinical or molecular attribute related to oral contraception,ORAL_CONTRACEPTION,1
+organ_system,Clinical or molecular attribute related to organ system,ORGAN_SYSTEM,1
+original_diagnosis_at_implant,Clinical or molecular attribute related to original diagnosis at implant,ORIGINAL_DIAGNOSIS_AT_IMPLANT,1
+os_censor,Clinical or molecular attribute related to os censor,OS_CENSOR,1
+os_days,Temporal measurement or date for os days,OS_DAYS,1
+os_from_pd1i_months,Temporal measurement or date for os from pd1i months,OS_FROM_PD1I_MONTHS,1
+os_from_pd1i_status,Clinical or pathological status for os from pd1i status,OS_FROM_PD1I_STATUS,1
+os_from_surgery_months,Temporal measurement or date for os from surgery months,OS_FROM_SURGERY_MONTHS,1
+os_int,Clinical or molecular attribute related to os int,OS_INT,1
+os_io,Clinical or molecular attribute related to os io,OS_IO,1
+os_months,Overall survival duration in months from diagnosis or treatment,GMED_OS_MONTHS;IO_EGC_SURVIVAL_OS_MONTHS_START_OF_IO_TO_DATE_OF_DEATH_LAST_FOLLOW_UP;IO_OS_MONTHS_START_OF_IO;OS_MONTHS;OS_MONTHS_ADDITIONAL;OS_MONTHS_DIAGNOSIS_TO_FU;OS_MONTHS_DIAG_TO_COLL;OS_MONTHS_DMT;OS_MONTHS_FROM_RX;OS_MONTHS_STAGE_IV;OVERALL_SURVIVAL_MONTHS;PLATINUM_OS_MONTHS;POST_RECURRENCE_SURVIVAL_MONTHS,13
+os_neo_months,Temporal measurement or date for os neo months,OS_NEO_MONTHS,1
+os_neo_status,Clinical or pathological status for os neo status,OS_NEO_STATUS,1
+os_smp_months,Temporal measurement or date for os smp months,OS_SMP_MONTHS,1
+os_sorafenib,Clinical or molecular attribute related to os sorafenib,OS_SORAFENIB,1
+os_status,Overall survival status indicating alive or deceased at last follow-up,HER2_VITAL_STATUS;OS_STATUS;OS_STATUS_DMT;OS_STATUS_IO;OS_STATUS_SORAFENIB;PLATINUM_OS_STATUS;VITAL_STATUS;VITAL_STATUS_CODE,8
+other_related,"OTHER-related clinical, molecular, or pathological attributes",OTHER_CANCER_HISTORY;OTHER_CYTOGENETICS;OTHER_CYTOTOXIC_TX;OTHER_DISEASES;OTHER_DNP;OTHER_FSM;OTHER_HEPATO_CARCINOMA_RISK_FACTORS;OTHER_HYSTERECTOMY_TYPE;OTHER_IHC_SPECIFY;OTHER_IMMUNOSUPPRESSIVE_DISEASE;OTHER_INVOLVED_MARGINS;OTHER_MLL;OTHER_POS_NODE_LOCATION;OTHER_SITES_OF_METS;OTHER_SITE_OF_RELAPSE;OTHER_SKIN_TUMORS;OTHER_TREATMENT_RESPONSE,17
+overall_related,"OVERALL-related clinical status, score, or measurement",OVERALL_HER2_STATUS;OVERALL_HER2_STATUS_PATIENT;OVERALL_HR_STATUS_PATIENT;OVERALL_RECEPTOR_STATUS_PATIENT;OVERALL_RESPONSE,5
+oxaliplatin_tx,Clinical or molecular attribute related to oxaliplatin tx,OXALIPLATIN_TX,1
+p16_ish,Clinical or molecular attribute related to p16 ish,P16_ISH,1
+p53,Clinical or molecular attribute related to p53,P53,1
+p53_gene_analysis,Clinical or molecular attribute related to p53 gene analysis,P53_GENE_ANALYSIS,1
+pack_related,"PACK-related clinical, molecular, or pathological attributes",PACK_YEARS;PACK_YEARS_SMOKED,2
+pam50,Clinical or molecular attribute related to pam50,PAM50,1
+pan_related,"PAN-related clinical, molecular, or pathological attributes",PAN_GLIOMA_DNA_METHYLATION_CLUSTER;PAN_GLIOMA_RNA_EXPRESSION_CLUSTER,2
+pao_fsm,Clinical or molecular attribute related to pao fsm,PAO_FSM,1
+paradigm_cluster,Clinical or molecular attribute related to paradigm cluster,PARADIGM_CLUSTER,1
+parotid_ln,Clinical or molecular attribute related to parotid ln,PAROTID_LN,1
+parta_consented_12_245,Clinical or molecular attribute related to parta consented 12 245,PARTA_CONSENTED_12_245,1
+partc_consented_12_245,Clinical or molecular attribute related to partc consented 12 245,PARTC_CONSENTED_12_245,1
+participant_country,Numeric count or quantity for participant country,PARTICIPANT_COUNTRY,1
+path_related,"PATH-related clinical, molecular, or pathological attributes",PATH_CANCER_MAX_DIM_CM;PATH_DIAG_TO_DEATH_DAYS;PATH_DIAG_TO_LAST_CONTACT_DAYS;PATH_DIAG_TO_TUMOR_REOCCUR_DAYS;PATH_DX_MSK;PATH_GLEASON_SCORE;PATH_GLEASON_SCORE_1;PATH_GLEASON_SCORE_2;PATH_MARGIN;PATH_SLIDE_EXISTS;PATH_STAGE_DIST_METS-PM;PATH_STAGE_PRIMARY_TUMOR-PT;PATH_STAGE_REG_LYMPH_NODES-PN,13
+pathologic_related,"PATHOLOGIC-related clinical, molecular, or pathological attributes",PATHOLOGIC_DISTANT_SPREAD;PATHOLOGIC_DOWNSTAGING;PATHOLOGIC_SPREAD_INCIDENTAL_PROSTATE_CANCER;PATHOLOGIC_STAGE_AJCC7_AT_DIAGNOSIS_COMPLEX;PATHOLOGIC_STAGE_AJCC7_AT_DIAGNOSIS_SIMPLE;PATHOLOGIC_STAGING_PRIMARY_TUMOR_PT;PATHOLOGIC_STAGING_REGIONAL_LYMPH_NODES_PN,7
+pathological_related,"PATHOLOGICAL-related clinical, molecular, or pathological attributes",PATHOLOGICAL_DIAGNOSIS;PATHOLOGICAL_TUMORRESPONSE,2
+pathologist_annotation,Clinical or molecular attribute related to pathologist annotation,PATHOLOGIST_ANNOTATION,1
+pathology_related,"PATHOLOGY-related clinical, molecular, or pathological attributes",PATHOLOGY_BASED_HISTOLOGY_ASSESSMENT;PATHOLOGY_CLASSIFICATION;PATHOLOGY_LAUREN;PATHOLOGY_OF_NORMAL_MUCOSA;PATHOLOGY_STATUS,5
+pathology_report,"Pathology report file name, UUID, or identifier",PATHOLOGY_REPORT_FILE_NAME;PATHOLOGY_REPORT_UUID,2
+pathway_related,"PATHWAY-related clinical, molecular, or pathological attributes",PATHWAY_ACTIVITY_EGFR;PATHWAY_ACTIVITY_HYPOXIA;PATHWAY_ACTIVITY_JAK.STAT;PATHWAY_ACTIVITY_MAPK;PATHWAY_ACTIVITY_NFKB;PATHWAY_ACTIVITY_P53;PATHWAY_ACTIVITY_PI3K;PATHWAY_ACTIVITY_TGFB;PATHWAY_ACTIVITY_TNFA;PATHWAY_ACTIVITY_TRAIL;PATHWAY_ACTIVITY_VEGF,11
+patient_id,Unique patient or participant identifier across studies and databases,EXTERNAL_PATIENT_ID;INVESTIGATOR_PATIENT_ID;OTHER_PATIENT_ID;patientId,4
+patient_related,"PATIENT-related clinical, molecular, or pathological attributes",PATIENT_ASSAYS;PATIENT_DEATH_REASON;PATIENT_DISPLAY_NAME;PATIENT_ISABL_ID;PATIENT_NOTES;PATIENT_TO_UNDERGO_SURGERY,6
+patients_related,"PATIENTS-related clinical, molecular, or pathological attributes",PATIENTS_IN_GROUP0;PATIENTS_IN_GROUP1;PATIENTS_IN_GROUP2;PATIENTS_IN_GROUP3;PATIENTS_IN_GROUP4;PATIENTS_IN_GROUP5;PATIENTS_IN_GROUP6,7
+pax_fusion,Clinical or molecular attribute related to pax fusion,PAX_FUSION,1
+pb_albumin_level,Clinical or molecular attribute related to pb albumin level,PB_ALBUMIN_LEVEL,1
+pb_alt_level,Clinical or molecular attribute related to pb alt level,PB_ALT_LEVEL,1
+pb_ast_level,Clinical or molecular attribute related to pb ast level,PB_AST_LEVEL,1
+pb_blast,Clinical or molecular attribute related to pb blast,PB_BLAST,1
+pc_rplnd,Clinical or molecular attribute related to pc rplnd,PC_RPLND,1
+pci,Clinical or molecular attribute related to pci,PCI,1
+pcr,Clinical or molecular attribute related to pcr,PCR,1
+pcr_primer_pairs,Clinical or molecular attribute related to pcr primer pairs,PCR_PRIMER_PAIRS,1
+pd1_related,"PD1-related clinical, molecular, or pathological attributes",PD1_INHIBITOR;PD1_INHIBITOR_CONCURRENTLY_WITH_BCNU/CCNU;PD1_INHIBITOR_CONCURRENTLY_WITH_BEV;PD1_INHIBITOR_CONCURRENTLY_WITH_DC_VAX;PD1_INHIBITOR_CONCURRENTLY_WITH_HYDROXYUREA;PD1_INHIBITOR_CONCURRENTLY_WITH_NOVO-TTF;PD1_INHIBITOR_CONCURRENTLY_WITH_TEMODAR;PD1_INHIBITOR_STARTED_FOR_PD;PD1_INHIBITOR_WITH_CELECOXIB;PD1_INHIBITOR_WITH_IMATINIB,10
+pd_inf,Clinical or molecular attribute related to pd inf,PD_INF,1
+pdl1_related,"PDL1-related clinical, molecular, or pathological attributes",PDL1_EXP;PDL1_EXPRESSION;PDL1_POSITIVE_1PERCENT;PDL1_POSITIVE_5PERCENT;PDL1_SCORE;PDL1_TISSUE_SITE,6
+pdtc_definition,Clinical or molecular attribute related to pdtc definition,PDTC_DEFINITION,1
+pdx_sample_days_from_diagnosis,Temporal measurement or date for pdx sample days from diagnosis,PDX_SAMPLE_DAYS_FROM_DIAGNOSIS,1
+ped_ind,Clinical or molecular attribute related to ped ind,PED_IND,1
+pelvic_extension_comment,Clinical or molecular attribute related to pelvic extension comment,PELVIC_EXTENSION_COMMENT,1
+pelvis_fsm,Clinical or molecular attribute related to pelvis fsm,PELVIS_FSM,1
+percent_related,"PERCENT-related percentage, fraction, or proportion measurement",PERCENT_CHANGE_BY_PET;PERCENT_CHANGE_BY_RECIST;PERCENT_GLEASON_PATTERN_4_OR_5;PERCENT_LYMPHOCYTE_INFILTRATION;PERCENT_TUMOR_CELLS;PERCENT_TUMOR_CELLS_RELAPSE;PERCENT_TUMOR_NUCLEI;PERCENT_TUMOR_VS_STROMA,8
+percentage_necrosis,"Percentage, fraction, or ratio for percentage necrosis",PERCENTAGE_NECROSIS,1
+performance_related,"PERFORMANCE-related clinical status, score, or measurement",PERFORMANCE_STATUS;PERFORMANCE_STATUS_DAYS_TO;PERFORMANCE_STATUS_OTHER_TIMING;PERFORMANCE_STATUS_TIMING,4
+perineural_invasion,Clinical or molecular attribute related to perineural invasion,PERINEURAL_INVASION,1
+peripheral_blood_wbc,Clinical or molecular attribute related to peripheral blood wbc,PERIPHERAL_BLOOD_WBC,1
+peritoneal_washing,Clinical or molecular attribute related to peritoneal washing,PERITONEAL_WASHING,1
+persistant_disease_tumor_studied,Clinical or molecular attribute related to persistant disease tumor studied,PERSISTANT_DISEASE_TUMOR_STUDIED,1
+person_neoplasm_status,Patient neoplasm cancer status at clinical assessment,PERSON_NEOPLASM_CANCER_STATUS,1
+personal_history,Clinical or molecular attribute related to personal history,PERSONAL_HISTORY,1
+pet_related,"PET-related clinical, molecular, or pathological attributes",PET_BEST_RESPONSE;PET_RESPONDER;PET_TBR,3
+pf_months,Temporal measurement or date for pf months,PF_MONTHS,1
+pf_status,Clinical or pathological status for pf status,PF_STATUS,1
+pfs,Clinical or molecular attribute related to pfs,PFS,1
+pfs_months,Progression-free survival duration in months without disease progression,IO_PFS_MONTHS_START_OF_IO_TO_POD;PFS_MONTHS;PFS_MONTHS_FIRST_LINE_TX;PLATINUM_PFS_MONTHS,4
+pfs_related,"PFS-related clinical, molecular, or pathological attributes",PFS_CENSOR;PFS_DATE;PFS_EVENT;PFS_IO;PFS_SORAFENIB_TREATMENT,5
+pfs_status,Progression-free survival status indicating progression or progression-free state,IO_PFS_STATUS;PFS_STATUS;PFS_STATUS_IO;PFS_STATUS_SORAFENIB_TREATMENT;PLATINUM_PFS_STATUS,5
+pharm_related,"PHARM-related clinical, molecular, or pathological attributes",PHARM_TX_MITOTANE_FOR_MACRO_DISEASE;PHARM_TX_MITOTANE_INDICATOR;PHARM_TX_MITOTANE_THERAPUTIC_AT_PROG;PHARM_TX_MITOTANE_THERAPUTIC_AT_REC;PHARM_TX_MITOTANE_THERAPUTIC_LEVELS;PHARM_TX_MITOTANE_THERAPUTIC_MACRO,6
+pharmaceutical_therapy,Systemic drug therapy including chemotherapy and targeted agents,ADJUVANT_CHEMO;ADJUVANT_CHEMOTHERAPY;ADJUVANT_CHEMO_REGIMEN;AGE_AT_CHEMOTHERAPY_START;AGE_AT_CHEMOTHERAPY_STOP;ALKYLATING_CHEMOTHERAPY;ANY_LINE_CHEMO;BEST_RESPONSE_CHEMOTHERAPY;BEST_RESPONSE_CHEMOTHERAPY_AND_IMMUNOTHERAPY;CHEMOTHERAPY;CHEMOTHERAPY+IMMUNOTHERAPY;CHEMOTHERAPY_AGENTS;CHEMOTHERAPY_PRIOR_SAMPLE_ACQUIRED;CHEMOTHERAPY_TYPE;CHEMO_CONCURRENT_COURSE;CHEMO_CONCURRENT_DOSE;CHEMO_CONCURRENT_FRACTIONS_TOTAL;CHEMO_CONCURRENT_REASON_NOT_GIVEN;CHEMO_CONCURRENT_REASON_NOT_OTHER;CHEMO_CONCURRENT_TYPE;CHEMO_CONCURRENT_TYPE_OTHER;CHEMO_CYCLES;CHEMO_DETAILS;CHEMO_EXP_SEQ_SPECIMEN;CHEMO_FIRST_LINE;CHEMO_OTHER;CHEMO_OTHER_CYCLES;CHEMO_REGIMEN_CATEGORY;CHEMO_RESISTANT;CHEMO_SURVIVAL;CHEMO_TX;CONCURRENT_CHEMOTHERAPY;CRT_CHEMOAGENT;CUMULATIVE_CHEMO;FIRSTLINE_CHEMO_GROUP;GYN_DIAGNOSIS_CHEMO_INTENT_DESCRIPTION;IPCHEMO_FIRST_CRS;LINE_OBR_CHEMO;LINE_OBR_CHEMO_G;NEOADJUVANT_CHEMO;NEOADJUVANT_CHEMOTHERAPY;NEOADJ_CHEMO;NEOADJ_CHEMOAGENT;NEOADJ_CHEMOCYCLES;NUM_LINES_CHEMO;PHARMACEUTICAL_TX_ADJUVANT;POST_SAMPLE_CHEMOTHERAPY;PRD_CHEMOTHERAPY;PRE_SAMPLE_CHEMOTHERAPY;PRIOR_ADJUVANT_CHEMO;PRIOR_INTRAVESICAL_CHEMOTHERAPY;PRIOR_TREATMENT_OF_CYTOTOXIC_CHEMOTHERAPY;RADIATION_OR_CHEMOTHERAPY;R_CHOP_LIKE_CHEMO;SALVAGE_CHEMO;SPECIMEN_COLLECTION_PRE_OR_POST_CHEMO;SURVIVAL_FROM_FIRST_CHEMOTHERAPY;SYSTEMIC_CHEMO;SYSTEMIC_THERAPY;TREATMENT_CHEMOTHERAPY,60
+phase,Clinical or molecular attribute related to phase,PHASE,1
+pheochromocytoma_or_paraganglioma,Clinical or molecular attribute related to pheochromocytoma or paraganglioma,PHEOCHROMOCYTOMA_OR_PARAGANGLIOMA,1
+phosphoprotein,Clinical or molecular attribute related to phosphoprotein,PHOSPHOPROTEIN,1
+pi3k,Clinical or molecular attribute related to pi3k,PI3K,1
+pi3k_related,"PI3K-related clinical, molecular, or pathological attributes",PI3K_AKT1;PI3K_AKT2;PI3K_AKT3;PI3K_DEPDC5;PI3K_DEPTOR;PI3K_INPP4B;PI3K_MAPKAP1;PI3K_MLST8;PI3K_MTOR;PI3K_NPRL2;PI3K_NPRL3;PI3K_PATHWAY;PI3K_PDK1;PI3K_PIK3CA;PI3K_PIK3CB;PI3K_PIK3R1;PI3K_PIK3R2;PI3K_PPP2R1A;PI3K_PTEN;PI3K_RHEB;PI3K_RICTOR;PI3K_RPS6;PI3K_RPS6KB1;PI3K_RPTOR;PI3K_STK11;PI3K_TSC1;PI3K_TSC2,27
+pik3ca_related,PIK3CA-related genetic mutations or molecular alterations,PIK3CA_MUTATION;PIK3CA_MUT_PRE_TREATMENT_TUMOR;PIK3CA_PATHWAY_ALTERATION_STATUS;PIK3CA_PRE_TREATMENT_TUMOR;PIK3CA_PROTEIN_CODING,5
+pik3r1_related,"PIK3R1-related clinical status, score, or measurement",PIK3R1_LOSS_STATUS;PIK3R1_STATUS,2
+pipeline_version,Clinical or molecular attribute related to pipeline version,PIPELINE_VERSION,1
+platelet_related,"PLATELET-related clinical, molecular, or pathological attributes",PLATELET_COUNT;PLATELET_COUNT_PRERESECTION;PLATELET_NORM_RANGE_LOWER;PLATELET_NORM_RANGE_UPPER,4
+platform,"Sequencing platform, technology, or instrument used",PLATFORM;SECONDARY_PLATFORM;SEQUENCING_PLATFORM,3
+platinum_related,"PLATINUM-related clinical, molecular, or pathological attributes",PLATINUM_BEST_RESPONSE;PLATINUM_GERMLINE_TESTED;PLATINUM_HRD_MUTATION;PLATINUM_LST_SCORE;PLATINUM_STATUS;PLATINUM_TX,6
+pleomorphism_score,Calculated score or index for pleomorphism score,PLEOMORPHISM_SCORE,1
+pleura_related,PLEURA-related temporal information or time measurements,PLEURA_MONTHS;PLEURA_STATUS,2
+pleural_invasion,Clinical or molecular attribute related to pleural invasion,PLEURAL_INVASION,1
+ploidy,Clinical or molecular attribute related to ploidy,PLOIDY,1
+ploidy_absolute,Clinical or molecular attribute related to ploidy absolute,PLOIDY_ABSOLUTE,1
+plt,Clinical or molecular attribute related to plt,PLT,1
+pms2,Clinical or molecular attribute related to pms2,PMS2,1
+pn_category,Classification or category for pn category,PN_CATEGORY,1
+pn_status,Clinical or pathological status for pn status,PN_STATUS,1
+pni,Clinical or molecular attribute related to pni,PNI,1
+poar_combined_ctla_pd1,Clinical or molecular attribute related to poar combined ctla pd1,POAR_COMBINED_CTLA_PD1,1
+pod_first_line,Clinical or molecular attribute related to pod first line,POD_FIRST_LINE,1
+pole_impact,Clinical or molecular attribute related to pole impact,POLE_IMPACT,1
+polya_arv7_srpm,Clinical or molecular attribute related to polya arv7 srpm,POLYA_ARV7_SRPM,1
+polyps_related,"POLYPS-related clinical, molecular, or pathological attributes",POLYPS_HISTORY;POLYPS_PRESENT,2
+population,Clinical or molecular attribute related to population,POPULATION,1
+portal_vein_invasion,Clinical or molecular attribute related to portal vein invasion,PORTAL_VEIN_INVASION,1
+pos_related,"POS-related clinical, molecular, or pathological attributes",POS_ARCHER;POS_CYTOGENETICS;POS_IMPACT;POS_LYMPH_NODE_LOCATION;POS_METHOD,5
+positive_related,"POSITIVE-related clinical, molecular, or pathological attributes",POSITIVE_LYMPH_NODE;POSITIVE_MARGIN,2
+post_related,"POST-related clinical, molecular, or pathological attributes",POST_CTLA4;POST_MAPK_TX;POST_ORCHI_AFP;POST_ORCHI_HCG;POST_ORCHI_LDH;POST_ORCHI_LH;POST_ORCHI_LYMPH_NODE_DISSECTION;POST_ORCHI_TESTOSTERONE;POST_SAMPLE_TARGETED;POST_SAMPLE_TX,10
+postcrt_pathological_ln,Clinical or molecular attribute related to postcrt pathological ln,POSTCRT_PATHOLOGICAL_LN,1
+postoperative_tx,Clinical or molecular attribute related to postoperative tx,POSTOPERATIVE_TX,1
+pr_clinical_status,Clinical or pathological status for pr clinical status,PR_CLINICAL_STATUS,1
+pr_pct_primary,Clinical or molecular attribute related to pr pct primary,PR_PCT_PRIMARY,1
+pr_pgr,Clinical or molecular attribute related to pr pgr,PR_PGR,1
+pr_positivity_define_method,Clinical or molecular attribute related to pr positivity define method,PR_POSITIVITY_DEFINE_METHOD,1
+pr_positivity_ihc_intensity_score,Calculated score or index for pr positivity ihc intensity score,PR_POSITIVITY_IHC_INTENSITY_SCORE,1
+pr_positivity_scale_other,Clinical or molecular attribute related to pr positivity scale other,PR_POSITIVITY_SCALE_OTHER,1
+pr_positivity_scale_used,Clinical or molecular attribute related to pr positivity scale used,PR_POSITIVITY_SCALE_USED,1
+pr_status,Clinical or pathological status for pr status,PR_STATUS,1
+pr_status_by_ihc,Clinical or pathological status for pr status by ihc,PR_STATUS_BY_IHC,1
+pr_status_ihc_percent_positive,Clinical or pathological status for pr status ihc percent positive,PR_STATUS_IHC_PERCENT_POSITIVE,1
+pr_status_primary,Clinical or pathological status for pr status primary,PR_STATUS_PRIMARY,1
+prd_related,"PRD-related clinical, molecular, or pathological attributes",PRD_CURRENT_LOCATION;PRD_DIAGNOSIS_LOC;PRD_DIAGNOSIS_MET_ADV;PRD_EVER_LOCATION;PRD_EXP_CLINICAL_TRIAL;PRD_FAMILY_HISTORY;PRD_LOCATION_AT_ENROLLMENT;PRD_OTHER_CANCER;PRD_OTHER_CANCER_LIST;PRD_PROSTATECTOMY;PRD_SURGERY;PRD_SURGERY_CLEAN_MARGINS;PRD_TREATED_AT_ENROLLMENT,13
+pre_related,"PRE-related clinical, molecular, or pathological attributes",PRE_ORCHI_AFP;PRE_ORCHI_HCG;PRE_ORCHI_LDH;PRE_ORCHI_LH;PRE_ORCHI_TESTOSTERONE;PRE_SAMPLE_TARGETED;PRE_SAMPLE_TX,7
+precrt_ajcc_classification,Classification or category for precrt ajcc classification,PRECRT_AJCC_CLASSIFICATION,1
+predicted_neoantigen_burden,Clinical or molecular attribute related to predicted neoantigen burden,PREDICTED_NEOANTIGEN_BURDEN,1
+pregnancies_related,"PREGNANCIES-related clinical, molecular, or pathological attributes",PREGNANCIES_COUNT_ECTOPIC;PREGNANCIES_COUNT_INDUCED_ABORTION;PREGNANCIES_COUNT_LIVE_BIRTH;PREGNANCIES_COUNT_STILLBIRTH;PREGNANCIES_COUNT_TOTAL;PREGNANCIES_FULL_TERM_COUNT,6
+pregnant_at_diagnosis,Clinical or molecular attribute related to pregnant at diagnosis,PREGNANT_AT_DIAGNOSIS,1
+preoperative_psa,Clinical or molecular attribute related to preoperative psa,PREOPERATIVE_PSA,1
+presentation,Clinical or molecular attribute related to presentation,PRESENTATION,1
+preservation_method,"Sample preservation method: FFPE, frozen, or fresh tissue",IS_FFPE;OCT_EMBEDDED;SPECIMEN_PRESERVATION;SPECIMEN_PRESERVATION_TYPE,4
+pretreated,Clinical or molecular attribute related to pretreated,PRETREATED,1
+pretreatment_history,Clinical or molecular attribute related to pretreatment history,PRETREATMENT_HISTORY,1
+previous_related,"PREVIOUS-related clinical, molecular, or pathological attributes",PREVIOUS_MAPKI;PREVIOUS_TREATMENT,2
+primary_related,"PRIMARY-related clinical, molecular, or pathological attributes",PRIMARY_AT_DX_COUNT;PRIMARY_CYTOGENETIC_CODE;PRIMARY_DEPTH;PRIMARY_EXOME;PRIMARY_LYMPH_NODE_PRESENTATION_ASSESSMENT;PRIMARY_MELANOMA_KNOWN_DX;PRIMARY_MELANOMA_MITOTIC_RATE;PRIMARY_MELANOMA_SKIN_TYPE;PRIMARY_MELANOMA_TUMOR_ULCERATION;PRIMARY_MET;PRIMARY_MITOSES;PRIMARY_MULTIPLE_AT_DX;PRIMARY_RPLND;PRIMARY_SURGERY;PRIMARY_TISSUE;PRIMARY_TUMOR_LOCALIZATION_TYPE;PRIMARY_TUMOR_LOCATION;PRIMARY_TUMOR_PATHOLOGIC_SPREAD;PRIMARY_TUMOR_SIZE;PRIMARY_TYPE;PRIMARY_VS_SECONDARY,21
+prior_malignancy,History of prior cancer diagnosis or malignancy,HISTORY_OTHER_MALIGNANCY;PRIOR_DIAGNOSIS;PRIOR_MALIGNANCY_NON_MYELOID;PRIOR_MALIGNANCY_TYPE,4
+prior_related,"PRIOR-related clinical, molecular, or pathological attributes",PRIOR_BREAST_PRIMARY;PRIOR_CANCER;PRIOR_CTLA4;PRIOR_DX;PRIOR_GLIOMA;PRIOR_LINES;PRIOR_MAPK_TX;PRIOR_MDS;PRIOR_MDSMPN;PRIOR_MDS_MORE_THAN_TWO_MTHS;PRIOR_MDS_MPN;PRIOR_MDS_MPN_MORE_THAN_TWO_MTHS;PRIOR_MGUS;PRIOR_MKI;PRIOR_MPN;PRIOR_MPN_MORE_THAN_TWO_MONTHS;PRIOR_SYSTEMIC_THERAPIES;PRIOR_TREATMENT;PRIOR_TUMOR;PRIOR_TX_TO_IMPACT_SAMPLE,20
+procedure,Clinical or molecular attribute related to procedure,PROCEDURE,1
+procedure_type,Classification or category for procedure type,PROCEDURE_TYPE,1
+prog_related,"PROG-related clinical, molecular, or pathological attributes",PROG_DEATH;PROG_DEATH_TIME_YRS;PROG_EVAL_C,3
+progesterone_related,"PROGESTERONE-related clinical, molecular, or pathological attributes",PROGESTERONE_RECEPTOR;PROGESTERONE_RECEPTOR_%,2
+prognostic_model,Clinical or molecular attribute related to prognostic model,PROGNOSTIC_MODEL,1
+project_code,Clinical or molecular attribute related to project code,PROJECT_CODE,1
+protein,Clinical or molecular attribute related to protein,PROTEIN,1
+protein_coding_rhoa,Clinical or molecular attribute related to protein coding rhoa,PROTEIN_CODING_RHOA,1
+proteomics_related,"PROTEOMICS-related clinical, molecular, or pathological attributes",PROTEOMICS_10PLEX_ID;PROTEOMICS_OCT;PROTEOMICS_TMT_BATCH;PROTEOMICS_TMT_CHANNEL;PROTEOMICS_TMT_LABEL;PROTEOMICS_TMT_PLEX;PROTEOMICS_TUMOR_NORMAL,7
+prothrom_time_inr_norm_range_lower,Temporal measurement or date for prothrom time inr norm range lower,PROTHROM_TIME_INR_NORM_RANGE_LOWER,1
+prothrombin_related,PROTHROMBIN-related temporal information or time measurements,PROTHROMBIN_TIME_INR_AT_PROCUREMENT;PROTHROMBIN_TIME_NORM_RANGE_UPPER,2
+proto_num,Numeric count or quantity for proto num,PROTO_NUM,1
+protocol,Clinical or molecular attribute related to protocol,PROTOCOL,1
+protocol_and_treatment_arm,Clinical or molecular attribute related to protocol and treatment arm,PROTOCOL_AND_TREATMENT_ARM,1
+psa,Clinical or molecular attribute related to psa,PSA,1
+psa_most_recent_results,Clinical or molecular attribute related to psa most recent results,PSA_MOST_RECENT_RESULTS,1
+psc,Clinical or molecular attribute related to psc,PSC,1
+pstage_category,Classification or category for pstage category,PSTAGE_CATEGORY,1
+pt_category,Classification or category for pt category,PT_CATEGORY,1
+pt_notes,Clinical or molecular attribute related to pt notes,PT_NOTES,1
+pten_related,"PTEN-related clinical, molecular, or pathological attributes",PTEN_CNA;PTEN_CYT;PTEN_MUTATION;PTEN_NUC,4
+ptpn11_mutation,Genetic mutation or variant information for ptpn11 mutation,PTPN11_MUTATION,1
+pulmonary_function_test_indicator,Clinical or molecular attribute related to pulmonary function test indicator,PULMONARY_FUNCTION_TEST_INDICATOR,1
+putative_driver_mutation,Genetic mutation or variant information for putative driver mutation,PUTATIVE_DRIVER_MUTATION,1
+qualifying_mut,Clinical or molecular attribute related to qualifying mut,QUALIFYING_MUT,1
+race,Patient self-reported or documented racial category,PRD_RACE;RACE,2
+race_related,"RACE-related clinical, molecular, or pathological attributes",RACE_CATEGORIZED;RACE_CATEGORY,2
+rad51c_cna,Clinical or molecular attribute related to rad51c cna,RAD51C_CNA,1
+radiation_therapy,"Radiation therapy status, type, or anatomical site treated",ACQUIRED_AFTER_RADIOTHERAPY;ADJUVANT_RADIATION_THERAPY;ADJUVANT_XRT;ADJ_XRT;AGE_AT_CHEMOTHERAPY_START;AGE_AT_RADIATION_START;AGE_AT_RADIATION_STOP;AGE_AT_SEQ_REPORT;ANALYSIS_COHORT;BIOPSY_COHORT;COHORT;COMPLETED_RADIATION_DOSE;COMPLETED_TOTAL_RADIATION_DOSE;DOSE_MG_DAY_STEROID_PD1_START;DOSE_OF_RE-IRRADIATION;DRUG_START;HISTORY_RADIATION_EXPOSURE;KPS_AT_PD1_INHIBITOR_START;METASTATIC_RADIATION_THERAPY;NEOADJUVANT_XRT;PD1_INHIBITOR_CONCURRENTLY_WITH_RE-IRRADIATION;POST_SAMPLE_XRT;PRD_OTHER_CANCER_RADIATION;PRD_RADIATION;PRD_RADIATION_SURGERY;PRE_SAMPLE_XRT;PRIMARY_RADIATION_THERAPY;PRIORRADIATIONFOROTHERCANCER;PRIOR_MALIGNANCY_RADIATION_TX;RADIATION;RADIATION_DOSE;RADIATION_DOSE_PELVIC_NODES_PRIMARY_TUMOR.;RADIATION_OR_CHEMOTHERAPY;RADIATION_OTHER;RADIATION_SITE;RADIATION_THERAPY;RADIATION_THERAPY_DOSE_PARAAORTIC_NODES;RADIATION_THERAPY_XRT_TYPE;RADIATION_TREATMENT_ADJUVANT;RADIATION_TYPE;RADIATION_TYPE_OTHER;RADIOTHERAPY;RADIOTHERAPY_FRACTIONS;RADIOTHERAPY_TX;RADIO_THERAPY;TREATMENT_PALLIATIVE_RADIATION;TREATMENT_RADIATION;YEAR_NAT_START,48
+radicality,Clinical or molecular attribute related to radicality,RADICALITY,1
+raf1_braf_status,Clinical or pathological status for raf1 braf status,RAF1_BRAF_STATUS,1
+raf_ras_status,Clinical or pathological status for raf ras status,RAF_RAS_STATUS,1
+ragnum_hypoxia_score,Numeric count or quantity for ragnum hypoxia score,RAGNUM_HYPOXIA_SCORE,1
+ralp,Clinical or molecular attribute related to ralp,RALP,1
+ralp_related,"RALP-related clinical, molecular, or pathological attributes",RALP_EXTRACAPSULAR_EXTENSION;RALP_MARGIN;RALP_NUMBER_POSITIVE_LN;RALP_PERINEURAL_INVASION;RALP_POSITIVE_LN;RALP_SEMINAL_VESICLES,6
+random_forest_sturm_cluster,Clinical or molecular attribute related to random forest sturm cluster,RANDOM_FOREST_STURM_CLUSTER,1
+rash,Clinical or molecular attribute related to rash,RASH,1
+ratio_related,RATIO-related genetic mutations or molecular alterations,RATIO_OF_CLONAL_TO_ALL_MUTATIONS;RATIO_OF_CLONAL_TO_CLONAL_AND_SUBCLONAL,2
+rb1_related,"RB1-related clinical, molecular, or pathological attributes",RB1_CNA;RB1_MUT;RB1_MUTATION;RB1_MUTATION_STATUS,4
+reason_related,"REASON-related clinical, molecular, or pathological attributes",REASON_FOR_TX_DISCONTINUATION;REASON_STOP,2
+rec_related,"REC-related clinical, molecular, or pathological attributes",REC_AFTER_FIRST_LINE;REC_GREATER_THAN_1_DOT_5,2
+received_related,"RECEIVED-related clinical, molecular, or pathological attributes",RECEIVED_IO_AFTER_1ST_LINE;RECEIVED_TARGETED_TX,2
+receptor_status_primary,Clinical or pathological status for receptor status primary,RECEPTOR_STATUS_PRIMARY,1
+recist,Clinical or molecular attribute related to recist,RECIST,1
+recist_related,"RECIST-related clinical, molecular, or pathological attributes",RECIST_BURDEN_OF_DISEASE;RECIST_RESPONSE,2
+rectal_location,Clinical or molecular attribute related to rectal location,RECTAL_LOCATION,1
+recur_eval_c,Clinical or molecular attribute related to recur eval c,RECUR_EVAL_C,1
+recurrent_related,"RECURRENT-related clinical, molecular, or pathological attributes",RECURRENT_DISEASE_TUMOR_STUDIED;RECURRENT_FREE_INTERVAL_MONTHS,2
+reflux_history,Clinical or molecular attribute related to reflux history,REFLUX_HISTORY,1
+region_of_origin,Clinical or molecular attribute related to region of origin,REGION_OF_ORIGIN,1
+regional_related,"REGIONAL-related clinical, molecular, or pathological attributes",REGIONAL_LYMPH_NODE;REGIONAL_LYMPH_NODES;REGIONAL_VS_PRIMARY,3
+relapse_related,"RELAPSE-related percentage, fraction, or proportion measurement",RELAPSE_PERCENT_NECROSIS;RELAPSE_PERCENT_STROMA;RELAPSE_SEQUENCED,3
+related_related,"RELATED-related clinical, molecular, or pathological attributes",RELATED_SYMPTOM_FIRST_PRESENT;RELATED_TUMORS_OUTSIDE_ADRENAL_GLANDS,2
+relation_testicular_cancer,Clinical or molecular attribute related to relation testicular cancer,RELATION_TESTICULAR_CANCER,1
+relative_family_cancer_hx_text,Clinical or molecular attribute related to relative family cancer hx text,RELATIVE_FAMILY_CANCER_HX_TEXT,1
+relevant_medical_history,Clinical or molecular attribute related to relevant medical history,RELEVANT_MEDICAL_HISTORY,1
+religion,Clinical or molecular attribute related to religion,RELIGION,1
+resectable,Clinical or molecular attribute related to resectable,RESECTABLE,1
+resection,Clinical or molecular attribute related to resection,RESECTION,1
+resection_timing,Clinical or molecular attribute related to resection timing,RESECTION_TIMING,1
+residual_nodal_disease,Clinical or molecular attribute related to residual nodal disease,RESIDUAL_NODAL_DISEASE,1
+residual_tumor,Residual tumor presence after surgical resection or treatment,RESIDUAL_TUMOR;TUMOR_RESIDUAL_DISEASE,2
+responded_second_line,Clinical or molecular attribute related to responded second line,RESPONDED_SECOND_LINE,1
+response,Treatment response or clinical outcome for response,RESPONSE,1
+response_related,"RESPONSE-related clinical, molecular, or pathological attributes",RESPONSE_DURATION;RESPONSE_DURATION_TO_INDUCTION_TX;RESPONSE_PCR_OR_CCR;RESPONSE_PCR_OR_CCR_TWO_YEARS;RESPONSE_TO_INDUCTION_TX,5
+ret,Clinical or molecular attribute related to ret,RET,1
+ret_related,"RET-related clinical, molecular, or pathological attributes",RET_AF;RET_ALT;RET_DRIVER;RET_FUSION;RET_PROTEIN,5
+retrospective_or_prospective,Clinical or molecular attribute related to retrospective or prospective,RETROSPECTIVE_OR_PROSPECTIVE,1
+reviewed_related,"REVIEWED-related clinical, molecular, or pathological attributes",REVIEWED_GLEASON;REVIEWED_GLEASON_CATEGORY;REVIEWED_GLEASON_SUM,3
+rfs_related,RFS-related temporal information or time measurements,RFS_MONTHS;RFS_STATUS,2
+rhoa_mutation,Genetic mutation or variant information for rhoa mutation,RHOA_MUTATION,1
+ringed_sideroblasts,Clinical or molecular attribute related to ringed sideroblasts,RINGED_SIDEROBLASTS,1
+risk_related,"RISK-related clinical, molecular, or pathological attributes",RISK_CYTO;RISK_GROUP;RISK_MOLECULAR,3
+rlc_greater_than_17_dot_5,Clinical or molecular attribute related to rlc greater than 17 dot 5,RLC_GREATER_THAN_17_DOT_5,1
+rna,Clinical or molecular attribute related to rna,RNA,1
+rna_related,"RNA-related clinical, molecular, or pathological attributes",RNA_SEQUENCED;RNA_SEQ_ANALYSIS,2
+rnaseq_data,Clinical or molecular attribute related to rnaseq data,RNASEQ_DATA,1
+roh_response,Treatment response or clinical outcome for roh response,ROH_RESPONSE,1
+ros1_related,"ROS1-related clinical, molecular, or pathological attributes",ROS1_DRIVER;ROS1_FUSION;ROS1_PROTEIN,3
+rplnd_path,Clinical or molecular attribute related to rplnd path,RPLND_PATH,1
+rppa,Clinical or molecular attribute related to rppa,RPPA,1
+rppa_related,"RPPA-related clinical, molecular, or pathological attributes",RPPA_CLUSTER;RPPA_CLUSTER_EC;RPPA_CLUSTER_GEA;RPPA_CLUSTER_GEA_CIN;RPPA_CLUSTER_SCC,5
+rt_tx_reason_not_completed,Clinical or molecular attribute related to rt tx reason not completed,RT_TX_REASON_NOT_COMPLETED,1
+rt_tx_reason_not_completed_other,Clinical or molecular attribute related to rt tx reason not completed other,RT_TX_REASON_NOT_COMPLETED_OTHER,1
+rt_tx_total_dose_to_pelvis,Medication dose or dosage for rt tx total dose to pelvis,RT_TX_TOTAL_DOSE_TO_PELVIS,1
+rtk_ras,Clinical or molecular attribute related to rtk ras,RTK_RAS,1
+rubeosis,Clinical or molecular attribute related to rubeosis,RUBEOSIS,1
+runx1,Clinical or molecular attribute related to runx1,RUNX1,1
+salicylates,Clinical or molecular attribute related to salicylates,SALICYLATES,1
+sample_count,Number of samples collected per patient or timepoint,SAMPLE_COUNT,1
+sample_coverage,Mean sequencing coverage depth across targeted regions,COVERAGE_CONTROL;COVERAGE_MEAN;COVERAGE_NORMAL;COVERAGE_TUMOR;MEAN_TARGET_COVERAGE_NORMAL;MEAN_TARGET_COVERAGE_TUMOR,6
+sample_id,Unique sample or specimen identifier for biological material,CGH_SAMPLE_ID;EXOME_SAMPLE_ID;EXP_SAMPLE_ID;ICGC_SAMPLE_ID;OTHER_SAMPLE_ID;sampleId,6
+sample_related,"SAMPLE-related clinical, molecular, or pathological attributes",SAMPLE_ANNOTATION;SAMPLE_CLASS;SAMPLE_CODE;SAMPLE_COLLECTION_METHOD;SAMPLE_COLLECTION_SOURCE;SAMPLE_COLLECTION_TIMEPOINT;SAMPLE_CPS_SCORE;SAMPLE_DETAILED_SUBHISTOLOGIES;SAMPLE_DISPLAY_NAME;SAMPLE_NAME;SAMPLE_ORIGIN;SAMPLE_SITE;SAMPLE_SITE_SOURCE;SAMPLE_STATUS;SAMPLE_TESTED_CATEGORY;SAMPLE_TIMEPOINT;SAMPLE_TYPE_DETAIL;SAMPLE_TYPE_ID,18
+sample_site,Anatomical site or organ where sample was collected,CLASSIFICATION_OF_PRIMARY_SITE;DETAILED_METASTATIC_SITE;DETAILED_PRIMARY_SITE;DMT_PRIMARY_SITE;DMT_PRIMARY_SITE_CLASSIFIED;MEDR_PRIMARY_SITE;METASTATIC_SITE;METASTATIC_SITE_OTHER;METASTATIC_SITE_PATIENT;PRIMARY_SITE;PRIMARY_SITE_NOTES;PRIMARY_SITE_OTHER;PRIMARY_SITE_PATIENT;PRIMARY_SITE_PROGRESSION;SIMPLIFIED_METASTATIC_SITE;SIMPLIFIED_TUMOR_SITE;SITE_OF_TUMOR_TISSUE;TUMOR_SITE;TUMOR_TISSUE_SITE;TUMOR_TISSUE_SITE_OTHER;TUMOR_TISSUE_SITE_PATIENT,21
+sample_type,"Sample type: primary tumor, metastasis, normal tissue, or recurrence",MIRNASEQ_SAMPLE_TYPE;RNASEQ_R1_SAMPLE_TYPE;RNASEQ_R2_SAMPLE_TYPE;SAMPLE_TYPE;SPECIMEN_TYPE;TISSUE_TYPE;WGS_NORMAL_SAMPLE_TYPE;WGS_TUMOR_SAMPLE_TYPE;WXS_NORMAL_SAMPLE_TYPE;WXS_TUMOR_SAMPLE_TYPE,10
+sample_weight,Sample or specimen weight at collection,SAMPLE_INITIAL_WEIGHT,1
+sarcomatoid_related,"SARCOMATOID-related clinical, molecular, or pathological attributes",SARCOMATOID_COMPONENT;SARCOMATOID_FEATURES;SARCOMATOID_PERCENT_OF_TUMOR,3
+sca_type,Classification or category for sca type,SCA_TYPE,1
+scc,Clinical or molecular attribute related to scc,SCC,1
+scc_cluster_icluster_and_smarca4,Clinical or molecular attribute related to scc cluster icluster and smarca4,SCC_CLUSTER_ICLUSTER_AND_SMARCA4,1
+sccsmg,Clinical or molecular attribute related to sccsmg,SCCSMG,1
+scens,Clinical or molecular attribute related to scens,SCENS,1
+scna_related,"SCNA-related clinical, molecular, or pathological attributes",SCNA_ANALYSIS;SCNA_CLUSTER;SCNA_CLUSTER_EC;SCNA_CLUSTER_GEA;SCNA_CLUSTER_GEA_CIN;SCNA_CLUSTER_SCC,6
+sct_in_first_cr,Clinical or molecular attribute related to sct in first cr,SCT_IN_FIRST_CR,1
+second_related,"SECOND-related clinical, molecular, or pathological attributes",SECOND_LINE_TC_OR_SURGERY;SECOND_PRIMARY_CANCER,2
+secondary_pathological_review,Clinical or molecular attribute related to secondary pathological review,SECONDARY_PATHOLOGICAL_REVIEW,1
+secondhand_related,"SECONDHAND-related clinical, molecular, or pathological attributes",SECONDHAND_SMOKE;SECONDHAND_SMOKE_EXPOSURE,2
+seizure_history,Clinical or molecular attribute related to seizure history,SEIZURE_HISTORY,1
+seminal_vesicle_invasion,Clinical or molecular attribute related to seminal vesicle invasion,SEMINAL_VESICLE_INVASION,1
+seqcap_ez_exome_version,Clinical or molecular attribute related to seqcap ez exome version,SEQCAP_EZ_EXOME_VERSION,1
+sequenced,Clinical or molecular attribute related to sequenced,SEQUENCED,1
+sequenced_center,Clinical or molecular attribute related to sequenced center,SEQUENCED_CENTER,1
+sequencing,Clinical or molecular attribute related to sequencing,SEQUENCING,1
+sequencing_type,Classification or category for sequencing type,SEQUENCING_TYPE,1
+serum_related,"SERUM-related clinical, molecular, or pathological attributes",SERUM_ALBUMIN_NORM_RANGE_LOWER;SERUM_ALBUMIN_NORM_RANGE_UPPER;SERUM_ALBUMIN_PRERESECTION;SERUM_ALPHA_FOETO_PROTEIN;SERUM_CALCIUM_LEVEL;SERUM_LACTATE_DEHYDROGENASE;SERUM_MARKERS;SERUM_PSA,8
+setd2_mutation,Genetic mutation or variant information for setd2 mutation,SETD2_MUTATION,1
+sex,"Biological sex or gender of patient (male, female, other)",GENDER;NODES_EX;SEX,3
+sex_dmt,Clinical or molecular attribute related to sex dmt,SEX_DMT,1
+shortest_dimension,Clinical or molecular attribute related to shortest dimension,SHORTEST_DIMENSION,1
+sigclust_related,"SIGCLUST-related clinical, molecular, or pathological attributes",SIGCLUST_INTRINSIC_MRNA;SIGCLUST_UNSUPERVISED_MRNA,2
+signet_ring,Clinical or molecular attribute related to signet ring,SIGNET_RING,1
+silent_related,SILENT-related genetic mutations or molecular alterations,SILENT_MUTATION;SILENT_MUTATION_DENSITY;SILENT_PER_MB;SILENT_RATE,4
+sinusoid_invasion,Clinical or molecular attribute related to sinusoid invasion,SINUSOID_INVASION,1
+site,Clinical or molecular attribute related to site,SITE,1
+site_related,"SITE-related clinical, molecular, or pathological attributes",SITE_OF_FINDING;SITE_OF_PRIMARY_TUMOR_INCLUDING_UNKNOWN;SITE_OF_PRIMARY_TUMOR_KNOWN_PRIMARY_ONLY;SITE_OF_SPECIMEN;SITE_OF_TISSUE_BIOPSY;SITE_SEQUENCED;SITE_SUBTYPE1;SITE_SUBTYPE2;SITE_SUBTYPE3,9
+smoke status,Clinical or pathological status for smoke status,SMOKE STATUS,1
+smoker,Clinical or molecular attribute related to smoker,SMOKER,1
+smoker_pack_years,Temporal measurement or date for smoker pack years,SMOKER_PACK_YEARS,1
+smoking_history,"Smoking status, history, or pack-years of tobacco exposure",DOMINANT_SIGNATURE_FRACTION_WGS_NOTSMOKING;DOMINANT_SIGNATURE_WGS_NOTSMOKING_50PERC;MOLECULAR_SMOKING_SIGNATURE;PASSIVE_SMOKING;SMOKING;SMOKING_HISTORY;SMOKING_PACK_YEARS;SMOKING_SCORE;SMOKING_SCORE_CATEGORY;SMOKING_SCORE_WGS;SMOKING_SIGNATURE_COUNT;SMOKING_SIGNATURE_FRACTION;SMOKING_SIGNATURE_FRACTION_WGS;SMOKING_STATUS;SMOKING_YEAR_STARTED;SMOKING_YEAR_STOPPED;TOBACCO_SMOKING_HISTORY;TOBACCO_SMOKING_HISTORY_INDICATOR;TOBACCO_SMOKING_INTENSITY;TOBACCO_TYPE,20
+smp_related,SMP-related temporal information or time measurements,SMP_CRPC_MONTHS;SMP_OS_MOS,2
+sms,Clinical or molecular attribute related to sms,SMS,1
+snapshot_mutations,Genetic mutation or variant information for snapshot mutations,SNAPSHOT_MUTATIONS,1
+snomed,Clinical or molecular attribute related to snomed,SNOMED,1
+snp6,Clinical or molecular attribute related to snp6,SNP6,1
+snp_count,Numeric count or quantity for snp count,SNP_COUNT,1
+so_comments,Clinical or molecular attribute related to so comments,SO_COMMENTS,1
+somatic_status,"Somatic mutation classification: somatic, germline, or unknown",SOMATIC_STATUS,1
+sorafenib_treatment,Clinical or molecular attribute related to sorafenib treatment,SORAFENIB_TREATMENT,1
+source,Clinical or molecular attribute related to source,SOURCE,1
+source_related,"SOURCE-related clinical, molecular, or pathological attributes",SOURCE_CENTER;SOURCE_LAB;SOURCE_TYPE,3
+specific_related,"SPECIFIC-related clinical, molecular, or pathological attributes",SPECIFIC_DIAGNOSIS_AT_ACQUISITION;SPECIFIC_DIAGNOSIS_AT_INCLUSION;SPECIFIC_DX_AT_ACQUISITION_MDSMPN;SPECIFIC_DX_AT_INCLUSION;SPECIFIC_TUMOR_LOCATION,5
+specimen_related,"SPECIMEN-related clinical, molecular, or pathological attributes",SPECIMEN_GROUPS;SPECIMEN_SECOND_LONGEST_DIMENSION;SPECIMEN_SITE,3
+spink1_high,Clinical or molecular attribute related to spink1 high,SPINK1_HIGH,1
+splenomegaly,Clinical or molecular attribute related to splenomegaly,SPLENOMEGALY,1
+splice_related,"SPLICE-related clinical, molecular, or pathological attributes",SPLICE_SITE;SPLICE_SITE_INSERTION;SPLICE_SITE_SNP,3
+spop_mutation,Genetic mutation or variant information for spop mutation,SPOP_MUTATION,1
+spopl_cna,Clinical or molecular attribute related to spopl cna,SPOPL_CNA,1
+srs,Clinical or molecular attribute related to srs,SRS,1
+stage_related,"STAGE-related clinical, molecular, or pathological attributes",STAGE_4_DX;STAGE_AT_DRAW;STAGE_AT_HCC_DIAGNOSIS;STAGE_AT_PRESENTATION;STAGE_M;STAGE_N;STAGE_OF_HCC_SYSTEMIC;STAGE_T,8
+staging_related,"STAGING-related clinical, molecular, or pathological attributes",STAGING_SYSTEM;STAGING_SYSTEM_OTHER,2
+status,Clinical or pathological status for status,STATUS,1
+status_1p_19q,Clinical or pathological status for status 1p 19q,STATUS_1P_19Q,1
+steatosis,Clinical or molecular attribute related to steatosis,STEATOSIS,1
+stemness_score,Calculated score or index for stemness score,STEMNESS_SCORE,1
+stephanson_5yr_nomogram,Clinical or molecular attribute related to stephanson 5yr nomogram,STEPHANSON_5YR_NOMOGRAM,1
+steroids,Clinical or molecular attribute related to steroids,STEROIDS,1
+steroids_related,"STEROIDS-related clinical, molecular, or pathological attributes",STEROIDS_GT_10MG_DAILY;STEROIDS_WHEN_STARTED_PD1_INHIBITOR,2
+stime,Temporal measurement or date for stime,STIME,1
+stk11_related,"STK11-related clinical, molecular, or pathological attributes",STK11_DRIVER;STK11_MUTATION;STK11_MUTATION_STATUS;STK11_PROTEIN,4
+streoids_during_pd1_inhibitor,Clinical or molecular attribute related to streoids during pd1 inhibitor,STREOIDS_DURING_PD1_INHIBITOR,1
+stroma_score,Calculated score or index for stroma score,STROMA_SCORE,1
+stromal_related,"STROMAL-related percentage, fraction, or proportion measurement",STROMAL_FRACTION;STROMAL_SCORE,2
+strong_binding_neoantigens_per_mb,Clinical or molecular attribute related to strong binding neoantigens per mb,STRONG_BINDING_NEOANTIGENS_PER_MB,1
+structural_variants,Genetic mutation or variant information for structural variants,STRUCTURAL_VARIANTS,1
+study,Clinical or molecular attribute related to study,STUDY,1
+study_arm,Clinical or molecular attribute related to study arm,STUDY_ARM,1
+study_id,Study or cohort identifier for grouping related samples,ANALYSIS_COHORT;BIOPSY_COHORT;COHORT;CVR_TMB_COHORT_PERCENTILE;CVR_TMB_TT_COHORT_PERCENTILE;PATIENT_STUDY_ID;STUDY_ID;studyId,8
+sub_related,"SUB-related clinical, molecular, or pathological attributes",SUB_CLONES;SUB_SITE,2
+subclonal_genomic_fraction,"Percentage, fraction, or ratio for subclonal genomic fraction",SUBCLONAL_GENOMIC_FRACTION,1
+subgroup,Clinical or molecular attribute related to subgroup,SUBGROUP,1
+subsequent_related,"SUBSEQUENT-related clinical, molecular, or pathological attributes",SUBSEQUENT_CANCERS;SUBSEQUENT_RX,2
+substitution,Clinical or molecular attribute related to substitution,SUBSTITUTION,1
+subtype,"Cancer molecular, histological, or clinical subtype classification",ANATOMICAL_SUBTYPE;BREAST_CANCER_SUBTYPE;CANCER_IDENTIFICATION_RARE_SUBTYPE;CLAUDIN_SUBTYPE;DISEASE_SUBTYPE;DOMINANT_HISTOLOGICAL_SUBTYPE;EXPRESSION_SUBTYPE;GENOMICS_SUBTYPE;HISTOLOGICAL_SUBTYPE;HISTOLOGIC_SUBTYPE;HISTOLOGY_SUBTYPE;IDH_1P19Q_SUBTYPE;IDH_CODEL_SUBTYPE;IHC_SUBTYPE;LINEAGE_MOLECULAR_SUBTYPE;LINEAGE_SUBTYPE;LINEAGE_SUB_SUBTYPE;METHYLATION_SUBTYPE;MOLECULAR_SUBTYPE;MORPHOLOGY_SUBTYPE;NMF_SUBTYPE;ORIGINAL_SUBTYPE;PAM50_SUBTYPE;POLE_SUBTYPE;PREDOMINANT_HISTOLOGIC_SUBTYPE;PREDOM_HISTO_SUBTYPE;SUBTYPE;TRANSCRIPTOME_SUBTYPE;TUMOR_SUBTYPE,29
+subtype_related,"SUBTYPE-related clinical, molecular, or pathological attributes",SUBTYPE_ABBREVIATION;SUBTYPE_CONSENSUS;SUBTYPE_DETAILS;SUBTYPE_GROUP,4
+successful_ctdx_lung,Clinical or molecular attribute related to successful ctdx lung,SUCCESSFUL_CTDX_LUNG,1
+sun_exposure,Clinical or molecular attribute related to sun exposure,SUN_EXPOSURE,1
+supervised_dna_methylation_cluster,Clinical or molecular attribute related to supervised dna methylation cluster,SUPERVISED_DNA_METHYLATION_CLUSTER,1
+supplements,Clinical or molecular attribute related to supplements,SUPPLEMENTS,1
+supratentorial_localization,Clinical or molecular attribute related to supratentorial localization,SUPRATENTORIAL_LOCALIZATION,1
+surface_related,"SURFACE-related clinical, molecular, or pathological attributes",SURFACE_ANTIGENS;SURFACE_ANTIGENS_IMMUNOHISTOCHEMICAL_STAINS,2
+surgery,Clinical or molecular attribute related to surgery,SURGERY,1
+surgery_related,"SURGERY-related clinical, molecular, or pathological attributes",SURGERY NUMBER;SURGERY_ADVANCED_DISEASE;SURGERY_AT_DX;SURGERY_DATE_RELATIVE_TO_DX_MONTHS;SURGERY_FOR_POSITIVE_MARGINS;SURGERY_FOR_POSITIVE_MARGINS_OTHER;SURGERY_INDICATION;SURGERY_PROCEDURE;SURGERY_TYPE,9
+surgical_related,"SURGICAL-related clinical, molecular, or pathological attributes",SURGICAL_APPROACH_AT_DIAGNOSIS;SURGICAL_MARGIN;SURGICAL_PROCEDURE_FIRST,3
+survival,Clinical or molecular attribute related to survival,SURVIVAL,1
+survival_related,SURVIVAL-related temporal information or time measurements,SURVIVAL_AFTER_BIOPSY_MONTHS;SURVIVAL_DATA_FORM;SURVIVAL_STATUS;SURVIVAL_TIME,4
+suv,Clinical or molecular attribute related to suv,SUV,1
+svi,Clinical or molecular attribute related to svi,SVI,1
+sx_cep17_copy,Clinical or molecular attribute related to sx cep17 copy,SX_CEP17_COPY,1
+sx_er,Clinical or molecular attribute related to sx er,SX_ER,1
+sx_her2_copy,Clinical or molecular attribute related to sx her2 copy,SX_HER2_COPY,1
+sx_her2_ratio,"Percentage, fraction, or ratio for sx her2 ratio",SX_HER2_RATIO,1
+sx_her2fish,Clinical or molecular attribute related to sx her2fish,SX_HER2FISH,1
+sx_her2ihc,Clinical or molecular attribute related to sx her2ihc,SX_HER2IHC,1
+sx_her2overall,Clinical or molecular attribute related to sx her2overall,SX_HER2OVERALL,1
+sx_percent_er,"Percentage, fraction, or ratio for sx percent er",SX_PERCENT_ER,1
+sx_percent_pr,"Percentage, fraction, or ratio for sx percent pr",SX_PERCENT_PR,1
+sx_pr,Clinical or molecular attribute related to sx pr,SX_PR,1
+symp_related,"SYMP-related clinical status, score, or measurement",SYMP_CHANGES_MENTAL_STATUS;SYMP_CHANGES_MOTOR_MOVEMENT;SYMP_CHANGES_SENSORY;SYMP_CHANGES_VISUAL,4
+synchronous_tumor_histology_pct,Clinical or molecular attribute related to synchronous tumor histology pct,SYNCHRONOUS_TUMOR_HISTOLOGY_PCT,1
+synovial_related,"SYNOVIAL-related clinical status, score, or measurement",SYNOVIAL_SS18SSX_FUSION_STATUS;SYNOVIAL_SS18SSX_TESTING_METHOD,2
+syp,Clinical or molecular attribute related to syp,SYP,1
+systemic_treatment,Clinical or molecular attribute related to systemic treatment,SYSTEMIC_TREATMENT,1
+t_10_11_p11_2_q23,Clinical or molecular attribute related to t 10 11 p11 2 q23,T_10_11_P11_2_Q23,1
+t_11_19_q23_p13_1,Clinical or molecular attribute related to t 11 19 q23 p13 1,T_11_19_Q23_P13_1,1
+t_3_5_q25_q34,Clinical or molecular attribute related to t 3 5 q25 q34,T_3_5_Q25_Q34,1
+t_6_11_q27_q23,Clinical or molecular attribute related to t 6 11 q27 q23,T_6_11_Q27_Q23,1
+t_6_9,Clinical or molecular attribute related to t 6 9,T_6_9,1
+t_8_21,Clinical or molecular attribute related to t 8 21,T_8_21,1
+t_9_11_p22_q23,Clinical or molecular attribute related to t 9 11 p22 q23,T_9_11_P22_Q23,1
+t_cell_cluster,Clinical or molecular attribute related to t cell cluster,T_CELL_CLUSTER,1
+t_cells_cd4_memory_activated,Clinical or molecular attribute related to t cells cd4 memory activated,T_CELLS_CD4_MEMORY_ACTIVATED,1
+t_cells_cd4_memory_resting,Clinical or molecular attribute related to t cells cd4 memory resting,T_CELLS_CD4_MEMORY_RESTING,1
+t_cells_cd4_naive,Clinical or molecular attribute related to t cells cd4 naive,T_CELLS_CD4_NAIVE,1
+t_cells_cd8,Clinical or molecular attribute related to t cells cd8,T_CELLS_CD8,1
+t_cells_follicular_helper,Clinical or molecular attribute related to t cells follicular helper,T_CELLS_FOLLICULAR_HELPER,1
+t_cells_gamma_delta,Clinical or molecular attribute related to t cells gamma delta,T_CELLS_GAMMA_DELTA,1
+t_cells_regulatory_tregs,Clinical or molecular attribute related to t cells regulatory tregs,T_CELLS_REGULATORY_TREGS,1
+target_id,Clinical or molecular attribute related to target id,TARGET_ID,1
+targeted_related,"TARGETED-related clinical, molecular, or pathological attributes",TARGETED_SEQ;TARGETED_TX,2
+taxane_related,"TAXANE-related clinical status, score, or measurement",TAXANE_EXPOSURE_STATUS;TAXANE_TX,2
+tcf3_pbx1_status,Clinical or pathological status for tcf3 pbx1 status,TCF3_PBX1_STATUS,1
+tcga_related,"TCGA-related clinical, molecular, or pathological attributes",TCGA_PAN_CAN_IMMUNE_CLUSTERING;TCGA_RNA_CLUSTER;TCGA_SPECIMEN_DISTANT;TCGA_SPECIMEN_SITE,4
+telomere_related,"TELOMERE-related clinical, molecular, or pathological attributes",TELOMERE_LENGTH_ESTIMATE_IN_BLOOD_NORMAL_KB;TELOMERE_LENGTH_ESTIMATE_IN_TUMOR_KB;TELOMERE_MAINTENANCE,3
+telomeric_loh_mean_size,Clinical or molecular attribute related to telomeric loh mean size,TELOMERIC_LOH_MEAN_SIZE,1
+tert_related,"TERT-related clinical, molecular, or pathological attributes",TERT_ALKYLATING_TX;TERT_ANTHRACYCLINE_TX;TERT_ANTIMETABOLITE_TX;TERT_CARBOLATIN_TX;TERT_CISPLATIN_TX;TERT_CYTOTOXIC_TX;TERT_EXPRESSION_LOG2;TERT_EXPRESSION_STATUS;TERT_IO_TX;TERT_MICROTUBULE_TX;TERT_OTHER_CYTOTOXIC_TX;TERT_OXALIPLATIN_TX;TERT_PLATINUM_TX;TERT_PROMOTER_MUT;TERT_PROMOTER_MUTATION;TERT_PROMOTER_MUTATION_STATUS;TERT_PROMOTER_STATUS;TERT_TARGETED_TX;TERT_TAXANE_TX;TERT_TOPO_II_INH_TX;TERT_TOPO_I_INH_TX,21
+testes_site_of_relapse,Clinical or molecular attribute related to testes site of relapse,TESTES_SITE_OF_RELAPSE,1
+testicular_involvement,Clinical or molecular attribute related to testicular involvement,TESTICULAR_INVOLVEMENT,1
+testis_related,"TESTIS-related clinical, molecular, or pathological attributes",TESTIS_TUMOR_MACROEXTENT;TESTIS_TUMOR_MACROEXTENT_OTHER;TESTIS_TUMOR_MICROEXTENT,3
+tgf_beta,Clinical or molecular attribute related to tgf beta,TGF_BETA,1
+therapies,Clinical or molecular attribute related to therapies,THERAPIES,1
+third_line,Clinical or molecular attribute related to third line,THIRD_LINE,1
+threegene,Clinical or molecular attribute related to threegene,THREEGENE,1
+time_related,TIME-related temporal information or time measurements,TIME_AT_LAST_FOLLOWUP_MONTHS;TIME_FROM_DX_TO_SEQ;TIME_FROM_MET_DX_SEQUENCING;TIME_FROM_NEO_TO_SURGERY;TIME_FROM_SURGERY_TO_BCR_LASTFU;TIME_OF_SAMPLE_COLLECTION_RELATIVE_TO_INCLUSION;TIME_POINT;TIME_TO_BEST_PET_RESPONSE;TIME_TO_BLOOD_DRAW_FROM_TX;TIME_TO_BR;TIME_TO_COMPLETE_RESPONSE;TIME_TO_DEATH_MONTHS;TIME_TO_FIRST_PET_RESPONSE;TIME_TO_LAST_FOLLOWUP;TIME_TO_METASTASIS_MONTHS;TIME_TO_MET_MONTHS;TIME_TO_NED,17
+timepoint,Temporal measurement or date for timepoint,TIMEPOINT,1
+timing_related,"TIMING-related clinical, molecular, or pathological attributes",TIMING_METS;TIMING_OTHER_NOTES,2
+tissue_related,TISSUE-related temporal information or time measurements,TISSUE_REPORT_TIME_YRS;TISSUE_SEQUENCED;TISSUE_SITE;TISSUE_SITE_OF_DERIVATION,4
+tissue_site_code,Coded identifier for tissue collection site or center,TISSUE_SOURCE_SITE_CODE,1
+tissue_source,"Tissue source site, institution, or biobank code",TISSUE_SOURCE;TISSUE_SOURCE_SITE;TISSUE_SOURCE_SITE_CODE,3
+tki_treatment,Clinical or molecular attribute related to tki treatment,TKI_TREATMENT,1
+tmb,Tumor mutational burden measured as mutations per megabase,CFDNA_TMB;CVR_TMB_COHORT_PERCENTILE;CVR_TMB_SCORE;CVR_TMB_TT_COHORT_PERCENTILE;IMPACT_TMB_SCORE;MUTATION_BURDEN;NONSYNONYMOUS_MUTATION_BURDEN;TMB;TMB_NONSYNONYMOUS;TOTAL_EXONIC_MUTATION_BURDEN;TUMOR_TMB,11
+tmprss2_erg_fusion_status,Clinical or pathological status for tmprss2 erg fusion status,TMPRSS2_ERG_FUSION_STATUS,1
+tmt_related,"TMT-related clinical, molecular, or pathological attributes",TMT_CHANNEL;TMT_PLEX,2
+tmz_related,"TMZ-related clinical, molecular, or pathological attributes",TMZ_CYCLES;TMZ_HYPERMUTATED;TMZ_TREATMENT,3
+tnbc_updated_clinical_status,Clinical or pathological status for tnbc updated clinical status,TNBC_UPDATED_CLINICAL_STATUS,1
+tnf,Clinical or molecular attribute related to tnf,TNF,1
+tnm,Clinical or molecular attribute related to tnm,TNM,1
+tnm_m,TNM M stage describing presence of distant metastasis,AJCC_METASTASIS_CLINICAL_CM;AJCC_METASTASIS_PATHOLOGIC_PM;CLINICAL_STAGING_DISTANT_METASTASIS_CM;CLIN_M_STAGE;DAYS_TO_EVENT_DISTANT_METASTASIS;DISTANT_METASTASIS_PATHOLOGIC_SPREAD;DX_BX_M_STAGE;HIGHEST_RECORDED_CLINICAL_TNM_STAGE;INITIAL_TNM_STAGE;M_STAGE;M_STAGE_AT_DIAGNOSIS_COMPLEX;M_STAGE_AT_DIAGNOSIS_SIMPLE;PATHOLOGIC_STAGING_DISTANT_METASTASIS_PM;PATH_M_STAGE;POSTCRT_TNM_STAGE_YPTNM;PRECRT_CLINICAL_MSTAGE;PRIMARY_SURGERY_M_STAGE;RALP_M_STAGE;TNMSTAGE;TNM_STAGE,20
+tnm_n,TNM N stage describing regional lymph node involvement,AJCC_NODES_CLINICAL_CN;AJCC_NODES_CLINICAL_CT;AJCC_NODES_PATHOLOGIC_PN;CLIN_N_STAGE;CLIN_N_STAGE_CODE;CLIN_STAGE_DIST_METS-CM;DX_BX_N_STAGE;N_STAGE;N_STAGE_AT_DIAGNOSIS_COMPLEX;N_STAGE_AT_DIAGNOSIS_SIMPLE;N_STAGE_REPORTED;PATHOLOGY_N_STAGE;PATH_N_STAGE;POSTCRT_PATHOLOGIC_NSTAGE_YPN;PRECRT_CLINICAL_NSTAGE;PRIMARY_SURGERY_N_STAGE;RALP_N_STAGE;REGIONAL_NODES_PATHOLOGIC_SPREAD;SPECIMEN_STAGE,19
+tnm_t,TNM T stage describing primary tumor size and extent,AJCC_TUMOR_CLINICAL_CT;AJCC_TUMOR_PATHOLOGIC_PT;CLIN_T_STAGE;CUMULATIVE_TREATMENT_STAGES;CUMULATIVE_TREATMENT_STAGE_COUNT;CURRENT_STAGE;DX_BX_T_STAGE;ECOG_AT_STAGE_4_DX;HISTOLOGY_CLASSIFICATION_IN_PRIMARY_TUMOR;HISTOPATOLOGY_PRIMARY_TUMOR;PATHOLOGY_T_STAGE;PATH_T_STAGE;POSTCRT_PATHOLOGIC_TSTAGE_YPT;PRECRT_CLINICAL_T_STAGE;PRIMARY_SURGERY_T_STAGE;RALP_T_STAGE;SURGERY_PRIMARY_TUMOR;T_STAGE;T_STAGE_AT_DIAGNOSIS_COMPLEX;T_STAGE_AT_DIAGNOSIS_SIMPLE;T_STAGE_REPORTED,21
+top2a_related,"TOP2A-related clinical, molecular, or pathological attributes",TOP2A_GENE_AMPLIFIED;TOP2A_PROTEOGENOMIC_STATUS,2
+topo_related,"TOPO-related clinical, molecular, or pathological attributes",TOPO_II_TX;TOPO_I_TX,2
+total_related,"TOTAL-related clinical, molecular, or pathological attributes",TOTAL_CNA;TOTAL_DNP_COUNT_WGS;TOTAL_NEOANTIGEN;TOTAL_PER_MB;TOTAL_PROTEIN_LEVEL;TOTAL_REARRANGEMENT;TOTAL_TIME_PERIOD_MONTHS,7
+tp53,Clinical or molecular attribute related to tp53,TP53,1
+tp53_related,"TP53-related clinical, molecular, or pathological attributes",TP53_ATM;TP53_BIALLELIC_GROUPS;TP53_CHEK2;TP53_CNA;TP53_MDM4;TP53_MUTATION;TP53_MUTATION_STATUS;TP53_PATH;TP53_PATHWAY;TP53_PROTEIN_CODING;TP53_RPS6KA3;TP53_TP53,12
+transcriptional_subtypes,Classification or category for transcriptional subtypes,TRANSCRIPTIONAL_SUBTYPES,1
+transplant,Clinical or molecular attribute related to transplant,TRANSPLANT,1
+transplant_type,Classification or category for transplant type,TRANSPLANT_TYPE,1
+treated_with_ici,Clinical or molecular attribute related to treated with ici,TREATED_WITH_ICI,1
+treatment,Clinical or molecular attribute related to treatment,TREATMENT,1
+treatment_outcome,Clinical outcome or response to treatment intervention,TREATMENT_OUTCOME_AT_TCGA_FOLLOWUP;TREATMENT_OUTCOME_FIRST_COURSE,2
+treatment_related,"TREATMENT-related treatment, therapy, or medication information",TREATMENT_ARM;TREATMENT_AT_MSK;TREATMENT_BEST_RESPONSE;TREATMENT_CATEGORY;TREATMENT_CHANGED;TREATMENT_DETAILS;TREATMENT_DETAIL_BEFORE_PDX;TREATMENT_EFFECT;TREATMENT_GROUP;TREATMENT_NAIVE;TREATMENT_ONGOING;TREATMENT_PRIOR_TO_RESECTION;TREATMENT_PRIOR_TO_SURGERY_INDICATOR;TREATMENT_PROSTATECTOMY;TREATMENT_RESPONSE;TREATMENT_SCHEDULE;TREATMENT_STATUS,17
+treatment_type,Type of cancer treatment received including drugs and therapies,ACQUIRED_AFTER_RADIOTHERAPY;ADC+IMMUNOTHERAPY;ADC_THERAPY;ADJUVANT_CHEMOTHERAPY;ADJUVANT_HORMONE_THERAPY;ADJUVANT_IMMUNOTHERAPY;ADJUVANT_RADIATION_THERAPY;ADJUVANT_THERAPY;ADMINISTRATION_OF_DRUG_WEEKS;AGE_AT_CHEMOTHERAPY_START;AGE_AT_CHEMOTHERAPY_STOP;ALKYLATING_CHEMOTHERAPY;ALTERNATE_THERAPY;ALTERNATE_THERAPY_OTHER;ANDROGEN_DEPRIVATION_THERAPY;ANY_THERAPY_2YRS;BEST_RESPONSE_ADC_AND_IMMUNOTHERAPY;BEST_RESPONSE_CHEMOTHERAPY;BEST_RESPONSE_CHEMOTHERAPY_AND_IMMUNOTHERAPY;BEST_RESPONSE_IMMUNOTHERAPY;BEST_RESPONSE_TARGETED_THERAPY;BEST_RESPONSE_TO_THERAPY;BRACHYTHERAPY_TOTAL_DOSE_POINT_A;BRACHYTHERAPY_TYPE;BRACHYTHERAPY_TYPE_OTHER;CHEMOTHERAPY;CHEMOTHERAPY+IMMUNOTHERAPY;CHEMOTHERAPY_AGENTS;CHEMOTHERAPY_PRIOR_SAMPLE_ACQUIRED;CHEMOTHERAPY_TYPE;CONCURRENT_CHEMOTHERAPY;CUMULATIVE_TREATMENT_TYPES;CUMULATIVE_TREATMENT_TYPE_COUNT;CYCLES_ON_THERAPY;DRUG;DRUG_AND_DOSE_STEROID_DURING_PD1;DRUG_LAST_ADMIN;DRUG_START;DRUG_TESTING_IN_ANALYSIS;DRUG_TYPE;DURATION_OF_THERAPY_DAYS;DURATION_OF_THERAPY_WEEKS;ENDOCRINE_THERAPY;EX_VIVO_DRUG_TESTING;FIRST THERAPY_RESPONSE;FIRST_LINE_THERAPY;FIRST_THERAPY;HISTORY_MENOPAUSAL_HORMONE_THERAPY;HORMONE_THERAPY;IMMUNOTHERAPY;IMMUNOTHERAPY_RESPONSE;IO_DRUG;IO_REGIMEN_MONOTHERAPY_VS_COMBINATION;IO_THERAPY;METASTATIC_RADIATION_THERAPY;MOST_RECENT_TREATMENT_TYPE;NEOADJUVANT_CHEMOTHERAPY;NEOADJUVANT_IMMUNOTHERAPY;NEOADJUVANT_THERAPY;NGS_PRIOR_THERAPY;OTHER_CONCURRENT_THERAPY;PD1_INHIBITOR_DRUG;POST_SAMPLE_CHEMOTHERAPY;POST_SAMPLE_IMMUNOTHERAPY;PRD_CHEMOTHERAPY;PRD_HORMONE_THERAPY;PRD_OTHER_THERAPY;PRE_SAMPLE_CHEMOTHERAPY;PRE_SAMPLE_IMMUNOTHERAPY;PRIMARY_RADIATION_THERAPY;PRIMARY_THERAPY_OUTCOME_SUCCESS;PRIOR_INTRAVESICAL_CHEMOTHERAPY;PRIOR_LINES_OF_THERAPY;PRIOR_THERAPY;PRIOR_TREATMENT_OF_CYTOTOXIC_CHEMOTHERAPY;RADIATION_OR_CHEMOTHERAPY;RADIATION_THERAPY;RADIATION_THERAPY_DOSE_PARAAORTIC_NODES;RADIATION_THERAPY_XRT_TYPE;RADIOTHERAPY;RADIOTHERAPY_FRACTIONS;RADIOTHERAPY_TX;RADIO_THERAPY;RESPONSE_TO_TARGET_THERAPY;SAMPLE_PRE_LUNG_THERAPY;STEROID_PD1_STARTING_DRUG_NAME;SURVIVAL_FROM_FIRST_CHEMOTHERAPY;SURVIVAL_FROM_FIRST_HORMONE_THERAPY;SYSTEMIC_THERAPY;TARGETED_MOLECULAR_THERAPY;TARGETED_THERAPY;TARGET_THERAPY;THERAPY;THERAPY_PRIOR_TO_DERIVATION;TREATMENT_CHEMOTHERAPY;TREATMENT_HORMONE_THERAPY;TREATMENT_TYPE,97
+trg_related,"TRG-related clinical, molecular, or pathological attributes",TRG_AJCC;TRG_GROUPS;TRG_SCORE,3
+triple_related,"TRIPLE-related clinical, molecular, or pathological attributes",TRIPLE_NEGATIVE;TRIPLE_NEG_STATUS,2
+trisomy_related,"TRISOMY-related clinical, molecular, or pathological attributes",TRISOMY_21;TRISOMY_4_10;TRISOMY_8,3
+tubule_score,Calculated score or index for tubule score,TUBULE_SCORE,1
+tumor_grade,Histological grade indicating tumor differentiation and aggressiveness,BX_GRADE;BX_NUCLEAR_GRADE;DX_GRADE;EDMONDSON_GRADE;FNCLCC_GRADE;FUHRMAN_GRADE;GRADE;HISTOLOGICAL_GRADE;IMPLANT_GRADE;INITIAL_GRADE;OVERALL_TUMOR_GRADE;PATIENT_GRADE;PRIMARY_NUCLEAR_GRADE;PRIMARY_TUMOR_GRADE;RESPONSE_GRADE;SX_GRADE;TUMOR_GRADE;UPDATED_GRADE;WHO_GRADE,19
+tumor_purity,Estimated tumor cell fraction or cellularity in sample,ABSOLUTE_EXTRACT_PURITY;ASCN_PURITY;AVE_DNA_PURITY;AVE_RNA_PURITY;CLONET_PURITY;DEMIX_PURITY;ESTIMATE_TUMORPURITY;EST_TUMOR_CELLULARITY;ISOPURE_PURITY;MEDIAN_PURITY;METHOD_PURITY;PERCENTAGE_TUMOR_PURITY;PURITY;PURITY_ABSOLUTE;PURITY_CANCER;PURITY_CONFUGURATION;PURITY_IMMUNE;PURITY_STROMA;TSNET PURITY;TSNET_PURITY;TUMOR_CELLULARITY_DOMINANT_CLONE_VAF;TUMOR_CELLULARITY_PATHOLOGY_REVIEW;TUMOR_PURITY;TUMOR_PURITY_BYESTIMATE_RNASEQ;WGS_BASED_PURITY_ESTIMATION,25
+tumor_related,"TUMOR-related clinical, molecular, or pathological attributes",TUMOR_BASAL_DIAMETER;TUMOR_BASAL_DIAMETER_MX;TUMOR_BURDEN_PATHOLOGIC;TUMOR_BURDEN_RADIOLOGIC;TUMOR_CHANGE;TUMOR_CONTENT;TUMOR_DETAILS;TUMOR_DIFFERENTIATION;TUMOR_EXOME_DEPTH;TUMOR_EXTENT;TUMOR_FOCALITY;TUMOR_FRACTION;TUMOR_GENOME_LIBRARY;TUMOR_HEMISPHERE;TUMOR_INFILTRATING_LYMPHOCYTES;TUMOR_INFILTRATING_MACROPHAGES;TUMOR_INVASION_PERCENT;TUMOR_IN_NORMAL_ESTIMATE;TUMOR_LATERALITY;TUMOR_LEVEL;TUMOR_LOCATION;TUMOR_LOCATION_CONDENSED;TUMOR_MATCHED_CTDNA;TUMOR_MEGASITE;TUMOR_MORPHOLOGIC_APPEARANCE_ON_CT;TUMOR_NECROSIS;TUMOR_NUMBER;TUMOR_PLOIDY;TUMOR_PURTITY;TUMOR_REOCCUR_AFTER_TREATMENT;TUMOR_RESECTED_MAX_DIMENSION;TUMOR_RESPONSE;TUMOR_SAMPLES;TUMOR_SAMPLE_HISTOLOGY_CODE;TUMOR_SAMPLE_PROCUREMENT_COUNTRY;TUMOR_SHAPE_PATHOLOGIC_CLINICAL;TUMOR_SITE_CATEGORY;TUMOR_SITE_CURATED;TUMOR_SITE_CURATION_NOTES;TUMOR_SITE_DETAIL;TUMOR_SITE_OTHER;TUMOR_SITE_SAMPLE;TUMOR_SIZE;TUMOR_SIZE_CM;TUMOR_SIZE_GROUPS;TUMOR_SIZE_ON_CT;TUMOR_SUBSITE;TUMOR_SUPERSITE;TUMOR_SURGERY_NUMBER;TUMOR_SUVMAX;TUMOR_T1_CODED;TUMOR_THICKNESS;TUMOR_THICKNESS_MEASUREMENT;TUMOR_TISSUE_ORIGIN;TUMOR_TOTAL_DEPTH;TUMOR_TOTAL_NECROSIS;TUMOR_TREATED;TUMOR_TYPE;TUMOR_VOLUME,59
+tumor_stage,"Overall tumor stage using AJCC, clinical, or pathological staging",AJCC_CLINICAL_TUMOR_STAGE;AJCC_PATHOLOGIC_TUMOR_STAGE;BCLC_STAGE;CLINICAL_STAGE;CLIN_M_STAGE;CLIN_N_STAGE;CLIN_T_STAGE;CONVERTED_STAGE;CSTAGE;CURRENT_STAGE;DISEASE_STAGE;DX_BX_M_STAGE;DX_BX_N_STAGE;DX_BX_T_STAGE;DX_PSTAGE;DX_STAGE;FIGO_STAGE;HIGHEST_RECORDED_CLINICAL_TNM_STAGE;IGCCCG_STAGE;INITIAL_FIGO_STAGE;INITIAL_STAGE;INITIAL_TNM_STAGE;INSS_STAGE;IPI_ANNARBOR_STAGE;IPI_STAGE;LIFE_STAGE;M_STAGE;NODAL_STAGE;N_STAGE;PATHOLOGIC_PRIMARY_TUMOR_STAGE;PATHOLOGIC_STAGE;PATHOLOGY_N_STAGE;PATHOLOGY_T_STAGE;PATH_M_STAGE;PATH_N_STAGE;PATH_T_STAGE;PRECRT_CLINICAL_MSTAGE;PRECRT_CLINICAL_NSTAGE;PRECRT_CLINICAL_T_STAGE;PRIMARY_SURGERY_M_STAGE;PRIMARY_SURGERY_N_STAGE;PRIMARY_SURGERY_T_STAGE;PSTAGE;RALP_M_STAGE;RALP_N_STAGE;RALP_T_STAGE;SPECIMEN_STAGE;STAGE;SURGIVAL_STAGE;SX_STAGE;S_STAGE;TNMSTAGE;TNM_STAGE;TUMOR_STAGE;TUMOR_STAGE-PATHOLOGICAL;TUMOR_STAGE_2009;TUMOR_STAGE_COLLECTION;TUMOR_STAGE_PATHOLOGICAL;T_STAGE;UICC_TUMOR_STAGE,60
+tumor_status,Current tumor or disease status at time of assessment,DISEASE_STATUS;TUMOR_STATUS,2
+tumorsize_cm,Clinical or molecular attribute related to tumorsize cm,TUMORSIZE_CM,1
+tx_17-dmag,Clinical or molecular attribute related to tx 17-dmag,TX_17-DMAG,1
+tx_19d12,Clinical or molecular attribute related to tx 19d12,TX_19D12,1
+tx_90days_post_resection,Temporal measurement or date for tx 90days post resection,TX_90DAYS_POST_RESECTION,1
+tx_abraxane,Clinical or molecular attribute related to tx abraxane,TX_ABRAXANE,1
+tx_abt-199,Clinical or molecular attribute related to tx abt-199,TX_ABT-199,1
+tx_abt-263,Clinical or molecular attribute related to tx abt-263,TX_ABT-263,1
+tx_actinomycin d,Clinical or molecular attribute related to tx actinomycin d,TX_ACTINOMYCIN D,1
+tx_aplidin,Clinical or molecular attribute related to tx aplidin,TX_APLIDIN,1
+tx_azd-2171,Clinical or molecular attribute related to tx azd-2171,TX_AZD-2171,1
+tx_azd-6244,Clinical or molecular attribute related to tx azd-6244,TX_AZD-6244,1
+tx_azd1480,Clinical or molecular attribute related to tx azd1480,TX_AZD1480,1
+tx_azd8055,Clinical or molecular attribute related to tx azd8055,TX_AZD8055,1
+tx_bal101553,Clinical or molecular attribute related to tx bal101553,TX_BAL101553,1
+tx_bet_pri_met_sample_collection,Clinical or molecular attribute related to tx bet pri met sample collection,TX_BET_PRI_MET_SAMPLE_COLLECTION,1
+tx_bi6727 (volasertib),Clinical or molecular attribute related to tx bi6727 (volasertib),TX_BI6727 (VOLASERTIB),1
+tx_bmn-673,Clinical or molecular attribute related to tx bmn-673,TX_BMN-673,1
+tx_bms-354825,Clinical or molecular attribute related to tx bms-354825,TX_BMS-354825,1
+tx_bms-754807,Clinical or molecular attribute related to tx bms-754807,TX_BMS-754807,1
+tx_bortezomib,Clinical or molecular attribute related to tx bortezomib,TX_BORTEZOMIB,1
+tx_cabozantinib (xl-148),Clinical or molecular attribute related to tx cabozantinib (xl-148),TX_CABOZANTINIB (XL-148),1
+tx_cbl0137,Clinical or molecular attribute related to tx cbl0137,TX_CBL0137,1
+tx_cdx-011 (glembatumumab),Clinical or molecular attribute related to tx cdx-011 (glembatumumab),TX_CDX-011 (GLEMBATUMUMAB),1
+tx_cgc(pg)-11047,Clinical or molecular attribute related to tx cgc(pg)-11047,TX_CGC(PG)-11047,1
+tx_cisplatin,Clinical or molecular attribute related to tx cisplatin,TX_CISPLATIN,1
+tx_cloretazine,Clinical or molecular attribute related to tx cloretazine,TX_CLORETAZINE,1
+tx_complete_response,Treatment response or clinical outcome for tx complete response,TX_COMPLETE_RESPONSE,1
+tx_cpx351,Clinical or molecular attribute related to tx cpx351,TX_CPX351,1
+tx_cx-5461 (pol1),Clinical or molecular attribute related to tx cx-5461 (pol1),TX_CX-5461 (POL1),1
+tx_cyclophosphamide,Clinical or molecular attribute related to tx cyclophosphamide,TX_CYCLOPHOSPHAMIDE,1
+tx_cytarabine,Clinical or molecular attribute related to tx cytarabine,TX_CYTARABINE,1
+tx_e7438/epz6438,Clinical or molecular attribute related to tx e7438/epz6438,TX_E7438/EPZ6438,1
+tx_ec1456,Clinical or molecular attribute related to tx ec1456,TX_EC1456,1
+tx_eribulin,Clinical or molecular attribute related to tx eribulin,TX_ERIBULIN,1
+tx_fenretinide,Clinical or molecular attribute related to tx fenretinide,TX_FENRETINIDE,1
+tx_genz-644282,Clinical or molecular attribute related to tx genz-644282,TX_GENZ-644282,1
+tx_gs-9820,Clinical or molecular attribute related to tx gs-9820,TX_GS-9820,1
+tx_gsk690693,Clinical or molecular attribute related to tx gsk690693,TX_GSK690693,1
+tx_gsk923295a,Clinical or molecular attribute related to tx gsk923295a,TX_GSK923295A,1
+tx_hgs-etr1,Clinical or molecular attribute related to tx hgs-etr1,TX_HGS-ETR1,1
+tx_imc-a12,Clinical or molecular attribute related to tx imc-a12,TX_IMC-A12,1
+tx_induction_courses_indicator,Clinical or molecular attribute related to tx induction courses indicator,TX_INDUCTION_COURSES_INDICATOR,1
+tx_ink128-1110-028,Clinical or molecular attribute related to tx ink128-1110-028,TX_INK128-1110-028,1
+tx_jnj26481585,Clinical or molecular attribute related to tx jnj26481585,TX_JNJ26481585,1
+tx_jnj26854165,Clinical or molecular attribute related to tx jnj26854165,TX_JNJ26854165,1
+tx_kpt-330,Clinical or molecular attribute related to tx kpt-330,TX_KPT-330,1
+tx_lapatinib,Clinical or molecular attribute related to tx lapatinib,TX_LAPATINIB,1
+tx_lenolidamide,Clinical or molecular attribute related to tx lenolidamide,TX_LENOLIDAMIDE,1
+tx_line,Clinical or molecular attribute related to tx line,TX_LINE,1
+tx_location,Clinical or molecular attribute related to tx location,TX_LOCATION,1
+tx_ly 2606368,Clinical or molecular attribute related to tx ly 2606368,TX_LY 2606368,1
+tx_maintenance_courses_indicator,Clinical or molecular attribute related to tx maintenance courses indicator,TX_MAINTENANCE_COURSES_INDICATOR,1
+tx_mk-2206,Clinical or molecular attribute related to tx mk-2206,TX_MK-2206,1
+tx_mk-8242,Clinical or molecular attribute related to tx mk-8242,TX_MK-8242,1
+tx_mln4924,Clinical or molecular attribute related to tx mln4924,TX_MLN4924,1
+tx_mln8237,Clinical or molecular attribute related to tx mln8237,TX_MLN8237,1
+tx_mm-141,Clinical or molecular attribute related to tx mm-141,TX_MM-141,1
+tx_nsc060043,Clinical or molecular attribute related to tx nsc060043,TX_NSC060043,1
+tx_nsc750854,Clinical or molecular attribute related to tx nsc750854,TX_NSC750854,1
+tx_pci-32765,Clinical or molecular attribute related to tx pci-32765,TX_PCI-32765,1
+tx_pf-03084014,Clinical or molecular attribute related to tx pf-03084014,TX_PF-03084014,1
+tx_pixantrone,Clinical or molecular attribute related to tx pixantrone,TX_PIXANTRONE,1
+tx_pr-104,Clinical or molecular attribute related to tx pr-104,TX_PR-104,1
+tx_rapamycin,Clinical or molecular attribute related to tx rapamycin,TX_RAPAMYCIN,1
+tx_reg,Clinical or molecular attribute related to tx reg,TX_REG,1
+tx_rg7112,Clinical or molecular attribute related to tx rg7112,TX_RG7112,1
+tx_ro4929097,Clinical or molecular attribute related to tx ro4929097,TX_RO4929097,1
+tx_ruxolitinib,Clinical or molecular attribute related to tx ruxolitinib,TX_RUXOLITINIB,1
+tx_saha,Clinical or molecular attribute related to tx saha,TX_SAHA,1
+tx_sar3419,Clinical or molecular attribute related to tx sar3419,TX_SAR3419,1
+tx_sb-715992,Clinical or molecular attribute related to tx sb-715992,TX_SB-715992,1
+tx_sch 727965,Clinical or molecular attribute related to tx sch 727965,TX_SCH 727965,1
+tx_setting,Clinical or molecular attribute related to tx setting,TX_SETTING,1
+tx_sgi-1776,Clinical or molecular attribute related to tx sgi-1776,TX_SGI-1776,1
+tx_sgn-cd19a,Clinical or molecular attribute related to tx sgn-cd19a,TX_SGN-CD19A,1
+tx_sorafenib,Clinical or molecular attribute related to tx sorafenib,TX_SORAFENIB,1
+tx_sta9090 (ganetespib),Clinical or molecular attribute related to tx sta9090 (ganetespib),TX_STA9090 (GANETESPIB),1
+tx_start_ecog,Clinical or molecular attribute related to tx start ecog,TX_START_ECOG,1
+tx_start_ldh,Clinical or molecular attribute related to tx start ldh,TX_START_LDH,1
+tx_stf-118804,Clinical or molecular attribute related to tx stf-118804,TX_STF-118804,1
+tx_su11248,Clinical or molecular attribute related to tx su11248,TX_SU11248,1
+tx_svv-001,Clinical or molecular attribute related to tx svv-001,TX_SVV-001,1
+tx_tak-701,Clinical or molecular attribute related to tx tak-701,TX_TAK-701,1
+tx_tb-403,Clinical or molecular attribute related to tx tb-403,TX_TB-403,1
+tx_tl32711,Clinical or molecular attribute related to tx tl32711,TX_TL32711,1
+tx_topotecan,Clinical or molecular attribute related to tx topotecan,TX_TOPOTECAN,1
+tx_trisenox(ato),Clinical or molecular attribute related to tx trisenox(ato),TX_TRISENOX(ATO),1
+tx_vincristine,Clinical or molecular attribute related to tx vincristine,TX_VINCRISTINE,1
+tx_vs-4718,Clinical or molecular attribute related to tx vs-4718,TX_VS-4718,1
+tx_xl147,Clinical or molecular attribute related to tx xl147,TX_XL147,1
+tx_xl765,Clinical or molecular attribute related to tx xl765,TX_XL765,1
+type,Classification or category for type,TYPE,1
+type_related,"TYPE-related treatment, therapy, or medication information",TYPE_INDUCTION_TREATMENT;TYPE_INDUCTION_TX;TYPE_OF_SURGERY;TYPE_REFINED,4
+u133a,Clinical or molecular attribute related to u133a,U133A,1
+ulceration,"Percentage, fraction, or ratio for ulceration",ULCERATION,1
+uld,Clinical or molecular attribute related to uld,ULD,1
+undescended_related,"UNDESCENDED-related clinical, molecular, or pathological attributes",UNDESCENDED_TESTIS_CORRECTED;UNDESCENDED_TESTIS_METHOD_LEFT;UNDESCENDED_TESTIS_METHOD_RIGHT,3
+unique_paper_samples,Clinical or molecular attribute related to unique paper samples,UNIQUE_PAPER_SAMPLES,1
+urothelial_primary,Clinical or molecular attribute related to urothelial primary,UROTHELIAL_PRIMARY,1
+use_related,"USE-related clinical, molecular, or pathological attributes",USE_FOR_DFS;USE_FOR_RESPONSE_2YEAR;USE_IN_OUTCOME_ANALYSIS,3
+used_related,"USED-related clinical, molecular, or pathological attributes",USED_IN_GENOMIC_ANALYSIS;USED_IN_MANUSCRIPT,2
+uv_induced_mutations,Genetic mutation or variant information for uv induced mutations,UV_INDUCED_MUTATIONS,1
+uv_rate,Clinical or molecular attribute related to uv rate,UV_RATE,1
+uv_signature,Clinical or molecular attribute related to uv signature,UV_SIGNATURE,1
+va_response,Treatment response or clinical outcome for va response,VA_RESPONSE,1
+var_related,"VAR-related clinical, molecular, or pathological attributes",VAR_10Q_NEG;VAR_11Q_NEG;VAR_12P_POS;VAR_12_245;VAR_14Q_NEG;VAR_17Q_POS;VAR_1P_NEG;VAR_1Q_POS;VAR_2P_POS;VAR_3P_NEG;VAR_4P_NEG;VAR_6Q_NEG;VAR_7Q_POS;VAR_9P_NEG,14
+variant_summary,Genetic mutation or variant information for variant summary,VARIANT_SUMMARY,1
+varix,Clinical or molecular attribute related to varix,VARIX,1
+varix_degree,Clinical or molecular attribute related to varix degree,VARIX_DEGREE,1
+vascular_related,"VASCULAR-related clinical, molecular, or pathological attributes",VASCULAR_INVASION;VASCULAR_INVASION_INDICATOR,2
+vhl_related,VHL-related genetic mutations or molecular alterations,VHL_MUTATION_AA;VHL_MUTATION_CODON,2
+vial_number,Sample vial identifier or aliquot number,VIAL_NUMBER,1
+vismo_status,Clinical or pathological status for vismo status,VISMO_STATUS,1
+vs,Clinical or molecular attribute related to vs,VS,1
+waterfall_group,Clinical or molecular attribute related to waterfall group,WATERFALL_GROUP,1
+wbc,Clinical or molecular attribute related to wbc,WBC,1
+weak_binding_neoantigens_per_mb,Clinical or molecular attribute related to weak binding neoantigens per mb,WEAK_BINDING_NEOANTIGENS_PER_MB,1
+week_added,Clinical or molecular attribute related to week added,WEEK_ADDED,1
+weeks_related,"WEEKS-related clinical, molecular, or pathological attributes",WEEKS_ON_STUDY;WEEKS_ON_TREATMENT,2
+weight,Patient body weight in kilograms or pounds,SAMPLE_INITIAL_WEIGHT;WEIGHT,2
+weiss_related,"WEISS-related clinical status, score, or measurement",WEISS_SCORE_OVERALL;WEISS_VENOUS_INVASION,2
+well_related,"WELL-related clinical, molecular, or pathological attributes",WELL_DIFF_LIPOSARC_PRIOR_DX_DAYS_TO;WELL_DIFF_LIPOSARC_PRIOR_DX_INDICATOR;WELL_DIFF_LIPOSARC_RESECTION_DAYS_TO,3
+wes,Clinical or molecular attribute related to wes,WES,1
+wgd,Clinical or molecular attribute related to wgd,WGD,1
+wgs_related,"WGS-related clinical, molecular, or pathological attributes",WGS_SIGNATURE;WGS_STATUS,2
+who_related,"WHO-related clinical, molecular, or pathological attributes",WHO_2016;WHO_CLASS;WHO_CLASSIFICATION;WHO_CLASSIFICATION_OF_DX_TUMOR,4
+whole_related,"WHOLE-related clinical, molecular, or pathological attributes",WHOLE_EXOME_SEQUENCED;WHOLE_EXOME_SEQUENCING;WHOLE_GENOME_DOUBLING;WHOLE_GENOME_SEQUENCED;WHOLE_GENOME_SEQUENCING,5
+winter_hypoxia_score,Calculated score or index for winter hypoxia score,WINTER_HYPOXIA_SCORE,1
+wnt,Clinical or molecular attribute related to wnt,WNT,1
+worse_prognosis,Clinical or molecular attribute related to worse prognosis,WORSE_PROGNOSIS,1
+wt1_mutation,Genetic mutation or variant information for wt1 mutation,WT1_MUTATION,1
+x2yr_related,"X2YR-related clinical, molecular, or pathological attributes",X2YR_AIS;X2YR_ALKYLATING_AGENT;X2YR_ANTHRACYCLINE;X2YR_ANTIHER2;X2YR_CAPECITABINE;X2YR_CDK46;X2YR_FULVESTRANT;X2YR_TAMOXIFEN;X2YR_TAXANE;X2YR_VEGF_INHIBITOR,10
+xcell_related,"XCELL-related clinical, molecular, or pathological attributes",XCELL_ADC;XCELL_ADIPOCYTES;XCELL_ASTROCYTES;XCELL_B-CELLS;XCELL_BASOPHILS;XCELL_CD4+ MEMORY T-CELLS;XCELL_CD4+ NAIVE T-CELLS;XCELL_CD4+ T-CELLS;XCELL_CD4+ TCM;XCELL_CD4+ TEM;XCELL_CD8+ NAIVE T-CELLS;XCELL_CD8+ T-CELLS;XCELL_CD8+ TCM;XCELL_CD8+ TEM;XCELL_CDC;XCELL_CHONDROCYTES;XCELL_CLASS-SWITCHED MEMORY B-CELLS;XCELL_CLP;XCELL_CMP;XCELL_DC;XCELL_ENDOTHELIAL CELLS;XCELL_EOSINOPHILS;XCELL_EPITHELIAL CELLS;XCELL_ERYTHROCYTES;XCELL_FIBROBLASTS;XCELL_GMP;XCELL_HEPATOCYTES;XCELL_HSC;XCELL_IDC;XCELL_IMMUNESCORE;XCELL_IMMUNE_SCORE;XCELL_KERATINOCYTES;XCELL_LY ENDOTHELIAL CELLS;XCELL_MACROPHAGES;XCELL_MACROPHAGES M1;XCELL_MACROPHAGES M2;XCELL_MAST CELLS;XCELL_MEGAKARYOCYTES;XCELL_MELANOCYTES;XCELL_MEMORY B-CELLS;XCELL_MEP;XCELL_MESANGIAL CELLS;XCELL_MICROENVIRONMENTSCORE;XCELL_MONOCYTES;XCELL_MPP;XCELL_MSC;XCELL_MV ENDOTHELIAL CELLS;XCELL_MYOCYTES;XCELL_NAIVE B-CELLS;XCELL_NEURONS;XCELL_NEUTROPHILS;XCELL_NK CELLS;XCELL_NKT;XCELL_OSTEOBLAST;XCELL_PDC;XCELL_PERICYTES;XCELL_PLASMA CELLS;XCELL_PLATELETS;XCELL_PREADIPOCYTES;XCELL_PRO B-CELLS;XCELL_SEBOCYTES;XCELL_SKELETAL MUSCLE;XCELL_SMOOTH MUSCLE;XCELL_STROMAL_SCORE;XCELL_STROMASCORE;XCELL_TGD CELLS;XCELL_TH1 CELLS;XCELL_TH2 CELLS;XCELL_TREGS,69
+xrt_tx,Clinical or molecular attribute related to xrt tx,XRT_TX,1
+year,Temporal measurement or date for year,YEAR,1
+year_of_diagnosis,Calendar year of initial cancer diagnosis,INITIAL_DIAGNOSIS_YEAR;INITIAL_PATHOLOGIC_DX_YEAR;YEAR_OF_DIAGNOSIS,3
+year_related,"YEAR-related clinical, molecular, or pathological attributes",YEAR_NAT_START_GROUPS;YEAR_OF_BIRTH;YEAR_OF_INITIAL_PATHOLOGIC_DIAGNOSIS;YEAR_OF_SURGERY,4
+zmym3_mut,Clinical or molecular attribute related to zmym3 mut,ZMYM3_MUT,1
