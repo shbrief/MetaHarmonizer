@@ -73,16 +73,6 @@ def _apply_cancer_disease_override(
     # All cancer-related tokens (including disease)
     cancer_related_set = cancer_tokens_set | {disease_norm}
 
-    def is_cancer_row(s: str) -> bool:
-        """Check if ref_match contains any cancer token."""
-        toks = [t.strip().lower() for t in str(s or "").split("|") if t]
-        return any(t in cancer_tokens_set for t in toks)
-
-    def is_disease_row(s: str) -> bool:
-        """Check if ref_match contains disease."""
-        toks = [t.strip().lower() for t in str(s or "").split("|") if t]
-        return disease_norm in toks
-    
     def is_cancer_or_disease_row(s: str) -> bool:
         """Check if ref_match contains any cancer-related token (cancer or disease)."""
         toks = [t.strip().lower() for t in str(s or "").split("|") if t]
@@ -99,7 +89,7 @@ def _apply_cancer_disease_override(
     # Only apply override to unmatched rows
     unmatched = df["match_level"].fillna(99).astype(int) == 99
 
-    # Case 1: ref_match is cancer-related AND unmatched
+    # Case: ref_match is cancer-related AND unmatched
     # → Check if ANY cancer-related token appears in predictions
     is_cancer_related = df["ref_match"].apply(is_cancer_or_disease_row)
     cancer_related_ranks = df.apply(find_earliest_cancer_related_rank, axis=1)
@@ -118,6 +108,7 @@ def build_eval_df(
     truth_file: str,
     top_k: int = 5,
     normalize_text: bool = False,
+    apply_cancer_disease_override: bool = True,
     save_eval: bool = True,
     out_dir: Optional[str] = "data/schema_mapping_eval",
 ) -> Tuple[pd.DataFrame, Optional[str]]:
@@ -131,6 +122,7 @@ def build_eval_df(
         truth_file: Path to ground truth CSV (must have 'source' and 'ref_match' columns)
         top_k: Number of top predictions to consider
         normalize_text: Whether to normalize text for matching (lowercase, strip)
+        apply_cancer_disease_override: Whether to apply cancer/disease override rules
         save_eval: Whether to save the evaluation DataFrame
         out_dir: Directory to save evaluation file
 
@@ -226,6 +218,12 @@ def build_eval_df(
         column="match_level",
         value=match_levels,
     )
+
+    # Apply cancer-disease override
+    if apply_cancer_disease_override:
+        pred_cols = _pred_cols(merged, top_k)
+        if pred_cols:
+            merged = _apply_cancer_disease_override(merged, pred_cols)
 
     # Save if requested
     saved_path: Optional[str] = None
@@ -358,7 +356,7 @@ def compute_accuracy(
     NOTE: Filtering (include_methods/exclude_methods) applies to metrics only, not to saved eval CSV.
     """
     if eval_csv is None:
-        # Build eval from pred_file and truth_file
+        # Build eval from pred_file and truth_file (override applied inside build_eval_df)
         if not (pred_file and truth_file):
             raise ValueError(
                 "Provide either eval_csv OR both pred_file and truth_file.")
@@ -368,19 +366,15 @@ def compute_accuracy(
             truth_file=truth_file,
             top_k=top_k,
             normalize_text=normalize_text,
+            apply_cancer_disease_override=apply_cancer_disease_override,
             save_eval=save_eval,
             out_dir=out_dir,
         )
         
-        # Compute on the just-built df in-memory
+        # Filter and compute metrics on the already-overridden df
         df = eval_df.copy()
         mask = df["ref_match"].notna() & (df["ref_match"] != "")
-        df = df[mask]  # only rows with truth
-
-        if apply_cancer_disease_override:
-            pred_cols = _pred_cols(df, top_k)
-            if pred_cols:
-                df = _apply_cancer_disease_override(df, pred_cols)
+        df = df[mask]
 
         if include_methods and exclude_methods:
             raise ValueError(

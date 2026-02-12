@@ -4,11 +4,11 @@ from .stage1_matchers import (
     StandardExactMatcher, AliasExactMatcher,
     StandardFuzzyMatcher, AliasFuzzyMatcher
 )
-from .stage2_matchers import (
+from .stage3_matchers import (
     NumericStandardMatcher, NumericAliasMatcher,
     SemanticStandardMatcher, SemanticAliasMatcher
 )
-from .stage3_matchers import ValueStandardMatcher, OntologyMatcher
+from .stage2_matchers import ValueDictMatcher, OntologyMatcher
 
 __all__ = [
     'BaseMatcher', 'MatchStrategy',
@@ -16,5 +16,5 @@ __all__ = [
     'StandardFuzzyMatcher', 'AliasFuzzyMatcher',
     'NumericStandardMatcher', 'NumericAliasMatcher',
     'SemanticStandardMatcher', 'SemanticAliasMatcher',
-    'ValueStandardMatcher', 'OntologyMatcher'
+    'ValueDictMatcher', 'OntologyMatcher'
 ]
