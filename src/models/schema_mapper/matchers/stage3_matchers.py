@@ -1,5 +1,6 @@
 """Stage 3: Numeric and semantic field matching."""
-from typing import List, Tuple, Dict
+import re
+from typing import List, Tuple, Dict, Set
 import torch
 from sentence_transformers import util
 from .base import BaseMatcher
@@ -12,6 +13,44 @@ from src.utils.numeric_match_utils import (
 from src.CustomLogger.custom_logger import CustomLogger
 
 logger = CustomLogger().custlogger(loglevel='WARNING')
+
+# ============= Treatment Boost Logic =============
+
+TREATMENT_KEYWORDS_SUBSTRING = ("therapy", "chemo", "surgery", "radiation", "treatment", "drug", "regimen")
+TREATMENT_BOOST = 0.2
+
+_TX_PATTERN = re.compile(r'(?:^tx_|_tx$|_tx_)')
+
+
+def _is_treatment_column(col_normed: str) -> bool:
+    """Check if a normalized column name suggests treatment-related content."""
+    if _TX_PATTERN.search(col_normed):
+        return True
+    return any(kw in col_normed for kw in TREATMENT_KEYWORDS_SUBSTRING)
+
+
+def _get_treatment_fields(engine) -> Set[str]:
+    """Get treatment-related field names from curated dict (cached on engine)."""
+    if not hasattr(engine, '_treatment_fields_cache'):
+        treatment_fields = set()
+        if hasattr(engine, 'curated_df') and engine.curated_df is not None:
+            for f in engine.curated_df['field_name'].unique():
+                if 'treatment' in f.lower():
+                    treatment_fields.add(f)
+        engine._treatment_fields_cache = treatment_fields
+        if treatment_fields:
+            logger.info(f"[TreatmentBoost] Cached {len(treatment_fields)} treatment fields")
+    return engine._treatment_fields_cache
+
+
+def treatment_boost(field: str, col_normed: str, engine) -> float:
+    """Return boost score if column is treatment-related and field is a treatment field."""
+    if not _is_treatment_column(col_normed):
+        return 0.0
+    treatment_fields = _get_treatment_fields(engine)
+    if field in treatment_fields:
+        return TREATMENT_BOOST
+    return 0.0
 
 
 # ============= Individual Matchers (kept for potential separate use) =============
@@ -38,17 +77,19 @@ class NumericStandardMatcher(BaseMatcher):
         
         with torch.no_grad():
             sims = util.pytorch_cos_sim(emb, self.engine._std_numeric_embs)[0]
-        top = torch.topk(sims, k=min(self.engine.top_k, len(sims)))
+        top = torch.topk(sims, k=min(self.engine.top_k * 3, len(sims)))
         
         numeric_scores = []
         for score, idx in zip(top[0], top[1]):
             std_field = self.engine._std_numeric_fields[int(idx)]
             base = float(score)
             bonus = family_boost(std_field, family)
+            bonus += treatment_boost(std_field, key_raw, self.engine)
             final = base + bonus
             numeric_scores.append((std_field, final, ""))
         
-        return sorted(numeric_scores, key=lambda x: x[1], reverse=True)
+        numeric_scores.sort(key=lambda x: x[1], reverse=True)
+        return numeric_scores[:self.engine.top_k]
     
     def _ensure_std_numeric_index(self):
         """Lazy-build standard numeric field index."""
@@ -98,7 +139,7 @@ class NumericAliasMatcher(BaseMatcher):
         emb = self.engine._enc(key_clean or key_raw)
         with torch.no_grad():
             sims = util.pytorch_cos_sim(emb, self.engine._numeric_embs)[0]
-        top = torch.topk(sims, k=min(self.engine.top_k, len(sims)))
+        top = torch.topk(sims, k=min(self.engine.top_k * 3, len(sims)))
         
         field_best: Dict[str, Tuple[float, str]] = {}
         
@@ -111,6 +152,7 @@ class NumericAliasMatcher(BaseMatcher):
             for f in matching_rows['field_name'].unique():
                 base = float(score)
                 bonus = family_boost(f, family)
+                bonus += treatment_boost(f, key_raw, self.engine)
                 final = base + bonus
                 
                 if f not in field_best or final > field_best[f][0]:
@@ -122,8 +164,7 @@ class NumericAliasMatcher(BaseMatcher):
         ]
         
         numeric_scores.sort(key=lambda x: x[1], reverse=True)
-        
-        return numeric_scores
+        return numeric_scores[:self.engine.top_k]
 
 
 # ============= Combined Matchers (for Stage 3) =============
@@ -191,14 +232,18 @@ class SemanticStandardMatcher(BaseMatcher):
         
         with torch.no_grad():
             sims = util.pytorch_cos_sim(emb, self.engine._std_field_embs)[0]
-        top = torch.topk(sims, k=min(self.engine.top_k, len(sims)))
+        top = torch.topk(sims, k=min(self.engine.top_k * 3, len(sims)))
         
         matches = []
         for score, idx in zip(top[0], top[1]):
             std_field = self.engine.standard_fields[int(idx)]
-            matches.append((std_field, float(score), ""))
+            base = float(score)
+            bonus = treatment_boost(std_field, key, self.engine)
+            final = base + bonus
+            matches.append((std_field, final, ""))
         
-        return sorted(matches, key=lambda x: x[1], reverse=True)
+        matches.sort(key=lambda x: x[1], reverse=True)
+        return matches[:self.engine.top_k]
 
 
 class SemanticAliasMatcher(BaseMatcher):
@@ -214,7 +259,7 @@ class SemanticAliasMatcher(BaseMatcher):
         
         with torch.no_grad():
             sims = util.pytorch_cos_sim(emb, self.engine.alias_embs)[0]
-        top = torch.topk(sims, k=min(self.engine.top_k * 2, len(sims)))
+        top = torch.topk(sims, k=min(self.engine.top_k * 3, len(sims)))
         
         field_best: Dict[str, Tuple[float, str]] = {}
         
@@ -223,8 +268,10 @@ class SemanticAliasMatcher(BaseMatcher):
             score_val = float(score)
             
             for f in self.engine.sources_to_fields[alias]:
-                if f not in field_best or score_val > field_best[f][0]:
-                    field_best[f] = (score_val, alias)
+                bonus = treatment_boost(f, key, self.engine)
+                final = score_val + bonus
+                if f not in field_best or final > field_best[f][0]:
+                    field_best[f] = (final, alias)
         
         alias_scores = [
             (field, score, src) 
