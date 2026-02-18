@@ -8,7 +8,7 @@ from sentence_transformers import SentenceTransformer, util
 import torch
 
 from .config import (
-    FUZZY_THRESH, OUTPUT_DIR, ALIAS_DICT_PATH, FIELD_MODEL,
+    FUZZY_THRESH, NOISE_VALUES, OUTPUT_DIR, ALIAS_DICT_PATH, FIELD_MODEL,
     NUMERIC_THRESH, FIELD_ALIAS_THRESH, VALUE_PERCENTAGE_THRESH,
     LLM_THRESHOLD 
 )
@@ -20,10 +20,10 @@ from .matchers.stage1_matchers import (
     StandardFuzzyMatcher, AliasFuzzyMatcher
 )
 from .matchers.stage2_matchers import (
-    NumericCombinedMatcher, SemanticCombinedMatcher
+    ValueDictMatcher, OntologyMatcher
 )
 from .matchers.stage3_matchers import (
-    ValueStandardMatcher, OntologyMatcher
+    NumericCombinedMatcher, SemanticCombinedMatcher
 )
 from .matchers.stage4_matchers import LLMMatcher 
 from src.utils.schema_mapper_utils import normalize, is_numeric_column, extract_valid_value
@@ -40,8 +40,8 @@ class SchemaMapEngine:
     
     Stages:
     - Stage 1: Dictionary matching (exact + fuzzy, standard + alias)
-    - Stage 2: Field matching (numeric + semantic, standard + alias)
-    - Stage 3: Value matching (value dict + ontology)
+    - Stage 2: Value matching (value dict + ontology)
+    - Stage 3: Field matching (numeric + semantic, standard + alias)
     - Stage 4: LLM fallback (auto mode only)
     """
     
@@ -86,6 +86,7 @@ class SchemaMapEngine:
         # Lazy-loaded components
         self._numeric_embs = None
         self._col_values_cache = {}
+        self._col_freq_cache: Dict[str, Dict[str, float]] = {}
         
         logger.info("SchemaMapEngine initialized")
     
@@ -134,12 +135,12 @@ class SchemaMapEngine:
             self.alias_fuzzy = None
         
         # Stage 2
+        self.value_dict = ValueDictMatcher(self)
+        self.ontology = OntologyMatcher(self)
+
+        # Stage 3
         self.numeric_combined = NumericCombinedMatcher(self)
         self.semantic_combined = SemanticCombinedMatcher(self)
-        
-        # Stage 3
-        self.value_std = ValueStandardMatcher(self)
-        self.ontology = OntologyMatcher(self)
         
         # Stage 4 - LLM (only in auto mode)
         if self.mode == "auto":
@@ -191,6 +192,19 @@ class SchemaMapEngine:
         
         vals = self._col_values_cache[col]
         return vals if (cap is None or cap >= len(vals)) else vals[:cap]
+    
+    def value_frequencies(self, col: str) -> Dict[str, float]:
+        if col not in self._col_freq_cache:
+            series = self.df[col].dropna().astype(str).apply(extract_valid_value)
+            counts: Dict[str, int] = {}
+            for lst in series:
+                for v in lst:
+                    nv = normalize(v)
+                    if nv and nv not in NOISE_VALUES:
+                        counts[v] = counts.get(v, 0) + 1
+            total = sum(counts.values()) or 1
+            self._col_freq_cache[col] = {v: c / total for v, c in counts.items()}
+        return self._col_freq_cache[col]
     
     def format_matches_to_row(
         self,
@@ -315,24 +329,24 @@ class SchemaMapEngine:
         return self._run_cascade(col, "stage1", strategies)
 
     def stage2_match(self, col: str) -> Dict[str, Any]:
-        """Stage 2: Field matching with combined results."""
+        """Stage 2: Value matching cascade."""
+        if self.is_col_numeric(col):
+            return {}
+        
+        strategies = [
+            MatchStrategy("value", self.value_dict.match, threshold=VALUE_PERCENTAGE_THRESH),
+            MatchStrategy("ontology", self.ontology.match, threshold=VALUE_PERCENTAGE_THRESH),
+        ]
+        return self._run_cascade(col, "stage2", strategies)
+    
+    def stage3_match(self, col: str) -> Dict[str, Any]:
+        """Stage 3: Field matching with combined results."""
         strategies = [
             MatchStrategy("numeric", self.numeric_combined.match, threshold=NUMERIC_THRESH),
             MatchStrategy("semantic", self.semantic_combined.match, threshold=FIELD_ALIAS_THRESH),
         ]
         
-        return self._run_cascade(col, "stage2", strategies)
-    
-    def stage3_match(self, col: str) -> Dict[str, Any]:
-        """Stage 3: Value matching cascade."""
-        if self.is_col_numeric(col):
-            return {}
-        
-        strategies = [
-            MatchStrategy("value_std", self.value_std.match, threshold=VALUE_PERCENTAGE_THRESH),
-            MatchStrategy("ontology", self.ontology.match, threshold=VALUE_PERCENTAGE_THRESH),
-        ]
-        return self._run_cascade(col, "stage3", strategies)
+        return self._run_cascade(col, "stage3", strategies)    
     
     def stage4_match(self, col: str) -> Dict[str, Any]:
         """Stage 4: LLM matching."""
@@ -379,22 +393,22 @@ class SchemaMapEngine:
                 logger.info(f"[Stage1] '{col}' matched in {time.perf_counter() - t0:.2f}s")
                 continue
 
-            # Stage 3: Value matching
-            t0 = time.perf_counter()
-            row = self.stage3_match(col)
-            if row:
-                results.append(row)
-                logger.info(f"[Stage3] '{col}' matched in {time.perf_counter() - t0:.2f}s")
-                continue
-            
-            # Stage 2: Field matching
+            # Stage 2: Value matching
             t0 = time.perf_counter()
             row = self.stage2_match(col)
+            if row:
+                results.append(row)
+                logger.info(f"[Stage2] '{col}' matched in {time.perf_counter() - t0:.2f}s")
+                continue
+            
+            # Stage 3: Field matching
+            t0 = time.perf_counter()
+            row = self.stage3_match(col)
             if row:
                 # Auto mode: check if LLM fallback should be triggered
                 if self.mode == "auto" and self.llm and row.get('match1_score', 0) < LLM_THRESHOLD:
                     logger.info(
-                        f"[Stage2] '{col}' low confidence "
+                        f"[Stage3] '{col}' low confidence "
                         f"({row.get('match1_score', 0):.3f} < {LLM_THRESHOLD}), "
                         f"trying LLM fallback"
                     )
@@ -417,7 +431,7 @@ class SchemaMapEngine:
                 else:
                     results.append(row)
                 
-                logger.info(f"[Stage2] '{col}' matched in {time.perf_counter() - t0:.2f}s")
+                logger.info(f"[Stage3] '{col}' matched in {time.perf_counter() - t0:.2f}s")
                 continue
             
             # No match found - try LLM as last resort (auto mode only)

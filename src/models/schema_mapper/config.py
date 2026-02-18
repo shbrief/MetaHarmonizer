@@ -13,14 +13,16 @@ VALUE_DICT_PATH = os.getenv("FIELD_VALUE_JSON") or "data/schema/field_value_dict
 
 # === Models ===
 FIELD_MODEL = "all-MiniLM-L6-v2"
+# FIELD_MODEL = "cambridgeltl/SapBERT-from-PubmedBERT-fulltext"
 LLM_MODEL = "gemma-3-27b-it"
 
 # === Thresholds ===
-FUZZY_THRESH = 90
+FUZZY_THRESH = 92
 NUMERIC_THRESH = 0.6
 FIELD_ALIAS_THRESH = 0.5
 VALUE_DICT_THRESH = 0.85
-VALUE_PERCENTAGE_THRESH = 0.5
+VALUE_UNIQUE_CAP = 50
+VALUE_PERCENTAGE_THRESH = 0.15
 LLM_THRESHOLD = 0.5
 
 # === Noise Values ===

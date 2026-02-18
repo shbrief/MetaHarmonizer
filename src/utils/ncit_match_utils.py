@@ -249,51 +249,39 @@ class NCIClientSync:
 
         return []
 
-    def map_value_to_schema(self, values: List[str]) -> Dict[str, int]:
-        """
-        Value(s) -> category counts
-        """
+    def map_value_to_schema(self, values: List[str]) -> Dict[str, List[str]]:
         if isinstance(values, str):
             values = [values]
 
-        counts: Dict[str, int] = defaultdict(int)
-        to_lookup = {}  # term_norm -> raw value
+        hits: Dict[str, List[str]] = defaultdict(list)  # field -> [value, ...]
+        to_lookup = {}
 
-        # 1. Lookup cache
         for value in values:
             if not value or not isinstance(value, str):
                 continue
-
             term_norm = self.normalize(value)
             if term_norm in self.term2code:
                 code = self.term2code[term_norm]
                 if code:
-                    cats = self.classify_code(code)
-                    for cat in cats:
-                        counts[cat] += 1
+                    for cat in self.classify_code(code):
+                        hits[cat].append(value)
             else:
                 to_lookup[term_norm] = value
 
-        # 2. Parallel lookup for the remaining
         def lookup(term_norm, raw_value):
             cands = self.search_candidates(raw_value)
             if cands is None:
-                return term_norm, None  # Network failure, do not cache
-            return term_norm, cands[0][0] if cands else None
+                return term_norm, raw_value, None
+            return term_norm, raw_value, cands[0][0] if cands else None
 
         if to_lookup:
             with ThreadPoolExecutor(max_workers=16) as ex:
-                futures = [
-                    ex.submit(lookup, tn, rv) for tn, rv in to_lookup.items()
-                ]
+                futures = [ex.submit(lookup, tn, rv) for tn, rv in to_lookup.items()]
                 for f in as_completed(futures):
-                    term_norm, code = f.result()
-                    # Cache
+                    term_norm, raw_value, code = f.result()
                     self.term2code[term_norm] = code
-                    # Classify if code found
                     if code:
-                        cats = self.classify_code(code)
-                        for cat in cats:
-                            counts[cat] += 1
+                        for cat in self.classify_code(code):
+                            hits[cat].append(raw_value)
 
-        return dict(counts)
+        return dict(hits)
