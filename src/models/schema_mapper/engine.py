@@ -8,7 +8,7 @@ from sentence_transformers import SentenceTransformer, util
 import torch
 
 from .config import (
-    FUZZY_THRESH, OUTPUT_DIR, ALIAS_DICT_PATH, FIELD_MODEL,
+    FUZZY_THRESH, NOISE_VALUES, OUTPUT_DIR, ALIAS_DICT_PATH, FIELD_MODEL,
     NUMERIC_THRESH, FIELD_ALIAS_THRESH, VALUE_PERCENTAGE_THRESH,
     LLM_THRESHOLD 
 )
@@ -86,6 +86,7 @@ class SchemaMapEngine:
         # Lazy-loaded components
         self._numeric_embs = None
         self._col_values_cache = {}
+        self._col_freq_cache: Dict[str, Dict[str, float]] = {}
         
         logger.info("SchemaMapEngine initialized")
     
@@ -191,6 +192,19 @@ class SchemaMapEngine:
         
         vals = self._col_values_cache[col]
         return vals if (cap is None or cap >= len(vals)) else vals[:cap]
+    
+    def value_frequencies(self, col: str) -> Dict[str, float]:
+        if col not in self._col_freq_cache:
+            series = self.df[col].dropna().astype(str).apply(extract_valid_value)
+            counts: Dict[str, int] = {}
+            for lst in series:
+                for v in lst:
+                    nv = normalize(v)
+                    if nv and nv not in NOISE_VALUES:
+                        counts[v] = counts.get(v, 0) + 1
+            total = sum(counts.values()) or 1
+            self._col_freq_cache[col] = {v: c / total for v, c in counts.items()}
+        return self._col_freq_cache[col]
     
     def format_matches_to_row(
         self,
