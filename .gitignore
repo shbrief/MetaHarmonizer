@@ -17,8 +17,9 @@ notes
 *app.py
 *docs*
 
-# RStudio files
+# RStudio files (R package files live in HarmonizeR repo)
 .Rproj.user
+.Rproj.user/
 .Rhistory
 .RData
 .Ruserdata
@@ -33,5 +34,17 @@ dist/
 
 # Model cache
 model_cache/
-.html
 EDA/data/concatenated_cols_for_189439_values.csv
+*.html
+
+# Claude Agent SDK (local dev tooling)
+agents/
+
+# Local conda environment
+.conda-py311/
+
+# Generated embedding cache
+data/outputs/embedding_cache/
+
+# Test bytecode
+tests/__pycache__/

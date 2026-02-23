@@ -1,0 +1,40 @@
+"ColName","Released","ColClass","Unique","Required","MultipleValues","Description","AllowedValues","Delimiter","Separater","DynamicEnum","DynamicEnumProperty"
+"age_at_death",TRUE,"Numeric",FALSE,FALSE,FALSE,"The age at which death occurred. Unit is a year.",NA,NA,NA,"HANCESTRO:0004","children"
+"age_at_diagnosis",TRUE,"Numeric",FALSE,FALSE,FALSE,"The age of an individual at the time of initial pathologic diagnosis.",NA,NA,NA,NA,NA
+"age_at_metastasis",TRUE,"Numeric",FALSE,FALSE,FALSE,"Subject's age in years at initial metastasis of cancer",NA,NA,NA,NA,NA
+"age_at_procurement",TRUE,"Numeric",FALSE,TRUE,FALSE,"Subject's age in years at initial procurement of the sample",NA,NA,NA,NA,NA
+"age_group",TRUE,"String",FALSE,TRUE,FALSE,"Subgroups of populations based on age.","Adolescent;Adult;Children 2-11 Years Old;Elderly;Infant",NA,NA,NA,NA
+"ancestry",TRUE,"String",FALSE,TRUE,TRUE,"A person's descent or lineage. Patient's population ancestry information, inclusive of values relating to racial and ethnic groups",NA,";",NA,"HANCESTRO:0004","children"
+"ancestry_details",TRUE,"String",FALSE,FALSE,TRUE,"A person's descent or lineage (more specific than 'ancestry'). Patient's population ancestry information, inclusive of values relating to racial and ethnic groups",NA,NA,NA,"HANCESTRO:0004","descendant"
+"body_site",TRUE,"String",FALSE,FALSE,TRUE,"Named locations of or within the body. The anatomical location(s) affected by the patient's disease/condition/cancer, often the site from which the sample was derived",NA,"<;>",NA,NA,NA
+"cancer_status",TRUE,"String",FALSE,FALSE,FALSE,"Tumor status","Tumor Free;With Tumor",NA,NA,"NCIT:C96643","children"
+"cancer_subtype",TRUE,"String",FALSE,FALSE,TRUE,"A specifc subtype(s) of the cancer (relevant to the sample) which the patient has been diagnosed with",NA,"<;>",NA,NA,NA
+"cancer_type",TRUE,"String",FALSE,FALSE,TRUE,"A type(s) of cancer (relevant to the sample) which the patient has been diagnosed with",NA,"<;>",NA,NA,NA
+"cancer_type_details",TRUE,"String",FALSE,FALSE,TRUE,"Detailed information which elaborates on the corresponding curated_cancer_type value",NA,"<;>",NA,NA,NA
+"country",TRUE,"String",FALSE,FALSE,FALSE,"Country where subject lives and/or data was collected",NA,NA,NA,"NCIT:C25464","descendant"
+"curation_id",TRUE,"String",TRUE,TRUE,FALSE,"Unique identifier",NA,NA,NA,NA,NA
+"disease",TRUE,"String",FALSE,FALSE,TRUE,"Any abnormal condition of the body or mind that causes discomfort, dysfunction, or distress to the person affected or those in contact with the person. The disease(s) (relevant to the sample) which the patient has been diagnosed with",NA,"<;>",NA,"NCIT:C7057;EFO_0000408","descendant"
+"location",TRUE,"String",FALSE,FALSE,FALSE,"Location (more specific than 'country') where subject lives and/or data was collected",NA,NA,NA,NA,NA
+"oncotree_code",TRUE,"String",FALSE,FALSE,FALSE,"A unique identifier assigned to a specific cancer type within the open-source OncoTree classification system.",NA,NA,NA,NA,NA
+"patientId",TRUE,"String",FALSE,TRUE,FALSE,"Subject identifier",NA,NA,NA,NA,NA
+"sample_count",TRUE,"Numeric",FALSE,TRUE,FALSE,"The number of samples belong to a given study/dataset",NA,NA,NA,NA,NA
+"sample_type",TRUE,"String",FALSE,FALSE,FALSE,"Indicates if the sample is derived from a metastatic lesion","Primary Neoplasm;Metastatic Neoplasm;Recurrent Neoplasm;Neoplasm;Benigh Neoplasm;Locally Recurrent Disease;Clinical Relapse;Distant Metastasis",NA,NA,NA,NA
+"sampleId",TRUE,"String",FALSE,TRUE,FALSE,"Sample identifier",NA,NA,NA,NA,NA
+"sex",TRUE,"String",FALSE,TRUE,FALSE,"Biological sex of the subject as reported or inferred by sex-specific biological traits","Female;Male",NA,NA,NA,NA
+"specimen_type",TRUE,"String",FALSE,FALSE,TRUE,"The type of a material sample taken from a biological entity for testing, diagnostic, propagation, treatment or research purposes. This includes particular types of cellular molecules, cells, tissues, organs, body fluids, embryos, and body excretory substances. Origin of the specimen, including source of the cells, primary/metastatic/recurrent status, and anatomical location of derivation",NA,"<;>",NA,NA,NA
+"study_design",TRUE,"String",FALSE,FALSE,TRUE,"A plan detailing how a study will be performed in order to represent the phenomenon under examination, to answer the research questions that have been asked, and defining the methods of data analysis. Study design is driven by research hypothesis being posed, study subject/population/sample available, logistics/resources: technology, support, networking, collaborative support, etc.",NA,";",NA,NA,NA
+"studyId",TRUE,"String",FALSE,TRUE,FALSE,"Dataset name",NA,NA,NA,NA,NA
+"target_condition",TRUE,"String",FALSE,TRUE,TRUE,"The primary phenotype/condition of interest in the study from which the sample is derived",NA,";",NA,"NCIT:C7057;EFO_0000408","descendant"
+"treatment_dose",FALSE,"Numeric",FALSE,FALSE,TRUE,"A quantity of an agent (such as substance or energy) administered, taken, or absorbed at one time. Individual dose amount",NA,"<;>",NA,NA,NA
+"treatment_duration",FALSE,"Numeric",FALSE,FALSE,TRUE,"The length of time a treatment session lasts. A session is defined as the period of time between when the patient enters the treatment room and when they leave it. Overall duration of treatment",NA,"<;>",NA,NA,NA
+"treatment_end",FALSE,"String",FALSE,FALSE,TRUE,"Treatment end date/time",NA,"<;>",NA,NA,NA
+"treatment_frequency",FALSE,"String",FALSE,FALSE,TRUE,"The number of times a substance is administered within a specific time period. Frequency of treatment administration",NA,"<;>",NA,NA,NA
+"treatment_group",FALSE,"String",FALSE,FALSE,TRUE,"A study population that receives an intervention(s) within a trial. This could include the investigational product(s) or a comparator (e.g., placebo or an approved intervention).",NA,"<;>",NA,NA,NA
+"treatment_name",TRUE,"String",FALSE,FALSE,TRUE,"The literal identifier of a therapy. Specific name of drug/medication/treatment/surgical procedure",NA,"<;>",NA,NA,NA
+"treatment_notes",FALSE,"String",FALSE,FALSE,TRUE,"miscellaneous treatment information that does not fit into the other categories",NA,"<;>",NA,NA,NA
+"treatment_number",FALSE,"Numeric",FALSE,FALSE,TRUE,"number of times individual treatment was administered; can be number of doses/cycles/lines",NA,"<;>",NA,NA,NA
+"treatment_reason",FALSE,"String",FALSE,FALSE,TRUE,"stated purpose/goal of treatment; can be a specific treatment phase",NA,"<;>",NA,NA,NA
+"treatment_start",FALSE,"String",FALSE,FALSE,TRUE,"Treatment start date/time",NA,"<;>",NA,NA,NA
+"treatment_status",FALSE,"String",FALSE,FALSE,TRUE,"Information on treatment modifications or scheduling with respect to other treatments",NA,"<;>",NA,NA,NA
+"treatment_type",TRUE,"String",FALSE,FALSE,TRUE,"Broad treatment category",NA,"<;>",NA,NA,NA
+"vital_status",TRUE,"String",FALSE,FALSE,FALSE,"Indicates whether a person is alive or deceased at a specific point in time.","Dead;Alive;Unknown",NA,NA,NA,NA
