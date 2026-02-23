@@ -34,7 +34,6 @@ dist/
 
 # Model cache
 model_cache/
-EDA/data/concatenated_cols_for_189439_values.csv
 *.html
 
 # Claude Agent SDK (local dev tooling)
