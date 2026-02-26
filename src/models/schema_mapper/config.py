@@ -3,8 +3,8 @@ import os
 
 # === Paths ===
 OUTPUT_DIR = "data/schema_mapping_eval"
-CURATED_DICT_PATH = "data/schema/curated_fields.csv"
-# CURATED_DICT_PATH = "data/schema/curated_dict.csv"
+# CURATED_DICT_PATH = "data/schema/curated_fields.csv"
+CURATED_DICT_PATH = "data/schema/schema30.csv"
 ALIAS_DICT_PATH = ""
 # ALIAS_DICT_PATH = "data/schema/curated_fields_source_latest_with_flags.csv" 
 # ALIAS_DICT_PATH = "data/schema/heterogeneous_attribute_mapping_ver1.csv"
