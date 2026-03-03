@@ -1,5 +1,7 @@
 import logging
+import logging.handlers
 import inspect
+import os
 import sys
 
 
@@ -18,8 +20,11 @@ class CustomLogger:
 
         # Add handlers only if they are not already added
         if not logger.handlers:
-            # File handler
-            fh = logging.FileHandler("out.log")
+            # Rotating file handler (configurable via LOG_FILE env var)
+            log_path = os.getenv("LOG_FILE", "out.log")
+            fh = logging.handlers.RotatingFileHandler(
+                log_path, maxBytes=10 * 1024 * 1024, backupCount=3
+            )
             # Stream handler
             stdout = logging.StreamHandler(stream=sys.stdout)
 
@@ -41,11 +46,12 @@ class CustomLogger:
 
     def log(self):
         stack = inspect.stack()
+        logger = logging.getLogger(self.__class__.__name__)
         try:
-            print("Whole stack is:")
-            print("\n".join([str(x[4]) for x in stack]))
-            print("-" * 20)
-            print("Caller was %s" % (str(stack[2][4])))
+            logger.debug("Whole stack is:")
+            logger.debug("\n".join([str(x[4]) for x in stack]))
+            logger.debug("-" * 20)
+            logger.debug("Caller was %s" % (str(stack[2][4])))
         finally:
             del stack
 
