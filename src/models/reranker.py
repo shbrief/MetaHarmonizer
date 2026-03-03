@@ -92,7 +92,7 @@ class Reranker:
         """Load Cross-Encoder"""
         self.model = CrossEncoder(self.model_name,
                                   device=self.device,
-                                  automodel_args={"cache_dir": self.cache_dir})
+                                  cache_folder=self.cache_dir)
 
     def _load_t5(self):
         """Load T5"""

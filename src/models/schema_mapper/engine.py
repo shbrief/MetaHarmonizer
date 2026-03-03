@@ -1,6 +1,7 @@
 """Main schema mapping engine."""
 import os
 import time
+import yaml
 import pandas as pd
 from datetime import datetime
 from typing import Dict, Any, List, Optional
@@ -9,9 +10,9 @@ from sentence_transformers import SentenceTransformer, util
 import torch
 
 from .config import (
-    FUZZY_THRESH, NOISE_VALUES, OUTPUT_DIR, ALIAS_DICT_PATH, FIELD_MODEL,
+    FUZZY_THRESH, NOISE_VALUES, OUTPUT_DIR, ALIAS_DICT_PATH, FIELD_MODEL, LLM_MODEL,
     NUMERIC_THRESH, FIELD_ALIAS_THRESH, VALUE_PERCENTAGE_THRESH,
-    LLM_THRESHOLD 
+    LLM_THRESHOLD
 )
 from .loaders.dict_loader import DictLoader
 from .loaders.value_loader import ValueLoader
@@ -33,7 +34,19 @@ from src.utils.ncit_match_utils import NCIClientSync
 from src.CustomLogger.custom_logger import CustomLogger
 
 logger = CustomLogger().custlogger(loglevel='WARNING')
+_YAML_PATH = os.path.join(os.path.dirname(__file__), "../../models/method_model.yaml")
 
+def _model_short_name(full_name: str) -> str:
+    """Return the short key for a model from method_model.yaml, or clean the full name."""
+    try:
+        with open(_YAML_PATH) as f:
+            mapping = yaml.safe_load(f)
+        reverse = {v: k for k, v in mapping.items() if isinstance(v, str)}
+        if full_name in reverse:
+            return reverse[full_name]
+    except Exception:
+        pass
+    return full_name.replace('-', '_').replace('.', '_').split('/')[-1]
 
 class SchemaMapEngine:
     """
@@ -450,7 +463,11 @@ class SchemaMapEngine:
         
         df_out = pd.DataFrame(results)
         ts = datetime.now().strftime("%Y%m%d_%H%M%S")
-        out_file = self.output_file.replace(".csv", f"_{self.mode}_{ts}.csv")
+        parts = [f"s3_{_model_short_name(FIELD_MODEL)}"]
+        if self.mode == "auto":
+            parts.append(f"s4_{_model_short_name(LLM_MODEL)}")
+        parts += [self.mode, ts]
+        out_file = self.output_file.replace(".csv", f"_{'_'.join(parts)}.csv")
         df_out.to_csv(out_file, index=False)
         logger.info(f"Saved results to {out_file}")
         
