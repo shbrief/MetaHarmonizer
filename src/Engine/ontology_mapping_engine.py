@@ -3,8 +3,10 @@ from src.models import ontology_mapper_lm as oml
 from src.models import ontology_mapper_rag as omr
 from src.models import ontology_mapper_synonym as omsyn
 from src.models import ontology_mapper_bi_encoder as ombe
+import os
 import pandas as pd
 import numpy as np
+from datetime import datetime
 from src.CustomLogger.custom_logger import CustomLogger
 
 logger = CustomLogger()
@@ -40,6 +42,7 @@ class OntoMapEngine:
                  s3_method: str = 'pubmed-bert',
                  s3_strategy: str = None,
                  s3_threshold: float = 0.9,
+                 output_dir: str = None,
                  **other_params: dict) -> None:
         """
         Initializes the OntoMapEngine class.
@@ -59,6 +62,7 @@ class OntoMapEngine:
         self.s3_method = s3_method
         self.query = query
         self.category = category
+        self.output_dir = output_dir
         self.corpus = list(
             dict.fromkeys(corpus))  # Remove duplicates while preserving order
         self.topk = topk
@@ -222,7 +226,7 @@ class OntoMapEngine:
         if existing_cols_to_drop:
             df = df.drop(columns=existing_cols_to_drop)
             self._logger.info(f"Dropped internal columns: {existing_cols_to_drop}")
-        
+
         return df
 
     def _om_model_from_strategy(self, strategy: str,
@@ -443,6 +447,29 @@ class OntoMapEngine:
             self._logger.info(
                 f"Stage 2.5: Boosted {len(syn_boosted)} queries with synonyms")
 
+    def _save_result(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Save result DataFrame to output_dir with a timestamp if output_dir is set."""
+        if self.output_dir is not None:
+            os.makedirs(self.output_dir, exist_ok=True)
+            ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+            s2_method_clean = self.s2_method.replace('-', '_')
+            parts = [f"om_{self.category}", f"s2_{self.s2_strategy}_{s2_method_clean}"]
+
+            if self.s3_strategy is not None:
+                s3_method_clean = self.s3_method.replace('-', '_')
+                parts.append(f"s3_{self.s3_strategy}_{s3_method_clean}")
+                if self.other_params.get('use_reranker', True):
+                    reranker_method = self.other_params.get('reranker_method', 'minilm')
+                    parts.append(f"reranker_{reranker_method}")
+
+            parts.append(ts)
+            fname = "_".join(parts) + ".csv"
+            path = os.path.join(self.output_dir, fname)
+            df.to_csv(path, index=False)
+            self._logger.info(f"Saved results to {path}")
+        return df
+
     def run(self):
         """
         Runs the OntoMap Engine with multi-stage cascade.
@@ -478,7 +505,7 @@ class OntoMapEngine:
         if not non_exact_matches_ls:
             self._logger.info(
                 "No queries for Stage 2. Returning Stage 1 results.")
-            return self._finalize_results(exact_df)
+            return self._save_result(self._finalize_results(exact_df))
 
         # ========== Stage 2: LM/ST ==========
         self._logger.info(f"Stage 2: {self.s2_strategy.upper()} Matching")
@@ -525,7 +552,7 @@ class OntoMapEngine:
             combined_results = pd.concat([exact_df, s2_res], ignore_index=True)
 
             self._log_final_summary(exact_df, s2_res)
-            return self._finalize_results(combined_results)
+            return self._save_result(self._finalize_results(combined_results))
 
         else:
             # Check which queries need Stage 3 (top1_score < threshold)
@@ -541,7 +568,7 @@ class OntoMapEngine:
                             errors='ignore')
                 combined_results = pd.concat([exact_df, s2_res],
                                              ignore_index=True)
-                return combined_results
+                return self._save_result(combined_results)
 
             # Identify low-confidence queries for Stage 3
             # Use existing top1_score_float column
@@ -564,7 +591,7 @@ class OntoMapEngine:
                                              ignore_index=True)
 
                 self._log_final_summary(exact_df, s2_res)
-                return combined_results
+                return self._save_result(combined_results)
 
             # Apply shortname replacement for Stage 3 queries
             mapping_dict_s3 = self._map_shortname_to_fullname(queries_for_s3)
@@ -614,4 +641,4 @@ class OntoMapEngine:
 
             # Final summary
             self._log_final_summary(exact_df, s2_res_filtered, s3_res)
-            return self._finalize_results(combined_results)
+            return self._save_result(self._finalize_results(combined_results))

@@ -5,7 +5,6 @@ from functools import lru_cache
 import os
 from dotenv import load_dotenv
 from huggingface_hub import snapshot_download
-from src.models.reranker import Reranker
 
 load_dotenv()
 
@@ -91,6 +90,7 @@ def get_embedding_model_cached(method: str,
 def get_reranker_cached(method: str,
                         use_8bit: bool = False,
                         yaml_path: str = DEFAULT_YAML_PATH):
+    from src.models.reranker import Reranker
     method_model_dict = load_method_model_dict(yaml_path)
 
     if method not in method_model_dict:
