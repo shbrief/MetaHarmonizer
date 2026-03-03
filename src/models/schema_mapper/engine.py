@@ -2,6 +2,7 @@
 import os
 import time
 import pandas as pd
+from datetime import datetime
 from typing import Dict, Any, List, Optional
 from functools import lru_cache
 from sentence_transformers import SentenceTransformer, util
@@ -448,7 +449,8 @@ class SchemaMapEngine:
             logger.warning(f"[NoMatch] '{col}' did not match any stage")
         
         df_out = pd.DataFrame(results)
-        out_file = self.output_file.replace(".csv", f"_{self.mode}.csv")
+        ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+        out_file = self.output_file.replace(".csv", f"_{self.mode}_{ts}.csv")
         df_out.to_csv(out_file, index=False)
         logger.info(f"Saved results to {out_file}")
         

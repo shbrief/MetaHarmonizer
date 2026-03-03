@@ -1,5 +1,4 @@
 import os
-from datetime import datetime
 from typing import Dict, List, Optional, Sequence, Set, Iterable, Tuple
 import pandas as pd
 
@@ -35,8 +34,7 @@ def _pred_cols(df: pd.DataFrame, top_k: int) -> List[str]:
 def _build_output_filename(base_name: str,
                            include_methods: Optional[Iterable[str]],
                            exclude_methods: Optional[Iterable[str]],
-                           treatment_override: bool,
-                           timestamp: Optional[str] = None) -> str:
+                           treatment_override: bool) -> str:
     """
     Build output filename with suffixes reflecting active options.
 
@@ -62,13 +60,7 @@ def _build_output_filename(base_name: str,
         parts.append("treatment")
 
     parts.append("eval")
-    if timestamp:
-        parts.append(timestamp)
     return "_".join(parts) + ".csv"
-
-
-def _now_timestamp() -> str:
-    return datetime.now().strftime("%Y%m%d_%H%M%S")
 
 
 def _apply_cancer_disease_override(
@@ -248,20 +240,16 @@ def build_eval_df(
 
     saved_path: Optional[str] = None
     if save_eval:
-        ts = _now_timestamp()
         out_filename = _build_output_filename(
             os.path.basename(pred_file),
             include_methods=None,
             exclude_methods=None,
             treatment_override=apply_treatment_override,
-            timestamp=ts,
         )
         out_dir = out_dir or os.path.dirname(os.path.abspath(pred_file))
         os.makedirs(out_dir, exist_ok=True)
         saved_path = os.path.join(out_dir, out_filename)
-        merged_to_save = merged.copy()
-        merged_to_save["timestamp"] = ts
-        merged_to_save.to_csv(saved_path, index=False)
+        merged.to_csv(saved_path, index=False)
 
     return merged, saved_path
 
@@ -416,21 +404,17 @@ def compute_accuracy(
 
         # Save filtered df with appropriate filename
         saved_path: Optional[str] = None
-        ts = _now_timestamp()
         if save_eval:
             out_filename = _build_output_filename(
                 os.path.basename(pred_file),
                 include_methods=include_methods,
                 exclude_methods=exclude_methods,
                 treatment_override=apply_treatment_override,
-                timestamp=ts,
             )
             out_dir = out_dir or os.path.dirname(os.path.abspath(pred_file))
             os.makedirs(out_dir, exist_ok=True)
             saved_path = os.path.join(out_dir, out_filename)
-            df_to_save = df.copy()
-            df_to_save["timestamp"] = ts
-            df_to_save.to_csv(saved_path, index=False)
+            df.to_csv(saved_path, index=False)
 
         k_list: Sequence[int] = (1, 3, 5) if top_k == 5 else list(range(1, top_k + 1))
         n = len(df)
@@ -440,7 +424,6 @@ def compute_accuracy(
             for k in k_list:
                 results[f"acc@{k}"] = 0.0
             results["n_rows"] = 0.0
-            results["timestamp"] = ts
             if save_eval and saved_path:
                 results["eval_path"] = saved_path
             return results
@@ -449,7 +432,6 @@ def compute_accuracy(
             hits = int((df["match_level"].fillna(99).astype(int) <= k).sum())
             results[f"acc@{k}"] = hits / n
         results["n_rows"] = float(n)
-        results["timestamp"] = ts
 
         if save_eval and saved_path:
             results["eval_path"] = saved_path

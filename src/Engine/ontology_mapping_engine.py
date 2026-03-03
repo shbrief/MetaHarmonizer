@@ -222,7 +222,7 @@ class OntoMapEngine:
         if existing_cols_to_drop:
             df = df.drop(columns=existing_cols_to_drop)
             self._logger.info(f"Dropped internal columns: {existing_cols_to_drop}")
-        
+
         return df
 
     def _om_model_from_strategy(self, strategy: str,

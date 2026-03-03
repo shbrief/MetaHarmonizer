@@ -26,6 +26,8 @@ class ValueFAISSStore:
         self.db_path = BASE_DB
         self.index_path = os.path.join(BASE_IDX_DIR, IDX_NAME)
         self.logger = CustomLogger().custlogger(loglevel="INFO")
+        self.is_gpu = faiss.get_num_gpus() > 0
+        self._gpu_res = faiss.StandardGpuResources() if self.is_gpu else None
 
         raw_model = get_embedding_model_cached(MODEL_NAME)
         self.embedder = EmbeddingAdapter(raw_model)
@@ -123,7 +125,8 @@ class ValueFAISSStore:
     def _new_index(self, dim: int):
         self.dim = dim
         base = faiss.IndexFlatIP(dim)
-        self.index = faiss.IndexIDMap2(base)
+        cpu_index = faiss.IndexIDMap2(base)
+        self.index = faiss.index_cpu_to_gpu(self._gpu_res, 0, cpu_index) if self.is_gpu else cpu_index
 
     def _l2_normalize(self, v: np.ndarray) -> np.ndarray:
         if getattr(self.embedder, "model", None) and getattr(
@@ -136,12 +139,15 @@ class ValueFAISSStore:
     def save_index(self):
         if self.index is None:
             raise RuntimeError("Index is None.")
+        index_to_save = faiss.index_gpu_to_cpu(self.index) if self.is_gpu else self.index
         tmp = self.index_path + ".tmp"
-        faiss.write_index(self.index, tmp)
+        faiss.write_index(index_to_save, tmp)
         os.replace(tmp, self.index_path)
 
     def load_index(self):
         self.index = faiss.read_index(self.index_path)
+        if self.is_gpu:
+            self.index = faiss.index_cpu_to_gpu(self._gpu_res, 0, self.index)
         self.dim = self.index.d
         out_dim = getattr(self.embedder, "output_dim", None)
         if out_dim and out_dim != self.dim:
@@ -151,13 +157,20 @@ class ValueFAISSStore:
         if not ids or self.index is None:
             return
         selector = faiss.IDSelectorBatch(np.asarray(ids, dtype=np.int64))
-        self.index.remove_ids(selector)
+        if self.is_gpu:
+            # remove_ids is not supported on GPU index; convert to CPU, remove, convert back
+            cpu_index = faiss.index_gpu_to_cpu(self.index)
+            cpu_index.remove_ids(selector)
+            self.index = faiss.index_cpu_to_gpu(self._gpu_res, 0, cpu_index)
+        else:
+            self.index.remove_ids(selector)
 
     def _index_ids(self) -> set:
         if self.index is None:
             return set()
         try:
-            return set(map(int, faiss.vector_to_array(self.index.id_map)))
+            idx = faiss.index_gpu_to_cpu(self.index) if self.is_gpu else self.index
+            return set(map(int, faiss.vector_to_array(idx.id_map)))
         except Exception:
             return set()
 

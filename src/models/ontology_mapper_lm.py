@@ -97,8 +97,8 @@ class OntoMapLM(otm.OntoModelsBase):
             torch.Tensor: The query embeddings.
         """
         if self._query_embeddings is None:
-            embd = self.create_embeddings(self.query)
-        return embd
+            self._query_embeddings = self.create_embeddings(self.query)
+        return self._query_embeddings
 
     @property
     def corpus_embeddings(self):

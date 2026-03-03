@@ -47,6 +47,8 @@ class FAISSSQLiteSearch:
         om_strategy: str = "rag",
     ):
         ensure_knowledge_db()
+        self.is_gpu = faiss.get_num_gpus() > 0
+        self._gpu_res = faiss.StandardGpuResources() if self.is_gpu else None
         self.db_path = BASE_DB
         self.db = NCIDb(UMLS_API_KEY)
         self.method = method
@@ -96,6 +98,8 @@ class FAISSSQLiteSearch:
 
         if os.path.exists(self.index_path):
             self.index = faiss.read_index(self.index_path)
+            if self.is_gpu:
+                self.index = faiss.index_cpu_to_gpu(self._gpu_res, 0, self.index)
             rows = self.cursor.execute(
                 f"SELECT id FROM {self.table_name} ORDER BY id").fetchall()
             self._ids = [r[0] for r in rows]
@@ -224,9 +228,8 @@ class FAISSSQLiteSearch:
 
         # Batch embedding
         embed_batch_size = 512
-        if faiss.get_num_gpus() > 0:
-            total_mem = torch.cuda.get_device_properties(0).total_memory / (
-                1024**3)
+        if self.is_gpu:
+            total_mem = torch.cuda.get_device_properties(0).total_memory / (1024**3)
             used_mem = torch.cuda.memory_allocated(0) / (1024**3)
             free_mem = total_mem - used_mem
 
@@ -244,7 +247,7 @@ class FAISSSQLiteSearch:
             all_vectors.extend(batch_vecs)
 
             del batch_texts, batch_vecs
-            if faiss.get_num_gpus() > 0:
+            if self.is_gpu:
                 torch.cuda.empty_cache()
             gc.collect()
 
@@ -254,20 +257,17 @@ class FAISSSQLiteSearch:
 
         dim = vectors_array.shape[1]
         cpu_index = faiss.IndexFlatIP(dim)
-
-        if faiss.get_num_gpus() > 0:
-            res = faiss.StandardGpuResources()
-            self.index = faiss.index_cpu_to_gpu(res, 0, cpu_index)
-        else:
-            self.index = cpu_index
+        self.index = faiss.index_cpu_to_gpu(self._gpu_res, 0, cpu_index) if self.is_gpu else cpu_index
 
         # Add vectors in order
         self.index.add(vectors_array)
         self._ids = db_ids
 
-        # Save
+        # Save (GPU indices must be converted to CPU before writing)
         os.makedirs(BASE_IDX_DIR, exist_ok=True)
-        faiss.write_index(self.index, self.index_path)
+        index_to_save = faiss.index_gpu_to_cpu(self.index) if self.is_gpu else self.index
+        faiss.write_index(index_to_save, self.index_path)
+        self.logger.info(f"Index saved ({'GPU' if self.is_gpu else 'CPU'} mode)")
 
         self.logger.info(f"✅ FAISS index built: {self.index.ntotal} vectors")
 
