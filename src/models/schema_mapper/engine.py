@@ -27,7 +27,6 @@ from .matchers.stage2_matchers import (
 from .matchers.stage3_matchers import (
     NumericCombinedMatcher, SemanticCombinedMatcher
 )
-from .matchers.stage4_matchers import LLMMatcher 
 from src.utils.schema_mapper_utils import normalize, is_numeric_column, extract_valid_value
 from src.utils.invalid_column_utils import check_invalid
 from src.utils.ncit_match_utils import NCIClientSync
@@ -156,9 +155,11 @@ class SchemaMapEngine:
         self.numeric_combined = NumericCombinedMatcher(self)
         self.semantic_combined = SemanticCombinedMatcher(self)
         
-        # Stage 4 - LLM (only in auto mode)
+        # Stage 4 - LLM (only in auto mode); import lazily so that
+        # mode="manual" works without google.generativeai installed.
         if self.mode == "auto":
             try:
+                from .matchers.stage4_matchers import LLMMatcher
                 self.llm = LLMMatcher(self)
                 logger.info("[Engine] LLM matcher initialized for auto mode")
             except Exception as e:
@@ -190,7 +191,7 @@ class SchemaMapEngine:
         """Cached text encoding."""
         return self.dict_model.encode(text, convert_to_tensor=True)
     
-    def unique_values(self, col: str, cap: int | None = None) -> list[str]:
+    def unique_values(self, col: str, cap: Optional[int] = None) -> List[str]:
         """Get unique values from a column with caching."""
         if col not in self._col_values_cache:
             series = self.df[col].dropna().astype(str).apply(extract_valid_value)
@@ -492,9 +493,10 @@ class SchemaMapEngine:
         Returns:
             DataFrame with LLM results (merged or standalone)
         """
-        # Initialize LLM matcher if not already done
+        # Initialize LLM matcher if not already done (lazy import)
         if self.llm is None:
             try:
+                from .matchers.stage4_matchers import LLMMatcher
                 self.llm = LLMMatcher(self)
                 logger.info("[Engine] LLM matcher initialized for manual mode")
             except Exception as e:
@@ -532,6 +534,9 @@ class SchemaMapEngine:
         
         if len(queries_to_rematch) == 0:
             logger.info("[Engine] No queries need LLM")
+            if merge_results:
+                df_input.to_csv(output_csv, index=False)
+                return df_input
             return pd.DataFrame()
         
         # Re-match queries
