@@ -16,17 +16,32 @@ existing target field), this module:
 """
 
 import os
+import warnings
 from collections import Counter, defaultdict
 from typing import Dict, List, Optional, Set, Tuple
 
 import numpy as np
 import pandas as pd
-from sentence_transformers import SentenceTransformer
-from sklearn.cluster import AgglomerativeClustering
 from sklearn.metrics.pairwise import cosine_similarity
+
+from src.field_suggester.semantic_clustering import (
+    HybridSimilarityConfig,
+    SCSMode,
+    SemanticClusteringConfig,
+    SemanticClusteringEngine,
+)
+from src.utils.embedding_store import EmbeddingStore
 
 # Default sentence-transformer model (env-var override supported)
 FIELD_MODEL = os.environ.get("FIELD_MODEL", "all-MiniLM-L6-v2")
+
+# Convenience aliases for biomedical embedding models
+BIOMEDICAL_MODELS: Dict[str, str] = {
+    "sapbert": "cambridgeltl/SapBERT-from-PubMedBERT-fulltext",
+    "pubmedbert": "microsoft/BiomedNLP-PubMedBERT-base-uncased-abstract-fulltext",
+    "biobert": "dmis-lab/biobert-v1.1",
+    "minilm": "all-MiniLM-L6-v2",
+}
 
 
 # ======================================================================
@@ -51,6 +66,10 @@ _DEFAULT_MIN_CLUSTER_SIZE = 2
 
 # Value sampling
 _DEFAULT_VALUE_SAMPLE_SIZE = 50
+
+# Embedding text enrichment
+_DEFAULT_EMBED_TOP_K = 5        # unique values to append to embedding text
+_EMBED_VALUE_MAX_CHARS = 30     # max chars per value in the embedding string
 
 # Confidence weights
 _W_EMBEDDING_AGREEMENT = 0.35
@@ -87,12 +106,28 @@ class FieldSuggester:
         scispaCy model name for biomedical NER.  Falls back to
         embedding-only mode if the model is not installed.
     distance_threshold : float
-        Agglomerative clustering distance threshold (cosine).
-        Smaller → more clusters; larger → fewer, bigger clusters.
+        *Deprecated.*  Ignored when semantic clustering is active.
+        Kept for backward compatibility.
     min_cluster_size : int
         Minimum number of columns to form a valid suggestion.
     value_sample_size : int
         Max unique values to sample per column for NER enrichment.
+    embed_top_k : int
+        Maximum number of unique non-NA values to append to the embedding
+        text for each column.  Set to 0 to disable value enrichment.
+        Purely numeric columns are never enriched regardless of this value.
+        Default: 5.
+    embedding_store : EmbeddingStore, optional
+        Shared embedding store.  If *None*, one is created internally
+        using ``embedding_model``.
+    scs_mode : SCSMode
+        Semantic Consistency Score evaluation mode.
+        ``EMBEDDING`` (default) — no LLM calls required.
+        ``LLM`` — uses an LLM for richer semantic evaluation.
+    scs_threshold : float
+        Minimum SCS to accept a cluster as semantically coherent.
+    llm_client : callable, optional
+        Custom LLM backend for SCS evaluation (LLM mode only).
     """
 
     def __init__(
@@ -102,11 +137,52 @@ class FieldSuggester:
         distance_threshold: float = _DEFAULT_DISTANCE_THRESHOLD,
         min_cluster_size: int = _DEFAULT_MIN_CLUSTER_SIZE,
         value_sample_size: int = _DEFAULT_VALUE_SAMPLE_SIZE,
+        embed_top_k: int = _DEFAULT_EMBED_TOP_K,
+        embedding_store: Optional[EmbeddingStore] = None,
+        scs_mode: SCSMode = SCSMode.EMBEDDING,
+        scs_threshold: float = 0.9,
+        llm_client=None,
+        merge_similarity_threshold: float = 0.75,
+        use_hybrid_similarity: bool = True,
+        refine_clusters: bool = False,
+        split_threshold: float = 0.15,
     ) -> None:
-        self.encoder = SentenceTransformer(embedding_model)
+        # Resolve biomedical model aliases
+        embedding_model = BIOMEDICAL_MODELS.get(embedding_model, embedding_model)
+
+        # Shared embedding store (lazy model load)
+        self._store = embedding_store or EmbeddingStore(
+            model_name=embedding_model, strategy="st"
+        )
+
+        # Semantic clustering configuration
+        self._scs_mode = scs_mode
+        self._scs_threshold = scs_threshold
+        self._llm_client = llm_client
+
+        # NER merge gating: only merge clusters if centroid similarity exceeds this
+        self._merge_similarity_threshold = merge_similarity_threshold
+
+        # Hybrid similarity: combine embedding + lexical signals
+        self._use_hybrid_similarity = use_hybrid_similarity
+
+        # Post-clustering refinement
+        self._refine_clusters = refine_clusters
+        self._split_threshold = split_threshold
+
+        # Legacy — kept for backward compatibility
+        if distance_threshold != _DEFAULT_DISTANCE_THRESHOLD:
+            warnings.warn(
+                "distance_threshold is deprecated and ignored when semantic "
+                "clustering is active.  Use scs_threshold instead.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
         self.distance_threshold = distance_threshold
+
         self.min_cluster_size = min_cluster_size
         self.value_sample_size = value_sample_size
+        self.embed_top_k = embed_top_k
 
         # Attempt to load scispaCy NER model
         self._nlp = None
@@ -164,10 +240,20 @@ class FieldSuggester:
         ner_tags = self._ner_tag(columns, df)
 
         # --- Step 2: Embedding clustering (fine groups) ---
-        clusters, embeddings = self._embed_and_cluster(columns)
+        clusters, embeddings = self._embed_and_cluster(columns, df=df)
+
+        # --- Step 2b: Post-clustering refinement (split over-merged clusters) ---
+        if self._refine_clusters:
+            from src.field_suggester.cluster_refiner import ClusterRefiner
+            refiner = ClusterRefiner(split_threshold=self._split_threshold)
+            clusters = refiner.refine_cluster_map(
+                clusters, columns, embeddings
+            )
 
         # --- Step 3: Merge NER + clustering signals ---
-        merged_groups = self._merge_signals(columns, ner_tags, clusters)
+        merged_groups = self._merge_signals(
+            columns, ner_tags, clusters, embeddings
+        )
 
         # --- Step 4: Filter by min cluster size ---
         merged_groups = {
@@ -323,8 +409,18 @@ class FieldSuggester:
     def _embed_and_cluster(
         self,
         columns: List[str],
+        df: Optional[pd.DataFrame] = None,
     ) -> Tuple[Dict[str, int], np.ndarray]:
-        """Encode column names and cluster by cosine similarity.
+        """Encode column names and cluster via semantic clustering.
+
+        Uses :class:`SemanticClusteringEngine` with the configured SCS
+        mode and threshold.  Embeddings are computed (or retrieved from
+        cache) via the shared :class:`EmbeddingStore`.
+
+        When *df* is provided and :attr:`embed_top_k` > 0, each column's
+        embedding text is enriched with a sorted sample of unique non-NA
+        categorical values (e.g. ``"vital status: alive, dead"``), giving
+        the model richer context for clustering.
 
         Returns
         -------
@@ -333,22 +429,40 @@ class FieldSuggester:
         embeddings : np.ndarray
             Shape ``(n_columns, dim)``.
         """
-        # Convert column names to readable text for better embeddings
-        texts = [self._col_to_text(c) for c in columns]
-        embeddings = self.encoder.encode(texts, show_progress_bar=False)
+        # Build (possibly value-enriched) text for each column
+        texts = [
+            self._build_embed_text(c, df, self.embed_top_k)
+            for c in columns
+        ]
+        source_tag = (
+            "column_name_with_values"
+            if df is not None and self.embed_top_k > 0
+            else "column_name"
+        )
+        embeddings = self._store.embed(texts, source=source_tag)
 
         if len(columns) < 2:
             return {col: 0 for col in columns}, embeddings
 
-        clustering = AgglomerativeClustering(
-            n_clusters=None,
-            distance_threshold=self.distance_threshold,
-            metric="cosine",
-            linkage="average",
+        # Semantic clustering with SCS-based adaptive stopping
+        hybrid_cfg = HybridSimilarityConfig() if self._use_hybrid_similarity else None
+        sc_config = SemanticClusteringConfig(
+            scs_mode=self._scs_mode,
+            scs_threshold=self._scs_threshold,
+            min_cluster_size=self.min_cluster_size,
+            hybrid_similarity=hybrid_cfg,
         )
-        labels = clustering.fit_predict(embeddings)
+        sc_engine = SemanticClusteringEngine(
+            config=sc_config, llm_client=self._llm_client
+        )
+        semantic_clusters = sc_engine.cluster(columns, embeddings)
 
-        cluster_map = {col: int(lbl) for col, lbl in zip(columns, labels)}
+        # Convert SemanticCluster list → {column: label} dict
+        cluster_map: Dict[str, int] = {}
+        for cid, sc in enumerate(semantic_clusters):
+            for item in sc.items:
+                cluster_map[item] = cid
+
         return cluster_map, embeddings
 
     # ------------------------------------------------------------------
@@ -360,6 +474,7 @@ class FieldSuggester:
         columns: List[str],
         ner_tags: Dict[str, List[str]],
         clusters: Dict[str, int],
+        embeddings: Optional[np.ndarray] = None,
     ) -> Dict[int, Set[str]]:
         """Reconcile NER groups and embedding clusters.
 
@@ -367,9 +482,13 @@ class FieldSuggester:
         -------------
         - Start with embedding clusters as base groups.
         - For each NER entity type that spans multiple embedding clusters,
-          merge those clusters into one group.
+          check inter-cluster centroid similarity.
+        - Only merge clusters whose centroids are similar enough
+          (above ``merge_similarity_threshold``).
         - Columns with no NER entities remain in their embedding cluster.
         """
+        col_to_idx = {c: i for i, c in enumerate(columns)}
+
         # Base groups from embedding clusters
         cluster_groups: Dict[int, Set[str]] = defaultdict(set)
         for col, label in clusters.items():
@@ -384,7 +503,8 @@ class FieldSuggester:
             for ent in set(entities):  # unique entity labels per column
                 entity_to_cols[ent].add(col)
 
-        # Merge clusters that share the same NER entity type
+        # Merge clusters that share the same NER entity type,
+        # but only if their centroids are sufficiently similar.
         next_id = max(cluster_groups.keys()) + 1 if cluster_groups else 0
 
         for ent_type, ent_cols in entity_to_cols.items():
@@ -392,23 +512,88 @@ class FieldSuggester:
                 continue
 
             # Which current groups contain these columns?
-            involved_gids: Set[int] = set()
+            involved_gids: List[int] = []
             for gid, members in cluster_groups.items():
                 if members & ent_cols:
-                    involved_gids.add(gid)
+                    involved_gids.append(gid)
 
             if len(involved_gids) <= 1:
                 continue  # Already in the same group
 
-            # Merge all involved groups
-            combined: Set[str] = set()
-            for gid in involved_gids:
-                combined |= cluster_groups.pop(gid)
-
-            cluster_groups[next_id] = combined
-            next_id += 1
+            # Gate merges on centroid similarity when embeddings are available
+            if embeddings is not None and self._merge_similarity_threshold > 0:
+                merged_set = self._conditional_merge(
+                    involved_gids, cluster_groups, embeddings, col_to_idx
+                )
+                for new_group in merged_set:
+                    cluster_groups[next_id] = new_group
+                    next_id += 1
+            else:
+                # Legacy unconditional merge
+                combined: Set[str] = set()
+                for gid in involved_gids:
+                    combined |= cluster_groups.pop(gid)
+                cluster_groups[next_id] = combined
+                next_id += 1
 
         return dict(cluster_groups)
+
+    def _conditional_merge(
+        self,
+        group_ids: List[int],
+        cluster_groups: Dict[int, Set[str]],
+        embeddings: np.ndarray,
+        col_to_idx: Dict[str, int],
+    ) -> List[Set[str]]:
+        """Merge only groups whose centroids exceed the similarity threshold.
+
+        Uses greedy pairwise merging: for each pair of groups, merge if
+        centroid cosine similarity > ``_merge_similarity_threshold``.
+        Returns the list of newly formed merged groups (already removed
+        from ``cluster_groups`` in place).
+        """
+        # Compute centroids for each involved group
+        def _centroid(members: Set[str]) -> np.ndarray:
+            idxs = [col_to_idx[c] for c in members if c in col_to_idx]
+            if not idxs:
+                return np.zeros(embeddings.shape[1])
+            return embeddings[idxs].mean(axis=0)
+
+        centroids = {gid: _centroid(cluster_groups[gid]) for gid in group_ids}
+
+        # Union-Find for greedy merging
+        parent: Dict[int, int] = {gid: gid for gid in group_ids}
+
+        def find(x: int) -> int:
+            while parent[x] != x:
+                parent[x] = parent[parent[x]]
+                x = parent[x]
+            return x
+
+        def union(a: int, b: int) -> None:
+            ra, rb = find(a), find(b)
+            if ra != rb:
+                parent[ra] = rb
+
+        # Pairwise similarity check
+        for i, gid_a in enumerate(group_ids):
+            for gid_b in group_ids[i + 1:]:
+                ca, cb = centroids[gid_a], centroids[gid_b]
+                norm_a = np.linalg.norm(ca)
+                norm_b = np.linalg.norm(cb)
+                if norm_a < 1e-10 or norm_b < 1e-10:
+                    continue
+                sim = float(np.dot(ca, cb) / (norm_a * norm_b))
+                if sim >= self._merge_similarity_threshold:
+                    union(gid_a, gid_b)
+
+        # Build merged groups from union-find
+        merge_sets: Dict[int, Set[str]] = defaultdict(set)
+        for gid in group_ids:
+            root = find(gid)
+            merge_sets[root] |= cluster_groups.pop(gid)
+
+        return list(merge_sets.values())
 
     # ------------------------------------------------------------------
     # Step 4: Name Generation
@@ -547,10 +732,41 @@ class FieldSuggester:
     @staticmethod
     def _col_to_text(col: str) -> str:
         """Convert a column name to readable text for NER / embedding."""
-        return col.replace("_", " ").replace("-", " ").replace(".", " ").strip()
+        return col.replace("_", " ").replace("-", " ").replace(".", " ").replace(":", " ").strip()
+
+    @staticmethod
+    def _build_embed_text(
+        col: str,
+        df: Optional[pd.DataFrame],
+        embed_top_k: int,
+    ) -> str:
+        """Build the text string to embed for a column.
+
+        When *df* is provided and *embed_top_k* > 0, appends a sorted
+        sample of unique non-NA categorical values to the column name text.
+        Purely numeric columns fall back to column-name-only text.
+
+        Format: ``"col text: val1, val2, val3"``
+        """
+        from src.utils.schema_mapper_utils import is_numeric_column
+
+        col_text = FieldSuggester._col_to_text(col)
+
+        if df is None or embed_top_k <= 0 or col not in df.columns:
+            return col_text
+        if is_numeric_column(df, col):
+            return col_text
+
+        raw_vals = df[col].dropna().astype(str).unique()
+        if len(raw_vals) == 0:
+            return col_text
+
+        clipped = [v[:_EMBED_VALUE_MAX_CHARS] for v in raw_vals]
+        top_vals = sorted(clipped)[:embed_top_k]
+        return f"{col_text}: {', '.join(top_vals)}"
 
     @staticmethod
     def _tokenise(text: str) -> List[str]:
         """Lowercase tokenisation of a column name or text."""
-        cleaned = text.lower().replace("_", " ").replace("-", " ").replace(".", " ")
+        cleaned = text.lower().replace("_", " ").replace("-", " ").replace(".", " ").replace(":", " ")
         return [tok.strip() for tok in cleaned.split() if tok.strip()]

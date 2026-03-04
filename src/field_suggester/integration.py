@@ -6,12 +6,15 @@ import pandas as pd
 
 from .field_suggester import FieldSuggester
 
+from src.utils.embedding_store import EmbeddingStore
+
 
 def suggest_from_schema_mapper(
     schema_mapper_results: Union[pd.DataFrame, str],
     df: pd.DataFrame,
     score_threshold: float = 0.5,
     suggester: Optional[FieldSuggester] = None,
+    embedding_store: Optional[EmbeddingStore] = None,
 ) -> Dict[str, dict]:
     """Extract unmapped columns from SchemaMapEngine output and suggest new fields.
 
@@ -29,6 +32,10 @@ def suggest_from_schema_mapper(
     suggester : FieldSuggester or None
         Pre-configured ``FieldSuggester`` instance.  If ``None``, one is
         created with default parameters.
+    embedding_store : EmbeddingStore or None
+        Shared embedding store.  Passed through to ``FieldSuggester`` when
+        ``suggester`` is ``None``.  Ignored when a pre-built ``suggester``
+        is provided.
 
     Returns
     -------
@@ -82,6 +89,6 @@ def suggest_from_schema_mapper(
         return {}
 
     if suggester is None:
-        suggester = FieldSuggester()
+        suggester = FieldSuggester(embedding_store=embedding_store)
 
     return suggester.suggest(unmapped_columns, df=df)

@@ -23,13 +23,13 @@ from __future__ import annotations
 import json
 import re
 from collections import deque
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
-from typing import Callable, List, Optional, Tuple, TYPE_CHECKING
+from typing import Callable, Dict, List, Optional, Set, Tuple, TYPE_CHECKING
 
 import numpy as np
 from scipy.cluster.hierarchy import ClusterNode, linkage, to_tree
-from scipy.spatial.distance import pdist
+from scipy.spatial.distance import pdist, squareform
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
 
@@ -99,10 +99,162 @@ class SemanticClusteringConfig:
     llm_model: str = "gpt-4-turbo"
     llm_temperature: float = 0.0
     embedding_scs_metric: str = "cosine"
+    hybrid_similarity: Optional["HybridSimilarityConfig"] = None
+    domain_thresholds: Optional[Dict[str, float]] = None
 
     def __post_init__(self):
         if isinstance(self.scs_mode, str) and not isinstance(self.scs_mode, SCSMode):
             self.scs_mode = SCSMode(self.scs_mode)
+
+
+@dataclass
+class HybridSimilarityConfig:
+    """Weights for combining multiple similarity signals into a distance matrix."""
+
+    embedding_weight: float = 0.6
+    token_jaccard_weight: float = 0.2
+    edit_distance_weight: float = 0.1
+    prefix_suffix_weight: float = 0.1
+
+
+class HybridSimilarity:
+    """Combine embedding cosine distance with lexical similarity signals.
+
+    Produces a condensed distance matrix suitable for
+    ``scipy.cluster.hierarchy.linkage``.
+    """
+
+    def __init__(self, config: Optional[HybridSimilarityConfig] = None) -> None:
+        self.config = config or HybridSimilarityConfig()
+
+    def compute_distance_matrix(
+        self, items: List[str], embeddings: np.ndarray
+    ) -> np.ndarray:
+        """Return a condensed distance matrix combining 4 signals.
+
+        Parameters
+        ----------
+        items : list of str
+            Item labels (column names).
+        embeddings : np.ndarray
+            Embedding matrix of shape ``(n_items, dim)``.
+
+        Returns
+        -------
+        np.ndarray
+            Condensed distance vector (for ``scipy.cluster.hierarchy.linkage``).
+        """
+        n = len(items)
+        cfg = self.config
+
+        # 1. Embedding cosine distance
+        emb_dist = pdist(embeddings, metric="cosine")
+        emb_dist = np.nan_to_num(emb_dist, nan=0.0)
+        emb_dist = np.clip(emb_dist, 0.0, 2.0)
+
+        # Normalise to [0, 1] (cosine distance is already in [0, 2])
+        emb_dist_norm = emb_dist / 2.0
+
+        # 2. Token Jaccard distance
+        token_sets = [self._tokenise(item) for item in items]
+        jac_dist = np.zeros(n * (n - 1) // 2)
+        idx = 0
+        for i in range(n):
+            for j in range(i + 1, n):
+                jac_dist[idx] = 1.0 - self._token_jaccard(
+                    token_sets[i], token_sets[j]
+                )
+                idx += 1
+
+        # 3. Normalised edit distance
+        edit_dist = np.zeros(n * (n - 1) // 2)
+        normed_items = [item.lower().replace("_", "").replace(" ", "") for item in items]
+        idx = 0
+        for i in range(n):
+            for j in range(i + 1, n):
+                edit_dist[idx] = self._normalized_edit_distance(
+                    normed_items[i], normed_items[j]
+                )
+                idx += 1
+
+        # 4. Prefix/suffix distance
+        ps_dist = np.zeros(n * (n - 1) // 2)
+        idx = 0
+        for i in range(n):
+            for j in range(i + 1, n):
+                ps_dist[idx] = 1.0 - self._prefix_suffix_score(
+                    token_sets[i], token_sets[j]
+                )
+                idx += 1
+
+        # Weighted combination
+        combined = (
+            cfg.embedding_weight * emb_dist_norm
+            + cfg.token_jaccard_weight * jac_dist
+            + cfg.edit_distance_weight * edit_dist
+            + cfg.prefix_suffix_weight * ps_dist
+        )
+        return combined
+
+    @staticmethod
+    def _tokenise(text: str) -> Set[str]:
+        """Lowercase tokenise a column name."""
+        cleaned = text.lower().replace("_", " ").replace("-", " ").replace(".", " ")
+        return {tok.strip() for tok in cleaned.split() if tok.strip()}
+
+    @staticmethod
+    def _token_jaccard(tokens_a: Set[str], tokens_b: Set[str]) -> float:
+        """Jaccard similarity between two token sets."""
+        if not tokens_a and not tokens_b:
+            return 1.0
+        if not tokens_a or not tokens_b:
+            return 0.0
+        intersection = tokens_a & tokens_b
+        union = tokens_a | tokens_b
+        return len(intersection) / len(union)
+
+    @staticmethod
+    def _normalized_edit_distance(a: str, b: str) -> float:
+        """Normalised Levenshtein distance in [0, 1]."""
+        if a == b:
+            return 0.0
+        max_len = max(len(a), len(b))
+        if max_len == 0:
+            return 0.0
+        # Simple DP Levenshtein
+        m, n = len(a), len(b)
+        prev = list(range(n + 1))
+        for i in range(1, m + 1):
+            curr = [i] + [0] * n
+            for j in range(1, n + 1):
+                cost = 0 if a[i - 1] == b[j - 1] else 1
+                curr[j] = min(curr[j - 1] + 1, prev[j] + 1, prev[j - 1] + cost)
+            prev = curr
+        return prev[n] / max_len
+
+    @staticmethod
+    def _prefix_suffix_score(tokens_a: Set[str], tokens_b: Set[str]) -> float:
+        """Score based on shared prefix/suffix tokens.
+
+        Returns a value in [0, 1] reflecting what fraction of the smaller
+        set's tokens appear in the larger set as prefix or suffix tokens.
+        """
+        if not tokens_a or not tokens_b:
+            return 0.0
+        shared = tokens_a & tokens_b
+        smaller = min(len(tokens_a), len(tokens_b))
+        return len(shared) / smaller if smaller > 0 else 0.0
+
+
+# Domain keyword sets for adaptive thresholds
+_DOMAIN_KEYWORDS: Dict[str, Set[str]] = {
+    "staging": {"stage", "staging", "tnm", "ajcc", "path", "clin", "clinical"},
+    "site": {"site", "tissue", "location", "anatomic", "biopsy", "primary"},
+    "status": {"status", "vital", "alive", "dead", "deceased"},
+    "treatment": {"treatment", "therapy", "chemo", "radiation", "adjuvant", "neo"},
+    "age": {"age", "years", "birth", "dob"},
+    "smoking": {"smoking", "smoker", "tobacco", "pack"},
+}
 
 
 # ======================================================================
@@ -171,18 +323,24 @@ class SemanticClusteringEngine:
             ]
 
         log = CustomLogger().custlogger("INFO")
+        use_hybrid = self.config.hybrid_similarity is not None
         log.info(
             "Building hierarchical cluster tree for %d items "
-            "(cosine distance, average linkage). SCS mode: %s",
+            "(%s distance, average linkage). SCS mode: %s",
             len(items),
+            "hybrid" if use_hybrid else "cosine",
             getattr(self.config.scs_mode, "value", self.config.scs_mode),
         )
 
-        dist_matrix = pdist(embeddings, metric="cosine")
-        # Clamp NaN / negative distances that can arise from floating-point
-        # arithmetic on near-identical vectors.
-        dist_matrix = np.nan_to_num(dist_matrix, nan=0.0)
-        dist_matrix = np.clip(dist_matrix, 0.0, 2.0)
+        if use_hybrid:
+            hybrid = HybridSimilarity(self.config.hybrid_similarity)
+            dist_matrix = hybrid.compute_distance_matrix(items, embeddings)
+        else:
+            dist_matrix = pdist(embeddings, metric="cosine")
+            # Clamp NaN / negative distances that can arise from floating-point
+            # arithmetic on near-identical vectors.
+            dist_matrix = np.nan_to_num(dist_matrix, nan=0.0)
+            dist_matrix = np.clip(dist_matrix, 0.0, 2.0)
 
         linkage_matrix = linkage(dist_matrix, method="average")
         root: ClusterNode = to_tree(linkage_matrix)
@@ -258,7 +416,9 @@ class SemanticClusteringEngine:
                 "Depth %d, node size %d: SCS = %.3f", depth, len(indices), scs
             )
 
-            if scs >= self.config.scs_threshold:
+            threshold = self._resolve_threshold(node_items)
+
+            if scs >= threshold:
                 result_clusters.append(
                     SemanticCluster(
                         items=node_items,
@@ -482,6 +642,38 @@ class SemanticClusteringEngine:
     # ------------------------------------------------------------------
     # Helpers
     # ------------------------------------------------------------------
+
+    def _resolve_threshold(self, node_items: List[str]) -> float:
+        """Return the SCS threshold for a node, respecting domain overrides.
+
+        If ``config.domain_thresholds`` is set and >50% of the node's items
+        contain tokens from a recognised domain keyword set, the domain-specific
+        threshold is used.  Otherwise falls back to ``config.scs_threshold``.
+        """
+        dt = self.config.domain_thresholds
+        if not dt:
+            return self.config.scs_threshold
+
+        # Tokenise all items in the node
+        all_tokens: Set[str] = set()
+        for item in node_items:
+            cleaned = item.lower().replace("_", " ").replace("-", " ")
+            all_tokens.update(tok.strip() for tok in cleaned.split() if tok.strip())
+
+        best_domain: Optional[str] = None
+        best_overlap = 0
+        for domain, keywords in _DOMAIN_KEYWORDS.items():
+            if domain not in dt:
+                continue
+            overlap = len(all_tokens & keywords)
+            if overlap > best_overlap:
+                best_overlap = overlap
+                best_domain = domain
+
+        if best_domain is not None and best_overlap >= max(1, len(node_items) * 0.3):
+            return dt[best_domain]
+
+        return self.config.scs_threshold
 
     @staticmethod
     def _get_leaf_indices(node: ClusterNode) -> List[int]:
