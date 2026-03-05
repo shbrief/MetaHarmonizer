@@ -1,7 +1,6 @@
 import faiss
 import numpy as np
 import pandas as pd
-from transformers import AutoTokenizer
 import torch
 import src.models.ontology_models as otm
 
@@ -9,6 +8,9 @@ import src.models.ontology_models as otm
 class OntoMapLM(otm.OntoModelsBase):
     """
     A class to map ontologies using language models.
+
+    Uses the same cached SentenceTransformer instance as FAISSSQLiteSearch
+    to avoid loading duplicate model weights into memory.
 
     Attributes:
         method (str): The method to use for the model.
@@ -18,8 +20,7 @@ class OntoMapLM(otm.OntoModelsBase):
         from_tokenizer (bool): Whether to use a tokenizer.
         _query_embeddings (torch.Tensor or None): Embeddings for the queries.
         _corpus_embeddings (torch.Tensor or None): Embeddings for the corpus.
-        _model (AutoModel or SentenceTransformer or None): The model instance.
-        _tokenizer (AutoTokenizer or None): The tokenizer instance.
+        _model (SentenceTransformer or None): The model instance.
         logger (CustomLogger): Logger instance.
     """
 
@@ -49,43 +50,22 @@ class OntoMapLM(otm.OntoModelsBase):
         self._query_embeddings = None
         self._corpus_embeddings = None
         self._model = None
-        self._tokenizer = None
         self.logger.info("Initialized OntoMap Language Model module")
-
-    @property
-    def tokenizer(self):
-        """
-        Gets the tokenizer instance.
-
-        Returns:
-            AutoTokenizer or None: The tokenizer instance if from_tokenizer is True, otherwise None.
-        """
-        if self.from_tokenizer:
-            self._tokenizer = AutoTokenizer.from_pretrained(
-                self.method_model_dict[self.method])
-            return self._tokenizer
-        else:
-            return None
 
     @property
     def model(self):
         """
-        Gets the model instance.
+        Gets the cached SentenceTransformer model instance.
+
+        Reuses the same model loaded by FAISSSQLiteSearch / SynonymDict
+        via get_embedding_model_cached(), preventing duplicate memory usage.
 
         Returns:
-            AutoModel or SentenceTransformer: The model instance.
+            SentenceTransformer: The model instance.
         """
         if self._model is None:
-            if self.from_tokenizer:
-                from transformers import AutoModel
-                self._model = AutoModel.from_pretrained(
-                    self.method_model_dict[self.method]).eval().to(
-                        'cuda' if torch.cuda.is_available() else 'cpu')
-            else:
-                from sentence_transformers import SentenceTransformer
-                self._model = SentenceTransformer(
-                    self.method_model_dict[self.method],
-                    device='cuda' if torch.cuda.is_available() else 'cpu')
+            from src.utils.model_loader import get_embedding_model_cached
+            self._model = get_embedding_model_cached(self.method)
         return self._model
 
     @property
@@ -94,7 +74,7 @@ class OntoMapLM(otm.OntoModelsBase):
         Gets the embeddings for the queries.
 
         Returns:
-            torch.Tensor: The query embeddings.
+            numpy.ndarray: The query embeddings.
         """
         if self._query_embeddings is None:
             self._query_embeddings = self.create_embeddings(self.query)
@@ -106,7 +86,7 @@ class OntoMapLM(otm.OntoModelsBase):
         Gets the embeddings for the corpus.
 
         Returns:
-            torch.Tensor: The corpus embeddings.
+            numpy.ndarray: The corpus embeddings.
         """
         if self._corpus_embeddings is None:
             idx = faiss.read_index(self.vector_store.index_path)
@@ -118,40 +98,27 @@ class OntoMapLM(otm.OntoModelsBase):
                           query_list: list[str],
                           convert_to_tensor: bool = False):
         """
-        Creates embeddings using SAP-BERT like LM models using first token embeddings (CLS token).
+        Creates normalized embeddings using the cached SentenceTransformer.
 
         Args:
             query_list (list[str]): List of query strings.
-            convert_to_tensor (bool, optional): Whether to convert the output embeddings to tensor. Defaults to False.
+            convert_to_tensor (bool, optional): Whether to return a torch.Tensor
+                instead of a list of lists. Defaults to False.
 
         Returns:
-            numpy.ndarray or torch.Tensor: The output embeddings.
+            list[list[float]] or torch.Tensor: The output embeddings.
         """
-        device = next(self.model.parameters()).device
-
-        # Tokenize the texts and prepare input tensors
-        # Note: Adjust max_length to 64, as some terms are longer than 25 tokens
-        # encoded_input = tokenizer(query_list, padding="max_length", max_length=25, truncation=True, return_tensors='pt')
-        encoded = self.tokenizer(query_list,
-                                 padding="max_length",
-                                 max_length=64,
-                                 truncation=True,
-                                 return_tensors='pt').to(device)
-
-        with torch.no_grad():
-            out = self.model(**encoded)
-
-        # CLS
-        hidden = getattr(out, "last_hidden_state", out[0])
-        cls = hidden[:, 0, :]
+        device = 'cuda' if torch.cuda.is_available() else 'cpu'
+        embs = self.model.encode(
+            query_list,
+            convert_to_tensor=convert_to_tensor,
+            normalize_embeddings=True,
+            device=device)
 
         if convert_to_tensor:
-            return cls
+            return embs
 
-        arr = cls.cpu().numpy().astype("float32")
-        norms = np.linalg.norm(arr, axis=1, keepdims=True)
-        arr = arr / (norms + 1e-12)
-
+        arr = np.array(embs, dtype="float32")
         return arr.tolist()
 
     def create_cura_map(self, query_list: list[str], corpus_list: list[str]):
