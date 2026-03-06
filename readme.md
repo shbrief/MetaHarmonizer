@@ -1,4 +1,3 @@
-
 ### 1. Codebase folder structure
 
 ```md
@@ -41,6 +40,7 @@
 ├── setup.py
 └── readme.md
 ```
+
 ### 2. Usage
 
 In order to use schema and/Or ontology mapping functionality in metaharmonizer, please follow the steps below. 
@@ -53,7 +53,9 @@ In order to use schema and/Or ontology mapping functionality in metaharmonizer, 
 
 #### 2.2. Cloning the repository
 
-```git clone https://github.com/shbrief/MetaHarmonizer```
+```
+git clone https://github.com/shbrief/MetaHarmonizer
+```
 
 
 #### 2.3 Datasets
@@ -150,6 +152,7 @@ engine.run_schema_mapping()
 # (Optional) Run Stage 4 after manual review
 engine.run_stage4_from_manual("path_to_stage3_results.csv")
 ```
+
 - Parameters that can be changed in the model:
   - clinical_data_path (str): Path to clinical dataset (TSV or CSV).
   - mode (str):
@@ -171,6 +174,7 @@ match{i}, match{i}_score, match{i}_source (for top-k matches)
 #### 2.5. Demo Notebooks For Schema and Ontology Mapping
 
 The demo notebooks are located across `/demo_nb` folder
+
 ### 3. Resources
 | Topic | Links | Resource Type |
 |----------|----------|----------|
@@ -192,3 +196,24 @@ The demo notebooks are located across `/demo_nb` folder
 | How to train sentence transformers | [Link](https://huggingface.co/blog/how-to-train-sentence-transformers) | blog |
 
 
+---
+
+### R Interface
+
+R users can access MetaHarmonizer via the
+[**MetaHarmonizerR**](https://github.com/shbrief/MetaHarmonizerR) package, which
+wraps the Python engines using `{reticulate}`.
+
+```bash
+# Install the Python backend first
+pip install git+https://github.com/shbrief/MetaHarmonizer
+```
+
+```r
+# Install the R wrapper
+remotes::install_github("shbrief/MetaHarmonizerR")
+library(MetaHarmonizerR)
+
+init_field_suggester()
+suggestions <- suggest_fields(unmapped_columns = c("age_at_diagnosis", "tumor_size"))
+```
