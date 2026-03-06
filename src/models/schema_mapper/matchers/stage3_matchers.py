@@ -85,7 +85,7 @@ class NumericStandardMatcher(BaseMatcher):
             base = float(score)
             bonus = family_boost(std_field, family)
             bonus += treatment_boost(std_field, key_raw, self.engine)
-            final = base + bonus
+            final = min(1.0, base + bonus)
             numeric_scores.append((std_field, final, ""))
         
         numeric_scores.sort(key=lambda x: x[1], reverse=True)
@@ -153,7 +153,7 @@ class NumericAliasMatcher(BaseMatcher):
                 base = float(score)
                 bonus = family_boost(f, family)
                 bonus += treatment_boost(f, key_raw, self.engine)
-                final = base + bonus
+                final = min(1.0, base + bonus)
                 
                 if f not in field_best or final > field_best[f][0]:
                     field_best[f] = (final, src_name)
@@ -239,7 +239,7 @@ class SemanticStandardMatcher(BaseMatcher):
             std_field = self.engine.standard_fields[int(idx)]
             base = float(score)
             bonus = treatment_boost(std_field, key, self.engine)
-            final = base + bonus
+            final = min(1.0, base + bonus)
             matches.append((std_field, final, ""))
         
         matches.sort(key=lambda x: x[1], reverse=True)
