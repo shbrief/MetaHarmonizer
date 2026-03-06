@@ -155,8 +155,9 @@ class SchemaMapEngine:
         self.numeric_combined = NumericCombinedMatcher(self)
         self.semantic_combined = SemanticCombinedMatcher(self)
         
-        # Stage 4 - LLM (only in auto mode); import lazily so that
-        # mode="manual" works without google.generativeai installed.
+        # Stage 4 - LLM (auto-initialized here only when mode == "auto").
+        # LLMMatcher is imported lazily so that mode="manual" can run without
+        # google.generativeai installed and still initialize LLM on demand.
         if self.mode == "auto":
             try:
                 from .matchers.stage4_matchers import LLMMatcher
