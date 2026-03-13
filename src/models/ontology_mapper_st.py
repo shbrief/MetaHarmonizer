@@ -118,31 +118,6 @@ class OntoMapST(otm.OntoModelsBase):
             convert_to_tensor=convert_to_tensor,
             device='cuda' if torch.cuda.is_available() else 'cpu')
 
-    def get_match_result_single_query(self, query: str,
-                                      cosine_sim_df: pd.DataFrame):
-        """
-        Generates match results for a single query using cosine similarity DataFrame.
-
-        Args:
-            query (str): The query string.
-            cosine_sim_df (pd.DataFrame): DataFrame containing cosine similarity scores.
-
-        Raises:
-            NotImplementedError: This method is not implemented yet.
-        """
-        raise NotImplementedError(
-            "get_match_result_single_query will be implemented later")
-
-    def get_match_results_mp(self):
-        """
-        Generates match results for the given queries and corpus using multiprocessing.
-
-        Raises:
-            NotImplementedError: This method is not implemented yet.
-        """
-        raise NotImplementedError(
-            "get_match_results_mp will be implemented later")
-
     def get_match_results(self,
                           cura_map: dict[str, str] = None,
                           topk: int = 5,
@@ -157,25 +132,4 @@ class OntoMapST(otm.OntoModelsBase):
 
         D, I = idx.search(q_norm, topk)
 
-        rows = []
-        for qi, q in enumerate(self.query):
-            top_ids = I[qi]
-            top_scores = D[qi].tolist()
-            top_terms = [self.corpus[i] for i in top_ids]
-
-            curated = (cura_map.get(q, "Not Found") if test_or_prod == 'test'
-                       else "Not Available for Prod Environment")
-            lvl = next(
-                (i + 1 for i, t in enumerate(top_terms) if t == curated), 99)
-
-            row = {
-                "original_value": q,
-                "curated_ontology": curated,
-                "match_level": lvl
-            }
-            for i, (t, s) in enumerate(zip(top_terms, top_scores), start=1):
-                row[f"match{i}"] = t
-                row[f"match{i}_score"] = f"{s:.4f}"
-            rows.append(row)
-
-        return pd.DataFrame(rows)
+        return self._build_result_rows(I, D, cura_map, test_or_prod)

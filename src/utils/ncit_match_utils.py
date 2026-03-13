@@ -19,7 +19,8 @@ NCIT_DICT = {
     "C2991": "disease",
     "C3262": "cancer_type"
 }
-NCIT_DESC_PATH = "data/schema/ncit_descendants.json"
+from src._paths import DATA_DIR
+NCIT_DESC_PATH = DATA_DIR / "schema" / "ncit_descendants.json"
 
 
 class NCIClientSync:

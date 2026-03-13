@@ -5,7 +5,7 @@ from typing import Dict, List
 import asyncio
 import httpx
 import json
-from tenacity import retry, stop_after_attempt, wait_fixed, retry_if_exception_type
+from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
 import json
 from src.CustomLogger.custom_logger import CustomLogger
 from aiolimiter import AsyncLimiter
@@ -66,45 +66,52 @@ class NCIDb:
                 ON nci_concept_cache(code);
             """)
 
+    @retry(
+        stop=stop_after_attempt(3),
+        wait=wait_exponential(multiplier=1, min=2, max=10),
+        retry=retry_if_exception_type(
+            (httpx.TimeoutException, httpx.ConnectError, httpx.HTTPStatusError)),
+        retry_error_callback=lambda retry_state: None,
+    )
     async def fetch_one(self, client, url):
-        """Fetch a single URL with rate limiting and error handling.
+        """Fetch a single URL with rate limiting and per-URL retry on transient errors.
+
+        Raises on 429 / 5xx so tenacity retries with exponential backoff.
+        Returns None for permanent failures (4xx other than 429) and after
+        exhausting all retry attempts.
+
         Args:
             client (httpx.AsyncClient): The HTTP client to use for the request.
             url (str): The URL to fetch.
         Returns:
-            httpx.Response: The response object if the request is successful.
-            None: If the request fails or if the response status is not 200.
+            httpx.Response: The response object on success.
+            None: On permanent failure or after all retries are exhausted.
         """
         async with self.rate_limiter:
-            try:
-                r = await client.get(url, timeout=10.0)
-                if r.status_code == 429:
-                    self.logger.warning(
-                        f"Rate limited for {url}: sleeping briefly before retry"
-                    )
-                    await asyncio.sleep(5)
-                    raise httpx.HTTPStatusError("429 Too Many Requests",
-                                                request=r.request,
-                                                response=r)
-                return r
-            except httpx.HTTPStatusError as e:
-                self.logger.warning(f"HTTP error for {url}: {e}")
+            r = await client.get(url, timeout=10.0)
+            if r.status_code == 429:
+                self.logger.warning(f"NCIDb: Rate limited for {url}, retrying after backoff")
+                raise httpx.HTTPStatusError("429 Too Many Requests",
+                                            request=r.request,
+                                            response=r)
+            if r.status_code >= 500:
+                self.logger.warning(f"NCIDb: Server error {r.status_code} for {url}, retrying")
+                raise httpx.HTTPStatusError(f"{r.status_code} Server Error",
+                                            request=r.request,
+                                            response=r)
+            if r.status_code != 200:
+                self.logger.warning(f"NCIDb: Non-200 response {r.status_code} for {url}")
                 return None
-            except Exception as e:
-                self.logger.error(f"Failed to fetch {url}: {e}")
-                return None
+            return r
 
-    @retry(stop=stop_after_attempt(3),
-           wait=wait_fixed(2),
-           retry=retry_if_exception_type(
-               (httpx.HTTPStatusError, httpx.RequestError)))
     async def fetch_batch(self, client, urls):
-        """Fetch a batch of URLs concurrently with error handling.
+        """Fetch a batch of URLs concurrently. Each URL retries independently via fetch_one.
+
         Args:
             client (httpx.AsyncClient): The HTTP client to use for the requests.
             urls (List[str]): A list of URLs to fetch.
         Returns:
-            List[httpx.Response]: A list of response objects for the fetched URLs.
+            List[httpx.Response | None]: Response per URL; None for failed fetches.
         """
         tasks = [self.fetch_one(client, url) for url in urls]
         return await asyncio.gather(*tasks)

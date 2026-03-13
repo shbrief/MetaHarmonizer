@@ -108,6 +108,42 @@ class OntoModelsBase:
         raise NotImplementedError(
             "create_embeddings will be implemented in the child class")
 
+    def _build_result_rows(self, I, D, cura_map, test_or_prod):
+        """
+        Builds result rows from FAISS search output (I = index matrix, D = score matrix).
+
+        Args:
+            I (np.ndarray): Top-k corpus indices per query, shape (n_queries, topk).
+            D (np.ndarray): Top-k scores per query, shape (n_queries, topk).
+            cura_map (dict[str, str] or None): Curated label map for test evaluation.
+            test_or_prod (str): 'test' to look up ground truth; any other value skips it.
+
+        Returns:
+            pd.DataFrame: One row per query with match columns and scores.
+        """
+        rows = []
+        for qi, q in enumerate(self.query):
+            top_ids = I[qi]
+            top_scores = D[qi].tolist()
+            top_terms = [self.corpus[i] for i in top_ids]
+
+            curated = (cura_map.get(q, "Not Found") if test_or_prod == 'test'
+                       else "Not Available for Prod Environment")
+            lvl = next(
+                (i + 1 for i, t in enumerate(top_terms) if t == curated), 99)
+
+            row = {
+                "original_value": q,
+                "curated_ontology": curated,
+                "match_level": lvl
+            }
+            for i, (t, s) in enumerate(zip(top_terms, top_scores), start=1):
+                row[f"match{i}"] = t
+                row[f"match{i}_score"] = f"{s:.4f}"
+            rows.append(row)
+
+        return pd.DataFrame(rows)
+
     def get_match_results(self):
         """
         This method is responsible for generating match results for the given queries and corpus.

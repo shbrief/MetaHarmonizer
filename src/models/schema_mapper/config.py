@@ -1,14 +1,15 @@
 """Configuration constants for schema mapping."""
 import os
+from src._paths import DATA_DIR
 
 # === Paths ===
-OUTPUT_DIR = "data/schema_mapping_eval"
-# CURATED_DICT_PATH = "data/schema/curated_fields.csv"
-CURATED_DICT_PATH = "data/schema/schema30.csv"
+OUTPUT_DIR = DATA_DIR / "schema_mapping_eval"
+# CURATED_DICT_PATH = DATA_DIR / "schema" / "curated_fields.csv"
+CURATED_DICT_PATH = DATA_DIR / "schema" / "schema30.csv"
 ALIAS_DICT_PATH = ""
-# ALIAS_DICT_PATH = "data/schema/curated_fields_source_latest_with_flags.csv" 
-# ALIAS_DICT_PATH = "data/schema/heterogeneous_attribute_mapping_ver1.csv"
-VALUE_DICT_PATH = os.getenv("FIELD_VALUE_JSON") or "data/schema/field_value_dict.json"
+# ALIAS_DICT_PATH = DATA_DIR / "schema" / "curated_fields_source_latest_with_flags.csv"
+# ALIAS_DICT_PATH = DATA_DIR / "schema" / "heterogeneous_attribute_mapping_ver1.csv"
+VALUE_DICT_PATH = os.getenv("FIELD_VALUE_JSON") or DATA_DIR / "schema" / "field_value_dict.json"
 # VALUE_DICT_PATH = "data/schema/value_dictionary.json"
 
 # === Models ===
