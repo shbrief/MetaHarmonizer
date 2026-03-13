@@ -254,8 +254,7 @@ class OntoMapEngine:
                                  om_strategy='lm',
                                  query=non_exact_query_list,
                                  corpus=self.corpus,
-                                 topk=self.topk,
-                                 from_tokenizer=True)
+                                 topk=self.topk)
 
         elif strategy == 'st':
             return oms.OntoMapST(method=self.s2_method,
