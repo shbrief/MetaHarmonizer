@@ -14,6 +14,24 @@ from src.CustomLogger.custom_logger import CustomLogger
 
 logger = CustomLogger().custlogger(loglevel='WARNING')
 
+
+def _merge_top_k(
+    std_results: List[Tuple[str, float, str]],
+    alias_results: List[Tuple[str, float, str]],
+    top_k: int,
+) -> List[Tuple[str, float, str]]:
+    """Merge two result lists, keeping highest score per field, returning top-k."""
+    field_best: Dict[str, Tuple[float, str]] = {}
+    for field, score, source in std_results:
+        field_best[field] = (score, source)
+    for field, score, source in alias_results:
+        if field not in field_best or score > field_best[field][0]:
+            field_best[field] = (score, source)
+    combined = [(field, score, src) for field, (score, src) in field_best.items()]
+    combined.sort(key=lambda x: x[1], reverse=True)
+    return combined[:top_k]
+
+
 # ============= Treatment Boost Logic =============
 
 TREATMENT_KEYWORDS_SUBSTRING = ("therapy", "chemo", "surgery", "radiation", "treatment", "drug", "regimen")
@@ -187,31 +205,12 @@ class NumericCombinedMatcher(BaseMatcher):
         std_results = std_matcher.match(col)
         alias_results = alias_matcher.match(col)
         
-        # Merge results: deduplicate by field, keep highest score
-        field_best: Dict[str, Tuple[float, str]] = {}
-        
-        for field, score, source in std_results:
-            field_best[field] = (score, source)
-        
-        for field, score, source in alias_results:
-            if field not in field_best or score > field_best[field][0]:
-                field_best[field] = (score, source)
-        
-        # Convert to list and sort
-        combined = [
-            (field, score, src)
-            for field, (score, src) in field_best.items()
-        ]
-        combined.sort(key=lambda x: x[1], reverse=True)
-        
-        top_k = combined[:self.engine.top_k]
-        
+        top_k = _merge_top_k(std_results, alias_results, self.engine.top_k)
         logger.info(
             f"[NumericCombined] Column='{col}' "
             f"std={len(std_results)} alias={len(alias_results)} "
-            f"merged={len(combined)} top_k={len(top_k)}"
+            f"merged={len(top_k)}"
         )
-        
         return top_k
 
 
@@ -297,29 +296,10 @@ class SemanticCombinedMatcher(BaseMatcher):
         std_results = std_matcher.match(col)
         alias_results = alias_matcher.match(col)
         
-        # Merge results: deduplicate by field, keep highest score
-        field_best: Dict[str, Tuple[float, str]] = {}
-        
-        for field, score, source in std_results:
-            field_best[field] = (score, source)
-        
-        for field, score, source in alias_results:
-            if field not in field_best or score > field_best[field][0]:
-                field_best[field] = (score, source)
-        
-        # Convert to list and sort
-        combined = [
-            (field, score, src)
-            for field, (score, src) in field_best.items()
-        ]
-        combined.sort(key=lambda x: x[1], reverse=True)
-        
-        top_k = combined[:self.engine.top_k]
-        
+        top_k = _merge_top_k(std_results, alias_results, self.engine.top_k)
         logger.info(
             f"[SemanticCombined] Column='{col}' "
             f"std={len(std_results)} alias={len(alias_results)} "
-            f"merged={len(combined)} top_k={len(top_k)}"
+            f"merged={len(top_k)}"
         )
-        
         return top_k

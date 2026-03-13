@@ -30,8 +30,9 @@ class OntoMapBIE(OntoModelsBase):
                          query_df=query_df,
                          corpus_df=corpus_df)
         self.logger.info("Initialized Bi-Encoder (query with context) module")
+        from src._paths import DATA_DIR
         self.code2name = self.load_oncotree_mapping(
-            "data/corpus/oncotree_code_to_name.csv")
+            DATA_DIR / "corpus" / "oncotree_code_to_name.csv")
 
     def load_oncotree_mapping(self, path: str) -> dict:
         df = pd.read_csv(path)

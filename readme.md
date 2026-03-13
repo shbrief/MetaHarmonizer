@@ -26,7 +26,6 @@
 │   │   │   └── matchers
 │   ├── Engine
 │   │   ├── ontology_mapping_engine.py
-│   │   ├── schema_mapping_engine.py
 │   ├── CustomLogger
 │   ├── KnowledgeDb
 │   │   ├── faiss_sqlite_pipeline.py
@@ -37,7 +36,7 @@
 │   │       └── ols_client.py
 │   ├── utils
 │   ├── Plotter
-├── setup.py
+├── pyproject.toml
 └── readme.md
 ```
 
@@ -49,7 +48,7 @@ In order to use schema and/Or ontology mapping functionality in metaharmonizer, 
 
 - First create a `conda create -n demo_env python=3.10 -y` 
 - Activate the environment as `conda activate demo_env`
-- Install the dependencies `pip install -r requirements.txt` after `pip install --upgrade pip`
+- Install the dependencies `pip install -e ".[full]"` after `pip install --upgrade pip`
 
 #### 2.2. Cloning the repository
 
