@@ -67,7 +67,11 @@ class FAISSSQLiteSearch:
         self.index_path = os.path.join(BASE_IDX_DIR, idx_name)
 
         raw_model = get_embedding_model_cached(method)
-        self.embedder = EmbeddingAdapter(raw_model)
+        if self.om_strategy == 'lm':
+            lm_model = raw_model[0].auto_model
+            self.embedder = EmbeddingAdapter(lm_model, om_strategy='lm')
+        else:
+            self.embedder = EmbeddingAdapter(raw_model)
         self.logger = CustomLogger().custlogger(loglevel='INFO')
         self.term_batch_size = TERM_BATCH_SIZE
 

@@ -17,10 +17,9 @@ class OntoMapLM(otm.OntoModelsBase):
         query (list[str]): The list of query strings.
         corpus (list[str]): The list of corpus strings.
         topk (int): The number of top results to consider.
-        from_tokenizer (bool): Whether to use a tokenizer.
-        _query_embeddings (torch.Tensor or None): Embeddings for the queries.
-        _corpus_embeddings (torch.Tensor or None): Embeddings for the corpus.
-        _model (SentenceTransformer or None): The model instance.
+        _query_embeddings (numpy.ndarray or None): Embeddings for the queries.
+        _corpus_embeddings (numpy.ndarray or None): Embeddings for the corpus.
+        _model (EmbeddingAdapter or None): CLS-pooling adapter around the raw AutoModel.
         logger (CustomLogger): Logger instance.
     """
 
@@ -32,21 +31,20 @@ class OntoMapLM(otm.OntoModelsBase):
         corpus: list[str],
         om_strategy: str = 'lm',
         topk: int = 5,
-        from_tokenizer: bool = True,
     ) -> None:
         """
         Initializes the OntoMapLM class.
 
         Args:
             method (str): The method to use for the model.
+            category (str): The ontology category.
             query (list[str]): The list of query strings.
             corpus (list[str]): The list of corpus strings.
+            om_strategy (str, optional): Mapping strategy. Defaults to 'lm'.
             topk (int, optional): The number of top results to consider. Defaults to 5.
-            from_tokenizer (bool, optional): Whether to use a tokenizer. Defaults to True.
         """
         super().__init__(method, category, om_strategy, topk, query, corpus)
 
-        self.from_tokenizer = from_tokenizer
         self._query_embeddings = None
         self._corpus_embeddings = None
         self._model = None
@@ -55,17 +53,21 @@ class OntoMapLM(otm.OntoModelsBase):
     @property
     def model(self):
         """
-        Gets the cached SentenceTransformer model instance.
+        Gets an EmbeddingAdapter wrapping the raw AutoModel with CLS pooling.
 
-        Reuses the same model loaded by FAISSSQLiteSearch / SynonymDict
-        via get_embedding_model_cached(), preventing duplicate memory usage.
+        Extracts the underlying AutoModel from the cached SentenceTransformer
+        and wraps it in EmbeddingAdapter(om_strategy='lm') for CLS-token
+        embeddings, matching the corpus-side embedding used by FAISSSQLiteSearch.
 
         Returns:
-            SentenceTransformer: The model instance.
+            EmbeddingAdapter: CLS-pooling adapter around the raw AutoModel.
         """
         if self._model is None:
             from src.utils.model_loader import get_embedding_model_cached
-            self._model = get_embedding_model_cached(self.method)
+            from src.utils.embeddings import EmbeddingAdapter
+            st = get_embedding_model_cached(self.method)
+            lm = st[0].auto_model
+            self._model = EmbeddingAdapter(lm, om_strategy='lm')
         return self._model
 
     @property
@@ -98,27 +100,24 @@ class OntoMapLM(otm.OntoModelsBase):
                           query_list: list[str],
                           convert_to_tensor: bool = False):
         """
-        Creates normalized embeddings using the cached SentenceTransformer.
+        Creates CLS-token embeddings using EmbeddingAdapter (lm strategy).
 
         Args:
             query_list (list[str]): List of query strings.
             convert_to_tensor (bool, optional): Whether to return a torch.Tensor
-                instead of a list of lists. Defaults to False.
+                instead of a numpy array / list of lists. Defaults to False.
 
         Returns:
             list[list[float]] or torch.Tensor: The output embeddings.
         """
-        device = 'cuda' if torch.cuda.is_available() else 'cpu'
-        embs = self.model.encode(
-            query_list,
-            convert_to_tensor=convert_to_tensor,
-            normalize_embeddings=True,
-            device=device)
-
+        batch_size = 512
+        all_embs = []
+        for i in range(0, len(query_list), batch_size):
+            batch = query_list[i:i + batch_size]
+            all_embs.extend(self.model.embed_documents(batch))
+        arr = np.array(all_embs, dtype="float32")
         if convert_to_tensor:
-            return embs
-
-        arr = np.array(embs, dtype="float32")
+            return torch.tensor(arr)
         return arr.tolist()
 
     def create_cura_map(self, query_list: list[str], corpus_list: list[str]):
