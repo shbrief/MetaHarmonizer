@@ -8,9 +8,10 @@ import pandas as pd
 import numpy as np
 from datetime import datetime
 from src.CustomLogger.custom_logger import CustomLogger
+from src._paths import DATA_DIR
 
 logger = CustomLogger()
-ABBR_DICT_PATH = "data/corpus/oncotree_code_to_name.csv"
+ABBR_DICT_PATH = DATA_DIR / "corpus" / "oncotree_code_to_name.csv"
 SYNONYM_MIN_CONFIDENCE = 0.9
 
 
@@ -253,8 +254,7 @@ class OntoMapEngine:
                                  om_strategy='lm',
                                  query=non_exact_query_list,
                                  corpus=self.corpus,
-                                 topk=self.topk,
-                                 from_tokenizer=True)
+                                 topk=self.topk)
 
         elif strategy == 'st':
             return oms.OntoMapST(method=self.s2_method,

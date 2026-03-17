@@ -9,7 +9,6 @@ import numpy as np
 import pandas as pd
 from typing import List
 from functools import lru_cache
-from tqdm.auto import tqdm
 from src.utils.embeddings import EmbeddingAdapter
 from src.utils.model_loader import get_embedding_model_cached
 from src.CustomLogger.custom_logger import CustomLogger
@@ -67,7 +66,11 @@ class FAISSSQLiteSearch:
         self.index_path = os.path.join(BASE_IDX_DIR, idx_name)
 
         raw_model = get_embedding_model_cached(method)
-        self.embedder = EmbeddingAdapter(raw_model)
+        if self.om_strategy == 'lm':
+            lm_model = raw_model[0].auto_model
+            self.embedder = EmbeddingAdapter(lm_model, om_strategy='lm')
+        else:
+            self.embedder = EmbeddingAdapter(raw_model)
         self.logger = CustomLogger().custlogger(loglevel='INFO')
         self.term_batch_size = TERM_BATCH_SIZE
 
@@ -239,9 +242,8 @@ class FAISSSQLiteSearch:
                 embed_batch_size = min(2048, embed_batch_size * 2)
 
         all_vectors = []
-        for i in tqdm(range(0, len(texts), embed_batch_size),
-                      desc="Embedding batches",
-                      leave=False):
+        n_batches = (len(texts) + embed_batch_size - 1) // embed_batch_size
+        for batch_idx, i in enumerate(range(0, len(texts), embed_batch_size)):
             batch_texts = texts[i:i + embed_batch_size]
             batch_vecs = self.embedder.embed_documents(batch_texts)
             all_vectors.extend(batch_vecs)
@@ -250,6 +252,9 @@ class FAISSSQLiteSearch:
             if self.is_gpu:
                 torch.cuda.empty_cache()
             gc.collect()
+
+            if (batch_idx + 1) % 10 == 0 or (batch_idx + 1) == n_batches:
+                self.logger.info(f"Embedding progress: {batch_idx + 1}/{n_batches} batches")
 
         # Build FAISS index
         vectors_array = np.array(all_vectors, dtype=np.float32)
