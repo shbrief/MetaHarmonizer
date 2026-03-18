@@ -73,4 +73,12 @@ where = ["."]
 include = ["src*"]
 
 [tool.setuptools.package-data]
-"*" = ["data/**/*"]
+# Bundle the method→model YAML that lives inside src/models/.
+# The data/ corpus directory at the repo root is NOT bundled in the wheel;
+# installed users must set METAHARMONIZER_DATA_DIR to their local copy.
+"src.models" = ["method_model.yaml"]
+
+[tool.pytest.ini_options]
+markers = [
+    "slow: marks tests as slow, requiring real models (deselect with '-m \"not slow\"')",
+]

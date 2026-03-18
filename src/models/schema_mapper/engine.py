@@ -98,6 +98,9 @@ class SchemaMapEngine:
         
         # Lazy-loaded components
         self._numeric_embs = None
+        self._std_numeric_embs = None
+        self._std_numeric_fields = []
+        self._std_field_embs = None
         self._col_values_cache = {}
         self._col_freq_cache: Dict[str, Dict[str, float]] = {}
         
@@ -170,7 +173,7 @@ class SchemaMapEngine:
             self.llm = None
     
     def _ensure_numeric_index(self):
-        """Lazy-build numeric embedding index on first use."""
+        """Lazy-build alias numeric embedding index on first use."""
         if self._numeric_embs is not None:
             return
         self.norm_numeric = [normalize(s) for s in self.numeric_sources]
@@ -181,6 +184,36 @@ class SchemaMapEngine:
             self.norm_numeric,
             convert_to_tensor=True
         )
+
+    def _ensure_std_numeric_index(self):
+        """Lazy-build standard numeric field embedding index."""
+        if self._std_numeric_embs is not None:
+            return
+        std_numeric = self.curated_df[
+            self.curated_df['is_numeric_field'] == 'yes'
+        ]['field_name'].unique().tolist()
+        if not std_numeric:
+            self._std_numeric_fields = []
+            self._std_numeric_embs = torch.empty(0)
+            logger.warning("[NumericStd] No standard numeric fields found")
+            return
+        self._std_numeric_fields = std_numeric
+        self._std_numeric_fields_normed = [normalize(f) for f in std_numeric]
+        self._std_numeric_embs = self.dict_model.encode(
+            self._std_numeric_fields_normed,
+            convert_to_tensor=True
+        )
+        logger.info(f"[NumericStd] Indexed {len(std_numeric)} standard numeric fields")
+
+    def _ensure_std_field_embs(self):
+        """Lazy-build standard field embedding index."""
+        if self._std_field_embs is not None:
+            return
+        self._std_field_embs = self.dict_model.encode(
+            self.standard_fields_normed,
+            convert_to_tensor=True
+        )
+        logger.info(f"[SemanticStd] Encoded {len(self.standard_fields)} standard fields")
     
     @lru_cache(maxsize=None)
     def is_col_numeric(self, col: str) -> bool:

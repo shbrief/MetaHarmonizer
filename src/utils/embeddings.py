@@ -74,7 +74,7 @@ class EmbeddingAdapter(Embeddings):
             emb = self.model.encode([text],
                                     normalize_embeddings=True,
                                     batch_size=16,
-                                    show_progress_bar=True,
+                                    show_progress_bar=False,
                                     device=self.device)[0]
             return emb.tolist()
         if hasattr(self.model, "embed_query"):

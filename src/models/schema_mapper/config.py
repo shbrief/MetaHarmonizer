@@ -1,9 +1,10 @@
 """Configuration constants for schema mapping."""
 import os
+from pathlib import Path
 from src._paths import DATA_DIR
 
 # === Paths ===
-OUTPUT_DIR = DATA_DIR / "schema_mapping_eval"
+OUTPUT_DIR = Path(os.getenv("SM_OUTPUT_DIR", Path.cwd() / "schema_mapping_eval"))
 # CURATED_DICT_PATH = DATA_DIR / "schema" / "curated_fields.csv"
 CURATED_DICT_PATH = DATA_DIR / "schema" / "schema30.csv"
 ALIAS_DICT_PATH = ""
