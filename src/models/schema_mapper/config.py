@@ -2,6 +2,9 @@
 import os
 from pathlib import Path
 from src._paths import DATA_DIR
+from src.utils.model_loader import load_method_model_dict
+
+_method_model_dict = load_method_model_dict()
 
 # === Paths ===
 OUTPUT_DIR = Path(os.getenv("SM_OUTPUT_DIR", Path.cwd() / "schema_mapping_eval"))
@@ -14,9 +17,8 @@ VALUE_DICT_PATH = os.getenv("FIELD_VALUE_JSON") or DATA_DIR / "schema" / "field_
 # VALUE_DICT_PATH = "data/schema/value_dictionary.json"
 
 # === Models ===
-FIELD_MODEL = "all-MiniLM-L6-v2"
-# FIELD_MODEL = "cambridgeltl/SapBERT-from-PubmedBERT-fulltext"
-LLM_MODEL = "gemma-3-27b-it"
+FIELD_MODEL = _method_model_dict["minilm-l6"]
+LLM_MODEL = _method_model_dict["gemma-27b"]
 
 # === Thresholds ===
 FUZZY_THRESH = 92

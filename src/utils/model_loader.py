@@ -13,6 +13,7 @@ DEFAULT_YAML_PATH = os.getenv("METHOD_MODEL_YAML",
 CACHE_ROOT = "model_cache"
 
 
+@lru_cache(maxsize=1)
 def load_method_model_dict(yaml_path: str = DEFAULT_YAML_PATH) -> dict:
     with open(yaml_path, "r") as file:
         return yaml.safe_load(file)

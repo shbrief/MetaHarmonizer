@@ -1,16 +1,17 @@
 import os
 import json
 import pandas as pd
-import google.generativeai as genai
 from tqdm.auto import tqdm
 from src.models.ontology_models import OntoModelsBase
+from src.utils.model_loader import load_method_model_dict
 
-_BIE_LLM_MODEL = "models/gemma-3-12b-it"
+_BIE_LLM_MODEL = load_method_model_dict()["gemma-12b"]
 
 
 class OntoMapBIE(OntoModelsBase):
     """
-    A class to map ontologies using bi-encoder models.
+    A class to map ontologies using Retrieval-Augmented Generation (RAG) with optional reranking.
+    Both query-side and corpus-side context is retrieved for giving the model more information for semantic mapping.
     """
 
     def __init__(
@@ -23,6 +24,9 @@ class OntoMapBIE(OntoModelsBase):
         corpus_df: pd.DataFrame,
         topk: int = 5,
         om_strategy: str = 'rag_bie',
+        use_reranker: bool = False,
+        reranker_method: str = 'minilm',
+        reranker_topk: int = 50,
     ):
         super().__init__(method,
                          category,
@@ -32,7 +36,11 @@ class OntoMapBIE(OntoModelsBase):
                          corpus,
                          query_df=query_df,
                          corpus_df=corpus_df)
-        self.logger.info("Initialized Bi-Encoder (query with context) module")
+        self._init_reranker(use_reranker, reranker_method, reranker_topk)
+        self.logger.info(
+            f"Initialized Bi-Encoder (reranker="
+            f"{'enabled:' + reranker_method if use_reranker else 'disabled'})"
+        )
 
     def _llm_select_columns(self, df: pd.DataFrame) -> list[str]:
         """
@@ -54,6 +62,7 @@ class OntoMapBIE(OntoModelsBase):
         if not api_key:
             self.logger.warning("GEMINI_API_KEY not set, falling back to all columns")
             return list(df.columns)
+        import google.generativeai as genai
         genai.configure(api_key=api_key)
         model = genai.GenerativeModel(_BIE_LLM_MODEL)
         max_attempts = 3
@@ -137,11 +146,11 @@ class OntoMapBIE(OntoModelsBase):
             raise ValueError("cura_map should be provided for test mode")
 
         k = topk or self.topk
+        retrieval_k = self.reranker_topk if self.use_reranker else k
         all_results = []
 
         if 'enriched_query' not in self.query_df.columns:
-            self.logger.warning(
-                "No enriched_query column found. Adding context now.")
+            self.logger.warning("No enriched_query column found. Adding context now.")
             self.query_df = self.add_context_to_query(self.query_df)
 
         # _term_col may not be set if query_df was pre-enriched externally
@@ -151,19 +160,18 @@ class OntoMapBIE(OntoModelsBase):
         orig_queries = self.query_df[self._term_col].tolist()
         ctx_queries = self.query_df['enriched_query'].tolist()
 
-        for ctx_q in tqdm(ctx_queries,
-                          desc="Processing queries (Bi-Encoder)",
-                          leave=False):
-            hits = self.vector_store.similarity_search(query=ctx_q,
-                                                       k=k,
-                                                       as_documents=True)
+        for ctx_q in tqdm(ctx_queries, desc="Processing queries (Bi-Encoder)", leave=False):
+            hits = self.vector_store.similarity_search(
+                query=ctx_q, k=retrieval_k, as_documents=True)
+            if self.use_reranker:
+                hits = self._rerank_results(ctx_q, hits, k)
+            else:
+                hits = hits[:k]
             all_results.append(hits)
 
         df = pd.DataFrame({
-            'original_value':
-            orig_queries,
-            'ctx_query':
-            ctx_queries,
+            'original_value': orig_queries,
+            'ctx_query': ctx_queries,
             'curated_ontology': [
                 cura_map.get(q, "Not Found")
                 if test_or_prod == 'test' else "N/A" for q in orig_queries
@@ -179,6 +187,15 @@ class OntoMapBIE(OntoModelsBase):
                 f"{hits[i].metadata['score']:.4f}" if i < len(hits) else "N/A"
                 for hits in all_results
             ]
+            if self.use_reranker:
+                df[f'match{i+1}_similarity_score'] = [
+                    f"{hits[i].metadata.get('similarity_score', 0):.4f}"
+                    if i < len(hits) else "N/A" for hits in all_results
+                ]
+                df[f'match{i+1}_reranker_score'] = [
+                    f"{hits[i].metadata.get('reranker_score', 0):.4f}"
+                    if i < len(hits) else "N/A" for hits in all_results
+                ]
 
         df['match_level'] = df.apply(lambda row: next(
             (j + 1 for j in range(k)

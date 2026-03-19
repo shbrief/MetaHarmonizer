@@ -1,36 +1,32 @@
 """Identify new harmonized fields from unmapped columns using FieldSuggester."""
 
+import argparse
 import pandas as pd
-from src.field_suggester import FieldSuggester
 from src.models.schema_mapper.engine import SchemaMapEngine
-from src.utils.embedding_store import EmbeddingStore
-
+from src.field_suggester import suggest_from_schema_mapper
 
 if __name__ == "__main__":
-    # Load data
-    df = pd.read_csv("data/schema/hnsc_tcga_gdc_clinical_data.tsv", sep="\t")
-
-    # Run schema mapping
-    engine = SchemaMapEngine(
-        clinical_data_path="data/schema/hnsc_tcga_gdc_clinical_data.tsv",
-        mode="auto"
+    parser = argparse.ArgumentParser(
+        description="Identify new harmonized fields from unmapped columns."
     )
+    parser.add_argument("--input", required=True,
+                        help="Path to the clinical data TSV or CSV file.")
+    parser.add_argument("--threshold", type=float, default=0.5,
+                        help="Score threshold below which a column is considered "
+                             "unmapped (default: 0.5).")
+    args = parser.parse_args()
+
+    sep = "\t" if args.input.endswith(".tsv") else ","
+    df = pd.read_csv(args.input, sep=sep)
+
+    engine = SchemaMapEngine(clinical_data_path=args.input, mode="auto")
     results_df = engine.run_schema_mapping()
 
-    # Find columns that weren't confidently mapped
-    unmapped = results_df[
-        (results_df['match1_score'].isna()) | (results_df['match1_score'] < 0.5)
-    ]['query'].tolist()
-
-    print(f"Found {len(unmapped)} unmapped columns")
-    print(f"Unmapped: {unmapped}\n")
-
-    # Suggest new harmonized fields using FieldSuggester
-    # Optionally share an EmbeddingStore for cross-engine reuse:
-    #   store = EmbeddingStore()
-    #   suggester = FieldSuggester(embedding_store=store)
-    suggester = FieldSuggester()
-    suggestions = suggester.suggest(unmapped, df=df)
+    suggestions = suggest_from_schema_mapper(
+        schema_mapper_results=results_df,
+        df=df,
+        score_threshold=args.threshold,
+    )
 
     print("\nSuggested New Harmonized Fields:")
     print("=" * 80)

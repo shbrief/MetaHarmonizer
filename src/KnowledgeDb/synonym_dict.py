@@ -8,7 +8,6 @@ import numpy as np
 from typing import List, Dict, Optional, Set
 from pathlib import Path
 from collections import OrderedDict
-from tqdm.auto import tqdm
 from src.utils.embeddings import EmbeddingAdapter
 from src.utils.model_loader import get_embedding_model_cached
 from src.KnowledgeDb import ensure_knowledge_db
@@ -60,6 +59,8 @@ class SynonymDict:
         # Initialize FAISS index
         self.index: Optional[faiss.Index] = None
         self.dim: Optional[int] = None
+        self.is_gpu = faiss.get_num_gpus() > 0
+        self._gpu_res = faiss.StandardGpuResources() if self.is_gpu else None
 
         if os.path.exists(self.index_path):
             self.load_index()
@@ -148,19 +149,8 @@ class SynonymDict:
     # ---------------- FAISS Operations ----------------
     def _new_index(self, dim: int):
         self.dim = dim
-
-        # Create base flat index
-        base_index = faiss.IndexFlatIP(dim)
-
-        # Wrap with IndexIDMap2 for custom ID mapping
-        cpu_index = faiss.IndexIDMap2(base_index)
-
-        # Use GPU if available
-        if faiss.get_num_gpus() > 0:
-            res = faiss.StandardGpuResources()
-            self.index = faiss.index_cpu_to_gpu(res, 0, cpu_index)
-        else:
-            self.index = cpu_index
+        cpu_index = faiss.IndexIDMap2(faiss.IndexFlatIP(dim))
+        self.index = faiss.index_cpu_to_gpu(self._gpu_res, 0, cpu_index) if self.is_gpu else cpu_index
 
     def _l2_normalize(self, v: np.ndarray) -> np.ndarray:
         if getattr(self.embedder, "model", None) and getattr(
@@ -176,37 +166,18 @@ class SynonymDict:
             raise RuntimeError("Index is None.")
 
         tmp = self.index_path + ".tmp"
-
-        # If using GPU, transfer to CPU first
-        if faiss.get_num_gpus() > 0:
-            cpu_index = faiss.index_gpu_to_cpu(self.index)
-            faiss.write_index(cpu_index, tmp)
-        else:
-            faiss.write_index(self.index, tmp)
-
+        index_to_save = faiss.index_gpu_to_cpu(self.index) if self.is_gpu else self.index
+        faiss.write_index(index_to_save, tmp)
         os.replace(tmp, self.index_path)
 
     def load_index(self):
         """Load FAISS index from disk."""
-        self.index = faiss.read_index(self.index_path)
-        self.dim = self.index.d
+        cpu_index = faiss.read_index(self.index_path)
+        self.dim = cpu_index.d
         out_dim = getattr(self.embedder, "output_dim", None)
         if out_dim and out_dim != self.dim:
             raise RuntimeError(f"Index dim {self.dim} != model dim {out_dim}")
-
-    def _add_to_faiss(self, vectors: np.ndarray, ids: np.ndarray):
-        """Add vectors with their SQLite IDs to FAISS."""
-        if len(vectors) == 0:
-            return
-
-        vec_array = np.array(vectors, dtype=np.float32)
-        vec_array = self._l2_normalize(vec_array)
-        ids_array = np.array(ids, dtype=np.int64)
-
-        if self.index is None:
-            self._new_index(vec_array.shape[1])
-
-        self.index.add_with_ids(vec_array, ids_array)
+        self.index = faiss.index_cpu_to_gpu(self._gpu_res, 0, cpu_index) if self.is_gpu else cpu_index
 
     # ---------------- Encoding ----------------
     def _encode(self, texts: List[str]) -> np.ndarray:
@@ -227,48 +198,38 @@ class SynonymDict:
 
         # Batch embedding
         embed_batch_size = 512
-        if faiss.get_num_gpus() > 0:
-            total_mem = torch.cuda.get_device_properties(0).total_memory / (
-                1024**3)
+        if self.is_gpu:
+            total_mem = torch.cuda.get_device_properties(0).total_memory / (1024**3)
             used_mem = torch.cuda.memory_allocated(0) / (1024**3)
             free_mem = total_mem - used_mem
-
             if free_mem < 2:
                 embed_batch_size = max(64, embed_batch_size // 2)
             elif free_mem > 8:
                 embed_batch_size = min(2048, embed_batch_size * 2)
 
-        all_vectors = []
-        for i in tqdm(range(0, len(synonyms), embed_batch_size),
-                      desc="Embedding batches",
-                      leave=False):
+        self.index = None  # reset
+
+        n_batches = (len(synonyms) + embed_batch_size - 1) // embed_batch_size
+        for batch_idx, i in enumerate(range(0, len(synonyms), embed_batch_size)):
             batch_syns = synonyms[i:i + embed_batch_size]
-            batch_vecs = self.embedder.embed_documents(batch_syns)
-            all_vectors.extend(batch_vecs)
+            batch_ids  = db_ids[i:i + embed_batch_size]
+
+            batch_vecs = np.array(self.embedder.embed_documents(batch_syns), dtype=np.float32)
+            batch_vecs = self._l2_normalize(batch_vecs)
+
+            if self.index is None:
+                self._new_index(batch_vecs.shape[1])
+
+            self.index.add_with_ids(batch_vecs, np.array(batch_ids, dtype=np.int64))
 
             del batch_syns, batch_vecs
-            if faiss.get_num_gpus() > 0:
+            if self.is_gpu:
                 torch.cuda.empty_cache()
             gc.collect()
 
-        # Build FAISS index
-        vectors_array = np.array(all_vectors, dtype=np.float32)
-        vectors_array = self._l2_normalize(vectors_array)
-        ids_array = np.array(db_ids, dtype=np.int64)
+            if (batch_idx + 1) % 10 == 0 or (batch_idx + 1) == n_batches:
+                self.logger.info(f"Embedding progress: {batch_idx + 1}/{n_batches} batches")
 
-        dim = vectors_array.shape[1]
-        base_index = faiss.IndexFlatIP(dim)
-        cpu_index = faiss.IndexIDMap2(base_index)
-
-        if faiss.get_num_gpus() > 0:
-            res = faiss.StandardGpuResources()
-            self.index = faiss.index_cpu_to_gpu(res, 0, cpu_index)
-        else:
-            self.index = cpu_index
-
-        self.index.add_with_ids(vectors_array, ids_array)
-
-        # Save
         self.save_index()
         self.logger.info(
             f"✅ FAISS index built with {self.index.ntotal} vectors")
@@ -415,7 +376,6 @@ class SynonymDict:
         q_emb = self._encode([q])
         D, I = self.index.search(q_emb, k)
 
-        # ✅ I[0] now contains actual SQLite IDs (not indices)
         db_ids = [int(i) for i in I[0] if i != -1]
         scores = [float(d) for d in D[0][:len(db_ids)]]
 
@@ -479,7 +439,6 @@ class SynonymDict:
             row_I = I[j]
             row_D = D[j]
 
-            # row_I contains actual SQLite IDs
             db_ids = [int(i) for i in row_I if i != -1]
             scores = [float(d) for d in row_D[:len(db_ids)]]
 

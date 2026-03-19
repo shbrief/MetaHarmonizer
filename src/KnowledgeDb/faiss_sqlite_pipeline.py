@@ -121,6 +121,12 @@ class FAISSSQLiteSearch:
             if corpus_df is None:
                 raise ValueError("corpus_df is required for RAG strategy")
 
+            if 'clean_code' not in corpus_df.columns:
+                if 'obo_id' in corpus_df.columns:
+                    corpus_df = corpus_df.copy()
+                    corpus_df['clean_code'] = corpus_df['obo_id'].astype(str).str.extract(r'(C\d+)', expand=False)
+                else:
+                    raise ValueError("corpus_df must contain 'clean_code' or 'obo_id' for RAG strategy")
             codes = corpus_df['clean_code'].dropna().unique().tolist()
 
             # 1. Use ConceptTableBuilder to build synonym and rag tables
@@ -241,32 +247,32 @@ class FAISSSQLiteSearch:
             elif free_mem > 8:
                 embed_batch_size = min(2048, embed_batch_size * 2)
 
-        all_vectors = []
+        self.index = None  # reset
+        self._ids = []
+
         n_batches = (len(texts) + embed_batch_size - 1) // embed_batch_size
         for batch_idx, i in enumerate(range(0, len(texts), embed_batch_size)):
             batch_texts = texts[i:i + embed_batch_size]
-            batch_vecs = self.embedder.embed_documents(batch_texts)
-            all_vectors.extend(batch_vecs)
+            batch_ids   = db_ids[i:i + embed_batch_size]
 
-            del batch_texts, batch_vecs
+            batch_array = np.array(self.embedder.embed_documents(batch_texts), dtype=np.float32)
+            batch_array = self.normalize(batch_array)
+
+            if self.index is None:
+                dim = batch_array.shape[1]
+                cpu_index = faiss.IndexFlatIP(dim)
+                self.index = faiss.index_cpu_to_gpu(self._gpu_res, 0, cpu_index) if self.is_gpu else cpu_index
+
+            self.index.add(batch_array)
+            self._ids.extend(batch_ids)
+
+            del batch_texts, batch_array
             if self.is_gpu:
                 torch.cuda.empty_cache()
             gc.collect()
 
             if (batch_idx + 1) % 10 == 0 or (batch_idx + 1) == n_batches:
                 self.logger.info(f"Embedding progress: {batch_idx + 1}/{n_batches} batches")
-
-        # Build FAISS index
-        vectors_array = np.array(all_vectors, dtype=np.float32)
-        vectors_array = self.normalize(vectors_array)
-
-        dim = vectors_array.shape[1]
-        cpu_index = faiss.IndexFlatIP(dim)
-        self.index = faiss.index_cpu_to_gpu(self._gpu_res, 0, cpu_index) if self.is_gpu else cpu_index
-
-        # Add vectors in order
-        self.index.add(vectors_array)
-        self._ids = db_ids
 
         # Save (GPU indices must be converted to CPU before writing)
         os.makedirs(BASE_IDX_DIR, exist_ok=True)
