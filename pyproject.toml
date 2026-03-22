@@ -27,6 +27,11 @@ dependencies = [
     "transformers",
     "sentence-transformers",
     "scikit-learn",
+    # Vector search
+    "faiss-cpu==1.11.0",
+    # RAG and LLM
+    "langchain",
+    "google-generativeai",
     # Fuzzy matching
     "rapidfuzz",
     "thefuzz",
@@ -45,21 +50,9 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-# Heavy extras not needed for basic schema/field suggestion
-full = [
-    "faiss-cpu==1.11.0",
-    "langchain",
-    "graphviz",
-    "matplotlib",
-    "seaborn",
-]
-# Development / notebook extras
 dev = [
-    "jupyter",
-    "ipython",
-    "ipywidgets",
-    "nest-asyncio",
     "pytest",
+    "pytest-cov",
 ]
 
 # Keep src.* import paths working without renaming the source directory.
@@ -79,6 +72,3 @@ include = ["src*"]
 "src.models" = ["method_model.yaml"]
 
 [tool.pytest.ini_options]
-markers = [
-    "slow: marks tests as slow, requiring real models (deselect with '-m \"not slow\"')",
-]
