@@ -1,7 +1,10 @@
+import torch
+import numpy as np
 from sentence_transformers import util
 import pandas as pd
 from src.KnowledgeDb.faiss_sqlite_pipeline import FAISSSQLiteSearch
-from src.utils.model_loader import load_method_model_dict
+from src.utils.model_loader import load_method_model_dict, get_reranker_cached
+from src.models.reranker import RERANKER_TYPE_MAP
 from src.CustomLogger.custom_logger import CustomLogger
 
 
@@ -98,6 +101,52 @@ class OntoModelsBase:
         cosine_scores = util.cos_sim(query_emb, corpus_emb)
         cosine_sim_df = pd.DataFrame(cosine_scores)
         return cosine_sim_df
+
+    # ---------------- Reranker (shared by RAG / BIE subclasses) ----------------
+    def _init_reranker(self, use_reranker: bool, reranker_method: str, reranker_topk: int):
+        self.use_reranker = use_reranker
+        if use_reranker:
+            if reranker_method not in RERANKER_TYPE_MAP:
+                raise ValueError(
+                    f"Unknown reranker_method '{reranker_method}'. "
+                    f"Must be one of {list(RERANKER_TYPE_MAP.keys())}"
+                )
+            self.reranker_method = reranker_method
+            self.reranker_topk = reranker_topk
+        else:
+            self.reranker_method = None
+            self.reranker_topk = None
+        self._reranker = None
+
+    @property
+    def reranker(self):
+        """Lazy-load reranker on first use."""
+        if self._reranker is None and self.use_reranker:
+            reranker_type = RERANKER_TYPE_MAP.get(self.reranker_method)
+            if torch.cuda.is_available():
+                vram = torch.cuda.get_device_properties(0).total_memory
+                use_8bit = (vram < 20e9) and (reranker_type in ["t5", "generative"])
+            else:
+                use_8bit = False
+            self.logger.info(f"Loading {reranker_type} reranker: {self.reranker_method}")
+            self._reranker = get_reranker_cached(self.reranker_method, use_8bit=use_8bit)
+        return self._reranker
+
+    def _rerank_results(self, query: str, candidates: list, topk: int) -> list:
+        """Rerank FAISS candidates using cross-encoder; returns top-k."""
+        if not candidates or not self.use_reranker:
+            return candidates[:topk]
+        pairs = [[query, doc.page_content] for doc in candidates]
+        scores = self.reranker.predict(pairs)
+        ranked_indices = np.argsort(-scores)[:topk]
+        reranked = []
+        for idx in ranked_indices:
+            doc = candidates[idx]
+            doc.metadata['similarity_score'] = doc.metadata.get('score', 0)
+            doc.metadata['reranker_score'] = float(scores[idx])
+            doc.metadata['score'] = float(scores[idx])
+            reranked.append(doc)
+        return reranked
 
     ##### To be implemented in the child class #####
     def create_embeddings(self):

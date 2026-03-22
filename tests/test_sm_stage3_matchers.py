@@ -81,6 +81,16 @@ class _MockEngine3:
     def is_col_numeric(self, col: str) -> bool:
         return col in self._numeric_cols
 
+    # no-ops: caches are pre-set in __init__
+    def _ensure_std_numeric_index(self):
+        pass
+
+    def _ensure_std_field_embs(self):
+        pass
+
+    def _ensure_numeric_index(self):
+        pass
+
     def _enc(self, text: str):
         seed = abs(hash(text)) % (2 ** 31)
         return _normalized_tensor(seed)

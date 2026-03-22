@@ -1,6 +1,7 @@
 # Schema mapper embedding models
 minilm-l6: all-MiniLM-L6-v2
-gemma-27b: gemma-3-27b-it
+gemma-27b: models/gemma-3-27b-it
+gemma-12b: models/gemma-3-12b-it
 
 bert-base: bert-base-nli-mean-tokens
 pubmed-bert: pritamdeka/S-PubMedBert-MS-MARCO

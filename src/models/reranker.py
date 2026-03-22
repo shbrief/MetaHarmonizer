@@ -167,7 +167,7 @@ class Reranker:
         scores = []
         for i in range(0, len(pairs), self.batch_size):
             batch = pairs[i:i + self.batch_size]
-            scores.extend(self.model.predict(batch))
+            scores.extend(self.model.predict(batch, show_progress_bar=False))
         return np.array(scores)
 
     def _predict_t5(self, pairs: List[List[str]]) -> np.ndarray:

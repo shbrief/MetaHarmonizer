@@ -568,7 +568,7 @@ class OntoMapEngine:
                             errors='ignore')
                 combined_results = pd.concat([exact_df, s2_res],
                                              ignore_index=True)
-                return self._save_result(combined_results)
+                return self._save_result(self._finalize_results(combined_results))
 
             # Identify low-confidence queries for Stage 3
             # Use existing top1_score_float column
@@ -591,7 +591,7 @@ class OntoMapEngine:
                                              ignore_index=True)
 
                 self._log_final_summary(exact_df, s2_res)
-                return self._save_result(combined_results)
+                return self._save_result(self._finalize_results(combined_results))
 
             # Apply shortname replacement for Stage 3 queries
             mapping_dict_s3 = self._map_shortname_to_fullname(queries_for_s3)

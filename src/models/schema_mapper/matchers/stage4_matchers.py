@@ -33,14 +33,8 @@ class LLMMatcher(BaseMatcher):
         # Configure Gemini
         genai.configure(api_key=api_key)
         
-        # Use model from config
+        self.model = genai.GenerativeModel(LLM_MODEL)
         model_name = LLM_MODEL
-        
-        # Add 'models/' prefix if not present
-        if not model_name.startswith('models/'):
-            model_name = f'models/{model_name}'
-        
-        self.model = genai.GenerativeModel(model_name)
         self.model_name = model_name
         
         logger.info(f"[LLM] Initialized with {model_name}")

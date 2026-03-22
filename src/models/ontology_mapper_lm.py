@@ -7,7 +7,7 @@ import src.models.ontology_models as otm
 
 class OntoMapLM(otm.OntoModelsBase):
     """
-    A class to map ontologies using language models.
+    A class to map ontologies using language models with CLS-token embeddings.
 
     Uses the same cached SentenceTransformer instance as FAISSSQLiteSearch
     to avoid loading duplicate model weights into memory.
