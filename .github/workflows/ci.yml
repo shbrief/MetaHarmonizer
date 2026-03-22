@@ -27,4 +27,4 @@ jobs:
           pip install -e ".[dev]"
 
       - name: Run fast tests
-        run: pytest tests/ -v -m "not slow"
+        run: pytest tests/ -v
