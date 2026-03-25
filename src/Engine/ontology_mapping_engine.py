@@ -4,6 +4,7 @@ from src.models import ontology_mapper_rag as omr
 from src.models import ontology_mapper_synonym as omsyn
 from src.models import ontology_mapper_bi_encoder as ombe
 import os
+import re
 import pandas as pd
 import numpy as np
 from datetime import datetime
@@ -13,6 +14,19 @@ from src._paths import DATA_DIR
 logger = CustomLogger()
 ABBR_DICT_PATH = DATA_DIR / "corpus" / "oncotree_code_to_name.csv"
 SYNONYM_MIN_CONFIDENCE = 0.9
+
+_BRITISH_TO_AMERICAN = [
+    (r"(?i)leukaemia",   "leukemia"),
+    (r"(?i)tumour",      "tumor"),
+    (r"(?i)haemato",     "hemato"),
+    (r"(?i)oedema",      "edema"),
+    (r"(?i)paediatric",  "pediatric"),
+    (r"(?i)foetal",      "fetal"),
+    (r"(?i)anaemia",     "anemia"),
+    (r"(?i)haemoglobin", "hemoglobin"),
+    (r"(?i)gynaecolog",  "gynecolog"),
+    (r"(?i)diarrhoea",   "diarrhea"),
+]
 
 
 class OntoMapEngine:
@@ -179,7 +193,7 @@ class OntoMapEngine:
         try:
             mapping_df = pd.read_csv(ABBR_DICT_PATH)
             short_to_name = dict(
-                zip(mapping_df["code"].str.strip(),
+                zip(mapping_df["code"].str.strip().str.replace("_", " ").str.lower(),
                     mapping_df["name"].str.strip()))
         except FileNotFoundError:
             self._logger.warning(
@@ -190,12 +204,44 @@ class OntoMapEngine:
         replaced = {}
         for q in non_exact_list:
             q_strip = q.strip()
-            replaced[q] = short_to_name.get(q_strip, q_strip)
-            if q_strip in short_to_name:
+            q_key = q_strip.lower()
+            replaced[q] = short_to_name.get(q_key, q_strip)
+            if q_key in short_to_name:
                 self._logger.info(
-                    f"Replaced: {q_strip} → {short_to_name[q_strip]}")
+                    f"Replaced: {q_strip} → {short_to_name[q_key]}")
         return replaced
     
+    def _normalize_query(self, q: str, corpus_set: set) -> str:
+        """
+        Apply lightweight text normalization to improve embedding recall.
+
+        Steps applied in order:
+        1. Underscore → space
+        2. British → American spelling
+        3. Symbol expansion: + → Positive, trailing - → Negative, NOS → Not Otherwise Specified
+        4. Plural stripping (only when singular form exists in corpus)
+        """
+        # 1. Underscore → space
+        q = q.replace("_", " ")
+
+        # 2. British → American spelling
+        for pattern, replacement in _BRITISH_TO_AMERICAN:
+            q = re.sub(pattern, replacement, q)
+
+        # 3. Symbol expansion
+        q = re.sub(r'\+', ' Positive', q)
+        q = re.sub(r'-\s*$', ' Negative', q)
+        q = q.replace('; NOS', '; Not Otherwise Specified')
+        q = re.sub(r'\s{2,}', ' ', q).strip()
+
+        # 4. Plural stripping: only strip trailing 's' when singular exists in corpus
+        if q.lower().endswith('s') and len(q) > 3:
+            singular = q[:-1]
+            if singular.lower() in corpus_set:
+                q = singular
+
+        return q
+
     def _finalize_results(self, df: pd.DataFrame) -> pd.DataFrame:
         """
         Finalize results for output by renaming columns and dropping internal columns.
@@ -481,6 +527,11 @@ class OntoMapEngine:
         self._logger.info("Starting Ontology Mapping")
         self._logger.info("=" * 50)
 
+        # ========== Query Normalization ==========
+        corpus_set = {c.strip().lower() for c in self.corpus}
+        norm_map = {q: self._normalize_query(q, corpus_set) for q in self.query}
+        self._logger.info("Query normalization applied")
+
         # ========== Stage 1: Exact Matching ==========
         self._logger.info("Stage 1: Exact Matching")
         exact_matches = self._exact_matching()
@@ -509,18 +560,22 @@ class OntoMapEngine:
 
         # ========== Stage 2: LM/ST ==========
         self._logger.info(f"Stage 2: {self.s2_strategy.upper()} Matching")
+
+        # Normalize non-exact queries, then apply shortname expansion
+        norm_non_exact = [norm_map[q] for q in non_exact_matches_ls]
         self._logger.info("Replacing shortNames using rule-based name mapping")
-        mapping_dict = self._map_shortname_to_fullname(non_exact_matches_ls)
-        updated_queries = [mapping_dict[q] for q in non_exact_matches_ls]
+        mapping_dict = self._map_shortname_to_fullname(norm_non_exact)
+        updated_queries = [mapping_dict[nq] for nq in norm_non_exact]
 
         replace_df = pd.DataFrame({
-            "original_value": non_exact_matches_ls,
-            "updated_value": updated_queries
+            "original_value": non_exact_matches_ls,  # original query for cura_map lookup
+            "updated_value": updated_queries           # normalized + shortname-expanded for embedding
         })
 
         updated_cura_map = {
-            mapping_dict[k]: v
-            for k, v in self.cura_map.items() if k in mapping_dict
+            mapping_dict[norm_map[k]]: v
+            for k, v in self.cura_map.items()
+            if k in norm_map and norm_map[k] in mapping_dict
         }
 
         # Run Stage 2 model
