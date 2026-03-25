@@ -229,8 +229,9 @@ class OntoMapEngine:
             q = re.sub(pattern, replacement, q)
 
         # 3. Symbol expansion
-        q = re.sub(r'\+', ' Positive', q)
-        q = re.sub(r'-\s*$', ' Negative', q)
+        if self.category == 'disease':
+            q = re.sub(r'\+', ' Positive', q)
+            q = re.sub(r'-\s*$', ' Negative', q)
         q = q.replace('; NOS', '; Not Otherwise Specified')
         q = re.sub(r'\s{2,}', ' ', q).strip()
 
@@ -648,9 +649,10 @@ class OntoMapEngine:
                 self._log_final_summary(exact_df, s2_res)
                 return self._save_result(self._finalize_results(combined_results))
 
-            # Apply shortname replacement for Stage 3 queries
-            mapping_dict_s3 = self._map_shortname_to_fullname(queries_for_s3)
-            updated_queries_s3 = [mapping_dict_s3[q] for q in queries_for_s3]
+            # Normalize then apply shortname replacement for Stage 3 queries
+            norm_queries_s3 = [norm_map[q] for q in queries_for_s3]
+            mapping_dict_s3 = self._map_shortname_to_fullname(norm_queries_s3)
+            updated_queries_s3 = [mapping_dict_s3[nq] for nq in norm_queries_s3]
 
             replace_df_s3 = pd.DataFrame({
                 "original_value": queries_for_s3,
@@ -658,8 +660,9 @@ class OntoMapEngine:
             })
 
             updated_cura_map_s3 = {
-                mapping_dict_s3[k]: v
-                for k, v in self.cura_map.items() if k in mapping_dict_s3
+                mapping_dict_s3[norm_map[k]]: v
+                for k, v in self.cura_map.items()
+                if k in norm_map and norm_map[k] in mapping_dict_s3
             }
 
             # Run Stage 3 model

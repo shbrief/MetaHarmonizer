@@ -3,10 +3,11 @@ import pytest
 from src.Engine.ontology_mapping_engine import OntoMapEngine
 
 
-def _engine():
+def _engine(category: str = "disease"):
     """Minimal OntoMapEngine stub with a small corpus."""
     e = OntoMapEngine.__new__(OntoMapEngine)
     e.corpus = ["Carcinoma", "Lung Cancer", "Leukemia", "Tumor"]
+    e.category = category
     return e
 
 
@@ -78,21 +79,33 @@ def test_diarrhoea():
     assert e._normalize_query("diarrhoea", _CORPUS_SET) == "diarrhea"
 
 
-# ── symbol expansion ─────────────────────────────────────────────────────────
+# ── symbol expansion (disease only) ─────────────────────────────────────────
 
-def test_plus_to_positive():
-    e = _engine()
+def test_plus_to_positive_disease():
+    e = _engine(category="disease")
     assert e._normalize_query("CD4+", _CORPUS_SET) == "CD4 Positive"
 
 
-def test_trailing_dash_to_negative():
-    e = _engine()
+def test_trailing_dash_to_negative_disease():
+    e = _engine(category="disease")
     assert e._normalize_query("CD4-", _CORPUS_SET) == "CD4 Negative"
 
 
-def test_trailing_dash_with_space():
-    e = _engine()
+def test_trailing_dash_with_space_disease():
+    e = _engine(category="disease")
     assert e._normalize_query("CD4 -", _CORPUS_SET) == "CD4 Negative"
+
+
+def test_plus_not_expanded_non_disease():
+    """+ should be kept as-is for non-disease categories (e.g. bodysite)."""
+    e = _engine(category="bodysite")
+    assert e._normalize_query("LIVER LEFT LOBE+LIVER RIGHT LOBE", _CORPUS_SET) == \
+        "LIVER LEFT LOBE+LIVER RIGHT LOBE"
+
+
+def test_trailing_dash_not_expanded_non_disease():
+    e = _engine(category="bodysite")
+    assert e._normalize_query("CD4-", _CORPUS_SET) == "CD4-"
 
 
 def test_nos_expansion():
@@ -102,7 +115,7 @@ def test_nos_expansion():
 
 def test_internal_hyphen_preserved():
     """Hyphens within words (non-Hodgkin) must NOT be replaced."""
-    e = _engine()
+    e = _engine(category="disease")
     result = e._normalize_query("non-Hodgkin lymphoma", _CORPUS_SET)
     assert result == "non-Hodgkin lymphoma"
 
