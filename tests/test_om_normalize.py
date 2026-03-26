@@ -86,6 +86,11 @@ def test_plus_to_positive_disease():
     assert e._normalize_query("CD4+", _CORPUS_SET) == "CD4 Positive"
 
 
+def test_multiple_plus_no_concatenation():
+    e = _engine(category="disease")
+    assert e._normalize_query("CD4+CD8+", _CORPUS_SET) == "CD4 Positive CD8 Positive"
+
+
 def test_trailing_dash_to_negative_disease():
     e = _engine(category="disease")
     assert e._normalize_query("CD4-", _CORPUS_SET) == "CD4 Negative"

@@ -154,11 +154,18 @@ class OntoMapEngine:
         if need_code:
             if "clean_code" not in df.columns:
                 if "obo_id" in df.columns:
-                    # Extract code from obo_id: "NCIT:C156482" → "NCIT_C156482",
-                    # "UBERON:0001062" → "UBERON_0001062" (any OBO prefix)
-                    df["clean_code"] = df["obo_id"].astype(str).apply(
-                        lambda x: "{}_{}".format(*x.split(":", 1)) if ":" in x else x
-                    )
+                    # Extract code from obo_id:
+                    #   - "NCIT:C156482"   → "C156482"        (strip NCIT prefix for NCI endpoints)
+                    #   - "UBERON:0001062" → "UBERON_0001062" (preserve non-NCIT prefixes)
+                    def _obo_to_clean_code(x: str) -> str:
+                        x = str(x)
+                        if ":" not in x:
+                            return x
+                        prefix, local = x.split(":", 1)
+                        if prefix == "NCIT":
+                            return local
+                        return f"{prefix}_{local}"
+                    df["clean_code"] = df["obo_id"].astype(str).apply(_obo_to_clean_code)
                     self._logger.info(
                         "`clean_code` not found — generated from `obo_id`.")
                 else:
@@ -277,6 +284,31 @@ class OntoMapEngine:
             df = df.drop(columns=existing_cols_to_drop)
             self._logger.info(f"Dropped internal columns: {existing_cols_to_drop}")
 
+        return df
+
+    def _recompute_match_level(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Recompute match_level from self.cura_map[original_value] and match columns.
+
+        Called after merging back to original_value so match_level is always
+        consistent with the original curated label, not the normalized/expanded
+        query key used inside the model.  Only has effect in test mode.
+        """
+        if self._test_or_prod != 'test':
+            return df
+
+        match_cols = [f"match{i}" for i in range(1, self.topk + 1)]
+
+        def _level(row):
+            curated = self.cura_map.get(row["original_value"])
+            if not curated:
+                return 99
+            for i, col in enumerate(match_cols, start=1):
+                if row.get(col) == curated:
+                    return i
+            return 99
+
+        df = df.copy()
+        df["match_level"] = df.apply(_level, axis=1)
         return df
 
     def _om_model_from_strategy(self, strategy: str,
@@ -594,6 +626,7 @@ class OntoMapEngine:
         s2_res = pd.merge(replace_df, s2_res, on="updated_value", how="left")
         s2_res["curated_ontology"] = s2_res["original_value"].map(
             self.cura_map).fillna("Not Found")
+        s2_res = self._recompute_match_level(s2_res)
         s2_res['stage'] = 2
 
         self._logger.info(f"Stage 2 completed: {len(s2_res)} queries")
@@ -684,6 +717,7 @@ class OntoMapEngine:
                               how="left")
             s3_res["curated_ontology"] = s3_res["original_value"].map(
                 self.cura_map).fillna("Not Found")
+            s3_res = self._recompute_match_level(s3_res)
             s3_res['stage'] = 3
 
             self._logger.info(f"Stage 3 completed: {len(s3_res)} queries")
