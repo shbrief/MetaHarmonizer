@@ -154,9 +154,11 @@ class OntoMapEngine:
         if need_code:
             if "clean_code" not in df.columns:
                 if "obo_id" in df.columns:
-                    # Extract code part from obo_id, e.g., "NCIT:C156482" -> "C156482"
-                    df["clean_code"] = df["obo_id"].astype(str).str.extract(
-                        r'(C\d+)', expand=False)
+                    # Extract code from obo_id: "NCIT:C156482" → "NCIT_C156482",
+                    # "UBERON:0001062" → "UBERON_0001062" (any OBO prefix)
+                    df["clean_code"] = df["obo_id"].astype(str).apply(
+                        lambda x: "{}_{}".format(*x.split(":", 1)) if ":" in x else x
+                    )
                     self._logger.info(
                         "`clean_code` not found — generated from `obo_id`.")
                 else:
@@ -218,7 +220,7 @@ class OntoMapEngine:
         Steps applied in order:
         1. Underscore → space
         2. British → American spelling
-        3. Symbol expansion: + → Positive, trailing - → Negative, NOS → Not Otherwise Specified
+        3. Symbol expansion: + → Positive, trailing - → Negative, "; NOS" → "; Not Otherwise Specified"
         4. Plural stripping (only when singular form exists in corpus)
         """
         # 1. Underscore → space
@@ -230,7 +232,7 @@ class OntoMapEngine:
 
         # 3. Symbol expansion
         if self.category == 'disease':
-            q = re.sub(r'\+', ' Positive', q)
+            q = re.sub(r'\+', ' Positive ', q)
             q = re.sub(r'-\s*$', ' Negative', q)
         q = q.replace('; NOS', '; Not Otherwise Specified')
         q = re.sub(r'\s{2,}', ' ', q).strip()
