@@ -234,7 +234,7 @@ class OntoMapEngine:
         if self.category == 'disease':
             q = re.sub(r'\+', ' Positive ', q)
             q = re.sub(r'-\s*$', ' Negative', q)
-        q = q.replace('; NOS', '; Not Otherwise Specified')
+        q = re.sub(r';\s*NOS\b', '; Not Otherwise Specified', q)
         q = re.sub(r'\s{2,}', ' ', q).strip()
 
         # 4. Plural stripping: only strip trailing 's' when singular exists in corpus
