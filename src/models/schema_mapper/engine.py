@@ -508,6 +508,27 @@ class SchemaMapEngine:
         
         return df_out
     
+    def run_stage4_from_manual(
+        self,
+        input_csv: str,
+        output_csv: str,
+        stage_filter: Optional[List[str]] = None,
+        merge_results: bool = True,
+    ) -> pd.DataFrame:
+        """
+        Backward-compatible wrapper referenced by README.
+
+        Runs Stage 4 (LLM) on an existing results CSV, optionally filtering by stage
+        and merging results back into the original file.
+        Defaults to merge_results=True to produce a single merged output file.
+        """
+        return self.run_llm_on_file(
+            input_csv=input_csv,
+            output_csv=output_csv,
+            stage_filter=stage_filter,
+            merge_results=merge_results,
+        )
+
     def run_llm_on_file(
         self,
         input_csv: str,

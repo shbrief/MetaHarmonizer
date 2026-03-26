@@ -149,7 +149,13 @@ engine = SchemaMapEngine(
 engine.run_schema_mapping()
 
 # (Optional) Run Stage 4 after manual review
-engine.run_stage4_from_manual("path_to_stage3_results.csv")
+engine.run_stage4_from_manual(
+  input_csv="path_to_stage3_results.csv",
+  output_csv="path_to_stage3_results_with_stage4.csv",
+  stage_filter=["stage3"],
+  merge_results=True,
+)
+
 ```
 
 - Parameters that can be changed in the model:
@@ -160,7 +166,7 @@ engine.run_stage4_from_manual("path_to_stage3_results.csv")
   - top_k (int): Number of top matches returned for each column.
 
 - Output  
-  - CSV File: Results saved to data/schema_mapping_eval/ with suffix:  
+  - CSV File: Results saved to OUTPUT_DIR (configured in src/models/schema_mapper/config.py) with suffix:  
 _schema_map_auto.csv for auto mode  
 _schema_map_manual.csv for manual mode  
 _schema_map_stage3.csv for Stage 3 results  
