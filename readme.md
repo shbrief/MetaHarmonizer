@@ -149,7 +149,7 @@ engine = SchemaMapEngine(
 engine.run_schema_mapping()
 
 # (Optional) Run Stage 4 after manual review
-engine.run_stage4_from_manual(
+engine.run_llm_on_file(
   input_csv="path_to_stage3_results.csv",
   output_csv="path_to_stage3_results_with_stage4.csv",
   stage_filter=["stage3"],
@@ -166,10 +166,10 @@ engine.run_stage4_from_manual(
   - top_k (int): Number of top matches returned for each column.
 
 - Output  
-  - CSV File: Results saved to OUTPUT_DIR (configured in src/models/schema_mapper/config.py) with suffix:  
-_schema_map_auto.csv for auto mode  
-_schema_map_manual.csv for manual mode  
-_schema_map_stage3.csv for Stage 3 results  
+  - CSV File: Results saved to OUTPUT_DIR (configured in src/models/schema_mapper/config.py). Filename pattern from `run_schema_mapping()` is:  
+`<input_root>_s3_<field_model_short>_<mode>_<YYYYMMDD_HHMMSS>.csv` (manual mode)  
+`<input_root>_s3_<field_model_short>_s4_<llm_model_short>_<mode>_<YYYYMMDD_HHMMSS>.csv` (auto mode)  
+  - If Stage 4 is run manually via `run_llm_on_file(...)`, use `output_csv` to control the output filename and location.  
   - Columns:  
 query  
 stage (stage1, stage2, stage3  )  
