@@ -54,7 +54,8 @@ def get_model(
                           repo_type="model",
                           revision=None,
                           allow_patterns=None,
-                          ignore_patterns=None)
+                          ignore_patterns=None,
+                          token=False)
 
         downloaded = os.listdir(CACHE_ROOT)
         hf_dir = max(
@@ -68,8 +69,7 @@ def get_model(
     # Load different model types
     if model_type == "embedding":
         model = SentenceTransformer(local_dir,
-                                    device=device,
-                                    local_files_only=True)
+                                    device=device)
         model._is_normalized = getattr(model, "normalize_embeddings", False)
     elif model_type == "reranker":
         model = CrossEncoder(local_dir, device=device)

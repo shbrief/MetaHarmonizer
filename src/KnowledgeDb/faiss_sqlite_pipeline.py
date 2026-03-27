@@ -17,8 +17,8 @@ from src.KnowledgeDb.db_clients.nci_db import NCIDb
 from src.KnowledgeDb.concept_table_builder import ConceptTableBuilder
 
 # Load environment variables for paths and API key
-BASE_DB = os.getenv("VECTOR_DB_PATH")
-BASE_IDX_DIR = os.getenv("FAISS_INDEX_DIR")
+BASE_DB = os.getenv("VECTOR_DB_PATH", "src/KnowledgeDb/vector_db.sqlite")
+BASE_IDX_DIR = os.getenv("FAISS_INDEX_DIR", "src/KnowledgeDb/faiss_indexes")
 UMLS_API_KEY = os.getenv("UMLS_API_KEY")
 
 TERM_BATCH_SIZE = 60  # Default batch size for term processing
