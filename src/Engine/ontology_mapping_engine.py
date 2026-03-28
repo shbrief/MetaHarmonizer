@@ -227,8 +227,7 @@ class OntoMapEngine:
         Steps applied in order:
         1. Underscore → space
         2. British → American spelling
-        3. Symbol expansion: + → Positive, trailing - → Negative, "; NOS" → "; Not Otherwise Specified"
-        4. Plural stripping (only when singular form exists in corpus)
+        3. Plural stripping (only when singular form exists in corpus)
         """
         # 1. Underscore → space
         q = q.replace("_", " ")
@@ -237,14 +236,7 @@ class OntoMapEngine:
         for pattern, replacement in _BRITISH_TO_AMERICAN:
             q = re.sub(pattern, replacement, q)
 
-        # 3. Symbol expansion
-        if self.category == 'disease':
-            q = re.sub(r'\+', ' Positive ', q)
-            q = re.sub(r'-\s*$', ' Negative', q)
-        q = re.sub(r';\s*NOS\b', '; Not Otherwise Specified', q)
-        q = re.sub(r'\s{2,}', ' ', q).strip()
-
-        # 4. Plural stripping: only strip trailing 's' when singular exists in corpus
+        # 3. Plural stripping: only strip trailing 's' when singular exists in corpus
         if q.lower().endswith('s') and len(q) > 3:
             singular = q[:-1]
             if singular.lower() in corpus_set:
