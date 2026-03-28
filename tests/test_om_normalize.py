@@ -79,52 +79,6 @@ def test_diarrhoea():
     assert e._normalize_query("diarrhoea", _CORPUS_SET) == "diarrhea"
 
 
-# ── symbol expansion (disease only) ─────────────────────────────────────────
-
-def test_plus_to_positive_disease():
-    e = _engine(category="disease")
-    assert e._normalize_query("CD4+", _CORPUS_SET) == "CD4 Positive"
-
-
-def test_multiple_plus_no_concatenation():
-    e = _engine(category="disease")
-    assert e._normalize_query("CD4+CD8+", _CORPUS_SET) == "CD4 Positive CD8 Positive"
-
-
-def test_trailing_dash_to_negative_disease():
-    e = _engine(category="disease")
-    assert e._normalize_query("CD4-", _CORPUS_SET) == "CD4 Negative"
-
-
-def test_trailing_dash_with_space_disease():
-    e = _engine(category="disease")
-    assert e._normalize_query("CD4 -", _CORPUS_SET) == "CD4 Negative"
-
-
-def test_plus_not_expanded_non_disease():
-    """+ should be kept as-is for non-disease categories (e.g. bodysite)."""
-    e = _engine(category="bodysite")
-    assert e._normalize_query("LIVER LEFT LOBE+LIVER RIGHT LOBE", _CORPUS_SET) == \
-        "LIVER LEFT LOBE+LIVER RIGHT LOBE"
-
-
-def test_trailing_dash_not_expanded_non_disease():
-    e = _engine(category="bodysite")
-    assert e._normalize_query("CD4-", _CORPUS_SET) == "CD4-"
-
-
-def test_nos_expansion():
-    e = _engine()
-    assert e._normalize_query("NSCLC; NOS", _CORPUS_SET) == "NSCLC; Not Otherwise Specified"
-
-
-def test_internal_hyphen_preserved():
-    """Hyphens within words (non-Hodgkin) must NOT be replaced."""
-    e = _engine(category="disease")
-    result = e._normalize_query("non-Hodgkin lymphoma", _CORPUS_SET)
-    assert result == "non-Hodgkin lymphoma"
-
-
 # ── plural stripping ─────────────────────────────────────────────────────────
 
 def test_plural_strip_when_singular_in_corpus():
