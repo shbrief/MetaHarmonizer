@@ -4,6 +4,7 @@ from src.models import ontology_mapper_rag as omr
 from src.models import ontology_mapper_synonym as omsyn
 from src.models import ontology_mapper_bi_encoder as ombe
 import os
+import re
 import pandas as pd
 import numpy as np
 from datetime import datetime
@@ -13,6 +14,19 @@ from src._paths import DATA_DIR
 logger = CustomLogger()
 ABBR_DICT_PATH = DATA_DIR / "corpus" / "oncotree_code_to_name.csv"
 SYNONYM_MIN_CONFIDENCE = 0.9
+
+_BRITISH_TO_AMERICAN = [
+    (r"(?i)leukaemia",   "leukemia"),
+    (r"(?i)tumour",      "tumor"),
+    (r"(?i)haemato",     "hemato"),
+    (r"(?i)oedema",      "edema"),
+    (r"(?i)paediatric",  "pediatric"),
+    (r"(?i)foetal",      "fetal"),
+    (r"(?i)anaemia",     "anemia"),
+    (r"(?i)haemoglobin", "hemoglobin"),
+    (r"(?i)gynaecolog",  "gynecolog"),
+    (r"(?i)diarrhoea",   "diarrhea"),
+]
 
 
 class OntoMapEngine:
@@ -140,9 +154,18 @@ class OntoMapEngine:
         if need_code:
             if "clean_code" not in df.columns:
                 if "obo_id" in df.columns:
-                    # Extract code part from obo_id, e.g., "NCIT:C156482" -> "C156482"
-                    df["clean_code"] = df["obo_id"].astype(str).str.extract(
-                        r'(C\d+)', expand=False)
+                    # Extract code from obo_id:
+                    #   - "NCIT:C156482"   → "C156482"        (strip NCIT prefix for NCI endpoints)
+                    #   - "UBERON:0001062" → "UBERON_0001062" (preserve non-NCIT prefixes)
+                    def _obo_to_clean_code(x: str) -> str:
+                        x = str(x)
+                        if ":" not in x:
+                            return x
+                        prefix, local = x.split(":", 1)
+                        if prefix == "NCIT":
+                            return local
+                        return f"{prefix}_{local}"
+                    df["clean_code"] = df["obo_id"].astype(str).apply(_obo_to_clean_code)
                     self._logger.info(
                         "`clean_code` not found — generated from `obo_id`.")
                 else:
@@ -179,7 +202,7 @@ class OntoMapEngine:
         try:
             mapping_df = pd.read_csv(ABBR_DICT_PATH)
             short_to_name = dict(
-                zip(mapping_df["code"].str.strip(),
+                zip(mapping_df["code"].str.strip().str.replace("_", " ").str.lower(),
                     mapping_df["name"].str.strip()))
         except FileNotFoundError:
             self._logger.warning(
@@ -190,12 +213,37 @@ class OntoMapEngine:
         replaced = {}
         for q in non_exact_list:
             q_strip = q.strip()
-            replaced[q] = short_to_name.get(q_strip, q_strip)
-            if q_strip in short_to_name:
+            q_key = q_strip.lower()
+            replaced[q] = short_to_name.get(q_key, q_strip)
+            if q_key in short_to_name:
                 self._logger.info(
-                    f"Replaced: {q_strip} → {short_to_name[q_strip]}")
+                    f"Replaced: {q_strip} → {short_to_name[q_key]}")
         return replaced
     
+    def _normalize_query(self, q: str, corpus_set: set) -> str:
+        """
+        Apply lightweight text normalization to improve embedding recall.
+
+        Steps applied in order:
+        1. Underscore → space
+        2. British → American spelling
+        3. Plural stripping (only when singular form exists in corpus)
+        """
+        # 1. Underscore → space
+        q = q.replace("_", " ")
+
+        # 2. British → American spelling
+        for pattern, replacement in _BRITISH_TO_AMERICAN:
+            q = re.sub(pattern, replacement, q)
+
+        # 3. Plural stripping: only strip trailing 's' when singular exists in corpus
+        if q.lower().endswith('s') and len(q) > 3:
+            singular = q[:-1]
+            if singular.lower() in corpus_set:
+                q = singular
+
+        return q
+
     def _finalize_results(self, df: pd.DataFrame) -> pd.DataFrame:
         """
         Finalize results for output by renaming columns and dropping internal columns.
@@ -228,6 +276,31 @@ class OntoMapEngine:
             df = df.drop(columns=existing_cols_to_drop)
             self._logger.info(f"Dropped internal columns: {existing_cols_to_drop}")
 
+        return df
+
+    def _recompute_match_level(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Recompute match_level from self.cura_map[original_value] and match columns.
+
+        Called after merging back to original_value so match_level is always
+        consistent with the original curated label, not the normalized/expanded
+        query key used inside the model.  Only has effect in test mode.
+        """
+        if self._test_or_prod != 'test':
+            return df
+
+        match_cols = [f"match{i}" for i in range(1, self.topk + 1)]
+
+        def _level(row):
+            curated = self.cura_map.get(row["original_value"])
+            if not curated:
+                return 99
+            for i, col in enumerate(match_cols, start=1):
+                if row.get(col) == curated:
+                    return i
+            return 99
+
+        df = df.copy()
+        df["match_level"] = df.apply(_level, axis=1)
         return df
 
     def _om_model_from_strategy(self, strategy: str,
@@ -481,6 +554,11 @@ class OntoMapEngine:
         self._logger.info("Starting Ontology Mapping")
         self._logger.info("=" * 50)
 
+        # ========== Query Normalization ==========
+        corpus_set = {c.strip().lower() for c in self.corpus}
+        norm_map = {q: self._normalize_query(q, corpus_set) for q in self.query}
+        self._logger.info("Query normalization applied")
+
         # ========== Stage 1: Exact Matching ==========
         self._logger.info("Stage 1: Exact Matching")
         exact_matches = self._exact_matching()
@@ -509,18 +587,22 @@ class OntoMapEngine:
 
         # ========== Stage 2: LM/ST ==========
         self._logger.info(f"Stage 2: {self.s2_strategy.upper()} Matching")
+
+        # Normalize non-exact queries, then apply shortname expansion
+        norm_non_exact = [norm_map[q] for q in non_exact_matches_ls]
         self._logger.info("Replacing shortNames using rule-based name mapping")
-        mapping_dict = self._map_shortname_to_fullname(non_exact_matches_ls)
-        updated_queries = [mapping_dict[q] for q in non_exact_matches_ls]
+        mapping_dict = self._map_shortname_to_fullname(norm_non_exact)
+        updated_queries = [mapping_dict[nq] for nq in norm_non_exact]
 
         replace_df = pd.DataFrame({
-            "original_value": non_exact_matches_ls,
-            "updated_value": updated_queries
+            "original_value": non_exact_matches_ls,  # original query for cura_map lookup
+            "updated_value": updated_queries           # normalized + shortname-expanded for embedding
         })
 
         updated_cura_map = {
-            mapping_dict[k]: v
-            for k, v in self.cura_map.items() if k in mapping_dict
+            mapping_dict[norm_map[k]]: v
+            for k, v in self.cura_map.items()
+            if k in norm_map and norm_map[k] in mapping_dict
         }
 
         # Run Stage 2 model
@@ -536,6 +618,7 @@ class OntoMapEngine:
         s2_res = pd.merge(replace_df, s2_res, on="updated_value", how="left")
         s2_res["curated_ontology"] = s2_res["original_value"].map(
             self.cura_map).fillna("Not Found")
+        s2_res = self._recompute_match_level(s2_res)
         s2_res['stage'] = 2
 
         self._logger.info(f"Stage 2 completed: {len(s2_res)} queries")
@@ -593,9 +676,10 @@ class OntoMapEngine:
                 self._log_final_summary(exact_df, s2_res)
                 return self._save_result(self._finalize_results(combined_results))
 
-            # Apply shortname replacement for Stage 3 queries
-            mapping_dict_s3 = self._map_shortname_to_fullname(queries_for_s3)
-            updated_queries_s3 = [mapping_dict_s3[q] for q in queries_for_s3]
+            # Normalize then apply shortname replacement for Stage 3 queries
+            norm_queries_s3 = [norm_map[q] for q in queries_for_s3]
+            mapping_dict_s3 = self._map_shortname_to_fullname(norm_queries_s3)
+            updated_queries_s3 = [mapping_dict_s3[nq] for nq in norm_queries_s3]
 
             replace_df_s3 = pd.DataFrame({
                 "original_value": queries_for_s3,
@@ -603,8 +687,9 @@ class OntoMapEngine:
             })
 
             updated_cura_map_s3 = {
-                mapping_dict_s3[k]: v
-                for k, v in self.cura_map.items() if k in mapping_dict_s3
+                mapping_dict_s3[norm_map[k]]: v
+                for k, v in self.cura_map.items()
+                if k in norm_map and norm_map[k] in mapping_dict_s3
             }
 
             # Run Stage 3 model
@@ -624,6 +709,7 @@ class OntoMapEngine:
                               how="left")
             s3_res["curated_ontology"] = s3_res["original_value"].map(
                 self.cura_map).fillna("Not Found")
+            s3_res = self._recompute_match_level(s3_res)
             s3_res['stage'] = 3
 
             self._logger.info(f"Stage 3 completed: {len(s3_res)} queries")

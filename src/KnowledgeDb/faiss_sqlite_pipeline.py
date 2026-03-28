@@ -124,19 +124,42 @@ class FAISSSQLiteSearch:
             if 'clean_code' not in corpus_df.columns:
                 if 'obo_id' in corpus_df.columns:
                     corpus_df = corpus_df.copy()
-                    corpus_df['clean_code'] = corpus_df['obo_id'].astype(str).str.extract(r'(C\d+)', expand=False)
+                    def _obo_to_clean_code(x: str) -> str:
+                        x = str(x)
+                        if ":" not in x:
+                            return x
+                        prefix, local = x.split(":", 1)
+                        return local if prefix == "NCIT" else f"{prefix}_{local}"
+                    corpus_df['clean_code'] = corpus_df['obo_id'].astype(str).apply(_obo_to_clean_code)
                 else:
                     raise ValueError("corpus_df must contain 'clean_code' or 'obo_id' for RAG strategy")
             codes = corpus_df['clean_code'].dropna().unique().tolist()
 
-            # 1. Use ConceptTableBuilder to build synonym and rag tables
-            builder = ConceptTableBuilder(self.category)
-            loop = asyncio.new_event_loop()
-            try:
-                loop.run_until_complete(
-                    builder.fetch_and_build_tables(codes, force_rebuild=False))
-            finally:
-                loop.close()
+            # 1. Use ConceptTableBuilder to build synonym and rag tables.
+            #    Skip if tables are already fully populated (e.g. pre-built by OLSConceptTableBuilder).
+            with sqlite3.connect(BASE_DB) as _conn:
+                try:
+                    stored_codes = {
+                        r[0] for r in _conn.execute(
+                            f"SELECT DISTINCT code FROM rag_{self.category}"
+                        ).fetchall()
+                    }
+                except sqlite3.OperationalError:
+                    stored_codes = set()
+            missing_codes = [c for c in codes if c not in stored_codes]
+
+            if missing_codes:
+                builder = ConceptTableBuilder(self.category)
+                loop = asyncio.new_event_loop()
+                try:
+                    loop.run_until_complete(
+                        builder.fetch_and_build_tables(codes, force_rebuild=False))
+                finally:
+                    loop.close()
+            else:
+                self.logger.info(
+                    f"RAG tables for '{self.category}' are pre-built; skipping NCI fetch"
+                )
 
             # 2. Check and build FAISS index
             self._ensure_faiss_index()
