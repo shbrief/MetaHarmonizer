@@ -101,7 +101,8 @@ class OntoMapSynonym:
 
             # Calculate match_level: position of curated term in top-k results
             match_level = next(
-                (i + 1 for i, term in enumerate(top_terms) if term == curated),
+                (i + 1 for i, term in enumerate(top_terms)
+                 if (term or "").strip().lower() == (curated or "").strip().lower()),
                 99  # 99 if curated term not in top-k
             )
 

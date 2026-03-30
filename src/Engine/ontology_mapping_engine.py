@@ -414,7 +414,7 @@ class OntoMapEngine:
 
                         match_level = next(
                             (i + 1 for i, term in enumerate(combined_matches)
-                             if term == curated), 99)
+                             if (term or "").strip().lower() == (curated or "").strip().lower()), 99)
 
                         old_top1_score = float(row['match1_score'])
                         new_top1_score = combined_scores[0]
