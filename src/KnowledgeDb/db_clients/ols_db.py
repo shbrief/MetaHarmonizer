@@ -7,8 +7,20 @@ from tenacity import (retry, stop_after_attempt, wait_exponential,
 from aiolimiter import AsyncLimiter
 from src.CustomLogger.custom_logger import CustomLogger
 
+import re
+
 OLS_CALLS = 10
 OLS_PERIOD = 1
+
+_SAFE_IDENTIFIER = re.compile(r"^[a-z0-9_]+$")
+
+
+def validate_identifier(name: str, label: str = "identifier") -> str:
+    """Ensure a string is safe for use in SQLite table names and file paths."""
+    if not _SAFE_IDENTIFIER.match(name):
+        raise ValueError(
+            f"Unsafe {label}: {name!r}. Must match [a-z0-9_]+.")
+    return name
 
 # Maps code prefix (as stored in clean_code, e.g. "EFO") to the OLS ontology id
 PREFIX_TO_ONTOLOGY = {
@@ -154,8 +166,8 @@ class OLSDb:
     @staticmethod
     def infer_ontology(term_id: str) -> str:
         """Infer ontology short name from OBO-format prefix."""
-        prefix = term_id.split(":")[0]
-        return prefix.lower()
+        prefix = term_id.split(":", 1)[0]
+        return PREFIX_TO_ONTOLOGY.get(prefix, prefix.lower())
 
     async def get_term(self, obo_id: str, ontology: str | None = None,
                        client: httpx.AsyncClient | None = None) -> dict:
@@ -170,8 +182,8 @@ class OLSDb:
         else:
             resp = await self.fetch_one(client, url)
         if resp is None:
-            raise httpx.HTTPStatusError(
-                f"Failed to fetch term {obo_id}", request=None, response=None)
+            raise RuntimeError(
+                f"Failed to fetch term {obo_id}: no successful HTTP response")
         return resp.json()
 
     async def get_descendants(self, obo_id: str,
@@ -189,6 +201,9 @@ class OLSDb:
             while url:
                 resp = await self.fetch_one(client, url)
                 if resp is None:
+                    self.logger.warning(
+                        f"get_descendants: page fetch failed at {len(all_terms)} terms "
+                        f"— returning partial results")
                     break
                 data = resp.json()
                 terms = data.get("_embedded", {}).get("terms", [])

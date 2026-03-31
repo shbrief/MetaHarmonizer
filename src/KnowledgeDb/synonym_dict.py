@@ -13,6 +13,7 @@ from src.utils.model_loader import get_embedding_model_cached
 from src.KnowledgeDb import ensure_knowledge_db
 from src.KnowledgeDb.db_clients.nci_db import NCIDb  # kept for backward compat
 from src.KnowledgeDb.concept_table_builder import ConceptTableBuilder
+from src.KnowledgeDb.db_clients.ols_db import validate_identifier
 from src.CustomLogger.custom_logger import CustomLogger
 
 # -------- ENV / CONSTS --------
@@ -28,9 +29,9 @@ class SynonymDict:
 
     def __init__(self, category: str, method: str, ontology_source: str = 'ncit'):
         ensure_knowledge_db()
-        self.category = category
+        self.category = validate_identifier(category, "category")
         self.method = method
-        self.ontology_source = ontology_source
+        self.ontology_source = validate_identifier(ontology_source, "ontology_source")
         self.table_name = f"{ontology_source}_synonym_{category}"
         method_clean = method.replace('-', '_')
         self.index_name = f"synonym_{method_clean}_{ontology_source}_{category}.index"

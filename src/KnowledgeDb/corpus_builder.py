@@ -137,9 +137,15 @@ class CorpusBuilder:
                 f"Fetching parent/child labels for {len(raw_terms)} terms "
                 f"(~{len(raw_terms) * 2} extra API calls) ..."
             )
+            sem = asyncio.Semaphore(20)
+
+            async def _bounded_enrich(raw, client):
+                async with sem:
+                    return await self._enrich_term(raw, client)
+
             async with httpx.AsyncClient() as client:
                 records = await asyncio.gather(
-                    *[self._enrich_term(raw, client) for raw in raw_terms]
+                    *[_bounded_enrich(raw, client) for raw in raw_terms]
                 )
             records = list(records)
         else:

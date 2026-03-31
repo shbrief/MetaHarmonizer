@@ -3,7 +3,7 @@ import os
 import math
 from typing import List, Tuple, Set
 from src.KnowledgeDb.db_clients.nci_db import NCIDb
-from src.KnowledgeDb.db_clients.ols_db import OLSDb, partition_codes
+from src.KnowledgeDb.db_clients.ols_db import OLSDb
 from src.CustomLogger.custom_logger import CustomLogger
 
 BASE_DB = os.getenv("VECTOR_DB_PATH")
@@ -19,8 +19,9 @@ class FTSSynonymDb:
     Simplified version without metadata table.
     """
 
-    def __init__(self, category: str):
+    def __init__(self, category: str, ontology_source: str = 'ncit'):
         self.category = category
+        self.ontology_source = ontology_source
         self.nci_db = NCIDb(UMLS_API_KEY)
         self.ols_db = OLSDb()
         self.db_path = BASE_DB
@@ -98,22 +99,16 @@ class FTSSynonymDb:
                 f"Fetching synonyms for {len(codes_to_fetch)} new codes "
                 f"(skipping {len(indexed_codes & codes_set)} already indexed)")
 
-        # Route codes to NCI or OLS API
-        partitioned = partition_codes(codes_to_fetch)
-        concept_data = {}
-
-        if partitioned["nci"]:
-            nci_data = await self.nci_db.get_custom_concepts_by_codes(
-                partitioned["nci"])
-            concept_data.update(nci_data)
-
-        if partitioned["ols"]:
-            ols_data = await self.ols_db.get_custom_concepts_by_codes(
-                partitioned["ols"])
-            concept_data.update(ols_data)
+        # Route all codes to the API determined by ontology_source
+        if self.ontology_source != "ncit":
+            concept_data = await self.ols_db.get_custom_concepts_by_codes(
+                codes_to_fetch)
+        else:
+            concept_data = await self.nci_db.get_custom_concepts_by_codes(
+                codes_to_fetch)
 
         if not concept_data:
-            self.logger.warning("No concept data fetched from NCI or OLS")
+            self.logger.warning("No concept data fetched")
             return
 
         # Extract synonyms and insert into FTS table

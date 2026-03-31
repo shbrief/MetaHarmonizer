@@ -5,7 +5,7 @@ import httpx
 from typing import List, Set
 from pathlib import Path
 from src.KnowledgeDb.db_clients.nci_db import NCIDb
-from src.KnowledgeDb.db_clients.ols_db import OLSDb, partition_codes
+from src.KnowledgeDb.db_clients.ols_db import OLSDb, validate_identifier
 from src.CustomLogger.custom_logger import CustomLogger
 
 BASE_DB = os.getenv("VECTOR_DB_PATH") or "src/KnowledgeDb/vector_db.sqlite"
@@ -18,8 +18,8 @@ class ConceptTableBuilder:
     """
 
     def __init__(self, category: str, ontology_source: str = 'ncit'):
-        self.category = category
-        self.ontology_source = ontology_source
+        self.category = validate_identifier(category, "category")
+        self.ontology_source = validate_identifier(ontology_source, "ontology_source")
         self.syn_table = f"{ontology_source}_synonym_{category}"
         self.rag_table = f"{ontology_source}_rag_{category}"
         self.db_path = BASE_DB
@@ -124,55 +124,48 @@ class ConceptTableBuilder:
                 f"📥 Fetching {len(codes_to_fetch)} new codes "
                 f"(skipping {len(stored_codes & codes_set)} already stored)")
 
-        # ===== Route codes to NCI or OLS API =====
-        partitioned = partition_codes(codes_to_fetch)
-        nci_codes = partitioned["nci"]
-        ols_codes = partitioned["ols"]
+        # ===== Fetch via the API determined by ontology_source =====
+        use_ols = self.ontology_source != "ncit"
 
-        concept_data = {}
-
-        async with httpx.AsyncClient(
-                limits=httpx.Limits(
-                    max_connections=max(
-                        self.nci_db.concurrency * self.nci_db.batch_size,
-                        self.ols_db.concurrency * self.ols_db.batch_size,
-                    ))) as client:
-            if nci_codes:
-                self.logger.info(
-                    f"Fetching {len(nci_codes)} NCIT codes via NCI API")
-                nci_data = await self.nci_db.get_custom_concepts_by_codes(
-                    nci_codes, client)
-                for code, data in nci_data.items():
-                    concept_data[code] = ("nci", data)
-
-            if ols_codes:
-                self.logger.info(
-                    f"Fetching {len(ols_codes)} non-NCIT codes via OLS API")
-                ols_data = await self.ols_db.get_custom_concepts_by_codes(
-                    ols_codes, client)
-                for code, data in ols_data.items():
-                    concept_data[code] = ("ols", data)
+        if use_ols:
+            self.logger.info(
+                f"Fetching {len(codes_to_fetch)} codes via OLS API "
+                f"(ontology_source={self.ontology_source})")
+            async with httpx.AsyncClient(
+                    limits=httpx.Limits(
+                        max_connections=self.ols_db.concurrency *
+                        self.ols_db.batch_size)) as client:
+                concept_data = await self.ols_db.get_custom_concepts_by_codes(
+                    codes_to_fetch, client)
+        else:
+            self.logger.info(
+                f"Fetching {len(codes_to_fetch)} codes via NCI API")
+            async with httpx.AsyncClient(
+                    limits=httpx.Limits(
+                        max_connections=self.nci_db.concurrency *
+                        self.nci_db.batch_size)) as client:
+                concept_data = await self.nci_db.get_custom_concepts_by_codes(
+                    codes_to_fetch, client)
 
         if not concept_data:
-            self.logger.warning("No concept data fetched from NCI or OLS")
+            self.logger.warning("No concept data fetched")
             return
 
-        self.logger.info(
-            f"Retrieved {len(concept_data)} concepts "
-            f"(NCI: {len(nci_codes)}, OLS: {len(ols_codes)})")
+        self.logger.info(f"Retrieved {len(concept_data)} concepts")
 
         # ===== Prepare data for tables =====
         syn_records = []
         rag_records = []
 
-        # Temporarily modify list_of_concepts for RAG (excluding synonyms)
-        original_concepts = self.nci_db.list_of_concepts
-        self.nci_db.list_of_concepts = [
-            "definitions", "parents", "children", "roles"
-        ]
+        # For NCIt RAG context: temporarily exclude synonyms
+        if not use_ols:
+            original_concepts = self.nci_db.list_of_concepts
+            self.nci_db.list_of_concepts = [
+                "definitions", "parents", "children", "roles"
+            ]
 
         try:
-            for code, (source, data) in concept_data.items():
+            for code, data in concept_data.items():
                 official_label = data.get('name', '').strip()
                 if not official_label:
                     continue
@@ -188,16 +181,16 @@ class ConceptTableBuilder:
                 for syn in syn_set:
                     syn_records.append((syn, official_label, code))
 
-                # 2. Build RAG records (context excludes synonyms)
-                if source == "ols":
+                # 2. Build RAG records
+                if use_ols:
                     context = self.ols_db.create_context_list(data)
                 else:
                     context = self.nci_db.create_context_list(data)
                 combined = f"{official_label}: {context}"
                 rag_records.append((official_label, code, combined))
         finally:
-            # Restore list_of_concepts even if an error occurs above
-            self.nci_db.list_of_concepts = original_concepts
+            if not use_ols:
+                self.nci_db.list_of_concepts = original_concepts
         # ===== Asynchronously batch insert into both tables =====
         def batch_insert():
             with sqlite3.connect(self.db_path) as conn:
