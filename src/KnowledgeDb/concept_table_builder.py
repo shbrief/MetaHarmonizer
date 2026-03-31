@@ -2,9 +2,10 @@ import os
 import sqlite3
 import asyncio
 import httpx
-from typing import List, Set
+from typing import Dict, List, Set
 from pathlib import Path
 from src.KnowledgeDb.db_clients.nci_db import NCIDb
+from src.KnowledgeDb.db_clients.ols_db import OLSDb, PREFIX_TO_ONTOLOGY
 from src.CustomLogger.custom_logger import CustomLogger
 
 BASE_DB = os.getenv("VECTOR_DB_PATH") or "src/KnowledgeDb/vector_db.sqlite"
@@ -23,6 +24,7 @@ class ConceptTableBuilder:
         self.db_path = BASE_DB
         self.logger = CustomLogger().custlogger(loglevel="INFO")
         self.nci_db = NCIDb(UMLS_API_KEY)
+        self.ols_db = OLSDb()
 
         Path(os.path.dirname(self.db_path)).mkdir(parents=True, exist_ok=True)
         self._ensure_tables()
@@ -30,18 +32,21 @@ class ConceptTableBuilder:
     def _ensure_tables(self):
         """Build synonym and RAG tables if they do not already exist."""
         with sqlite3.connect(self.db_path) as conn:
+            # Migrate legacy nci_code → code if needed
+            self._migrate_nci_code_column(conn)
+
             # Synonym
             conn.execute(f"""
                 CREATE TABLE IF NOT EXISTS {self.syn_table} (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     synonym TEXT NOT NULL,
                     official_label TEXT NOT NULL,
-                    nci_code TEXT NOT NULL
+                    code TEXT NOT NULL
                 );
             """)
             conn.execute(f"""
-                CREATE INDEX IF NOT EXISTS idx_{self.syn_table}_code 
-                ON {self.syn_table}(nci_code);
+                CREATE INDEX IF NOT EXISTS idx_{self.syn_table}_code
+                ON {self.syn_table}(code);
             """)
 
             # RAG (context)
@@ -57,6 +62,62 @@ class ConceptTableBuilder:
                 CREATE INDEX IF NOT EXISTS idx_{self.rag_table}_code 
                 ON {self.rag_table}(code);
             """)
+
+    def _migrate_nci_code_column(self, conn: sqlite3.Connection):
+        """Rename legacy nci_code column to code if the old schema exists."""
+        try:
+            cols = [
+                row[1]
+                for row in conn.execute(
+                    f"PRAGMA table_info({self.syn_table})").fetchall()
+            ]
+        except sqlite3.OperationalError:
+            return  # table doesn't exist yet
+        if "nci_code" in cols and "code" not in cols:
+            self.logger.info(
+                f"Migrating {self.syn_table}: renaming nci_code → code")
+            conn.execute(
+                f"ALTER TABLE {self.syn_table} RENAME COLUMN nci_code TO code")
+
+    @staticmethod
+    def _parse_prefix(code: str) -> str | None:
+        """Extract the ontology prefix from a code.
+
+        Handles both formats:
+          - 'EFO:0000249'  (colon-separated, from corpus CSV)
+          - 'EFO_0000249'  (underscore-separated, from _obo_to_clean_code)
+          - 'C12345'       (bare NCIT code, no prefix)
+        """
+        if ":" in code:
+            return code.split(":", 1)[0]
+        if "_" in code:
+            return code.split("_", 1)[0]
+        return None
+
+    @staticmethod
+    def _partition_codes(codes: List[str]) -> Dict[str, List[str]]:
+        """Split codes into NCI vs OLS groups based on prefix.
+
+        NCIT codes look like 'C12345' (bare, no prefix) or 'NCIT:C12345'.
+        Everything with a recognized OLS prefix goes to OLS.
+        """
+        nci_codes = []
+        ols_codes = []
+        for code in codes:
+            prefix = ConceptTableBuilder._parse_prefix(code)
+            if prefix is None:
+                # Bare code like 'C12345' — NCIT
+                nci_codes.append(code)
+            elif prefix == "NCIT":
+                # Strip NCIT prefix for NCI API
+                local = code.split(":", 1)[1] if ":" in code else code.split("_", 1)[1]
+                nci_codes.append(local)
+            elif prefix in PREFIX_TO_ONTOLOGY:
+                ols_codes.append(code)
+            else:
+                # Unknown prefix — try NCI as fallback
+                nci_codes.append(code)
+        return {"nci": nci_codes, "ols": ols_codes}
 
     def get_stored_codes(self) -> Set[str]:
         """
@@ -102,19 +163,42 @@ class ConceptTableBuilder:
                 f"📥 Fetching {len(codes_to_fetch)} new codes "
                 f"(skipping {len(stored_codes & codes_set)} already stored)")
 
-        # ===== Use NCI API to fetch data =====
+        # ===== Route codes to NCI or OLS API =====
+        partitioned = self._partition_codes(codes_to_fetch)
+        nci_codes = partitioned["nci"]
+        ols_codes = partitioned["ols"]
+
+        concept_data = {}
+
         async with httpx.AsyncClient(
-                limits=httpx.Limits(max_connections=self.nci_db.concurrency *
-                                    self.nci_db.batch_size)) as client:
-            concept_data = await self.nci_db.get_custom_concepts_by_codes(
-                codes_to_fetch, client)
+                limits=httpx.Limits(
+                    max_connections=max(
+                        self.nci_db.concurrency * self.nci_db.batch_size,
+                        self.ols_db.concurrency * self.ols_db.batch_size,
+                    ))) as client:
+            if nci_codes:
+                self.logger.info(
+                    f"Fetching {len(nci_codes)} NCIT codes via NCI API")
+                nci_data = await self.nci_db.get_custom_concepts_by_codes(
+                    nci_codes, client)
+                for code, data in nci_data.items():
+                    concept_data[code] = ("nci", data)
+
+            if ols_codes:
+                self.logger.info(
+                    f"Fetching {len(ols_codes)} non-NCIT codes via OLS API")
+                ols_data = await self.ols_db.get_custom_concepts_by_codes(
+                    ols_codes, client)
+                for code, data in ols_data.items():
+                    concept_data[code] = ("ols", data)
 
         if not concept_data:
-            self.logger.warning("No concept data fetched from NCI")
+            self.logger.warning("No concept data fetched from NCI or OLS")
             return
 
         self.logger.info(
-            f"Retrieved {len(concept_data)} concepts from NCI API")
+            f"Retrieved {len(concept_data)} concepts "
+            f"(NCI: {len(nci_codes)}, OLS: {len(ols_codes)})")
 
         # ===== Prepare data for tables =====
         syn_records = []
@@ -127,7 +211,7 @@ class ConceptTableBuilder:
         ]
 
         try:
-            for code, data in concept_data.items():
+            for code, (source, data) in concept_data.items():
                 official_label = data.get('name', '').strip()
                 if not official_label:
                     continue
@@ -144,7 +228,10 @@ class ConceptTableBuilder:
                     syn_records.append((syn, official_label, code))
 
                 # 2. Build RAG records (context excludes synonyms)
-                context = self.nci_db.create_context_list(data)
+                if source == "ols":
+                    context = self.ols_db.create_context_list(data)
+                else:
+                    context = self.nci_db.create_context_list(data)
                 combined = f"{official_label}: {context}"
                 rag_records.append((official_label, code, combined))
         finally:
@@ -155,7 +242,7 @@ class ConceptTableBuilder:
             with sqlite3.connect(self.db_path) as conn:
                 # Insert into synonym table
                 conn.executemany(
-                    f"INSERT INTO {self.syn_table} (synonym, official_label, nci_code) VALUES (?, ?, ?)",
+                    f"INSERT INTO {self.syn_table} (synonym, official_label, code) VALUES (?, ?, ?)",
                     syn_records)
 
                 # Insert into rag table
@@ -184,7 +271,7 @@ class ConceptTableBuilder:
                 f"SELECT COUNT(*) FROM {self.rag_table}").fetchone()[0]
 
             unique_codes = cursor.execute(
-                f"SELECT COUNT(DISTINCT nci_code) FROM {self.syn_table}"
+                f"SELECT COUNT(DISTINCT code) FROM {self.syn_table}"
             ).fetchone()[0]
 
         return {

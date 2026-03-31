@@ -6,7 +6,7 @@ from src.CustomLogger.custom_logger import CustomLogger
 
 class OntoMapSynonym:
     """
-    Stage 2.5: Synonym dictionary matching using NCI API.
+    Stage 2.5: Synonym dictionary matching using NCI and OLS APIs.
     """
 
     def __init__(self,
@@ -38,14 +38,14 @@ class OntoMapSynonym:
 
     def _warm_run(self):
         """
-        Warm run: Extract NCI codes from corpus_df and build index.
+        Warm run: Extract ontology codes from corpus_df and build index.
         """
         self.logger.info(
             f"Warm run: Checking synonym index for '{self.category}'")
 
-        # Extract NCI codes from corpus_df
+        # Extract ontology codes from corpus_df
         codes = self.corpus_df["clean_code"].dropna().unique().tolist()
-        self.logger.info(f"Found {len(codes)} unique NCI codes in corpus_df")
+        self.logger.info(f"Found {len(codes)} unique ontology codes in corpus_df")
 
         # Build index (will skip if already exists)
         self.syn_dict.warm_run(codes=codes, force_rebuild=False)
