@@ -3,7 +3,7 @@ import os
 import math
 from typing import List, Tuple, Set
 from src.KnowledgeDb.db_clients.nci_db import NCIDb
-from src.KnowledgeDb.db_clients.ols_db import OLSDb, PREFIX_TO_ONTOLOGY
+from src.KnowledgeDb.db_clients.ols_db import OLSDb, partition_codes
 from src.CustomLogger.custom_logger import CustomLogger
 
 BASE_DB = os.getenv("VECTOR_DB_PATH")
@@ -67,33 +67,6 @@ class FTSSynonymDb:
             f"SELECT COUNT(*) FROM {self.table_name}").fetchone()[0]
         return count > 0
 
-    @staticmethod
-    def _parse_prefix(code: str) -> str | None:
-        """Extract the ontology prefix from a code."""
-        if ":" in code:
-            return code.split(":", 1)[0]
-        if "_" in code:
-            return code.split("_", 1)[0]
-        return None
-
-    @staticmethod
-    def _partition_codes(codes: List[str]) -> dict:
-        """Split codes into NCI vs OLS groups based on prefix."""
-        nci_codes = []
-        ols_codes = []
-        for code in codes:
-            prefix = FTSSynonymDb._parse_prefix(code)
-            if prefix is None:
-                nci_codes.append(code)
-            elif prefix == "NCIT":
-                local = code.split(":", 1)[1] if ":" in code else code.split("_", 1)[1]
-                nci_codes.append(local)
-            elif prefix in PREFIX_TO_ONTOLOGY:
-                ols_codes.append(code)
-            else:
-                nci_codes.append(code)
-        return {"nci": nci_codes, "ols": ols_codes}
-
     async def build_index_from_codes(self,
                                      codes: List[str],
                                      force_rebuild: bool = False):
@@ -126,7 +99,7 @@ class FTSSynonymDb:
                 f"(skipping {len(indexed_codes & codes_set)} already indexed)")
 
         # Route codes to NCI or OLS API
-        partitioned = self._partition_codes(codes_to_fetch)
+        partitioned = partition_codes(codes_to_fetch)
         concept_data = {}
 
         if partitioned["nci"]:

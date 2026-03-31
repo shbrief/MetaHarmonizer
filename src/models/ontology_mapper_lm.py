@@ -31,6 +31,7 @@ class OntoMapLM(otm.OntoModelsBase):
         corpus: list[str],
         om_strategy: str = 'lm',
         topk: int = 5,
+        ontology_source: str = 'ncit',
     ) -> None:
         """
         Initializes the OntoMapLM class.
@@ -42,8 +43,10 @@ class OntoMapLM(otm.OntoModelsBase):
             corpus (list[str]): The list of corpus strings.
             om_strategy (str, optional): Mapping strategy. Defaults to 'lm'.
             topk (int, optional): The number of top results to consider. Defaults to 5.
+            ontology_source (str, optional): Ontology source. Defaults to 'ncit'.
         """
-        super().__init__(method, category, om_strategy, topk, query, corpus)
+        super().__init__(method, category, om_strategy, topk, query, corpus,
+                         ontology_source=ontology_source)
 
         self._query_embeddings = None
         self._corpus_embeddings = None

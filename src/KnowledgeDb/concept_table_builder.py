@@ -2,10 +2,10 @@ import os
 import sqlite3
 import asyncio
 import httpx
-from typing import Dict, List, Set
+from typing import List, Set
 from pathlib import Path
 from src.KnowledgeDb.db_clients.nci_db import NCIDb
-from src.KnowledgeDb.db_clients.ols_db import OLSDb, PREFIX_TO_ONTOLOGY
+from src.KnowledgeDb.db_clients.ols_db import OLSDb, partition_codes
 from src.CustomLogger.custom_logger import CustomLogger
 
 BASE_DB = os.getenv("VECTOR_DB_PATH") or "src/KnowledgeDb/vector_db.sqlite"
@@ -17,10 +17,11 @@ class ConceptTableBuilder:
     Build synonym and RAG tables for a given category using NCI API data.
     """
 
-    def __init__(self, category: str):
+    def __init__(self, category: str, ontology_source: str = 'ncit'):
         self.category = category
-        self.syn_table = f"synonym_{category}"
-        self.rag_table = f"rag_{category}"
+        self.ontology_source = ontology_source
+        self.syn_table = f"{ontology_source}_synonym_{category}"
+        self.rag_table = f"{ontology_source}_rag_{category}"
         self.db_path = BASE_DB
         self.logger = CustomLogger().custlogger(loglevel="INFO")
         self.nci_db = NCIDb(UMLS_API_KEY)
@@ -79,46 +80,6 @@ class ConceptTableBuilder:
             conn.execute(
                 f"ALTER TABLE {self.syn_table} RENAME COLUMN nci_code TO code")
 
-    @staticmethod
-    def _parse_prefix(code: str) -> str | None:
-        """Extract the ontology prefix from a code.
-
-        Handles both formats:
-          - 'EFO:0000249'  (colon-separated, from corpus CSV)
-          - 'EFO_0000249'  (underscore-separated, from _obo_to_clean_code)
-          - 'C12345'       (bare NCIT code, no prefix)
-        """
-        if ":" in code:
-            return code.split(":", 1)[0]
-        if "_" in code:
-            return code.split("_", 1)[0]
-        return None
-
-    @staticmethod
-    def _partition_codes(codes: List[str]) -> Dict[str, List[str]]:
-        """Split codes into NCI vs OLS groups based on prefix.
-
-        NCIT codes look like 'C12345' (bare, no prefix) or 'NCIT:C12345'.
-        Everything with a recognized OLS prefix goes to OLS.
-        """
-        nci_codes = []
-        ols_codes = []
-        for code in codes:
-            prefix = ConceptTableBuilder._parse_prefix(code)
-            if prefix is None:
-                # Bare code like 'C12345' — NCIT
-                nci_codes.append(code)
-            elif prefix == "NCIT":
-                # Strip NCIT prefix for NCI API
-                local = code.split(":", 1)[1] if ":" in code else code.split("_", 1)[1]
-                nci_codes.append(local)
-            elif prefix in PREFIX_TO_ONTOLOGY:
-                ols_codes.append(code)
-            else:
-                # Unknown prefix — try NCI as fallback
-                nci_codes.append(code)
-        return {"nci": nci_codes, "ols": ols_codes}
-
     def get_stored_codes(self) -> Set[str]:
         """
         Get stored codes
@@ -164,7 +125,7 @@ class ConceptTableBuilder:
                 f"(skipping {len(stored_codes & codes_set)} already stored)")
 
         # ===== Route codes to NCI or OLS API =====
-        partitioned = self._partition_codes(codes_to_fetch)
+        partitioned = partition_codes(codes_to_fetch)
         nci_codes = partitioned["nci"]
         ols_codes = partitioned["ols"]
 
@@ -257,6 +218,100 @@ class ConceptTableBuilder:
 
         self.logger.info(
             f"✅ Built tables: {syn_count} synonym records, {rag_count} rag records"
+        )
+
+    def build_from_json(
+        self,
+        json_path: str,
+        force_rebuild: bool = False,
+    ) -> None:
+        """Read a CorpusBuilder JSON and populate synonym/RAG tables.
+
+        This is the OLS offline path: a pre-saved JSON (produced by
+        ``CorpusBuilder.save()``) is loaded directly — no external API calls.
+
+        Parameters
+        ----------
+        json_path : str
+            Path to the JSON file produced by ``CorpusBuilder.save()``.
+        force_rebuild : bool
+            If True, clear existing tables before inserting.
+        """
+        import json
+        from pathlib import Path as _Path
+
+        path = _Path(json_path)
+        if not path.exists():
+            raise FileNotFoundError(f"Corpus JSON not found: {json_path}")
+
+        with open(path, encoding="utf-8") as f:
+            data = json.load(f)
+
+        terms = data.get("terms", [])
+        self.logger.info(
+            f"Loading {len(terms)} terms from {path.name} "
+            f"into {self.syn_table} / {self.rag_table}"
+        )
+
+        if force_rebuild:
+            self.logger.info("Force rebuild: clearing existing tables")
+            with sqlite3.connect(self.db_path) as conn:
+                conn.execute(f"DELETE FROM {self.syn_table}")
+                conn.execute(f"DELETE FROM {self.rag_table}")
+            stored_codes: set = set()
+        else:
+            stored_codes = self.get_stored_codes()
+
+        syn_records: list = []
+        rag_records: list = []
+
+        for term in terms:
+            label = (term.get("label") or "").strip()
+            short_form = (term.get("short_form") or "").strip()
+            description = (term.get("description") or "").strip()
+            synonyms: list = term.get("synonyms") or []
+
+            if not label or not short_form:
+                continue
+            if short_form in stored_codes:
+                continue
+
+            # RAG context: mirrors NCIt format (definition + parents + children)
+            parents: list = term.get("parents") or []
+            children: list = term.get("children") or []
+
+            parts = [f"{label}: {description}" if description else label]
+            if parents:
+                parts.append(f"Parents: {', '.join(parents)}")
+            if children:
+                parts.append(f"Children: {', '.join(children)}")
+            context = ". ".join(parts)
+            rag_records.append((label, short_form, context))
+
+            # Synonym records
+            syn_set = {label} | {s.strip() for s in synonyms if s.strip()}
+            for syn in syn_set:
+                syn_records.append((syn, label, short_form))
+
+        if not rag_records:
+            self.logger.info("No new terms to insert — tables already up to date")
+            return
+
+        with sqlite3.connect(self.db_path) as conn:
+            conn.executemany(
+                f"INSERT OR IGNORE INTO {self.rag_table} "
+                f"(term, code, context) VALUES (?, ?, ?)",
+                rag_records,
+            )
+            conn.executemany(
+                f"INSERT INTO {self.syn_table} "
+                f"(synonym, official_label, code) VALUES (?, ?, ?)",
+                syn_records,
+            )
+
+        self.logger.info(
+            f"Inserted {len(rag_records)} RAG records and "
+            f"{len(syn_records)} synonym records"
         )
 
     def get_stats(self) -> dict:

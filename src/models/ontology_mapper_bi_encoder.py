@@ -27,6 +27,7 @@ class OntoMapBIE(OntoModelsBase):
         use_reranker: bool = False,
         reranker_method: str = 'minilm',
         reranker_topk: int = 50,
+        ontology_source: str = 'ncit',
     ):
         super().__init__(method,
                          category,
@@ -35,7 +36,8 @@ class OntoMapBIE(OntoModelsBase):
                          query,
                          corpus,
                          query_df=query_df,
-                         corpus_df=corpus_df)
+                         corpus_df=corpus_df,
+                         ontology_source=ontology_source)
         self._init_reranker(use_reranker, reranker_method, reranker_topk)
         self.logger.info(
             f"Initialized Bi-Encoder (reranker="

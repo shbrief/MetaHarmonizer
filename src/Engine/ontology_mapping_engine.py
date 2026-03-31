@@ -10,10 +10,20 @@ import numpy as np
 from datetime import datetime
 from src.CustomLogger.custom_logger import CustomLogger
 from src._paths import DATA_DIR
+from src.KnowledgeDb.concept_table_builder import ConceptTableBuilder
+from src.KnowledgeDb.corpus_builder import CorpusBuilder
 
 logger = CustomLogger()
 ABBR_DICT_PATH = DATA_DIR / "corpus" / "oncotree_code_to_name.csv"
 SYNONYM_MIN_CONFIDENCE = 0.9
+
+# Supported OLS-based ontologies per category.
+# Maps (category, ontology_source) → OBO root term ID for CorpusBuilder.
+# NCIt ('ncit') is the default for all categories and is handled separately.
+_OLS_ONTOLOGIES: dict[tuple[str, str], str] = {
+    ("disease",  "mondo"):  "MONDO:0000001",
+    ("bodysite", "uberon"): "UBERON:0001062",
+}
 
 _BRITISH_TO_AMERICAN = [
     (r"(?i)leukaemia",   "leukemia"),
@@ -107,11 +117,28 @@ class OntoMapEngine:
                     "corpus_df must be provided for 'rag'/'rag_bie' for running stage 3"
                 )
         self.enable_stage_25 = corpus_df is not None
+
+        # Ontology source validation and internal DB category derivation
+        self._ontology_source = self.other_params.get("ontology_source", "ncit").lower()
+        if self._ontology_source != "ncit":
+            if (category, self._ontology_source) not in _OLS_ONTOLOGIES:
+                supported = [
+                    f"(category='{c}', ontology_source='{o}')"
+                    for c, o in _OLS_ONTOLOGIES
+                ]
+                raise ValueError(
+                    f"Unsupported combination: category='{category}', "
+                    f"ontology_source='{self._ontology_source}'. "
+                    f"Supported OLS combinations: {supported}. "
+                    f"Use ontology_source='ncit' for NCI Thesaurus (default)."
+                )
         if corpus_df is not None:
             corpus_df = self._normalize_df(corpus_df, need_code=True)
             self.other_params["corpus_df"] = corpus_df
             self.corpus_s3 = corpus_df["official_label"].astype(
                 str).unique().tolist()
+            if self._ontology_source != "ncit":
+                self._ensure_ols_tables(corpus_df)
 
         self._logger.info("Initialized OntoMap Engine")
         self._logger.info(f"Stage 1: Exact matching")
@@ -129,6 +156,64 @@ class OntoMapEngine:
             )
         else:
             self._logger.info("Stage 3: Disabled")
+
+    def _ensure_ols_tables(self, corpus_df: pd.DataFrame) -> None:
+        """Ensure rag and synonym SQLite tables are populated for OLS-based ontologies.
+
+        Uses ``self._ontology_source`` and ``self.category`` for table/JSON naming
+        (e.g. table ``uberon_rag_bodysite``, JSON dir ``uberon_bodysite/``).
+        Root term is looked up from ``_OLS_ONTOLOGIES``.
+
+        Lookup order:
+        1. Tables already populated with all corpus codes → done.
+        2. Corpus JSON at DATA_DIR/corpus/{ontology}_{category}/{ontology}_{category}_corpus.json → build from JSON.
+        3. Auto-fetch from OLS using root term from _OLS_ONTOLOGIES → save JSON → build tables.
+        """
+        import sqlite3
+        from os import getenv
+
+        codes = set(corpus_df["clean_code"].dropna().tolist())
+        db_path = getenv("VECTOR_DB_PATH") or "src/KnowledgeDb/vector_db.sqlite"
+
+        rag_table = f"{self._ontology_source}_rag_{self.category}"
+
+        # 1. Check pre-built tables
+        try:
+            with sqlite3.connect(db_path) as conn:
+                stored = {r[0] for r in conn.execute(
+                    f"SELECT DISTINCT code FROM {rag_table}"
+                ).fetchall()}
+        except sqlite3.OperationalError:
+            stored = set()
+
+        if codes and codes.issubset(stored):
+            self._logger.info(
+                f"OLS tables for '{self._ontology_source}_{self.category}' are pre-built; skipping fetch"
+            )
+            return
+
+        # 2. Try local corpus JSON
+        json_dir = f"{self._ontology_source}_{self.category}"
+        json_path = DATA_DIR / "corpus" / json_dir / f"{json_dir}_corpus.json"
+        if json_path.exists():
+            self._logger.info(f"Building OLS tables from local JSON: {json_path}")
+            ConceptTableBuilder(self.category, self._ontology_source).build_from_json(str(json_path))
+            return
+
+        # 3. Auto-fetch from OLS
+        root_term = _OLS_ONTOLOGIES[(self.category, self._ontology_source)]
+        self._logger.info(f"Fetching OLS corpus for root term '{root_term}' ...")
+        builder = CorpusBuilder()
+        records = builder.build_sync(root_term_id=root_term)
+        if not records:
+            raise RuntimeError(
+                f"OLS returned no terms for root '{root_term}'. "
+                "Check the term ID and network connectivity."
+            )
+        json_path.parent.mkdir(parents=True, exist_ok=True)
+        builder.save(records, str(json_path), root_term_id=root_term)
+        self._logger.info(f"Corpus saved to {json_path} ({len(records)} terms)")
+        ConceptTableBuilder(self.category, self._ontology_source).build_from_json(str(json_path))
 
     def _normalize_df(self, df: pd.DataFrame, need_code: bool) -> pd.DataFrame:
         """
@@ -324,6 +409,7 @@ class OntoMapEngine:
         if strategy == 'lm':
             return oml.OntoMapLM(method=self.s2_method,
                                  category=self.category,
+                                 ontology_source=self._ontology_source,
                                  om_strategy='lm',
                                  query=non_exact_query_list,
                                  corpus=self.corpus,
@@ -332,6 +418,7 @@ class OntoMapEngine:
         elif strategy == 'st':
             return oms.OntoMapST(method=self.s2_method,
                                  category=self.category,
+                                 ontology_source=self._ontology_source,
                                  om_strategy='st',
                                  query=non_exact_query_list,
                                  corpus=self.corpus,
@@ -340,6 +427,7 @@ class OntoMapEngine:
         elif strategy == 'syn':
             return omsyn.OntoMapSynonym(method=self.s2_method,
                                         category=self.category,
+                                 ontology_source=self._ontology_source,
                                         om_strategy='syn',
                                         query=non_exact_query_list,
                                         corpus=self.corpus,
@@ -348,6 +436,7 @@ class OntoMapEngine:
         elif strategy == 'rag':
             return omr.OntoMapRAG(method=self.s3_method,
                                   category=self.category,
+                                 ontology_source=self._ontology_source,
                                   om_strategy='rag',
                                   query=non_exact_query_list,
                                   corpus=self.corpus_s3,
@@ -359,6 +448,7 @@ class OntoMapEngine:
         elif strategy == 'rag_bie':
             return ombe.OntoMapBIE(method=self.s3_method,
                                    category=self.category,
+                                 ontology_source=self._ontology_source,
                                    om_strategy='rag_bie',
                                    query=non_exact_query_list,
                                    corpus=self.corpus_s3,
@@ -527,7 +617,7 @@ class OntoMapEngine:
             ts = datetime.now().strftime("%Y%m%d_%H%M%S")
 
             s2_method_clean = self.s2_method.replace('-', '_')
-            parts = [f"om_{self.category}", f"s2_{self.s2_strategy}_{s2_method_clean}"]
+            parts = [f"om_{self._ontology_source}_{self.category}", f"s2_{self.s2_strategy}_{s2_method_clean}"]
 
             if self.s3_strategy is not None:
                 s3_method_clean = self.s3_method.replace('-', '_')
@@ -710,7 +800,7 @@ class OntoMapEngine:
             s3_res["curated_ontology"] = s3_res["original_value"].map(
                 self.cura_map).fillna("Not Found")
             s3_res = self._recompute_match_level(s3_res)
-            s3_res['stage'] = 3
+            s3_res['stage'] = 3.0
 
             self._logger.info(f"Stage 3 completed: {len(s3_res)} queries")
 

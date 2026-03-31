@@ -26,13 +26,14 @@ class SynonymDict:
     SQLite + FAISS based synonym dictionary with proper ID mapping.
     """
 
-    def __init__(self, category: str, method: str):
+    def __init__(self, category: str, method: str, ontology_source: str = 'ncit'):
         ensure_knowledge_db()
         self.category = category
         self.method = method
-        self.table_name = f"synonym_{category}"
+        self.ontology_source = ontology_source
+        self.table_name = f"{ontology_source}_synonym_{category}"
         method_clean = method.replace('-', '_')
-        self.index_name = f"synonym_{method_clean}_{category}.index"
+        self.index_name = f"synonym_{method_clean}_{ontology_source}_{category}.index"
 
         self.db_path = BASE_DB
         self.index_path = os.path.join(BASE_IDX_DIR, self.index_name)
@@ -256,7 +257,7 @@ class SynonymDict:
         """Build FAISS index from NCI codes asynchronously."""
 
         # 1. Ensure the synonym table is built
-        builder = ConceptTableBuilder(self.category)
+        builder = ConceptTableBuilder(self.category, ontology_source=self.ontology_source)
         await builder.fetch_and_build_tables(codes,
                                              force_rebuild=force_rebuild)
 
@@ -304,7 +305,7 @@ class SynonymDict:
         3. If needed, build the index from the table
         """
         # ✅ 1. Ensure the table is created and populated
-        builder = ConceptTableBuilder(self.category)
+        builder = ConceptTableBuilder(self.category, ontology_source=self.ontology_source)
 
         loop = asyncio.new_event_loop()
         try:

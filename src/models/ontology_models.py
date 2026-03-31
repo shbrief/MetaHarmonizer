@@ -20,9 +20,11 @@ class OntoModelsBase:
         corpus: list,
         query_df: pd.DataFrame = None,
         corpus_df: pd.DataFrame = None,
+        ontology_source: str = 'ncit',
     ) -> None:
         self.method = method
         self.category = category
+        self.ontology_source = ontology_source
         self.om_strategy = om_strategy
         self.query = query
         self.corpus = corpus
@@ -65,7 +67,8 @@ class OntoModelsBase:
                        "_vs") or self._vs is None or self._vs.index is None:
             store = FAISSSQLiteSearch(method=self.method,
                                       category=self.category,
-                                      om_strategy=self.om_strategy)
+                                      om_strategy=self.om_strategy,
+                                      ontology_source=self.ontology_source)
 
             # For rag & rag bie, use ConceptTableBuilder
             if self.om_strategy in ("rag", "rag_bie"):

@@ -37,6 +37,16 @@ _CORPUS = ["Lung Adenocarcinoma", "Lung Cancer", "Breast Cancer"]
 _DIM = 4
 
 
+class _MockCursor:
+    """Minimal SQLite cursor stub returning (id, term) rows."""
+    def __init__(self, terms):
+        self._rows = [(i, t) for i, t in enumerate(terms)]
+    def execute(self, sql):
+        return self
+    def fetchall(self):
+        return self._rows
+
+
 def _make_st(query=None, corpus=None, topk=3):
     query = query or ["LUAD"]
     corpus = corpus or _CORPUS
@@ -45,7 +55,12 @@ def _make_st(query=None, corpus=None, topk=3):
     m.query = query
     m.corpus = corpus
     m.topk = topk
-    m._vs = type("VS", (), {"index": _CapturingIndex(len(corpus))})()
+    m._vs = type("VS", (), {
+        "index": _CapturingIndex(len(corpus)),
+        "cursor": _MockCursor(corpus),
+        "table_name": "test_corpus",
+        "_ids": list(range(len(corpus))),
+    })()
     rng = np.random.default_rng(1)
     m.create_embeddings = lambda lst, convert_to_tensor=False: (
         rng.standard_normal((len(lst), _DIM)).astype("float32").tolist()

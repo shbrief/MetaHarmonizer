@@ -43,6 +43,40 @@ def _curie_to_iri(prefix: str, local_id: str) -> str:
     return f"{base}{prefix}_{local_id}"
 
 
+def parse_code_prefix(code: str) -> str | None:
+    """Extract the ontology prefix from a code.
+
+    Handles: 'EFO:0000249' (colon), 'EFO_0000249' (underscore), 'C12345' (bare NCIT).
+    """
+    if ":" in code:
+        return code.split(":", 1)[0]
+    if "_" in code:
+        return code.split("_", 1)[0]
+    return None
+
+
+def partition_codes(codes: list[str]) -> dict[str, list[str]]:
+    """Split codes into NCI vs OLS groups based on prefix.
+
+    NCIT codes look like 'C12345' (bare) or 'NCIT:C12345'.
+    Everything with a recognized OLS prefix goes to OLS.
+    """
+    nci_codes = []
+    ols_codes = []
+    for code in codes:
+        prefix = parse_code_prefix(code)
+        if prefix is None:
+            nci_codes.append(code)
+        elif prefix == "NCIT":
+            local = code.split(":", 1)[1] if ":" in code else code.split("_", 1)[1]
+            nci_codes.append(local)
+        elif prefix in PREFIX_TO_ONTOLOGY:
+            ols_codes.append(code)
+        else:
+            nci_codes.append(code)
+    return {"nci": nci_codes, "ols": ols_codes}
+
+
 def _parse_clean_code(clean_code: str):
     """Parse a clean_code into (prefix, local_id).
 
@@ -110,6 +144,85 @@ class OLSDb:
         """Fetch a batch of URLs concurrently."""
         tasks = [self.fetch_one(client, url) for url in urls]
         return await asyncio.gather(*tasks)
+
+    @staticmethod
+    def obo_id_to_iri(obo_id: str) -> str:
+        """Convert an OBO ID (e.g. 'MONDO:0000001') to a full IRI."""
+        prefix, local_id = obo_id.split(":", 1)
+        return _curie_to_iri(prefix, local_id)
+
+    @staticmethod
+    def infer_ontology(term_id: str) -> str:
+        """Infer ontology short name from OBO-format prefix."""
+        prefix = term_id.split(":")[0]
+        return prefix.lower()
+
+    async def get_term(self, obo_id: str, ontology: str | None = None,
+                       client: httpx.AsyncClient | None = None) -> dict:
+        """Fetch raw metadata for a single term by OBO ID."""
+        ontology = ontology or self.infer_ontology(obo_id)
+        iri = self.obo_id_to_iri(obo_id)
+        encoded = quote_plus(quote_plus(iri))
+        url = f"{self._base_url}/ontologies/{ontology}/terms/{encoded}"
+        if client is None:
+            async with httpx.AsyncClient() as c:
+                resp = await self.fetch_one(c, url)
+        else:
+            resp = await self.fetch_one(client, url)
+        if resp is None:
+            raise httpx.HTTPStatusError(
+                f"Failed to fetch term {obo_id}", request=None, response=None)
+        return resp.json()
+
+    async def get_descendants(self, obo_id: str,
+                              ontology: str | None = None,
+                              page_size: int = 200) -> list[dict]:
+        """Fetch all descendant terms of a root term via paginated OLS4 API."""
+        ontology = ontology or self.infer_ontology(obo_id)
+        iri = self.obo_id_to_iri(obo_id)
+        encoded = quote_plus(quote_plus(iri))
+        url = (f"{self._base_url}/ontologies/{ontology}"
+               f"/terms/{encoded}/descendants?size={page_size}")
+
+        all_terms: list[dict] = []
+        async with httpx.AsyncClient() as client:
+            while url:
+                resp = await self.fetch_one(client, url)
+                if resp is None:
+                    break
+                data = resp.json()
+                terms = data.get("_embedded", {}).get("terms", [])
+                all_terms.extend(terms)
+
+                page_info = data.get("page", {})
+                total = page_info.get("totalElements", "?")
+                pages = page_info.get("totalPages", "?")
+                current = page_info.get("number", 0) + 1
+                self.logger.info(
+                    f"Fetched page {current}/{pages} "
+                    f"({len(all_terms)}/{total} terms)")
+
+                url = data.get("_links", {}).get("next", {}).get("href")
+
+        return all_terms
+
+    async def get_term_neighbors(self, href: str,
+                                 client: httpx.AsyncClient) -> list[str]:
+        """Fetch labels of related terms from a pre-built _links href.
+
+        Used for parent/child label retrieval in CorpusBuilder.
+        Returns list of label strings; empty list on error.
+        """
+        try:
+            resp = await self.fetch_one(client, href)
+            if resp is None:
+                return []
+            data = resp.json()
+            terms = data.get("_embedded", {}).get("terms", [])
+            return [t["label"] for t in terms if t.get("label")]
+        except Exception as exc:
+            self.logger.debug(f"get_term_neighbors failed for {href}: {exc}")
+            return []
 
     def _build_url(self, clean_code: str) -> str | None:
         """Build an OLS term-lookup URL from a clean_code like 'EFO_0000239'."""

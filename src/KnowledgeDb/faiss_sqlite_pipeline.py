@@ -44,6 +44,7 @@ class FAISSSQLiteSearch:
         method: str,
         category: str,
         om_strategy: str = "rag",
+        ontology_source: str = "ncit",
     ):
         ensure_knowledge_db()
         self.is_gpu = faiss.get_num_gpus() > 0
@@ -53,16 +54,17 @@ class FAISSSQLiteSearch:
         self.method = method
         self.om_strategy = om_strategy
         self.category = category
+        self.ontology_source = ontology_source
         if self.om_strategy in ("st", "lm"):
-            self.table_name = f"corpus_{category}"
+            self.table_name = f"{ontology_source}_corpus_{category}"
         elif self.om_strategy in ("rag", "rag_bie"):
-            self.table_name = f"rag_{category}"
+            self.table_name = f"{ontology_source}_rag_{category}"
         else:
             raise ValueError(
                 f"Unsupported om_strategy: {om_strategy}. Choose from 'rag', 'rag_bie', 'st', 'lm'."
             )
         method_clean = method.replace('-', '_')
-        idx_name = f"{om_strategy}_{method_clean}_{category}.index"
+        idx_name = f"{om_strategy}_{method_clean}_{ontology_source}_{category}.index"
         self.index_path = os.path.join(BASE_IDX_DIR, idx_name)
 
         raw_model = get_embedding_model_cached(method)
@@ -145,12 +147,12 @@ class FAISSSQLiteSearch:
             codes = corpus_df['clean_code'].dropna().unique().tolist()
 
             # 1. Use ConceptTableBuilder to build synonym and rag tables.
-            #    Skip if tables are already fully populated (e.g. pre-built by OLSConceptTableBuilder).
+            #    Skip if tables are already fully populated (e.g. pre-built via build_from_json).
             with sqlite3.connect(BASE_DB) as _conn:
                 try:
                     stored_codes = {
                         r[0] for r in _conn.execute(
-                            f"SELECT DISTINCT code FROM rag_{self.category}"
+                            f"SELECT DISTINCT code FROM {self.table_name}"
                         ).fetchall()
                     }
                 except sqlite3.OperationalError:
@@ -158,7 +160,7 @@ class FAISSSQLiteSearch:
             missing_codes = [c for c in codes if c not in stored_codes]
 
             if missing_codes:
-                builder = ConceptTableBuilder(self.category)
+                builder = ConceptTableBuilder(self.category, ontology_source=self.ontology_source)
                 loop = asyncio.new_event_loop()
                 try:
                     loop.run_until_complete(
