@@ -170,11 +170,26 @@ class OntoModelsBase:
         Returns:
             pd.DataFrame: One row per query with match columns and scores.
         """
+        # Build a FAISS-position → term lookup from the DB so that term
+        # retrieval is correct even when the corpus list order differs from
+        # the DB insertion order (e.g. when duplicates were de-duplicated on
+        # a subsequent run and the index was rebuilt from a smaller table).
+        vs = self.vector_store
+        db_rows = vs.cursor.execute(
+            f"SELECT id, term FROM {vs.table_name}"
+        ).fetchall()
+        _id_to_term = {r[0]: r[1] for r in db_rows}
+        _pos_to_term = {
+            pos: _id_to_term[db_id]
+            for pos, db_id in enumerate(vs._ids)
+            if db_id in _id_to_term
+        }
+
         rows = []
         for qi, q in enumerate(self.query):
             top_ids = I[qi]
             top_scores = D[qi].tolist()
-            top_terms = [self.corpus[i] for i in top_ids]
+            top_terms = [_pos_to_term.get(i, "") for i in top_ids]
 
             curated = (cura_map.get(q, "Not Found") if test_or_prod == 'test'
                        else "Not Available for Prod Environment")
