@@ -90,7 +90,7 @@ class OntoMapRAG(OntoModelsBase):
 
         df['match_level'] = df.apply(lambda row: next(
             (i + 1 for i in range(topk)
-             if row[f'match{i+1}'] == row['curated_ontology']), 99),
+             if str(row[f'match{i+1}']).strip().lower() == str(row['curated_ontology']).strip().lower()), 99),
                                      axis=1)
 
         self.logger.info("Results Generated")

@@ -115,7 +115,8 @@ class OntoMapFTS(otm.OntoModelsBase):
                 # Check if curated term is in top matches
                 top_terms = [r[0] for r in results]
                 match_level = next(
-                    (i + 1 for i, t in enumerate(top_terms) if t == curated),
+                    (i + 1 for i, t in enumerate(top_terms)
+                     if (t or "").strip().lower() == (curated or "").strip().lower()),
                     99)
                 row["match_level"] = match_level
 

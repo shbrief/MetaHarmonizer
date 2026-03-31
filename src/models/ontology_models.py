@@ -194,7 +194,8 @@ class OntoModelsBase:
             curated = (cura_map.get(q, "Not Found") if test_or_prod == 'test'
                        else "Not Available for Prod Environment")
             lvl = next(
-                (i + 1 for i, t in enumerate(top_terms) if t == curated), 99)
+                (i + 1 for i, t in enumerate(top_terms)
+                 if (t or "").strip().lower() == (curated or "").strip().lower()), 99)
 
             row = {
                 "original_value": q,
