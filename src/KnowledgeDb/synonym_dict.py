@@ -11,7 +11,7 @@ from collections import OrderedDict
 from src.utils.embeddings import EmbeddingAdapter
 from src.utils.model_loader import get_embedding_model_cached
 from src.KnowledgeDb import ensure_knowledge_db
-from src.KnowledgeDb.db_clients.nci_db import NCIDb
+from src.KnowledgeDb.db_clients.nci_db import NCIDb  # kept for backward compat
 from src.KnowledgeDb.concept_table_builder import ConceptTableBuilder
 from src.CustomLogger.custom_logger import CustomLogger
 
@@ -106,10 +106,10 @@ class SynonymDict:
 
     # ---------------- SQLite Operations ----------------
     def get_indexed_codes(self) -> Set[str]:
-        """Get all NCI codes already indexed."""
+        """Get all ontology codes already indexed."""
         cursor = self._conn.cursor()
         rows = cursor.execute(
-            f"SELECT DISTINCT nci_code FROM {self.table_name}").fetchall()
+            f"SELECT DISTINCT code FROM {self.table_name}").fetchall()
         return set(row[0] for row in rows)
 
     def has_synonym_data(self) -> bool:
@@ -130,7 +130,7 @@ class SynonymDict:
         placeholders = ",".join(["?"] * len(ids))
         cursor = self._conn.cursor()
         rows = cursor.execute(
-            f"SELECT id, synonym, official_label, nci_code "
+            f"SELECT id, synonym, official_label, code "
             f"FROM {self.table_name} WHERE id IN ({placeholders})",
             ids).fetchall()
 
@@ -138,7 +138,7 @@ class SynonymDict:
             "id": int(rid),
             "synonym": syn,
             "official_label": label,
-            "nci_code": code
+            "code": code
         } for rid, syn, label, code in rows]
 
         # Preserve order
@@ -369,7 +369,7 @@ class SynonymDict:
                 "id": c[0],
                 "synonym": c[1],
                 "official_label": c[2],
-                "nci_code": c[3],
+                "code": c[3],
                 "score": c[4]
             } for c in cached]
 
@@ -384,7 +384,7 @@ class SynonymDict:
             m["score"] = s
 
         frozen = tuple(
-            (m["id"], m["synonym"], m["official_label"], m["nci_code"],
+            (m["id"], m["synonym"], m["official_label"], m["code"],
              float(m.get("score", 0.0))) for m in metas)
         self._cache_put(cache_key, frozen)
 
@@ -420,7 +420,7 @@ class SynonymDict:
                     "id": c[0],
                     "synonym": c[1],
                     "official_label": c[2],
-                    "nci_code": c[3],
+                    "code": c[3],
                     "score": c[4]
                 } for c in cached]
                 results.append(metas)
@@ -450,7 +450,7 @@ class SynonymDict:
 
             ck = cache_keys[i_query]
             frozen = tuple(
-                (m["id"], m["synonym"], m["official_label"], m["nci_code"],
+                (m["id"], m["synonym"], m["official_label"], m["code"],
                  float(m.get("score", 0.0))) for m in metas)
             self._cache_put(ck, frozen)
 
@@ -465,7 +465,7 @@ class SynonymDict:
             f"SELECT COUNT(DISTINCT official_label) FROM {self.table_name}"
         ).fetchone()[0]
         unique_codes = cursor.execute(
-            f"SELECT COUNT(DISTINCT nci_code) FROM {self.table_name}"
+            f"SELECT COUNT(DISTINCT code) FROM {self.table_name}"
         ).fetchone()[0]
 
         return {

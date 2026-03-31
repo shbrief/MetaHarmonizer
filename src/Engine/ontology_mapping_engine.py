@@ -571,7 +571,7 @@ class OntoMapEngine:
         exact_df['curated_ontology'] = exact_df['original_value'].map(
             self.cura_map).fillna(exact_df['original_value'])
         exact_df['match_level'] = 1
-        exact_df['stage'] = 1
+        exact_df['stage'] = 1.0
         exact_df['match1'] = exact_df['curated_ontology']
         exact_df['match1_score'] = 1.00
 
@@ -619,7 +619,7 @@ class OntoMapEngine:
         s2_res["curated_ontology"] = s2_res["original_value"].map(
             self.cura_map).fillna("Not Found")
         s2_res = self._recompute_match_level(s2_res)
-        s2_res['stage'] = 2
+        s2_res['stage'] = 2.0
 
         self._logger.info(f"Stage 2 completed: {len(s2_res)} queries")
 
