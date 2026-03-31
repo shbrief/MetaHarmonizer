@@ -10,7 +10,7 @@ load_dotenv()
 
 DEFAULT_YAML_PATH = os.getenv("METHOD_MODEL_YAML",
                               "src/models/method_model.yaml")
-CACHE_ROOT = "model_cache"
+CACHE_ROOT = os.getenv("MODEL_CACHE_ROOT", "model_cache")
 
 
 @lru_cache(maxsize=1)

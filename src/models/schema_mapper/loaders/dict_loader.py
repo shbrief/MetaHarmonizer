@@ -3,7 +3,8 @@ import pandas as pd
 from pathlib import Path
 from sentence_transformers import SentenceTransformer
 from src.utils.schema_mapper_utils import normalize
-from ..config import CURATED_DICT_PATH, ALIAS_DICT_PATH, FIELD_MODEL
+from .. import config as _config
+from ..config import ALIAS_DICT_PATH, FIELD_MODEL
 from src.CustomLogger.custom_logger import CustomLogger
 
 logger = CustomLogger().custlogger(loglevel='WARNING')
@@ -20,7 +21,7 @@ class DictLoader:
         Returns:
             tuple: (standard_fields, standard_fields_normed, normed_std_to_std, curated_df)
         """
-        curated_df = pd.read_csv(CURATED_DICT_PATH)
+        curated_df = pd.read_csv(_config.CURATED_DICT_PATH)
         standard_fields = curated_df['field_name'].dropna().unique().tolist()
         standard_fields_normed = [normalize(f) for f in standard_fields]
         normed_std_to_std = {normalize(f): f for f in standard_fields}
