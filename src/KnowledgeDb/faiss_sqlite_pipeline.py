@@ -103,9 +103,18 @@ class FAISSSQLiteSearch:
             self.index = faiss.read_index(self.index_path)
             if self.is_gpu:
                 self.index = faiss.index_cpu_to_gpu(self._gpu_res, 0, self.index)
-            rows = self.cursor.execute(
-                f"SELECT id FROM {self.table_name} ORDER BY id").fetchall()
-            self._ids = [r[0] for r in rows]
+            # Load _ids from the persisted file saved at build time so the
+            # position→ID mapping always matches the FAISS index, even if
+            # the DB table was modified after the index was built.
+            ids_path = self.index_path + ".ids.npy"
+            if os.path.exists(ids_path):
+                self._ids = np.load(ids_path).tolist()
+            else:
+                # Fallback for indexes built before _ids persistence was added.
+                # This is correct only when the DB hasn't changed since building.
+                rows = self.cursor.execute(
+                    f"SELECT id FROM {self.table_name} ORDER BY id").fetchall()
+                self._ids = [r[0] for r in rows]
         else:
             self.index = None
             self._ids = []
@@ -301,6 +310,9 @@ class FAISSSQLiteSearch:
         os.makedirs(BASE_IDX_DIR, exist_ok=True)
         index_to_save = faiss.index_gpu_to_cpu(self.index) if self.is_gpu else self.index
         faiss.write_index(index_to_save, self.index_path)
+        # Persist _ids alongside the index so the position→DB-ID mapping is
+        # always in sync, even if the DB table changes later.
+        np.save(self.index_path + ".ids.npy", np.array(self._ids, dtype=np.int64))
         self.logger.info(f"Index saved ({'GPU' if self.is_gpu else 'CPU'} mode)")
 
         self.logger.info(f"✅ FAISS index built: {self.index.ntotal} vectors")
