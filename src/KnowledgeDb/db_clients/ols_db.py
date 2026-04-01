@@ -1,4 +1,5 @@
 import asyncio
+import re
 from typing import Dict, List
 from urllib.parse import quote_plus
 import httpx
@@ -7,10 +8,9 @@ from tenacity import (retry, stop_after_attempt, wait_exponential,
 from aiolimiter import AsyncLimiter
 from src.CustomLogger.custom_logger import CustomLogger
 
-import re
-
 OLS_CALLS = 10
 OLS_PERIOD = 1
+MAX_CONTEXT_ITEMS = 10
 
 _SAFE_IDENTIFIER = re.compile(r"^[a-z0-9_]+$")
 
@@ -168,6 +168,40 @@ class OLSDb:
         """Infer ontology short name from OBO-format prefix."""
         prefix = term_id.split(":", 1)[0]
         return PREFIX_TO_ONTOLOGY.get(prefix, prefix.lower())
+
+    async def get_ontology_metadata(self,
+                                    ontology: str,
+                                    client: httpx.AsyncClient | None = None) -> dict:
+        """Fetch ontology-level metadata from OLS."""
+        url = f"{self._base_url}/ontologies/{ontology}"
+        if client is None:
+            async with httpx.AsyncClient() as c:
+                resp = await self.fetch_one(c, url)
+        else:
+            resp = await self.fetch_one(client, url)
+        if resp is None:
+            raise RuntimeError(
+                f"Failed to fetch ontology metadata for {ontology}: no successful HTTP response"
+            )
+
+        data = resp.json()
+        config = data.get("config") or {}
+        version_iri = config.get("versionIri")
+        version = data.get("version") or config.get("version")
+        if not version and version_iri:
+            match = re.search(r"/releases/([^/]+)/", version_iri)
+            if match:
+                version = match.group(1)
+
+        return {
+            "ontology": ontology,
+            "ontology_title": config.get("title"),
+            "ontology_version": version,
+            "version_iri": version_iri,
+            "loaded_at": data.get("loaded"),
+            "updated_at": data.get("updated"),
+            "source_api": url,
+        }
 
     async def get_term(self, obo_id: str, ontology: str | None = None,
                        client: httpx.AsyncClient | None = None) -> dict:
@@ -443,7 +477,7 @@ class OLSDb:
             item.get("name", "")
             for item in parents
             if isinstance(item, dict) and item.get("name")
-        })[:10]
+        })[:MAX_CONTEXT_ITEMS]
         if parent_names:
             context.append(f"parents: {'; '.join(parent_names)}")
 
@@ -453,7 +487,7 @@ class OLSDb:
             item.get("name", "")
             for item in children
             if isinstance(item, dict) and item.get("name")
-        })[:10]
+        })[:MAX_CONTEXT_ITEMS]
         if child_names:
             context.append(f"children: {'; '.join(child_names)}")
 

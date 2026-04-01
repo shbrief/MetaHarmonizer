@@ -39,6 +39,7 @@ dependencies = [
     "httpx",
     "tenacity",
     "aiolimiter",
+    "nest-asyncio",
     # Utilities
     "requests",
     "python-dotenv",

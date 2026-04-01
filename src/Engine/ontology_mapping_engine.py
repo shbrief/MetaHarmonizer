@@ -9,21 +9,34 @@ import pandas as pd
 import numpy as np
 from datetime import datetime
 from src.CustomLogger.custom_logger import CustomLogger
-from src._paths import DATA_DIR
+from src._paths import DATA_DIR, CORPUS_DIR, retrieved_ontology_json_path
+from src._async_utils import run_async
 from src.KnowledgeDb.concept_table_builder import ConceptTableBuilder
 from src.KnowledgeDb.corpus_builder import CorpusBuilder
+from src.KnowledgeDb.db_clients.ols_db import OLSDb
 
 logger = CustomLogger()
 ABBR_DICT_PATH = DATA_DIR / "corpus" / "oncotree_code_to_name.csv"
 SYNONYM_MIN_CONFIDENCE = 0.9
+MAX_RETRIEVED_CONTEXT_ITEMS = 10
 
-# Supported OLS-based ontologies per category.
-# Maps (category, ontology_source) → OBO root term ID for CorpusBuilder.
-# NCIt ('ncit') is the default for all categories and is handled separately.
-_OLS_ONTOLOGIES: dict[tuple[str, str], str] = {
-    ("disease",  "mondo"):  "MONDO:0000001",
-    ("bodysite", "uberon"): "UBERON:0001062",
+# Known (category, ontology_source) → OBO root term ID.
+# NCIt entries use the NCI EVSREST API for corpus + concept tables.
+# Non-ncit entries use OLS4 API via CorpusBuilder.
+_CORPUS_REGISTRY: dict[tuple[str, str], str] = {
+    # NCIt
+    ("bodysite",  "ncit"):   "NCIT:C32221",
+    ("disease",   "ncit"):   "NCIT:C3262",
+    ("treatment", "ncit"):   "NCIT:C1909",
+    # OLS-based
+    ("disease",   "mondo"):  "MONDO:0000001",
+    ("bodysite",  "uberon"): "UBERON:0001062",
 }
+
+def _corpus_csv_path(category: str, ontology_source: str):
+    """Standard CSV path for a (category, ontology_source) corpus."""
+    name = f"{ontology_source}_{category}"
+    return CORPUS_DIR / name / f"{name}_corpus.csv"
 
 _BRITISH_TO_AMERICAN = [
     (r"(?i)leukaemia",   "leukemia"),
@@ -59,8 +72,8 @@ class OntoMapEngine:
     def __init__(self,
                  category: str,
                  query: list[str],
-                 corpus: list[str],
                  cura_map: dict,
+                 corpus: list[str] = None,
                  topk: int = 5,
                  s2_method: str = 'sap-bert',
                  s2_strategy: str = 'lm',
@@ -88,8 +101,6 @@ class OntoMapEngine:
         self.query = query
         self.category = category
         self.output_dir = output_dir
-        self.corpus = list(
-            dict.fromkeys(corpus))  # Remove duplicates while preserving order
         self.topk = topk
         self.s2_strategy = s2_strategy
         self.s3_strategy = s3_strategy
@@ -104,51 +115,63 @@ class OntoMapEngine:
         self._test_or_prod = self.other_params['test_or_prod']
         self._logger = logger.custlogger(loglevel='INFO')
 
-        corpus_df = self.other_params.get("corpus_df", None)
-
         if self.s2_strategy not in ('lm', 'st'):
             raise ValueError("s2_strategy must be 'lm' or 'st'")
-        if self.s3_strategy is not None:
-            if self.s3_strategy not in ('rag', 'rag_bie'):
-                raise ValueError(
-                    "s3_strategy must be 'rag', 'rag_bie', or None")
-            if corpus_df is None:
-                raise ValueError(
-                    "corpus_df must be provided for 'rag'/'rag_bie' for running stage 3"
-                )
-        self.enable_stage_25 = corpus_df is not None
+        if self.s3_strategy is not None and self.s3_strategy not in ('rag', 'rag_bie'):
+            raise ValueError("s3_strategy must be 'rag', 'rag_bie', or None")
 
-        # Ontology source validation and internal DB category derivation
+        # Ontology source validation
         self._ontology_source = self.other_params.get("ontology_source", "ncit").lower()
+        if (category, self._ontology_source) not in _CORPUS_REGISTRY:
+            supported = [
+                f"(category='{c}', ontology_source='{o}')"
+                for c, o in _CORPUS_REGISTRY
+            ]
+            raise ValueError(
+                f"Unsupported combination: category='{category}', "
+                f"ontology_source='{self._ontology_source}'. "
+                f"Supported: {supported}."
+            )
+
+        # Resolve corpus_df: use provided value or auto-load from CSV
+        corpus_df = self.other_params.get("corpus_df", None)
+        corpus_df_provided = corpus_df is not None
+        if corpus_df is None:
+            corpus_df = self._resolve_corpus_df()
+            self._logger.info(
+                f"Auto-loaded corpus_df ({len(corpus_df)} terms) from "
+                f"{_corpus_csv_path(self.category, self._ontology_source)}"
+            )
+        corpus_df = self._normalize_df(corpus_df, need_code=True)
+        self.other_params["corpus_df"] = corpus_df
+        self.corpus_s3 = corpus_df["official_label"].astype(
+            str).unique().tolist()
+        self.enable_stage_25 = True
+
+        if corpus_df_provided:
+            csv_path = _corpus_csv_path(self.category, self._ontology_source)
+            self._logger.info(
+                f"Overwriting cached corpus CSV with provided corpus_df → {csv_path}"
+            )
+            self._persist_corpus_csv(corpus_df)
+
+        # Resolve corpus (stage 2 term list)
+        if corpus is not None:
+            self.corpus = list(dict.fromkeys(corpus))
+        else:
+            self.corpus = list(dict.fromkeys(
+                corpus_df["official_label"].astype(str).tolist()
+            ))
+
         if self._ontology_source != "ncit":
-            if (category, self._ontology_source) not in _OLS_ONTOLOGIES:
-                supported = [
-                    f"(category='{c}', ontology_source='{o}')"
-                    for c, o in _OLS_ONTOLOGIES
-                ]
-                raise ValueError(
-                    f"Unsupported combination: category='{category}', "
-                    f"ontology_source='{self._ontology_source}'. "
-                    f"Supported OLS combinations: {supported}. "
-                    f"Use ontology_source='ncit' for NCI Thesaurus (default)."
-                )
-        if corpus_df is not None:
-            corpus_df = self._normalize_df(corpus_df, need_code=True)
-            self.other_params["corpus_df"] = corpus_df
-            self.corpus_s3 = corpus_df["official_label"].astype(
-                str).unique().tolist()
-            if self._ontology_source != "ncit":
-                self._ensure_ols_tables(corpus_df)
+            self._ensure_ols_tables(corpus_df)
 
         self._logger.info("Initialized OntoMap Engine")
         self._logger.info(f"Stage 1: Exact matching")
         self._logger.info(f"Stage 2: {self.s2_strategy.upper()}")
-        if self.enable_stage_25:
-            self._logger.info(
-                f"Stage 2.5: Synonym matching (confidence>={SYNONYM_MIN_CONFIDENCE})"
-            )
-        else:
-            self._logger.info("Stage 2.5: Disabled (corpus_df not provided)")
+        self._logger.info(
+            f"Stage 2.5: Synonym matching (confidence>={SYNONYM_MIN_CONFIDENCE})"
+        )
 
         if self.s3_strategy is not None:
             self._logger.info(
@@ -157,17 +180,253 @@ class OntoMapEngine:
         else:
             self._logger.info("Stage 3: Disabled")
 
+    # ------------------------------------------------------------------
+    # Corpus resolution
+    # ------------------------------------------------------------------
+
+    def _resolve_corpus_df(self) -> pd.DataFrame:
+        """Load or build the corpus CSV for (category, ontology_source).
+
+        Lookup order:
+        1. CSV at standard path → pd.read_csv
+        2. Build from API → save CSV → return DataFrame
+
+        For ncit: uses NCI EVSREST ``/descendants`` endpoint.
+        For non-ncit: uses ``CorpusBuilder`` (OLS4 API).
+        """
+        csv_path = _corpus_csv_path(self.category, self._ontology_source)
+        if csv_path.exists():
+            self._logger.info(f"Loading corpus CSV: {csv_path}")
+            return pd.read_csv(csv_path)
+
+        root_term = _CORPUS_REGISTRY[(self.category, self._ontology_source)]
+
+        if self._ontology_source == "ncit":
+            df = self._build_ncit_corpus_csv(root_term)
+        else:
+            df = self._build_ols_corpus_csv(root_term)
+
+        return df
+
+    def _retrieved_json_path(self):
+        return retrieved_ontology_json_path(self.category, self._ontology_source)
+
+    def _persist_corpus_csv(self, corpus_df: pd.DataFrame) -> None:
+        """Persist corpus_df to the standard CSV cache path."""
+        csv_path = _corpus_csv_path(self.category, self._ontology_source)
+        csv_path.parent.mkdir(parents=True, exist_ok=True)
+        corpus_df.to_csv(csv_path, index=False)
+        self._logger.info(f"Saved corpus CSV ({len(corpus_df)} terms) to {csv_path}")
+
+    def _get_retrieved_ontology_metadata(self, root_term: str) -> dict:
+        """Fetch ontology/version metadata for the retrieved JSON envelope."""
+        # TODO: Use ontology_version/version_iri to detect stale cached corpora
+        # and implement incremental refresh/update behavior.
+        if self._ontology_source == "ncit":
+            from src.KnowledgeDb.db_clients.nci_db import NCIDb
+
+            root_code = root_term.split(":")[-1]
+            nci = NCIDb(os.getenv("UMLS_API_KEY"))
+            root_concept = run_async(nci.get_concept(root_code))
+            return {
+                "ontology_title": root_concept.get("terminology", "ncit"),
+                "ontology_version": root_concept.get("version"),
+                "source_api": f"{nci._base_url}/concept/ncit/{root_code}",
+            }
+
+        return run_async(OLSDb().get_ontology_metadata(self._ontology_source))
+
+    @staticmethod
+    def _extract_names(items: list, key: str = "name",
+                       limit: int = MAX_RETRIEVED_CONTEXT_ITEMS,
+                       dedupe: bool = False) -> list[str]:
+        """Extract string values from a list of dicts, with optional dedup and limit."""
+        result = []
+        seen: set[str] = set()
+        for item in items:
+            if not isinstance(item, dict):
+                continue
+            value = str(item.get(key) or "").strip()
+            if not value:
+                continue
+            if dedupe:
+                if value in seen:
+                    continue
+                seen.add(value)
+            result.append(value)
+            if len(result) >= limit:
+                break
+        return result
+
+    def _nci_concepts_to_records(self, concept_map: dict[str, dict]) -> list[dict]:
+        """Convert NCIt concept payloads into retrieved-ontology JSON records."""
+        records = []
+        for code, concept in concept_map.items():
+            label = str(concept.get("name") or "").strip()
+            if not label:
+                continue
+
+            first_definition = ""
+            for item in concept.get("definitions", []):
+                if isinstance(item, dict):
+                    definition = str(item.get("definition") or "").strip()
+                    if definition:
+                        first_definition = definition
+                        break
+
+            synonyms = self._extract_names(
+                concept.get("synonyms", []), dedupe=True,
+                limit=MAX_RETRIEVED_CONTEXT_ITEMS)
+            parents = self._extract_names(concept.get("parents", []))
+            children = self._extract_names(concept.get("children", []))
+
+            roles = []
+            for item in concept.get("roles", []):
+                if not isinstance(item, dict):
+                    continue
+                role_type = str(item.get("type") or "").strip()
+                related_name = str(item.get("relatedName") or "").strip()
+                related_code = str(item.get("relatedCode") or "").strip()
+                if role_type or related_name or related_code:
+                    roles.append({
+                        "type": role_type,
+                        "related_name": related_name,
+                        "related_code": related_code,
+                    })
+                if len(roles) >= MAX_RETRIEVED_CONTEXT_ITEMS:
+                    break
+
+            records.append({
+                "iri": f"http://purl.obolibrary.org/obo/NCIT_{code}",
+                "ontology_name": "ncit",
+                "ontology_prefix": "NCIT",
+                "short_form": f"NCIT_{code}",
+                "label": label,
+                "obo_id": f"NCIT:{code}",
+                "definitions": [first_definition] if first_definition else [],
+                "description": first_definition or None,
+                "synonyms": synonyms,
+                "parents": parents,
+                "children": children,
+                "roles": roles,
+                "type": "class",
+            })
+
+        return records
+
+    def _save_retrieved_ontology_json(self,
+                                      records: list[dict],
+                                      root_term: str) -> None:
+        """Persist fetched ontology terms to the canonical JSON cache path."""
+        json_path = self._retrieved_json_path()
+        metadata_extra = self._get_retrieved_ontology_metadata(root_term)
+        CorpusBuilder().save(records,
+                             str(json_path),
+                             root_term_id=root_term,
+                             ontology=self._ontology_source,
+                             metadata_extra=metadata_extra)
+        self._logger.info(
+            f"Saved retrieved ontology JSON ({len(records)} terms) to {json_path}"
+        )
+
+    def _build_ncit_corpus_csv(self, root_term: str) -> pd.DataFrame:
+        """Fetch NCI descendants via EVSREST API and save corpus CSV + JSON.
+
+        1. ``get_descendants`` → list of codes
+        2. ``get_custom_concepts_by_codes`` → full concept data (single pass)
+        3. Derive both CSV (label + obo_id) and rich JSON from the concept data
+        """
+        from src.KnowledgeDb.db_clients.nci_db import NCIDb
+
+        code = root_term.split(":")[-1]  # "NCIT:C32221" → "C32221"
+        self._logger.info(
+            f"Building NCIt corpus for {root_term} via EVSREST API ..."
+        )
+
+        umls_key = os.getenv("UMLS_API_KEY")
+        nci = NCIDb(umls_key)
+        descendants = run_async(nci.get_descendants(code))
+
+        if not descendants:
+            raise RuntimeError(
+                f"NCI EVSREST returned no descendants for {root_term}. "
+                "Check the code and network connectivity."
+            )
+
+        # Single API pass: fetch full concepts for all codes
+        concept_codes = [d["code"] for d in descendants]
+        self._logger.info(
+            f"Fetching full concept data for {len(concept_codes)} codes ..."
+        )
+        concept_map = run_async(
+            nci.get_custom_concepts_by_codes(concept_codes))
+
+        # Derive CSV rows from concept data (fall back to descendants for missing)
+        rows = []
+        for d in descendants:
+            c = d["code"]
+            concept = concept_map.get(c, {})
+            label = concept.get("name", d["name"]).strip()
+            rows.append({
+                "iri": f"http://purl.obolibrary.org/obo/NCIT_{c}",
+                "ontology_name": "ncit",
+                "ontology_prefix": "NCIT",
+                "short_form": f"NCIT_{c}",
+                "description": "",
+                "label": label,
+                "obo_id": f"NCIT:{c}",
+                "type": "class",
+            })
+
+        df = pd.DataFrame(rows)
+        self._persist_corpus_csv(df)
+
+        # Save rich JSON from the same concept data
+        self._save_retrieved_ontology_json(
+            self._nci_concepts_to_records(concept_map), root_term)
+        return df
+
+    def _build_ols_corpus_csv(self, root_term: str) -> pd.DataFrame:
+        """Fetch OLS descendants via CorpusBuilder and save as corpus CSV."""
+        self._logger.info(
+            f"Building OLS corpus for {root_term} via CorpusBuilder ..."
+        )
+        builder = CorpusBuilder()
+        records = builder.build_sync(root_term_id=root_term,
+                                     include_hierarchy=True)
+        if not records:
+            raise RuntimeError(
+                f"OLS returned no terms for root '{root_term}'. "
+                "Check the term ID and network connectivity."
+            )
+
+        df = pd.DataFrame(records)
+        # Keep columns consistent with NCIt CSV format
+        for col in ("iri", "ontology_name", "ontology_prefix", "short_form",
+                     "description", "label", "obo_id", "type"):
+            if col not in df.columns:
+                df[col] = ""
+        df = df[["iri", "ontology_name", "ontology_prefix", "short_form",
+                  "description", "label", "obo_id", "type"]]
+
+        self._persist_corpus_csv(df)
+        self._save_retrieved_ontology_json(records, root_term)
+        return df
+
+    # ------------------------------------------------------------------
+    # OLS concept table building (non-ncit only)
+    # ------------------------------------------------------------------
+
     def _ensure_ols_tables(self, corpus_df: pd.DataFrame) -> None:
         """Ensure rag and synonym SQLite tables are populated for OLS-based ontologies.
 
-        Uses ``self._ontology_source`` and ``self.category`` for table/JSON naming
-        (e.g. table ``uberon_rag_bodysite``, JSON dir ``uberon_bodysite/``).
-        Root term is looked up from ``_OLS_ONTOLOGIES``.
+        Uses ``self._ontology_source`` and ``self.category`` for table/JSON naming.
 
         Lookup order:
         1. Tables already populated with all corpus codes → done.
-        2. Corpus JSON at DATA_DIR/corpus/{ontology}_{category}/{ontology}_{category}_corpus.json → build from JSON.
-        3. Auto-fetch from OLS using root term from _OLS_ONTOLOGIES → save JSON → build tables.
+        2. Corpus JSON at DATA_DIR/corpus/retrieved_ontologies/{ontology}_{category}.json
+           → build from JSON.
+        3. Auto-fetch from OLS using root term → save JSON → build tables.
         """
         import sqlite3
         from os import getenv
@@ -193,26 +452,24 @@ class OntoMapEngine:
             return
 
         # 2. Try local corpus JSON
-        json_dir = f"{self._ontology_source}_{self.category}"
-        json_path = DATA_DIR / "corpus" / json_dir / f"{json_dir}_corpus.json"
+        json_path = self._retrieved_json_path()
         if json_path.exists():
             self._logger.info(f"Building OLS tables from local JSON: {json_path}")
             ConceptTableBuilder(self.category, self._ontology_source).build_from_json(str(json_path))
             return
 
         # 3. Auto-fetch from OLS
-        root_term = _OLS_ONTOLOGIES[(self.category, self._ontology_source)]
+        root_term = _CORPUS_REGISTRY[(self.category, self._ontology_source)]
         self._logger.info(f"Fetching OLS corpus for root term '{root_term}' ...")
         builder = CorpusBuilder()
-        records = builder.build_sync(root_term_id=root_term)
+        records = builder.build_sync(root_term_id=root_term,
+                                     include_hierarchy=True)
         if not records:
             raise RuntimeError(
                 f"OLS returned no terms for root '{root_term}'. "
                 "Check the term ID and network connectivity."
             )
-        json_path.parent.mkdir(parents=True, exist_ok=True)
-        builder.save(records, str(json_path), root_term_id=root_term)
-        self._logger.info(f"Corpus saved to {json_path} ({len(records)} terms)")
+        self._save_retrieved_ontology_json(records, root_term)
         ConceptTableBuilder(self.category, self._ontology_source).build_from_json(str(json_path))
 
     def _normalize_df(self, df: pd.DataFrame, need_code: bool) -> pd.DataFrame:

@@ -65,7 +65,9 @@ class FAISSSQLiteSearch:
                 f"Unsupported om_strategy: {om_strategy}. Choose from 'rag', 'rag_bie', 'st', 'lm'."
             )
         method_clean = method.replace('-', '_')
-        idx_name = f"{om_strategy}_{method_clean}_{ontology_source}_{category}.index"
+        # rag and rag_bie embed the same context table — share one index file
+        idx_strategy = "rag" if om_strategy in ("rag", "rag_bie") else om_strategy
+        idx_name = f"{idx_strategy}_{method_clean}_{ontology_source}_{category}.index"
         self.index_path = os.path.join(BASE_IDX_DIR, idx_name)
 
         raw_model = get_embedding_model_cached(method)

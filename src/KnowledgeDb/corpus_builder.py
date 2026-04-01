@@ -20,6 +20,9 @@ import httpx
 
 from src.CustomLogger.custom_logger import CustomLogger
 from src.KnowledgeDb.db_clients.ols_db import OLSDb
+from src._async_utils import run_async
+
+MAX_CONTEXT_NEIGHBORS = 10
 
 
 async def _async_empty() -> list:
@@ -43,11 +46,16 @@ class CorpusBuilder:
     def _parse_term(raw: dict) -> dict:
         """Extract a flat record from a raw OLS term dict.
 
-        Captures label, obo_id, short_form, description, and synonyms so that
+        Captures label, obo_id, short_form, definitions, and synonyms so that
         the saved JSON is self-contained for building concept tables offline
         (no further API calls needed).
         """
         descriptions = raw.get("description") or []
+        first_definition = ""
+        for item in descriptions:
+            if isinstance(item, str) and item.strip():
+                first_definition = item.strip()
+                break
         # OLS returns synonyms as a list of plain strings
         synonyms = [
             s for s in (raw.get("synonyms") or [])
@@ -60,8 +68,12 @@ class CorpusBuilder:
             "short_form": raw.get("short_form", ""),
             "label": raw.get("label", ""),
             "obo_id": raw.get("obo_id", ""),
-            "description": descriptions[0] if descriptions else None,
+            "definitions": [first_definition] if first_definition else [],
+            "description": first_definition or None,
             "synonyms": synonyms,
+            "parents": [],
+            "children": [],
+            "roles": [],
             "type": "class",
         }
 
@@ -80,8 +92,8 @@ class CorpusBuilder:
             self._ols.get_term_neighbors(children_href, client)
             if children_href else _async_empty(),
         )
-        record["parents"] = parent_labels
-        record["children"] = child_labels
+        record["parents"] = parent_labels[:MAX_CONTEXT_NEIGHBORS]
+        record["children"] = child_labels[:MAX_CONTEXT_NEIGHBORS]
         return record
 
     async def build(
@@ -165,26 +177,9 @@ class CorpusBuilder:
         include_hierarchy: bool = False,
     ) -> list[dict]:
         """Synchronous wrapper around :meth:`build`."""
-        try:
-            loop = asyncio.get_running_loop()
-        except RuntimeError:
-            loop = None
-
-        if loop and loop.is_running():
-            import nest_asyncio
-
-            nest_asyncio.apply()
-            return loop.run_until_complete(
-                self.build(root_term_id, ontology, include_root, include_hierarchy)
-            )
-
-        loop = asyncio.new_event_loop()
-        try:
-            return loop.run_until_complete(
-                self.build(root_term_id, ontology, include_root, include_hierarchy)
-            )
-        finally:
-            loop.close()
+        return run_async(
+            self.build(root_term_id, ontology, include_root, include_hierarchy)
+        )
 
     # ----------------------------- persistence --------------------------------
 
@@ -195,6 +190,7 @@ class CorpusBuilder:
         root_term_id: str = "",
         root_term_label: str = "",
         ontology: str = "",
+        metadata_extra: Optional[dict] = None,
     ) -> Path:
         """Write corpus records to a JSON file.
 
@@ -217,16 +213,17 @@ class CorpusBuilder:
         if not ontology and records:
             ontology = records[0].get("ontology_name", "")
 
-        output = {
-            "metadata": {
-                "root_term_id": root_term_id,
-                "root_term_label": root_term_label,
-                "ontology": ontology,
-                "total_terms": len(records),
-                "generated_at": datetime.now(timezone.utc).isoformat(),
-            },
-            "terms": records,
+        metadata = {
+            "root_term_id": root_term_id,
+            "root_term_label": root_term_label,
+            "ontology": ontology,
+            "total_terms": len(records),
+            "generated_at": datetime.now(timezone.utc).isoformat(),
         }
+        if metadata_extra:
+            metadata.update(metadata_extra)
+
+        output = {"metadata": metadata, "terms": records}
 
         path = Path(output_path)
         path.parent.mkdir(parents=True, exist_ok=True)

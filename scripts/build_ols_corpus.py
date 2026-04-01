@@ -13,11 +13,10 @@ Usage::
 
 import argparse
 import sys
-from pathlib import Path
 
 from src.KnowledgeDb.corpus_builder import CorpusBuilder
 from src.KnowledgeDb.concept_table_builder import ConceptTableBuilder
-from src._paths import DATA_DIR
+from src._paths import retrieved_ontology_json_path
 
 
 def main() -> None:
@@ -75,8 +74,7 @@ def main() -> None:
 
     # ── Step 2: save corpus JSON ──────────────────────────────────────────────
     corpus_key = f"{args.ontology}_{args.category}"
-    out_dir = DATA_DIR / "corpus" / corpus_key
-    json_path = out_dir / f"{corpus_key}_corpus.json"
+    json_path = retrieved_ontology_json_path(args.category, args.ontology)
     builder.save(records, str(json_path), root_term_id=args.term)
     print(f"Corpus saved to: {json_path}  ({len(records)} terms)")
 
