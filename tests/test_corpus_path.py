@@ -34,7 +34,7 @@ class TestCorpusPath:
         c = corpus_path("disease", "mondo", "_corpus.csv")
         assert j.parent == c.parent
 
-    def test_respects_data_dir_env(self):
-        """When METAHARMONIZER_DATA_DIR is set, paths follow it."""
+    def test_retrieved_ontologies_dir_relative_to_data_dir(self):
+        """RETRIEVED_ONTOLOGIES_DIR lives under DATA_DIR/corpus/retrieved_ontologies."""
         # DATA_DIR is resolved at import time, so we verify the relationship
         assert RETRIEVED_ONTOLOGIES_DIR == DATA_DIR / "corpus" / "retrieved_ontologies"
