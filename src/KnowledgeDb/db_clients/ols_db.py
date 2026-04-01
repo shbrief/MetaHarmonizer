@@ -55,40 +55,6 @@ def _curie_to_iri(prefix: str, local_id: str) -> str:
     return f"{base}{prefix}_{local_id}"
 
 
-def parse_code_prefix(code: str) -> str | None:
-    """Extract the ontology prefix from a code.
-
-    Handles: 'EFO:0000249' (colon), 'EFO_0000249' (underscore), 'C12345' (bare NCIT).
-    """
-    if ":" in code:
-        return code.split(":", 1)[0]
-    if "_" in code:
-        return code.split("_", 1)[0]
-    return None
-
-
-def partition_codes(codes: list[str]) -> dict[str, list[str]]:
-    """Split codes into NCI vs OLS groups based on prefix.
-
-    NCIT codes look like 'C12345' (bare) or 'NCIT:C12345'.
-    Everything with a recognized OLS prefix goes to OLS.
-    """
-    nci_codes = []
-    ols_codes = []
-    for code in codes:
-        prefix = parse_code_prefix(code)
-        if prefix is None:
-            nci_codes.append(code)
-        elif prefix == "NCIT":
-            local = code.split(":", 1)[1] if ":" in code else code.split("_", 1)[1]
-            nci_codes.append(local)
-        elif prefix in PREFIX_TO_ONTOLOGY:
-            ols_codes.append(code)
-        else:
-            nci_codes.append(code)
-    return {"nci": nci_codes, "ols": ols_codes}
-
-
 def _parse_clean_code(clean_code: str):
     """Parse a clean_code into (prefix, local_id).
 
@@ -235,10 +201,11 @@ class OLSDb:
             while url:
                 resp = await self.fetch_one(client, url)
                 if resp is None:
-                    self.logger.warning(
-                        f"get_descendants: page fetch failed at {len(all_terms)} terms "
-                        f"— returning partial results")
-                    break
+                    raise RuntimeError(
+                        f"OLS get_descendants({obo_id}): page fetch failed "
+                        f"after {len(all_terms)} terms. "
+                        f"Aborting to avoid an incomplete corpus."
+                    )
                 data = resp.json()
                 terms = data.get("_embedded", {}).get("terms", [])
                 all_terms.extend(terms)

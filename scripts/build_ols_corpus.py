@@ -16,7 +16,7 @@ import sys
 
 from src.KnowledgeDb.corpus_builder import CorpusBuilder
 from src.KnowledgeDb.concept_table_builder import ConceptTableBuilder
-from src._paths import retrieved_ontology_json_path
+from src._paths import corpus_path
 
 
 def main() -> None:
@@ -57,6 +57,8 @@ def main() -> None:
         ),
     )
     args = parser.parse_args()
+    args.ontology = args.ontology.lower()
+    args.category = args.category.lower()
 
     # ── Step 1: fetch corpus from OLS ────────────────────────────────────────
     print(f"\nBuilding corpus for {args.term} (category={args.category}) ...")
@@ -74,7 +76,7 @@ def main() -> None:
 
     # ── Step 2: save corpus JSON ──────────────────────────────────────────────
     corpus_key = f"{args.ontology}_{args.category}"
-    json_path = retrieved_ontology_json_path(args.category, args.ontology)
+    json_path = corpus_path(args.category, args.ontology, ".json")
     builder.save(records, str(json_path), root_term_id=args.term)
     print(f"Corpus saved to: {json_path}  ({len(records)} terms)")
 

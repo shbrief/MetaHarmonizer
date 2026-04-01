@@ -40,7 +40,7 @@ class NCIDb:
     """
 
     def __init__(self, umls_api_key):
-        self._base_url = "https://api-evsrest.nci.nih.gov/api/v1"
+        self.base_url = "https://api-evsrest.nci.nih.gov/api/v1"
         self._umls_db = UMLSDb(umls_api_key)
         self.logger = CustomLogger().custlogger(loglevel='INFO')
         self.rate_limiter = AsyncLimiter(NCI_CALLS, time_period=NCI_PERIOD)
@@ -137,7 +137,7 @@ class NCIDb:
         async def fetch_and_parse(batch_codes, batch_idx, http_client):
             async with semaphore:
                 urls = [
-                    f"{self._base_url}/concept/ncit/{code}?include={','.join(self.list_of_concepts)}"
+                    f"{self.base_url}/concept/ncit/{code}?include={','.join(self.list_of_concepts)}"
                     for code in batch_codes
                 ]
                 responses = await self.fetch_batch(http_client, urls)
@@ -193,7 +193,7 @@ class NCIDb:
                           code: str,
                           client: httpx.AsyncClient = None) -> dict:
         """Fetch one NCIt concept with the standard include set."""
-        url = (f"{self._base_url}/concept/ncit/{code}"
+        url = (f"{self.base_url}/concept/ncit/{code}"
                f"?include={','.join(self.list_of_concepts)}")
         if client is None:
             async with httpx.AsyncClient() as owned_client:
@@ -311,17 +311,18 @@ class NCIDb:
             nonlocal from_record
             while True:
                 url = (
-                    f"{self._base_url}/concept/ncit/{code}/descendants"
+                    f"{self.base_url}/concept/ncit/{code}/descendants"
                     f"?maxLevel={max_level}"
                     f"&fromRecord={from_record}&pageSize={page_size}"
                 )
                 async with self.rate_limiter:
                     r = await http_client.get(url, timeout=60.0)
                 if r.status_code != 200:
-                    self.logger.warning(
-                        f"Descendants fetch failed for {code}: {r.status_code}"
+                    raise RuntimeError(
+                        f"NCI get_descendants({code}): HTTP {r.status_code} "
+                        f"after {len(results)} descendants. "
+                        f"Aborting to avoid an incomplete corpus."
                     )
-                    break
                 page = r.json()
                 if not page:
                     break

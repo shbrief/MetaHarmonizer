@@ -9,11 +9,11 @@ import pandas as pd
 import numpy as np
 from datetime import datetime
 from src.CustomLogger.custom_logger import CustomLogger
-from src._paths import DATA_DIR, CORPUS_DIR, retrieved_ontology_json_path
+from src._paths import DATA_DIR, corpus_path
 from src._async_utils import run_async
 from src.KnowledgeDb.concept_table_builder import ConceptTableBuilder
 from src.KnowledgeDb.corpus_builder import CorpusBuilder
-from src.KnowledgeDb.db_clients.ols_db import OLSDb
+from src.KnowledgeDb.db_clients.ols_db import OLSDb, validate_identifier
 
 logger = CustomLogger()
 ABBR_DICT_PATH = DATA_DIR / "corpus" / "oncotree_code_to_name.csv"
@@ -32,11 +32,6 @@ _CORPUS_REGISTRY: dict[tuple[str, str], str] = {
     ("disease",   "mondo"):  "MONDO:0000001",
     ("bodysite",  "uberon"): "UBERON:0001062",
 }
-
-def _corpus_csv_path(category: str, ontology_source: str):
-    """Standard CSV path for a (category, ontology_source) corpus."""
-    name = f"{ontology_source}_{category}"
-    return CORPUS_DIR / name / f"{name}_corpus.csv"
 
 _BRITISH_TO_AMERICAN = [
     (r"(?i)leukaemia",   "leukemia"),
@@ -99,7 +94,7 @@ class OntoMapEngine:
         self.s2_method = s2_method
         self.s3_method = s3_method
         self.query = query
-        self.category = category
+        self.category = validate_identifier(category, "category")
         self.output_dir = output_dir
         self.topk = topk
         self.s2_strategy = s2_strategy
@@ -120,39 +115,66 @@ class OntoMapEngine:
         if self.s3_strategy is not None and self.s3_strategy not in ('rag', 'rag_bie'):
             raise ValueError("s3_strategy must be 'rag', 'rag_bie', or None")
 
-        # Ontology source validation
-        self._ontology_source = self.other_params.get("ontology_source", "ncit").lower()
-        if (category, self._ontology_source) not in _CORPUS_REGISTRY:
-            supported = [
-                f"(category='{c}', ontology_source='{o}')"
-                for c, o in _CORPUS_REGISTRY
-            ]
-            raise ValueError(
-                f"Unsupported combination: category='{category}', "
-                f"ontology_source='{self._ontology_source}'. "
-                f"Supported: {supported}."
-            )
+        # Ontology source validation (also guards f-string SQL in table names)
+        self._ontology_source = validate_identifier(
+            self.other_params.get("ontology_source", "ncit").lower(),
+            "ontology_source"
+        )
 
         # Resolve corpus_df: use provided value or auto-load from CSV
         corpus_df = self.other_params.get("corpus_df", None)
         corpus_df_provided = corpus_df is not None
+
         if corpus_df is None:
+            # Auto-resolve: registry must have the (category, ontology_source)
+            if (self.category, self._ontology_source) not in _CORPUS_REGISTRY:
+                supported = [
+                    f"(category='{c}', ontology_source='{o}')"
+                    for c, o in _CORPUS_REGISTRY
+                ]
+                raise ValueError(
+                    f"Unsupported combination: category='{self.category}', "
+                    f"ontology_source='{self._ontology_source}'. "
+                    f"Supported: {supported}."
+                )
             corpus_df = self._resolve_corpus_df()
+            csv_src = corpus_path(self.category, self._ontology_source, "_corpus.csv")
             self._logger.info(
-                f"Auto-loaded corpus_df ({len(corpus_df)} terms) from "
-                f"{_corpus_csv_path(self.category, self._ontology_source)}"
+                f"Auto-loaded corpus_df ({len(corpus_df)} terms) from {csv_src}"
             )
+        else:
+            self._logger.info(
+                f"Using caller-provided corpus_df ({len(corpus_df)} rows)."
+            )
+
         corpus_df = self._normalize_df(corpus_df, need_code=True)
         self.other_params["corpus_df"] = corpus_df
+
+        # When corpus_df is caller-provided, infer ontology_source from codes
+        if corpus_df_provided:
+            codes = corpus_df["clean_code"].dropna().unique().tolist()
+            groups = self._partition_codes(codes)
+            detected = sorted(groups.keys())
+            if len(detected) == 1:
+                inferred = detected[0]
+            else:
+                inferred = max(groups, key=lambda k: len(groups[k]))
+                self._logger.info(
+                    f"Mixed-prefix codes detected: {detected}. "
+                    f"Using dominant source '{inferred}' for table/file naming."
+                )
+            if inferred != self._ontology_source:
+                self._logger.info(
+                    f"Overriding ontology_source: "
+                    f"'{self._ontology_source}' → '{inferred}' "
+                    f"(inferred from corpus_df code prefixes)"
+                )
+                self._ontology_source = validate_identifier(
+                    inferred, "ontology_source")
         self.corpus_s3 = corpus_df["official_label"].astype(
             str).unique().tolist()
-        self.enable_stage_25 = True
 
-        if corpus_df_provided:
-            csv_path = _corpus_csv_path(self.category, self._ontology_source)
-            self._logger.info(
-                f"Overwriting cached corpus CSV with provided corpus_df → {csv_path}"
-            )
+        if corpus_df_provided and self.other_params.get("persist_corpus", False):
             self._persist_corpus_csv(corpus_df)
 
         # Resolve corpus (stage 2 term list)
@@ -163,8 +185,7 @@ class OntoMapEngine:
                 corpus_df["official_label"].astype(str).tolist()
             ))
 
-        if self._ontology_source != "ncit":
-            self._ensure_ols_tables(corpus_df)
+        self._ensure_concept_tables(corpus_df)
 
         self._logger.info("Initialized OntoMap Engine")
         self._logger.info(f"Stage 1: Exact matching")
@@ -194,7 +215,7 @@ class OntoMapEngine:
         For ncit: uses NCI EVSREST ``/descendants`` endpoint.
         For non-ncit: uses ``CorpusBuilder`` (OLS4 API).
         """
-        csv_path = _corpus_csv_path(self.category, self._ontology_source)
+        csv_path = corpus_path(self.category, self._ontology_source, "_corpus.csv")
         if csv_path.exists():
             self._logger.info(f"Loading corpus CSV: {csv_path}")
             return pd.read_csv(csv_path)
@@ -209,11 +230,11 @@ class OntoMapEngine:
         return df
 
     def _retrieved_json_path(self):
-        return retrieved_ontology_json_path(self.category, self._ontology_source)
+        return corpus_path(self.category, self._ontology_source, ".json")
 
     def _persist_corpus_csv(self, corpus_df: pd.DataFrame) -> None:
         """Persist corpus_df to the standard CSV cache path."""
-        csv_path = _corpus_csv_path(self.category, self._ontology_source)
+        csv_path = corpus_path(self.category, self._ontology_source, "_corpus.csv")
         csv_path.parent.mkdir(parents=True, exist_ok=True)
         corpus_df.to_csv(csv_path, index=False)
         self._logger.info(f"Saved corpus CSV ({len(corpus_df)} terms) to {csv_path}")
@@ -231,7 +252,7 @@ class OntoMapEngine:
             return {
                 "ontology_title": root_concept.get("terminology", "ncit"),
                 "ontology_version": root_concept.get("version"),
-                "source_api": f"{nci._base_url}/concept/ncit/{root_code}",
+                "source_api": f"{nci.base_url}/concept/ncit/{root_code}",
             }
 
         return run_async(OLSDb().get_ontology_metadata(self._ontology_source))
@@ -414,63 +435,87 @@ class OntoMapEngine:
         return df
 
     # ------------------------------------------------------------------
-    # OLS concept table building (non-ncit only)
+    # Concept table building (RAG + synonym)
     # ------------------------------------------------------------------
 
-    def _ensure_ols_tables(self, corpus_df: pd.DataFrame) -> None:
-        """Ensure rag and synonym SQLite tables are populated for OLS-based ontologies.
+    @staticmethod
+    def _partition_codes(codes: list[str]) -> dict[str, list[str]]:
+        """Partition clean_codes by ontology source.
 
-        Uses ``self._ontology_source`` and ``self.category`` for table/JSON naming.
+        Bare codes (e.g. ``C12345``) → ``'ncit'``.
+        Prefixed codes (e.g. ``UBERON_0001062``) → looked up in
+        ``PREFIX_TO_ONTOLOGY`` or lowercased prefix as fallback.
+        """
+        from src.KnowledgeDb.db_clients.ols_db import PREFIX_TO_ONTOLOGY
 
-        Lookup order:
-        1. Tables already populated with all corpus codes → done.
-        2. Corpus JSON at DATA_DIR/corpus/retrieved_ontologies/{ontology}_{category}.json
-           → build from JSON.
-        3. Auto-fetch from OLS using root term → save JSON → build tables.
+        groups: dict[str, list[str]] = {}
+        for code in codes:
+            if "_" in code:
+                prefix = code.split("_", 1)[0]
+                ont = PREFIX_TO_ONTOLOGY.get(prefix, prefix.lower())
+            else:
+                ont = "ncit"
+            groups.setdefault(ont, []).append(code)
+        return groups
+
+    def _ensure_concept_tables(self, corpus_df: pd.DataFrame) -> None:
+        """Ensure RAG and synonym SQLite tables are populated for all codes.
+
+        Partitions codes by ontology prefix and routes each group to the
+        correct API (NCI EVSREST or OLS4).  For each group:
+
+        1. Tables already have all codes → skip.
+        2. Local JSON exists → build from JSON.
+        3. Fetch only missing codes from API.
         """
         import sqlite3
         from os import getenv
 
-        codes = set(corpus_df["clean_code"].dropna().tolist())
+        all_codes = corpus_df["clean_code"].dropna().unique().tolist()
+        if not all_codes:
+            return
+
         db_path = getenv("VECTOR_DB_PATH") or "src/KnowledgeDb/vector_db.sqlite"
+        groups = self._partition_codes(all_codes)
 
-        rag_table = f"{self._ontology_source}_rag_{self.category}"
+        for ont_source, codes in groups.items():
+            ont_source = validate_identifier(ont_source, "ontology_source")
+            rag_table = f"{ont_source}_rag_{self.category}"
+            codes_set = set(codes)
 
-        # 1. Check pre-built tables
-        try:
-            with sqlite3.connect(db_path) as conn:
-                stored = {r[0] for r in conn.execute(
-                    f"SELECT DISTINCT code FROM {rag_table}"
-                ).fetchall()}
-        except sqlite3.OperationalError:
-            stored = set()
+            # 1. Check pre-built tables
+            try:
+                with sqlite3.connect(db_path) as conn:
+                    stored = {r[0] for r in conn.execute(
+                        f"SELECT DISTINCT code FROM {rag_table}"
+                    ).fetchall()}
+            except sqlite3.OperationalError:
+                stored = set()
 
-        if codes and codes.issubset(stored):
+            if codes_set.issubset(stored):
+                self._logger.info(
+                    f"Concept tables for '{ont_source}_{self.category}' "
+                    f"are up-to-date ({len(codes_set)} codes); skipping"
+                )
+                continue
+
+            # 2. Try local corpus JSON
+            json_path = corpus_path(self.category, ont_source, ".json")
+            if json_path.exists():
+                self._logger.info(
+                    f"Building concept tables from local JSON: {json_path}")
+                ConceptTableBuilder(self.category, ont_source).build_from_json(
+                    str(json_path))
+                continue
+
+            # 3. Fetch only the missing codes from API
+            missing = list(codes_set - stored)
             self._logger.info(
-                f"OLS tables for '{self._ontology_source}_{self.category}' are pre-built; skipping fetch"
+                f"Fetching {len(missing)} missing codes via API "
+                f"(ontology_source={ont_source})"
             )
-            return
-
-        # 2. Try local corpus JSON
-        json_path = self._retrieved_json_path()
-        if json_path.exists():
-            self._logger.info(f"Building OLS tables from local JSON: {json_path}")
-            ConceptTableBuilder(self.category, self._ontology_source).build_from_json(str(json_path))
-            return
-
-        # 3. Auto-fetch from OLS
-        root_term = _CORPUS_REGISTRY[(self.category, self._ontology_source)]
-        self._logger.info(f"Fetching OLS corpus for root term '{root_term}' ...")
-        builder = CorpusBuilder()
-        records = builder.build_sync(root_term_id=root_term,
-                                     include_hierarchy=True)
-        if not records:
-            raise RuntimeError(
-                f"OLS returned no terms for root '{root_term}'. "
-                "Check the term ID and network connectivity."
-            )
-        self._save_retrieved_ontology_json(records, root_term)
-        ConceptTableBuilder(self.category, self._ontology_source).build_from_json(str(json_path))
+            builder = ConceptTableBuilder(self.category, ont_source)
+            run_async(builder.fetch_and_build_tables(missing))
 
     def _normalize_df(self, df: pd.DataFrame, need_code: bool) -> pd.DataFrame:
         """
@@ -734,10 +779,9 @@ class OntoMapEngine:
         self._logger.info(
             f"Stage 2 ({self.s2_strategy.upper()}): {s2_only} queries")
 
-        if self.enable_stage_25:
-            s25_boosted = len(stage2_results[stage2_results['stage'] == 2.5])
-            self._logger.info(
-                f"Stage 2.5 (Synonym boost): {s25_boosted} queries")
+        s25_boosted = len(stage2_results[stage2_results['stage'] == 2.5])
+        self._logger.info(
+            f"Stage 2.5 (Synonym boost): {s25_boosted} queries")
 
         if s3_res is not None:
             self._logger.info(
@@ -753,119 +797,114 @@ class OntoMapEngine:
         Returns:
             None (modifies s2_res in place)
         """
-        if not self.enable_stage_25:
-            self._logger.info("Stage 2.5: Skipped (corpus_df not provided)")
-            s2_res['top1_score_float'] = pd.to_numeric(
-                s2_res['match1_score'], errors='coerce').fillna(0)
-        else:
-            self._logger.info(
-                "Stage 2.5: Synonym Verification for Low Confidence Results")
+        self._logger.info(
+            "Stage 2.5: Synonym Verification for Low Confidence Results")
 
-            s2_res['top1_score_float'] = pd.to_numeric(
-                s2_res['match1_score'], errors='coerce').fillna(0)
+        s2_res['top1_score_float'] = pd.to_numeric(
+            s2_res['match1_score'], errors='coerce').fillna(0)
 
-            low_conf_mask = s2_res['top1_score_float'] < SYNONYM_MIN_CONFIDENCE
-            low_conf_queries = s2_res.loc[low_conf_mask,
-                                          'original_value'].tolist()
+        low_conf_mask = s2_res['top1_score_float'] < SYNONYM_MIN_CONFIDENCE
+        low_conf_queries = s2_res.loc[low_conf_mask,
+                                      'original_value'].tolist()
 
-            self._logger.info(
-                f"Found {len(low_conf_queries)} low-confidence queries "
-                f"(score < {SYNONYM_MIN_CONFIDENCE}) for synonym verification")
+        self._logger.info(
+            f"Found {len(low_conf_queries)} low-confidence queries "
+            f"(score < {SYNONYM_MIN_CONFIDENCE}) for synonym verification")
 
-            syn_boosted = []
+        syn_boosted = []
 
-            if low_conf_queries:
-                syn_model = self._om_model_from_strategy(
-                    'syn', low_conf_queries)
-                syn_results = syn_model.get_match_results(
-                    cura_map=self.cura_map,
-                    topk=self.topk,
-                    test_or_prod=self._test_or_prod)
+        if low_conf_queries:
+            syn_model = self._om_model_from_strategy(
+                'syn', low_conf_queries)
+            syn_results = syn_model.get_match_results(
+                cura_map=self.cura_map,
+                topk=self.topk,
+                test_or_prod=self._test_or_prod)
 
-                syn_dict = {}
-                for _, syn_row in syn_results.iterrows():
-                    orig_val = syn_row['original_value']
-                    syn_dict[orig_val] = syn_row
+            syn_dict = {}
+            for _, syn_row in syn_results.iterrows():
+                orig_val = syn_row['original_value']
+                syn_dict[orig_val] = syn_row
 
-                for idx, row in s2_res[low_conf_mask].iterrows():
-                    orig_val = row['original_value']
-                    curated = row['curated_ontology']
+            for idx, row in s2_res[low_conf_mask].iterrows():
+                orig_val = row['original_value']
+                curated = row['curated_ontology']
 
-                    combined_candidates = {}
+                combined_candidates = {}
+                for i in range(1, self.topk + 1):
+                    match = row[f'match{i}']
+                    score = float(row[f'match{i}_score'])
+                    if pd.notna(match) and match:
+                        combined_candidates[match] = score
+
+                syn_row = syn_dict.get(orig_val)
+
+                if syn_row is not None:
                     for i in range(1, self.topk + 1):
-                        match = row[f'match{i}']
-                        score = float(row[f'match{i}_score'])
+                        match = syn_row[f'match{i}']
+                        score = float(syn_row[f'match{i}_score'])
                         if pd.notna(match) and match:
-                            combined_candidates[match] = score
+                            if match in combined_candidates:
+                                combined_candidates[match] = max(
+                                    combined_candidates[match], score)
+                            else:
+                                combined_candidates[match] = score
 
-                    syn_row = syn_dict.get(orig_val)
+                    if not combined_candidates:
+                        self._logger.warning(
+                            f"No valid candidates for '{orig_val}' in Stage 2 or Synonym results, skipping boost"
+                        )
+                        continue
 
-                    if syn_row is not None:
+                    sorted_candidates = sorted(combined_candidates.items(),
+                                               key=lambda x: x[1],
+                                               reverse=True)[:self.topk]
+
+                    combined_matches = [
+                        match for match, _ in sorted_candidates
+                    ]
+                    combined_scores = [
+                        score for _, score in sorted_candidates
+                    ]
+
+                    while len(combined_matches) < self.topk:
+                        combined_matches.append(None)
+                        combined_scores.append(0.0)
+
+                    match_level = next(
+                        (i + 1 for i, term in enumerate(combined_matches)
+                         if (term or "").strip().lower() == (curated or "").strip().lower()), 99)
+
+                    old_top1_score = float(row['match1_score'])
+                    new_top1_score = combined_scores[0]
+                    old_match_level = int(row['match_level'])
+
+                    boosted = (new_top1_score > old_top1_score
+                               or match_level < old_match_level)
+
+                    if boosted:
+                        self._logger.info(
+                            f"Boosted '{orig_val}': "
+                            f"S2_top1={row['match1']}({old_top1_score:.3f}) → "
+                            f"Combined_top1={combined_matches[0]}({new_top1_score:.3f}), "
+                            f"match_level: {old_match_level} → {match_level}"
+                        )
+
                         for i in range(1, self.topk + 1):
-                            match = syn_row[f'match{i}']
-                            score = float(syn_row[f'match{i}_score'])
-                            if pd.notna(match) and match:
-                                if match in combined_candidates:
-                                    combined_candidates[match] = max(
-                                        combined_candidates[match], score)
-                                else:
-                                    combined_candidates[match] = score
+                            s2_res.at[idx,
+                                      f'match{i}'] = combined_matches[i -
+                                                                      1]
+                            s2_res.at[
+                                idx,
+                                f'match{i}_score'] = f"{combined_scores[i - 1]:.4f}"
 
-                        if not combined_candidates:
-                            self._logger.warning(
-                                f"No valid candidates for '{orig_val}' in Stage 2 or Synonym results, skipping boost"
-                            )
-                            continue
+                        s2_res.at[idx, 'match_level'] = match_level
+                        s2_res.at[idx, 'stage'] = 2.5
+                        s2_res.at[idx, 'top1_score_float'] = new_top1_score
+                        syn_boosted.append(orig_val)
 
-                        sorted_candidates = sorted(combined_candidates.items(),
-                                                   key=lambda x: x[1],
-                                                   reverse=True)[:self.topk]
-
-                        combined_matches = [
-                            match for match, _ in sorted_candidates
-                        ]
-                        combined_scores = [
-                            score for _, score in sorted_candidates
-                        ]
-
-                        while len(combined_matches) < self.topk:
-                            combined_matches.append(None)
-                            combined_scores.append(0.0)
-
-                        match_level = next(
-                            (i + 1 for i, term in enumerate(combined_matches)
-                             if (term or "").strip().lower() == (curated or "").strip().lower()), 99)
-
-                        old_top1_score = float(row['match1_score'])
-                        new_top1_score = combined_scores[0]
-                        old_match_level = int(row['match_level'])
-
-                        boosted = (new_top1_score > old_top1_score
-                                   or match_level < old_match_level)
-
-                        if boosted:
-                            self._logger.info(
-                                f"Boosted '{orig_val}': "
-                                f"S2_top1={row['match1']}({old_top1_score:.3f}) → "
-                                f"Combined_top1={combined_matches[0]}({new_top1_score:.3f}), "
-                                f"match_level: {old_match_level} → {match_level}"
-                            )
-
-                            for i in range(1, self.topk + 1):
-                                s2_res.at[idx,
-                                          f'match{i}'] = combined_matches[i -
-                                                                          1]
-                                s2_res.at[
-                                    idx,
-                                    f'match{i}_score'] = f"{combined_scores[i - 1]:.4f}"
-
-                            s2_res.at[idx, 'match_level'] = match_level
-                            s2_res.at[idx, 'stage'] = 2.5
-                            s2_res.at[idx, 'top1_score_float'] = new_top1_score
-                            syn_boosted.append(orig_val)
-
-            self._logger.info(
-                f"Stage 2.5: Boosted {len(syn_boosted)} queries with synonyms")
+        self._logger.info(
+            f"Stage 2.5: Boosted {len(syn_boosted)} queries with synonyms")
 
     def _save_result(self, df: pd.DataFrame) -> pd.DataFrame:
         """Save result DataFrame to output_dir with a timestamp if output_dir is set."""

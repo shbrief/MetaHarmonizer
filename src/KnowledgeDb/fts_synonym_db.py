@@ -3,7 +3,7 @@ import os
 import math
 from typing import List, Tuple, Set
 from src.KnowledgeDb.db_clients.nci_db import NCIDb
-from src.KnowledgeDb.db_clients.ols_db import OLSDb
+from src.KnowledgeDb.db_clients.ols_db import OLSDb, validate_identifier
 from src.CustomLogger.custom_logger import CustomLogger
 
 BASE_DB = os.getenv("VECTOR_DB_PATH")
@@ -20,12 +20,12 @@ class FTSSynonymDb:
     """
 
     def __init__(self, category: str, ontology_source: str = 'ncit'):
-        self.category = category
-        self.ontology_source = ontology_source
+        self.category = validate_identifier(category, "category")
+        self.ontology_source = validate_identifier(ontology_source, "ontology_source")
         self.nci_db = NCIDb(UMLS_API_KEY)
         self.ols_db = OLSDb()
         self.db_path = BASE_DB
-        self.table_name = f"fts_synonyms_{category}"
+        self.table_name = f"{ontology_source}_fts_synonyms_{category}"
         self.logger = CustomLogger().custlogger(loglevel='INFO')
 
         self.conn = None
@@ -46,7 +46,7 @@ class FTSSynonymDb:
             CREATE VIRTUAL TABLE IF NOT EXISTS {self.table_name} USING fts5(
                 synonym,
                 standard_term,
-                nci_code,
+                code,
                 tokenize='trigram'
             )
         ''')
@@ -57,7 +57,7 @@ class FTSSynonymDb:
         Retrieve set of NCI codes already indexed in the FTS table.
         """
         cursor = self.conn.cursor()
-        cursor.execute(f"SELECT nci_code FROM {self.table_name}")
+        cursor.execute(f"SELECT code FROM {self.table_name}")
 
         return set(row[0] for row in cursor.fetchall())
 
@@ -135,7 +135,7 @@ class FTSSynonymDb:
 
             for synonym in synonym_set:
                 cursor.execute(
-                    f'INSERT INTO {self.table_name}(synonym, standard_term, nci_code) VALUES (?, ?, ?)',
+                    f'INSERT INTO {self.table_name}(synonym, standard_term, code) VALUES (?, ?, ?)',
                     (synonym, standard_term, code))
                 insert_count += 1
 
@@ -155,7 +155,7 @@ class FTSSynonymDb:
             limit: Maximum number of results
         
         Returns:
-            List of (standard_term, nci_code, confidence_score) tuples
+            List of (standard_term, code, confidence_score) tuples
         """
         if not self.index_exists():
             self.logger.warning("FTS index is empty")
@@ -170,7 +170,7 @@ class FTSSynonymDb:
         try:
             results = cursor.execute(
                 f'''
-                SELECT standard_term, nci_code, rank
+                SELECT standard_term, code, rank
                 FROM {self.table_name}
                 WHERE {self.table_name} MATCH ?
                 ORDER BY rank
@@ -184,7 +184,7 @@ class FTSSynonymDb:
             try:
                 results = cursor.execute(
                     f'''
-                    SELECT standard_term, nci_code, rank
+                    SELECT standard_term, code, rank
                     FROM {self.table_name}
                     WHERE {self.table_name} MATCH ?
                     ORDER BY rank

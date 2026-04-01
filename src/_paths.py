@@ -10,6 +10,12 @@ CORPUS_DIR: Path = DATA_DIR / "corpus"
 RETRIEVED_ONTOLOGIES_DIR: Path = CORPUS_DIR / "retrieved_ontologies"
 
 
-def retrieved_ontology_json_path(category: str, ontology_source: str) -> Path:
-    """Canonical JSON cache path for fetched ontology corpora."""
-    return RETRIEVED_ONTOLOGIES_DIR / f"{ontology_source}_{category}.json"
+def corpus_path(category: str, ontology_source: str, suffix: str) -> Path:
+    """Canonical cache path for a (category, ontology_source) corpus file.
+
+    Parameters
+    ----------
+    suffix : str
+        File extension including the dot, e.g. ``".json"`` or ``"_corpus.csv"``.
+    """
+    return RETRIEVED_ONTOLOGIES_DIR / f"{ontology_source}_{category}{suffix}"

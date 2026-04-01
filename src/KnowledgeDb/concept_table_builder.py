@@ -13,8 +13,11 @@ UMLS_API_KEY = os.getenv("UMLS_API_KEY")
 
 
 class ConceptTableBuilder:
-    """
-    Build synonym and RAG tables for a given category using NCI API data.
+    """Build synonym and RAG concept tables for a given (category, ontology_source).
+
+    Supports both NCI EVSREST API (ontology_source='ncit') and EBI OLS4 API
+    (non-ncit sources). Also supports offline building from pre-saved JSON
+    via :meth:`build_from_json`.
     """
 
     def __init__(self, category: str, ontology_source: str = 'ncit'):
@@ -260,13 +263,23 @@ class ConceptTableBuilder:
 
         for term in terms:
             label = (term.get("label") or "").strip()
-            short_form = (term.get("short_form") or "").strip()
+            obo_id = (term.get("obo_id") or "").strip()
             description = (term.get("description") or "").strip()
             synonyms: list = term.get("synonyms") or []
 
-            if not label or not short_form:
+            if not label or not obo_id:
                 continue
-            if short_form in stored_codes:
+
+            # Derive code from obo_id, matching _normalize_df logic:
+            #   "NCIT:C156482"  → "C156482"       (strip NCIT prefix)
+            #   "UBERON:0001062" → "UBERON_0001062" (keep non-NCIT prefix)
+            if ":" in obo_id:
+                prefix, local = obo_id.split(":", 1)
+                code = local if prefix == "NCIT" else f"{prefix}_{local}"
+            else:
+                code = obo_id
+
+            if code in stored_codes:
                 continue
 
             # RAG context: mirrors NCIt format (definition + parents + children)
@@ -275,16 +288,16 @@ class ConceptTableBuilder:
 
             parts = [f"{label}: {description}" if description else label]
             if parents:
-                parts.append(f"Parents: {', '.join(parents)}")
+                parts.append(f"parents: {', '.join(parents)}")
             if children:
-                parts.append(f"Children: {', '.join(children)}")
+                parts.append(f"children: {', '.join(children)}")
             context = ". ".join(parts)
-            rag_records.append((label, short_form, context))
+            rag_records.append((label, code, context))
 
             # Synonym records
             syn_set = {label} | {s.strip() for s in synonyms if s.strip()}
             for syn in syn_set:
-                syn_records.append((syn, label, short_form))
+                syn_records.append((syn, label, code))
 
         if not rag_records:
             self.logger.info("No new terms to insert — tables already up to date")
