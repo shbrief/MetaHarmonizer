@@ -40,3 +40,34 @@ class TestRunAsync:
         """Can be called multiple times in sequence."""
         results = [run_async(_echo(i)) for i in range(5)]
         assert results == [0, 1, 2, 3, 4]
+
+    def test_works_inside_running_loop(self):
+        """Simulates notebook context: call run_async from inside an active event loop."""
+        import nest_asyncio
+        nest_asyncio.apply()
+
+        async def _outer():
+            # run_async is called from sync code, but there IS a running loop
+            return run_async(_echo("nested"))
+
+        loop = asyncio.new_event_loop()
+        try:
+            result = loop.run_until_complete(_outer())
+            assert result == "nested"
+        finally:
+            loop.close()
+
+    def test_exception_inside_running_loop(self):
+        """Errors propagate correctly through the nested-loop path."""
+        import nest_asyncio
+        nest_asyncio.apply()
+
+        async def _outer():
+            return run_async(_failing())
+
+        loop = asyncio.new_event_loop()
+        with pytest.raises(ValueError, match="boom"):
+            try:
+                loop.run_until_complete(_outer())
+            finally:
+                loop.close()

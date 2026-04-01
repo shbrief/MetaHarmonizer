@@ -16,6 +16,7 @@ import sys
 
 from src.KnowledgeDb.corpus_builder import CorpusBuilder
 from src.KnowledgeDb.concept_table_builder import ConceptTableBuilder
+from src.KnowledgeDb.db_clients.ols_db import validate_identifier
 from src._paths import corpus_path
 
 
@@ -59,6 +60,8 @@ def main() -> None:
     args = parser.parse_args()
     args.ontology = args.ontology.lower()
     args.category = args.category.lower()
+    validate_identifier(args.ontology, "--ontology")
+    validate_identifier(args.category, "--category")
 
     # ── Step 1: fetch corpus from OLS ────────────────────────────────────────
     print(f"\nBuilding corpus for {args.term} (category={args.category}) ...")

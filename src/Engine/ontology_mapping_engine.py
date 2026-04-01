@@ -449,13 +449,24 @@ class OntoMapEngine:
         from src.KnowledgeDb.db_clients.ols_db import PREFIX_TO_ONTOLOGY
 
         groups: dict[str, list[str]] = {}
+        unknown: list[str] = []
         for code in codes:
             if "_" in code:
                 prefix = code.split("_", 1)[0]
-                ont = PREFIX_TO_ONTOLOGY.get(prefix, prefix.lower())
+                ont = PREFIX_TO_ONTOLOGY.get(prefix)
+                if ont is None:
+                    unknown.append(code)
+                    continue
             else:
                 ont = "ncit"
             groups.setdefault(ont, []).append(code)
+        if unknown:
+            raise ValueError(
+                f"Unknown ontology prefix in codes: {unknown[:5]}"
+                f"{'...' if len(unknown) > 5 else ''}. "
+                f"Supported prefixes: {sorted(PREFIX_TO_ONTOLOGY.keys())} "
+                f"and bare NCI codes (e.g. C12345)."
+            )
         return groups
 
     def _ensure_concept_tables(self, corpus_df: pd.DataFrame) -> None:

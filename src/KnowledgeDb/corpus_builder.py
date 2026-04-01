@@ -150,16 +150,24 @@ class CorpusBuilder:
                 f"(~{len(raw_terms) * 2} extra API calls) ..."
             )
             sem = asyncio.Semaphore(20)
+            chunk_size = 500
 
             async def _bounded_enrich(raw, client):
                 async with sem:
                     return await self._enrich_term(raw, client)
 
+            records = []
             async with httpx.AsyncClient() as client:
-                records = await asyncio.gather(
-                    *[_bounded_enrich(raw, client) for raw in raw_terms]
-                )
-            records = list(records)
+                for i in range(0, len(raw_terms), chunk_size):
+                    chunk = raw_terms[i:i + chunk_size]
+                    chunk_records = await asyncio.gather(
+                        *[_bounded_enrich(raw, client) for raw in chunk]
+                    )
+                    records.extend(chunk_records)
+                    self.logger.info(
+                        f"Enriched {min(i + chunk_size, len(raw_terms))}"
+                        f"/{len(raw_terms)} terms"
+                    )
         else:
             records = [self._parse_term(raw) for raw in raw_terms]
 

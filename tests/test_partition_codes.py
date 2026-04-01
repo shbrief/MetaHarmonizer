@@ -41,6 +41,6 @@ class TestPartitionCodes:
         assert "cl" in result
         assert "chebi" in result
 
-    def test_unknown_prefix_falls_back_to_lowercase(self):
-        result = OntoMapEngine._partition_codes(["XYZ_12345"])
-        assert result == {"xyz": ["XYZ_12345"]}
+    def test_unknown_prefix_raises(self):
+        with pytest.raises(ValueError, match="Unknown ontology prefix"):
+            OntoMapEngine._partition_codes(["XYZ_12345"])
