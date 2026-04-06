@@ -293,6 +293,50 @@ class NCIDb:
             for code, data in concept_map.items()
         }
 
+    async def get_ontology_metadata(
+        self,
+        terminology: str = "ncit",
+        client: httpx.AsyncClient | None = None,
+    ) -> dict:
+        """Fetch terminology-level metadata from the EVS REST API.
+
+        Returns a dict with keys matching the OLS metadata shape:
+        ontology, ontology_title, ontology_version, version_iri, source_api.
+        """
+        url = f"{self.base_url}/metadata/terminologies"
+
+        async def _fetch(http_client: httpx.AsyncClient) -> dict:
+            resp = await self.fetch_one(http_client, url)
+            if resp is None:
+                raise RuntimeError(
+                    f"Failed to fetch EVS terminology metadata from {url}"
+                )
+            return resp.json()
+
+        if client is None:
+            async with httpx.AsyncClient() as owned_client:
+                data = await _fetch(owned_client)
+        else:
+            data = await _fetch(client)
+
+        # data is a list of terminology objects; find the requested one
+        entry = next(
+            (t for t in data if t.get("terminology", "").lower() == terminology.lower()),
+            None,
+        )
+        if entry is None:
+            raise RuntimeError(
+                f"Terminology '{terminology}' not found in EVS metadata response"
+            )
+
+        return {
+            "ontology": terminology,
+            "ontology_title": entry.get("name") or terminology,
+            "ontology_version": entry.get("version"),
+            "version_iri": entry.get("graph"),
+            "source_api": url,
+        }
+
     async def get_descendants(
         self,
         code: str,

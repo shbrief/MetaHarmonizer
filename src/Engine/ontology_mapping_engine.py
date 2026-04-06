@@ -246,14 +246,8 @@ class OntoMapEngine:
         if self._ontology_source == "ncit":
             from src.KnowledgeDb.db_clients.nci_db import NCIDb
 
-            root_code = root_term.split(":")[-1]
             nci = NCIDb(os.getenv("UMLS_API_KEY"))
-            root_concept = run_async(nci.get_concept(root_code))
-            return {
-                "ontology_title": root_concept.get("terminology", "ncit"),
-                "ontology_version": root_concept.get("version"),
-                "source_api": f"{nci.base_url}/concept/ncit/{root_code}",
-            }
+            return run_async(nci.get_ontology_metadata("ncit"))
 
         return run_async(OLSDb().get_ontology_metadata(self._ontology_source))
 
