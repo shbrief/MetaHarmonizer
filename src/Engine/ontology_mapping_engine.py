@@ -58,6 +58,7 @@ class OntoMapEngine:
                  s3_strategy: str = None,
                  s3_threshold: float = 0.9,
                  output_dir: str = None,
+                 filter_obsolete: bool = True,
                  **other_params: dict) -> None:
         """
         Initializes the OntoMapEngine class.
@@ -71,6 +72,11 @@ class OntoMapEngine:
             s2_strategy (str, optional): The strategy to use for stage 2 OntoMap. Defaults to 'lm'. Options are 'st' or 'lm'.
             s3_strategy (str, optional): The strategy to use for stage 3 OntoMap. Defaults to None. Options are 'rag', 'rag_bie', or None.
             s3_threshold (float, optional): The threshold for stage 3 OntoMap. Defaults to 0.9.
+            filter_obsolete (bool, optional): If True (default), terms whose
+                label begins with ``obsolete_`` are removed from the corpus,
+                corpus_df, and synonym search results. Set to False for
+                benchmarking against a pinned ontology version whose ground
+                truth still references obsolete labels.
             **other_params (dict): Other parameters to pass to the engine.
         """
         self.s2_method = s2_method
@@ -78,8 +84,21 @@ class OntoMapEngine:
         self.query = query
         self.category = category
         self.output_dir = output_dir
+        self.filter_obsolete = filter_obsolete
         self.corpus = list(
             dict.fromkeys(corpus))  # Remove duplicates while preserving order
+
+        # Filter out obsolete ontology terms (e.g. "obsolete_AIDS") that exist
+        # as valid entries in ontologies like EFO but should not be selected as
+        # matches.  Applies to all stages (exact, LM/ST, synonym, RAG).
+        pre_filter = len(self.corpus)
+        if self.filter_obsolete:
+            self.corpus = [
+                t for t in self.corpus
+                if not t.strip().lower().startswith("obsolete_")
+            ]
+        n_removed = pre_filter - len(self.corpus)
+
         self.topk = topk
         self.s2_strategy = s2_strategy
         self.s3_strategy = s3_strategy
@@ -93,6 +112,16 @@ class OntoMapEngine:
 
         self._test_or_prod = self.other_params['test_or_prod']
         self._logger = logger.custlogger(loglevel='INFO')
+
+        if n_removed:
+            self._logger.info(
+                f"Filtered {n_removed} obsolete terms from corpus "
+                f"({pre_filter} → {len(self.corpus)})"
+            )
+        elif not self.filter_obsolete:
+            self._logger.info(
+                "filter_obsolete=False: keeping obsolete_ terms in corpus"
+            )
 
         corpus_df = self.other_params.get("corpus_df", None)
 
@@ -109,6 +138,17 @@ class OntoMapEngine:
         self.enable_stage_25 = corpus_df is not None
         if corpus_df is not None:
             corpus_df = self._normalize_df(corpus_df, need_code=True)
+
+            # Filter obsolete terms from corpus_df (used by Stages 2.5 and 3)
+            if self.filter_obsolete:
+                obs_mask = corpus_df["official_label"].str.strip().str.lower().str.startswith("obsolete_")
+                n_obs = obs_mask.sum()
+                if n_obs:
+                    corpus_df = corpus_df[~obs_mask].reset_index(drop=True)
+                    self._logger.info(
+                        f"Filtered {n_obs} obsolete rows from corpus_df"
+                    )
+
             self.other_params["corpus_df"] = corpus_df
             self.corpus_s3 = corpus_df["official_label"].astype(
                 str).unique().tolist()
@@ -344,7 +384,8 @@ class OntoMapEngine:
                                         query=non_exact_query_list,
                                         corpus=self.corpus,
                                         topk=self.topk,
-                                        corpus_df=corpus_df)
+                                        corpus_df=corpus_df,
+                                        filter_obsolete=self.filter_obsolete)
         elif strategy == 'rag':
             return omr.OntoMapRAG(method=self.s3_method,
                                   category=self.category,

@@ -16,13 +16,15 @@ class OntoMapSynonym:
                  corpus: List[str],
                  om_strategy: str = 'syn',
                  topk: int = 5,
-                 corpus_df: pd.DataFrame = None):
+                 corpus_df: pd.DataFrame = None,
+                 filter_obsolete: bool = True):
         self.method = method
         self.category = category
         self.query = query
         self.corpus = corpus
         self.topk = topk
         self.corpus_df = corpus_df
+        self.filter_obsolete = filter_obsolete
 
         self.logger = CustomLogger().custlogger(loglevel='INFO')
 
@@ -71,8 +73,12 @@ class OntoMapSynonym:
         k = topk or self.topk
         self.logger.info(f"Searching synonyms for {len(self.query)} queries")
 
-        # Batch search
-        batch_results = self.syn_dict.search_many(self.query, top_k=k)
+        # Over-fetch to compensate for obsolete terms that will be filtered out
+        if self.filter_obsolete:
+            fetch_k = min(k * 3, self.syn_dict.index.ntotal) if self.syn_dict.index else k
+        else:
+            fetch_k = k
+        batch_results = self.syn_dict.search_many(self.query, top_k=fetch_k)
 
         results = []
         for q, matches in zip(self.query, batch_results):
@@ -80,24 +86,26 @@ class OntoMapSynonym:
             curated = (cura_map.get(q, "Not Found") if test_or_prod == 'test'
                        else "Not Available for Prod Environment")
 
-            # Collect top-k matched terms
+            # Collect top-k matched terms, skipping obsolete labels
             top_terms = []
             top_scores = []
 
-            for i in range(k):
-                if i < len(matches):
-                    match = matches[i]
-                    score = match.get('score', 0.0)
+            for match in matches:
+                if len(top_terms) >= k:
+                    break
+                label = match.get('official_label', '')
+                if (self.filter_obsolete
+                        and label.strip().lower().startswith('obsolete_')):
+                    continue
+                score = match.get('score', 0.0)
+                if score >= min_score:
+                    top_terms.append(label)
+                    top_scores.append(score)
 
-                    if score >= min_score:
-                        top_terms.append(match['official_label'])
-                        top_scores.append(score)
-                    else:
-                        top_terms.append(None)
-                        top_scores.append(0.0)
-                else:
-                    top_terms.append(None)
-                    top_scores.append(0.0)
+            # Pad to k entries
+            while len(top_terms) < k:
+                top_terms.append(None)
+                top_scores.append(0.0)
 
             # Calculate match_level: position of curated term in top-k results
             match_level = next(
