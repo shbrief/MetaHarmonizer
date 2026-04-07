@@ -20,11 +20,12 @@ class ConceptTableBuilder:
     via :meth:`build_from_json`.
     """
 
-    def __init__(self, category: str, ontology_source: str = 'ncit'):
+    def __init__(self, category: str, ontology_source: str = 'ncit',
+                 table_suffix: str = ""):
         self.category = validate_identifier(category, "category")
         self.ontology_source = validate_identifier(ontology_source, "ontology_source")
-        self.syn_table = f"{ontology_source}_synonym_{category}"
-        self.rag_table = f"{ontology_source}_rag_{category}"
+        self.syn_table = f"{ontology_source}_synonym_{category}{table_suffix}"
+        self.rag_table = f"{ontology_source}_rag_{category}{table_suffix}"
         self.db_path = BASE_DB
         self.logger = CustomLogger().custlogger(loglevel="INFO")
         self.nci_db = NCIDb(UMLS_API_KEY)

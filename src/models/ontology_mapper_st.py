@@ -33,7 +33,8 @@ class OntoMapST(otm.OntoModelsBase):
                  om_strategy: str = 'st',
                  topk: int = 5,
                  from_tokenizer: bool = False,
-                 ontology_source: str = 'ncit') -> None:
+                 ontology_source: str = 'ncit',
+                 table_suffix: str = "") -> None:
         """
         Initializes the OntoMapST class.
 
@@ -46,7 +47,8 @@ class OntoMapST(otm.OntoModelsBase):
             ontology_source (str, optional): Ontology source. Defaults to 'ncit'.
         """
         super().__init__(method, category, om_strategy, topk, query, corpus,
-                         ontology_source=ontology_source)
+                         ontology_source=ontology_source,
+                         table_suffix=table_suffix)
 
         self.from_tokenizer = from_tokenizer
         self._query_embeddings = None

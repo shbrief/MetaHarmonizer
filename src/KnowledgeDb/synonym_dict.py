@@ -27,14 +27,15 @@ class SynonymDict:
     SQLite + FAISS based synonym dictionary with proper ID mapping.
     """
 
-    def __init__(self, category: str, method: str, ontology_source: str = 'ncit'):
+    def __init__(self, category: str, method: str, ontology_source: str = 'ncit',
+                 table_suffix: str = ""):
         ensure_knowledge_db()
         self.category = validate_identifier(category, "category")
         self.method = method
         self.ontology_source = validate_identifier(ontology_source, "ontology_source")
-        self.table_name = f"{ontology_source}_synonym_{category}"
+        self.table_name = f"{ontology_source}_synonym_{category}{table_suffix}"
         method_clean = method.replace('-', '_')
-        self.index_name = f"synonym_{method_clean}_{ontology_source}_{category}.index"
+        self.index_name = f"synonym_{method_clean}_{ontology_source}_{category}{table_suffix}.index"
 
         self.db_path = BASE_DB
         self.index_path = os.path.join(BASE_IDX_DIR, self.index_name)

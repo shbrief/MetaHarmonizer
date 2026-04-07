@@ -46,6 +46,7 @@ class FAISSSQLiteSearch:
         category: str,
         om_strategy: str = "rag",
         ontology_source: str = "ncit",
+        table_suffix: str = "",
     ):
         ensure_knowledge_db()
         self.is_gpu = faiss.get_num_gpus() > 0
@@ -57,9 +58,9 @@ class FAISSSQLiteSearch:
         self.category = validate_identifier(category, "category")
         self.ontology_source = validate_identifier(ontology_source, "ontology_source")
         if self.om_strategy in ("st", "lm"):
-            self.table_name = f"{ontology_source}_corpus_{category}"
+            self.table_name = f"{ontology_source}_corpus_{category}{table_suffix}"
         elif self.om_strategy in ("rag", "rag_bie"):
-            self.table_name = f"{ontology_source}_rag_{category}"
+            self.table_name = f"{ontology_source}_rag_{category}{table_suffix}"
         else:
             raise ValueError(
                 f"Unsupported om_strategy: {om_strategy}. Choose from 'rag', 'rag_bie', 'st', 'lm'."
@@ -67,7 +68,7 @@ class FAISSSQLiteSearch:
         method_clean = method.replace('-', '_')
         # rag and rag_bie embed the same context table — share one index file
         idx_strategy = "rag" if om_strategy in ("rag", "rag_bie") else om_strategy
-        idx_name = f"{idx_strategy}_{method_clean}_{ontology_source}_{category}.index"
+        idx_name = f"{idx_strategy}_{method_clean}_{ontology_source}_{category}{table_suffix}.index"
         self.index_path = os.path.join(BASE_IDX_DIR, idx_name)
 
         raw_model = get_embedding_model_cached(method)

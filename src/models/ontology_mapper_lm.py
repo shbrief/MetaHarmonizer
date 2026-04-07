@@ -32,6 +32,7 @@ class OntoMapLM(otm.OntoModelsBase):
         om_strategy: str = 'lm',
         topk: int = 5,
         ontology_source: str = 'ncit',
+        table_suffix: str = "",
     ) -> None:
         """
         Initializes the OntoMapLM class.
@@ -46,7 +47,8 @@ class OntoMapLM(otm.OntoModelsBase):
             ontology_source (str, optional): Ontology source. Defaults to 'ncit'.
         """
         super().__init__(method, category, om_strategy, topk, query, corpus,
-                         ontology_source=ontology_source)
+                         ontology_source=ontology_source,
+                         table_suffix=table_suffix)
 
         self._query_embeddings = None
         self._corpus_embeddings = None

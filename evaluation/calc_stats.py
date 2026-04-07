@@ -137,6 +137,88 @@ class CalcStats:
 
         return f1_score
 
+    def mcnemar_test(self, data_a, data_b, top_k_list=None):
+        """
+        Run McNemar's test to compare two models on paired predictions.
+
+        For each query, a model is considered correct if ref_match appears
+        in its top-k matches.  The 2x2 contingency table is:
+            b = A correct, B wrong
+            c = A wrong,   B correct
+        McNemar statistic: chi2 = (|b - c| - 1)^2 / (b + c)  (with continuity correction)
+        Falls back to exact binomial p-value when b+c < 25.
+
+        Parameters
+        ----------
+        data_a, data_b : pd.DataFrame
+            Two result DataFrames aligned on 'query'.  Must share 'query' and
+            'ref_match' columns plus match1..matchK columns.
+        top_k_list : list[int], optional
+            Which k values to test.  Defaults to [1, 3, 5].
+
+        Returns
+        -------
+        pd.DataFrame with columns: k, b, c, n_discordant, statistic, p_value, method
+        """
+        from scipy.stats import binom, chi2 as chi2_dist
+
+        if top_k_list is None:
+            top_k_list = [1, 3, 5]
+
+        # Align on query
+        merged = data_a[["query", "ref_match"]].merge(
+            data_b[["query", "ref_match"]],
+            on=["query", "ref_match"],
+            how="inner"
+        )
+        queries = merged["query"].values
+        ref_matches = merged["ref_match"].values
+
+        def is_correct(df, queries, ref_matches, k):
+            sub = df[df["query"].isin(queries)].set_index("query")
+            cols = [f"match{i}" for i in range(1, k + 1)]
+            # keep only cols that exist
+            cols = [c for c in cols if c in sub.columns]
+            results = []
+            for q, ref in zip(queries, ref_matches):
+                row = sub.loc[q, cols] if q in sub.index else pd.Series(dtype=object)
+                results.append(ref in row.values)
+            return np.array(results)
+
+        records = []
+        for k in top_k_list:
+            correct_a = is_correct(data_a, queries, ref_matches, k)
+            correct_b = is_correct(data_b, queries, ref_matches, k)
+
+            b = int(( correct_a & ~correct_b).sum())   # A right, B wrong
+            c = int((~correct_a &  correct_b).sum())   # A wrong, B right
+            n = b + c
+
+            if n == 0:
+                records.append({"k": k, "b": b, "c": c, "n_discordant": n,
+                                 "statistic": np.nan, "p_value": np.nan,
+                                 "method": "n/a (no discordant pairs)"})
+                continue
+
+            if n < 25:
+                # Exact binomial (two-sided)
+                p_val = 2 * min(binom.cdf(min(b, c), n, 0.5),
+                                1 - binom.cdf(min(b, c) - 1, n, 0.5))
+                method = "exact binomial"
+                stat = float(min(b, c))
+            else:
+                # Chi-squared with continuity correction
+                stat = (abs(b - c) - 1) ** 2 / n
+                p_val = float(chi2_dist.sf(stat, df=1))
+                method = "chi2 w/ continuity correction"
+
+            records.append({"k": k, "b": b, "c": c, "n_discordant": n,
+                             "statistic": round(stat, 4),
+                             "p_value": round(p_val, 6),
+                             "method": method})
+
+        return pd.DataFrame(records)
+
     def calc_mismatches_by_score_range(self,
                                     data,
                                     ranges,

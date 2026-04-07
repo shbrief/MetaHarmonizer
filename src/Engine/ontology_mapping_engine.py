@@ -150,6 +150,16 @@ class OntoMapEngine:
         corpus_df = self._normalize_df(corpus_df, need_code=True)
         self.other_params["corpus_df"] = corpus_df
 
+        # Content-hash suffix for user-uploaded corpus isolation
+        if corpus_df_provided:
+            from src.utils.corpus_hash import compute_corpus_hash
+            self._corpus_hash = compute_corpus_hash(corpus_df)
+            self._table_suffix = f"_{self._corpus_hash}"
+            self._logger.info(f"User corpus hash: {self._corpus_hash}")
+        else:
+            self._corpus_hash = None
+            self._table_suffix = ""
+
         # When corpus_df is caller-provided, infer ontology_source from codes
         if corpus_df_provided:
             codes = corpus_df["clean_code"].dropna().unique().tolist()
@@ -184,6 +194,11 @@ class OntoMapEngine:
             self.corpus = list(dict.fromkeys(
                 corpus_df["official_label"].astype(str).tolist()
             ))
+        # Filter obsolete terms from corpus list (mirrors _normalize_df filter)
+        self.corpus = [
+            t for t in self.corpus
+            if not t.strip().lower().startswith("obsolete_")
+        ]
 
         self._ensure_concept_tables(corpus_df)
 
@@ -485,7 +500,7 @@ class OntoMapEngine:
 
         for ont_source, codes in groups.items():
             ont_source = validate_identifier(ont_source, "ontology_source")
-            rag_table = f"{ont_source}_rag_{self.category}"
+            rag_table = f"{ont_source}_rag_{self.category}{self._table_suffix}"
             codes_set = set(codes)
 
             # 1. Check pre-built tables
@@ -509,7 +524,8 @@ class OntoMapEngine:
             if json_path.exists():
                 self._logger.info(
                     f"Building concept tables from local JSON: {json_path}")
-                ConceptTableBuilder(self.category, ont_source).build_from_json(
+                ConceptTableBuilder(self.category, ont_source,
+                                    table_suffix=self._table_suffix).build_from_json(
                     str(json_path))
                 continue
 
@@ -519,7 +535,8 @@ class OntoMapEngine:
                 f"Fetching {len(missing)} missing codes via API "
                 f"(ontology_source={ont_source})"
             )
-            builder = ConceptTableBuilder(self.category, ont_source)
+            builder = ConceptTableBuilder(self.category, ont_source,
+                                          table_suffix=self._table_suffix)
             run_async(builder.fetch_and_build_tables(missing))
 
     def _normalize_df(self, df: pd.DataFrame, need_code: bool) -> pd.DataFrame:
@@ -571,6 +588,15 @@ class OntoMapEngine:
         df["official_label"] = df["official_label"].astype(str)
         if "clean_code" in df.columns:
             df["clean_code"] = df["clean_code"].astype(str)
+
+        # Filter out obsolete ontology terms (e.g. "obsolete_AIDS" in EFO)
+        obs_mask = (df["official_label"].str.strip().str.lower()
+                    .str.startswith("obsolete_"))
+        n_obs = obs_mask.sum()
+        if n_obs:
+            df = df[~obs_mask].reset_index(drop=True)
+            self._logger.info(
+                f"Filtered {n_obs} obsolete_ terms from corpus_df")
 
         return df
 
@@ -720,7 +746,8 @@ class OntoMapEngine:
                                  om_strategy='lm',
                                  query=non_exact_query_list,
                                  corpus=self.corpus,
-                                 topk=self.topk)
+                                 topk=self.topk,
+                                 table_suffix=self._table_suffix)
 
         elif strategy == 'st':
             return oms.OntoMapST(method=self.s2_method,
@@ -730,7 +757,8 @@ class OntoMapEngine:
                                  query=non_exact_query_list,
                                  corpus=self.corpus,
                                  topk=self.topk,
-                                 from_tokenizer=False)
+                                 from_tokenizer=False,
+                                 table_suffix=self._table_suffix)
         elif strategy == 'syn':
             return omsyn.OntoMapSynonym(method=self.s2_method,
                                         category=self.category,
@@ -739,7 +767,8 @@ class OntoMapEngine:
                                         query=non_exact_query_list,
                                         corpus=self.corpus,
                                         topk=self.topk,
-                                        corpus_df=corpus_df)
+                                        corpus_df=corpus_df,
+                                        table_suffix=self._table_suffix)
         elif strategy == 'rag':
             return omr.OntoMapRAG(method=self.s3_method,
                                   category=self.category,
@@ -751,7 +780,8 @@ class OntoMapEngine:
                                   corpus_df=corpus_df,
                                   use_reranker=use_reranker,
                                   reranker_method=reranker_method,
-                                  reranker_topk=reranker_topk)
+                                  reranker_topk=reranker_topk,
+                                  table_suffix=self._table_suffix)
         elif strategy == 'rag_bie':
             return ombe.OntoMapBIE(method=self.s3_method,
                                    category=self.category,
@@ -761,7 +791,8 @@ class OntoMapEngine:
                                    corpus=self.corpus_s3,
                                    topk=self.topk,
                                    query_df=query_df,
-                                   corpus_df=corpus_df)
+                                   corpus_df=corpus_df,
+                                   table_suffix=self._table_suffix)
         else:
             raise ValueError(
                 f"strategy should be 'st', 'lm', 'rag', or 'rag_bie', got '{strategy}'"

@@ -17,7 +17,8 @@ class OntoMapSynonym:
                  om_strategy: str = 'syn',
                  topk: int = 5,
                  corpus_df: pd.DataFrame = None,
-                 ontology_source: str = 'ncit'):
+                 ontology_source: str = 'ncit',
+                 table_suffix: str = ""):
         self.method = method
         self.category = category
         self.query = query
@@ -29,7 +30,8 @@ class OntoMapSynonym:
 
         # Initialize SynonymDict with the same method as Stage 2
         self.syn_dict = SynonymDict(category=category, method=method,
-                                    ontology_source=ontology_source)
+                                    ontology_source=ontology_source,
+                                    table_suffix=table_suffix)
 
         # Warm run: build index if needed
         if corpus_df is not None:
