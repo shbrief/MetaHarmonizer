@@ -383,20 +383,27 @@ class OntoMapEngine:
                 "Check the code and network connectivity."
             )
 
-        # Single API pass: fetch full concepts for all codes
-        concept_codes = [d["code"] for d in descendants]
+        # Include root concept (consistent with OLS which includes root by default)
+        concept_codes = [code] + [d["code"] for d in descendants]
         self._logger.info(
             f"Fetching full concept data for {len(concept_codes)} codes ..."
         )
         concept_map = run_async(
             nci.get_custom_concepts_by_codes(concept_codes))
 
-        # Derive CSV rows from concept data (fall back to descendants for missing)
+        # Derive CSV rows: root + descendants
         rows = []
-        for d in descendants:
+        all_entries = [{"code": code, "name": ""}] + descendants
+        seen_codes = set()
+        for d in all_entries:
             c = d["code"]
+            if c in seen_codes:
+                continue
+            seen_codes.add(c)
             concept = concept_map.get(c, {})
             label = concept.get("name", d["name"]).strip()
+            if not label:
+                continue
             rows.append({
                 "iri": f"http://purl.obolibrary.org/obo/NCIT_{c}",
                 "ontology_name": "ncit",
@@ -561,26 +568,33 @@ class OntoMapEngine:
 
         # clean_code fallback
         if need_code:
+            def _curie_to_clean_code(x: str) -> str:
+                """Normalize CURIE-form codes to underscore form.
+
+                ``NCIT:C156482`` → ``C156482`` (strip prefix for NCI endpoints)
+                ``UBERON:0001062`` → ``UBERON_0001062`` (preserve non-NCIT prefixes)
+                Already-clean codes (no ``:``) pass through unchanged.
+                """
+                x = str(x)
+                if ":" not in x:
+                    return x
+                prefix, local = x.split(":", 1)
+                if prefix == "NCIT":
+                    return local
+                return f"{prefix}_{local}"
+
             if "clean_code" not in df.columns:
                 if "obo_id" in df.columns:
-                    # Extract code from obo_id:
-                    #   - "NCIT:C156482"   → "C156482"        (strip NCIT prefix for NCI endpoints)
-                    #   - "UBERON:0001062" → "UBERON_0001062" (preserve non-NCIT prefixes)
-                    def _obo_to_clean_code(x: str) -> str:
-                        x = str(x)
-                        if ":" not in x:
-                            return x
-                        prefix, local = x.split(":", 1)
-                        if prefix == "NCIT":
-                            return local
-                        return f"{prefix}_{local}"
-                    df["clean_code"] = df["obo_id"].astype(str).apply(_obo_to_clean_code)
+                    df["clean_code"] = df["obo_id"].astype(str).apply(_curie_to_clean_code)
                     self._logger.info(
                         "`clean_code` not found — generated from `obo_id`.")
                 else:
                     raise ValueError(
                         "DataFrame must contain 'clean_code' or 'obo_id' for RAG/RAG_BIE strategies"
                     )
+            else:
+                # Normalize existing clean_code values that may be in CURIE form
+                df["clean_code"] = df["clean_code"].astype(str).apply(_curie_to_clean_code)
 
         # Basic cleaning
         keep = ["official_label"] + (["clean_code"] if need_code else [])
