@@ -124,6 +124,7 @@ class OntoMapEngine:
         # Resolve corpus_df: use provided value or auto-load from CSV
         corpus_df = self.other_params.get("corpus_df", None)
         corpus_df_provided = corpus_df is not None
+        self._corpus_df_provided = corpus_df_provided
 
         if corpus_df is None:
             # Auto-resolve: registry must have the (category, ontology_source)
@@ -151,12 +152,22 @@ class OntoMapEngine:
         corpus_df = self._normalize_df(corpus_df, need_code=True)
         self.other_params["corpus_df"] = corpus_df
 
-        # Content-hash suffix for user-uploaded corpus isolation
+        # Content-hash suffix for user-uploaded corpus isolation.
+        # If the user corpus matches the official corpus, skip the suffix
+        # so pre-built tables are reused.
         if corpus_df_provided:
             from src.utils.corpus_hash import compute_corpus_hash
             self._corpus_hash = compute_corpus_hash(corpus_df)
-            self._table_suffix = f"_{self._corpus_hash}"
-            self._logger.info(f"User corpus hash: {self._corpus_hash}")
+            official_hash = self._compute_official_corpus_hash()
+            if official_hash and self._corpus_hash == official_hash:
+                self._table_suffix = ""
+                self._logger.info(
+                    f"User corpus matches official corpus (hash={self._corpus_hash}), "
+                    f"reusing standard tables."
+                )
+            else:
+                self._table_suffix = f"_{self._corpus_hash}"
+                self._logger.info(f"User corpus hash: {self._corpus_hash}")
         else:
             self._corpus_hash = None
             self._table_suffix = ""
@@ -227,6 +238,19 @@ class OntoMapEngine:
             )
         else:
             self._logger.info("Stage 3: Disabled")
+
+    def _compute_official_corpus_hash(self) -> str | None:
+        """Compute the content hash of the official corpus CSV, if it exists."""
+        from src.utils.corpus_hash import compute_corpus_hash
+        csv_path = corpus_path(self.category, self._ontology_source, "_corpus.csv")
+        if not csv_path.exists():
+            return None
+        try:
+            official_df = self._normalize_df(
+                pd.read_csv(csv_path), need_code=True)
+            return compute_corpus_hash(official_df)
+        except Exception:
+            return None
 
     # ------------------------------------------------------------------
     # Corpus resolution
@@ -500,12 +524,13 @@ class OntoMapEngine:
     def _ensure_concept_tables(self, corpus_df: pd.DataFrame) -> None:
         """Ensure RAG and synonym SQLite tables are populated for all codes.
 
-        Partitions codes by ontology prefix and routes each group to the
-        correct API (NCI EVSREST or OLS4).  For each group:
+        Build strategy depends on ontology source and whether corpus was
+        user-provided:
 
-        1. Tables already have all codes → skip.
-        2. Local JSON exists → build from JSON.
-        3. Fetch only missing codes from API.
+        - **NCIt** (always): fetch synonym + RAG context from NCI EVSREST API.
+        - **OLS + official corpus**: build from local JSON (contains full
+          synonym + context data from OLS API).
+        - **OLS + user-provided corpus**: fetch from OLS API (same as NCIt).
         """
         import sqlite3
         from os import getenv
@@ -522,7 +547,7 @@ class OntoMapEngine:
             rag_table = f"{ont_source}_rag_{self.category}{self._table_suffix}"
             codes_set = set(codes)
 
-            # 1. Check pre-built tables
+            # 1. Check if tables already have all codes
             try:
                 with sqlite3.connect(db_path) as conn:
                     stored = {r[0] for r in conn.execute(
@@ -538,24 +563,26 @@ class OntoMapEngine:
                 )
                 continue
 
-            # 2. Try local corpus JSON
-            json_path = corpus_path(self.category, ont_source, ".json")
-            if json_path.exists():
-                self._logger.info(
-                    f"Building concept tables from local JSON: {json_path}")
-                ConceptTableBuilder(self.category, ont_source,
-                                    table_suffix=self._table_suffix).build_from_json(
-                    str(json_path))
-                continue
-
-            # 3. Fetch only the missing codes from API
+            # 2. Build tables
+            builder = ConceptTableBuilder(self.category, ont_source,
+                                          table_suffix=self._table_suffix)
             missing = list(codes_set - stored)
+
+            # OLS + official corpus: build from local JSON (has synonym + context)
+            if (ont_source != "ncit"
+                    and not self._corpus_df_provided):
+                json_path = corpus_path(self.category, ont_source, ".json")
+                if json_path.exists():
+                    self._logger.info(
+                        f"Building concept tables from local JSON: {json_path}")
+                    builder.build_from_json(str(json_path))
+                    continue
+
+            # NCIt, or OLS + user corpus: fetch from API
             self._logger.info(
                 f"Fetching {len(missing)} missing codes via API "
                 f"(ontology_source={ont_source})"
             )
-            builder = ConceptTableBuilder(self.category, ont_source,
-                                          table_suffix=self._table_suffix)
             run_async(builder.fetch_and_build_tables(missing))
 
     @staticmethod
