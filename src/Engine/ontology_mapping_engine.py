@@ -146,6 +146,7 @@ class OntoMapEngine:
             self._logger.info(
                 f"Using caller-provided corpus_df ({len(corpus_df)} rows)."
             )
+            self._validate_user_corpus(corpus_df)
 
         corpus_df = self._normalize_df(corpus_df, need_code=True)
         self.other_params["corpus_df"] = corpus_df
@@ -163,18 +164,29 @@ class OntoMapEngine:
         # When corpus_df is caller-provided, infer ontology_source from codes
         if corpus_df_provided:
             codes = corpus_df["clean_code"].dropna().unique().tolist()
+            if not codes:
+                raise ValueError(
+                    "User-provided corpus_df has no valid clean_code values "
+                    "after normalization."
+                )
             groups = self._partition_codes(codes)
             detected = sorted(groups.keys())
-            if len(detected) == 1:
-                inferred = detected[0]
-            else:
-                inferred = max(groups, key=lambda k: len(groups[k]))
-                self._logger.info(
-                    f"Mixed-prefix codes detected: {detected}. "
-                    f"Using dominant source '{inferred}' for table/file naming."
+            if len(detected) != 1:
+                raise ValueError(
+                    f"User-provided corpus_df contains codes from multiple "
+                    f"ontology sources: {detected}. All codes must share "
+                    f"the same prefix. Separate your corpus by ontology source."
                 )
+            inferred = detected[0]
             if inferred != self._ontology_source:
-                self._logger.info(
+                import warnings
+                warnings.warn(
+                    f"ontology_source overridden: '{self._ontology_source}' → "
+                    f"'{inferred}' (inferred from corpus_df code prefixes)",
+                    UserWarning,
+                    stacklevel=2,
+                )
+                self._logger.warning(
                     f"Overriding ontology_source: "
                     f"'{self._ontology_source}' → '{inferred}' "
                     f"(inferred from corpus_df code prefixes)"
@@ -545,6 +557,27 @@ class OntoMapEngine:
             builder = ConceptTableBuilder(self.category, ont_source,
                                           table_suffix=self._table_suffix)
             run_async(builder.fetch_and_build_tables(missing))
+
+    @staticmethod
+    def _validate_user_corpus(df: pd.DataFrame) -> None:
+        """Validate that a user-provided corpus_df has the required columns.
+
+        Must contain a label column (``official_label`` or ``label``) and
+        a code column (``clean_code`` or ``obo_id``).
+        """
+        has_label = "official_label" in df.columns or "label" in df.columns
+        has_code = "clean_code" in df.columns or "obo_id" in df.columns
+        missing = []
+        if not has_label:
+            missing.append("'official_label' or 'label'")
+        if not has_code:
+            missing.append("'clean_code' or 'obo_id'")
+        if missing:
+            raise ValueError(
+                f"User-provided corpus_df is missing required columns: "
+                f"{' and '.join(missing)}. "
+                f"Available columns: {list(df.columns)}"
+            )
 
     def _normalize_df(self, df: pd.DataFrame, need_code: bool) -> pd.DataFrame:
         """
