@@ -15,7 +15,7 @@ from src.CustomLogger.custom_logger import CustomLogger
 from src.KnowledgeDb import ensure_knowledge_db
 from src.KnowledgeDb.db_clients.nci_db import NCIDb
 from src.KnowledgeDb.concept_table_builder import ConceptTableBuilder
-from src.KnowledgeDb.db_clients.ols_db import validate_identifier
+from src.KnowledgeDb.db_clients.ols_db import validate_identifier, validate_table_suffix
 
 # Load environment variables for paths and API key
 BASE_DB = os.getenv("VECTOR_DB_PATH", "src/KnowledgeDb/vector_db.sqlite")
@@ -57,6 +57,7 @@ class FAISSSQLiteSearch:
         self.om_strategy = om_strategy
         self.category = validate_identifier(category, "category")
         self.ontology_source = validate_identifier(ontology_source, "ontology_source")
+        validate_table_suffix(table_suffix)
         if self.om_strategy in ("st", "lm"):
             self.table_name = f"{ontology_source}_corpus_{category}{table_suffix}"
         elif self.om_strategy in ("rag", "rag_bie"):

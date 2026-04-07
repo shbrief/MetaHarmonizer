@@ -13,6 +13,7 @@ OLS_PERIOD = 1
 MAX_CONTEXT_ITEMS = 10
 
 _SAFE_IDENTIFIER = re.compile(r"^[a-z0-9_]+$")
+_SAFE_SUFFIX = re.compile(r"^(_[a-z0-9]+)?$")
 
 
 def validate_identifier(name: str, label: str = "identifier") -> str:
@@ -21,6 +22,15 @@ def validate_identifier(name: str, label: str = "identifier") -> str:
         raise ValueError(
             f"Unsafe {label}: {name!r}. Must match [a-z0-9_]+.")
     return name
+
+
+def validate_table_suffix(suffix: str) -> str:
+    """Ensure a table suffix is empty or ``_`` followed by safe chars."""
+    if not _SAFE_SUFFIX.match(suffix):
+        raise ValueError(
+            f"Unsafe table_suffix: {suffix!r}. "
+            f"Must be empty or match _[a-z0-9]+.")
+    return suffix
 
 # Maps code prefix (as stored in clean_code, e.g. "EFO") to the OLS ontology id
 PREFIX_TO_ONTOLOGY = {

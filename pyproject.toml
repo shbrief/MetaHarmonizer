@@ -58,6 +58,9 @@ dev = [
     "pytest-cov",
     "nest-asyncio",
 ]
+eval = [
+    "scipy",
+]
 
 # Keep src.* import paths working without renaming the source directory.
 # After `pip install -e .` or `pip install git+https://github.com/...`,

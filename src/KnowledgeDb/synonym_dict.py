@@ -13,7 +13,7 @@ from src.utils.model_loader import get_embedding_model_cached
 from src.KnowledgeDb import ensure_knowledge_db
 from src.KnowledgeDb.db_clients.nci_db import NCIDb  # kept for backward compat
 from src.KnowledgeDb.concept_table_builder import ConceptTableBuilder
-from src.KnowledgeDb.db_clients.ols_db import validate_identifier
+from src.KnowledgeDb.db_clients.ols_db import validate_identifier, validate_table_suffix
 from src.CustomLogger.custom_logger import CustomLogger
 
 # -------- ENV / CONSTS --------
@@ -33,6 +33,7 @@ class SynonymDict:
         self.category = validate_identifier(category, "category")
         self.method = method
         self.ontology_source = validate_identifier(ontology_source, "ontology_source")
+        validate_table_suffix(table_suffix)
         self.table_name = f"{ontology_source}_synonym_{category}{table_suffix}"
         method_clean = method.replace('-', '_')
         self.index_name = f"synonym_{method_clean}_{ontology_source}_{category}{table_suffix}.index"

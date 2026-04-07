@@ -5,7 +5,7 @@ import httpx
 from typing import List, Set
 from pathlib import Path
 from src.KnowledgeDb.db_clients.nci_db import NCIDb
-from src.KnowledgeDb.db_clients.ols_db import OLSDb, validate_identifier
+from src.KnowledgeDb.db_clients.ols_db import OLSDb, validate_identifier, validate_table_suffix
 from src.CustomLogger.custom_logger import CustomLogger
 
 BASE_DB = os.getenv("VECTOR_DB_PATH") or "src/KnowledgeDb/vector_db.sqlite"
@@ -15,15 +15,16 @@ UMLS_API_KEY = os.getenv("UMLS_API_KEY")
 class ConceptTableBuilder:
     """Build synonym and RAG concept tables for a given (category, ontology_source).
 
-    Supports both NCI EVSREST API (ontology_source='ncit') and EBI OLS4 API
-    (non-ncit sources). Also supports offline building from pre-saved JSON
-    via :meth:`build_from_json`.
+    Supports NCI EVSREST API (ontology_source='ncit'), EBI OLS4 API
+    (non-ncit sources such as MONDO, UBERON, EFO), and offline building
+    from pre-saved JSON via :meth:`build_from_json`.
     """
 
     def __init__(self, category: str, ontology_source: str = 'ncit',
                  table_suffix: str = ""):
         self.category = validate_identifier(category, "category")
         self.ontology_source = validate_identifier(ontology_source, "ontology_source")
+        validate_table_suffix(table_suffix)
         self.syn_table = f"{ontology_source}_synonym_{category}{table_suffix}"
         self.rag_table = f"{ontology_source}_rag_{category}{table_suffix}"
         self.db_path = BASE_DB

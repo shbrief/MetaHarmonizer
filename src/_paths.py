@@ -12,6 +12,7 @@ RETRIEVED_ONTOLOGIES_DIR: Path = CORPUS_DIR / "retrieved_ontologies"
 
 
 _SAFE_ID = re.compile(r"^[a-z0-9_]+$")
+_SAFE_SUFFIX = re.compile(r"^[a-z0-9_.]+$")
 
 
 def corpus_path(category: str, ontology_source: str, suffix: str) -> Path:
@@ -26,4 +27,6 @@ def corpus_path(category: str, ontology_source: str, suffix: str) -> Path:
         raise ValueError(f"Unsafe category: {category!r}. Must match [a-z0-9_]+.")
     if not _SAFE_ID.match(ontology_source):
         raise ValueError(f"Unsafe ontology_source: {ontology_source!r}. Must match [a-z0-9_]+.")
+    if os.sep in suffix or (os.altsep and os.altsep in suffix):
+        raise ValueError(f"Unsafe suffix: {suffix!r}. Must not contain path separators.")
     return RETRIEVED_ONTOLOGIES_DIR / f"{ontology_source}_{category}{suffix}"

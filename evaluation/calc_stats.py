@@ -160,7 +160,13 @@ class CalcStats:
         -------
         pd.DataFrame with columns: k, b, c, n_discordant, statistic, p_value, method
         """
-        from scipy.stats import binom, chi2 as chi2_dist
+        try:
+            from scipy.stats import binom, chi2 as chi2_dist
+        except ImportError:
+            raise ImportError(
+                "mcnemar_test requires scipy. "
+                "Install with: pip install metaharmonizer[eval]"
+            ) from None
 
         if top_k_list is None:
             top_k_list = [1, 3, 5]
