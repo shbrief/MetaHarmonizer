@@ -496,7 +496,8 @@ class OntoMapEngine:
 
         Bare codes (e.g. ``C12345``) → ``'ncit'``.
         Prefixed codes (e.g. ``UBERON_0001062``) → looked up in
-        ``PREFIX_TO_ONTOLOGY`` or lowercased prefix as fallback.
+        ``PREFIX_TO_ONTOLOGY`` (exact match first, then upper-cased
+        fallback); raises ``ValueError`` for unrecognised prefixes.
         """
         from src.KnowledgeDb.db_clients.ols_db import PREFIX_TO_ONTOLOGY
 
@@ -505,7 +506,8 @@ class OntoMapEngine:
         for code in codes:
             if "_" in code:
                 prefix = code.split("_", 1)[0]
-                ont = PREFIX_TO_ONTOLOGY.get(prefix)
+                ont = (PREFIX_TO_ONTOLOGY.get(prefix)
+                       or PREFIX_TO_ONTOLOGY.get(prefix.upper()))
                 if ont is None:
                     unknown.append(code)
                     continue

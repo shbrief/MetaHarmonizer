@@ -169,7 +169,7 @@ class FAISSSQLiteSearch:
             if missing_codes:
                 builder = ConceptTableBuilder(self.category, ontology_source=self.ontology_source,
                                               table_suffix=self.table_suffix)
-                run_async(builder.fetch_and_build_tables(codes, force_rebuild=False))
+                run_async(builder.fetch_and_build_tables(missing_codes, force_rebuild=False))
             else:
                 self.logger.info(
                     f"RAG tables for '{self.category}' are pre-built; skipping NCI fetch"

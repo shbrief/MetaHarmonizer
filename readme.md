@@ -120,7 +120,9 @@ results = engine.run()
 **Custom corpus (advanced):**
 
 ```python
-# Provide your own corpus_df — ontology_source is inferred from code prefixes
+# Provide your own corpus_df — ontology_source is inferred from code prefixes.
+# A content hash isolates user tables from the official ones, so different
+# corpora never cross-contaminate each other or the built-in tables.
 my_corpus = pd.read_csv("my_custom_corpus.csv")  # must have 'label' and 'obo_id' columns
 engine = OntoMapEngine(
     category="disease",
@@ -129,6 +131,7 @@ engine = OntoMapEngine(
     s2_strategy="lm",
     test_or_prod="test",
     corpus_df=my_corpus,
+    output_dir="data/outputs/my_run",  # optional: auto-save results to this directory
 )
 results = engine.run()
 ```
@@ -157,6 +160,7 @@ This fetches the full ontology tree once and caches it locally so subsequent pip
   - **s3_strategy** (str, optional): Stage 3 strategy — `rag`, `rag_bie`, or `None` to disable.
   - **topk** (int, default 5): Number of top matches per query.
   - **test_or_prod** (str): `test` includes curated_ontology in output for evaluation; `prod` omits it.
+  - **output_dir** (str, optional): Directory to auto-save result CSV. Filename pattern: `om_{ontology_source}_{category}_s2_{strategy}_{method}_{timestamp}.csv`.
   - **persist_corpus** (bool, default `False`): When `True` and `corpus_df` is caller-provided, persist it to the cache CSV.
 
 - **Pipeline stages:**
