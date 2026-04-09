@@ -426,15 +426,6 @@ class OLSDb:
         """
         context = []
 
-        # Synonyms
-        syns = concept_data.get("synonyms", [])
-        syn_names = list({
-            item.get("name", "")
-            for item in syns if isinstance(item, dict) and item.get("name")
-        })
-        if syn_names:
-            context.append(f"synonyms: {'; '.join(syn_names)}")
-
         # Definitions
         defs = concept_data.get("definitions", [])
         seen = set()

@@ -13,6 +13,7 @@ from src.utils.embeddings import EmbeddingAdapter
 from src.utils.model_loader import get_embedding_model_cached
 from src.CustomLogger.custom_logger import CustomLogger
 from src.KnowledgeDb import ensure_knowledge_db
+from src._async_utils import run_async
 from src.KnowledgeDb.db_clients.nci_db import NCIDb
 from src.KnowledgeDb.concept_table_builder import ConceptTableBuilder
 from src.KnowledgeDb.db_clients.ols_db import validate_identifier, validate_table_suffix
@@ -58,6 +59,7 @@ class FAISSSQLiteSearch:
         self.category = validate_identifier(category, "category")
         self.ontology_source = validate_identifier(ontology_source, "ontology_source")
         validate_table_suffix(table_suffix)
+        self.table_suffix = table_suffix
         if self.om_strategy in ("st", "lm"):
             self.table_name = f"{ontology_source}_corpus_{category}{table_suffix}"
         elif self.om_strategy in ("rag", "rag_bie"):
@@ -165,13 +167,9 @@ class FAISSSQLiteSearch:
             missing_codes = [c for c in codes if c not in stored_codes]
 
             if missing_codes:
-                builder = ConceptTableBuilder(self.category, ontology_source=self.ontology_source)
-                loop = asyncio.new_event_loop()
-                try:
-                    loop.run_until_complete(
-                        builder.fetch_and_build_tables(codes, force_rebuild=False))
-                finally:
-                    loop.close()
+                builder = ConceptTableBuilder(self.category, ontology_source=self.ontology_source,
+                                              table_suffix=self.table_suffix)
+                run_async(builder.fetch_and_build_tables(codes, force_rebuild=False))
             else:
                 self.logger.info(
                     f"RAG tables for '{self.category}' are pre-built; skipping NCI fetch"

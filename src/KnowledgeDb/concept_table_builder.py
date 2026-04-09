@@ -288,12 +288,15 @@ class ConceptTableBuilder:
             parents: list = term.get("parents") or []
             children: list = term.get("children") or []
 
-            parts = [f"{label}: {description}" if description else label]
+            ctx_parts = []
+            if description:
+                cleaned = description.strip().rstrip('.;, ')
+                ctx_parts.append(f"definitions: {cleaned}")
             if parents:
-                parts.append(f"parents: {', '.join(parents)}")
+                ctx_parts.append(f"parents: {'; '.join(parents)}")
             if children:
-                parts.append(f"children: {', '.join(children)}")
-            context = ". ".join(parts)
+                ctx_parts.append(f"children: {'; '.join(children)}")
+            context = f"{label}: {'. '.join(ctx_parts)}" if ctx_parts else label
             rag_records.append((label, code, context))
 
             # Synonym records
