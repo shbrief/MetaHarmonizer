@@ -30,10 +30,15 @@
 │   ├── KnowledgeDb
 │   │   ├── faiss_sqlite_pipeline.py
 │   │   ├── corpus_builder.py
+│   │   ├── concept_table_builder.py
+│   │   ├── synonym_dict.py
+│   │   ├── fts_synonym_db.py
 │   │   └── db_clients
 │   │       ├── nci_db.py
-│   │       ├── umls_db.py
-│   │       └── ols_client.py
+│   │       ├── ols_db.py
+│   │       └── umls_db.py
+│   ├── _paths.py
+│   ├── _async_utils.py
 │   ├── utils
 │   ├── Plotter
 ├── pyproject.toml
@@ -61,7 +66,7 @@ git clone https://github.com/shbrief/MetaHarmonizer
 - The datasets in this repository are encrypted to prevent contamination of the gold standard.  
 - For **ontology mapping**, you must provide:
   - A list of `query_terms`  
-  - A list of `corpus_terms`  
+  - A `corpus` list and/or `corpus_df` are **optional** — the engine auto-resolves them from cached CSV or API when not provided  
 - For **schema mapping**, provide a clinical metadata file.  
   - The schema mapping dictionary is available in the `/data` folder.  
 - ⚠️ You will not be able to use the encrypted demo datasets without authorization, but you can supply your own query and corpus lists.
@@ -69,70 +74,102 @@ git clone https://github.com/shbrief/MetaHarmonizer
 #### 2.4 Setting up the mappers 
 
 1. Ontology Mapping
+
+**Minimal example (auto-resolved corpus):**
+
 ```python
-## Go into the correct directory by specifying the user_path where MetaHarmonizer was cloned
 %cd <user_path>/MetaHarmonizer/
 
-## Ontology Mapping
-## Import required packages 
-import nest_asyncio
 import pandas as pd
-from importlib import reload
-
-## Allow nested usage
-nest_asyncio.apply()
-
-## Import the models/engine for ontology mapping
 from src.Engine import get_ontology_engine
-from src.models import ontology_mapper_st as om_st
-from src.models import ontology_mapper_lm as om_lm
-from src.models import ontology_mapper_rag as om_rag
-from src.models import ontology_mapper_bi_encoder as om_bi
-
-## The reload() calls are optional, useful only if you are editing the code live in a notebook.
-reload(om_st)
-reload(om_lm)
-reload(om_rag)
-reload(om_bi)
 
 OntoMapEngine = get_ontology_engine()
 
-## Import useful utilities 
-from evaluation.calc_stats import CalcStats # for calculating accuracy (testing)
-from src.utils.cleanup_vector_store import cleanup_vector_store # for cleaning up the vector store
+df = pd.read_csv("data/corpus/cbio_disease/disease_query_updated.csv")
+query_list = df["original_value"].tolist()
+cura_map = dict(zip(df["original_value"], df["curated_ontology"]))
 
-## Now you must initialize the engine
-other_params = {"test_or_prod": "test"}
-onto_engine_large = OntoMapEngine(method='sap-bert',
-                                      category='disease',
-                                      topk=5,
-                                      query=query_list,
-                                      corpus=large_corpus_list,
-                                      cura_map=cura_map,
-                                      om_strategy='lm',
-                                      **other_params)
-lm_sapbert_disease_top5_result = onto_engine_large.run()
-# for more examples, you can refer to demo_nb/ontology_mapper_workflow.ipynb
-
-## Run the ontology mapping
-results_engine_testing = onto_engine_large.run()
+# corpus is auto-loaded from cached CSV or built from NCI/OLS API
+engine = OntoMapEngine(
+    category="disease",
+    query=query_list,
+    cura_map=cura_map,
+    s2_method="sap-bert",
+    s2_strategy="st",
+    test_or_prod="test",
+)
+results = engine.run()
 ```
-- Parameters that can be changed in the model:
-  - **query(list):** list of query terms (can be 1 or Many)
-  - **corpus(list):** list of corpus terms to match against
-  - **query(df):** df of query, for query enrichment in rag_bie strategy
-  - **corpus(df):** df of corpus, for concept retrieval in rag/rag_bie strategy
-  - **om_strategy(str):** 4 types of strategy are available 
-    - strategy **lm**: Use [CLS] tokens for capturing the embedding representation. CLS is calculated in a much more intricate way, taking into account both its own embeddings (token/pos) as well as the context.
-    - strategy **st**: Sentence transformer based strategy use default embedding method.
-    - strategy **rag**: Combines retrieval from a knowledge database (e.g., FAISS + SQLite) with embedding-based similarity. Useful when the query requires additional context from a large corpus.
-    - strategy **rag_bie**: RAG with Bi-Encoder query enrichment. Still under development; may be merged into `rag` in future releases.
-  - **method(str):** These are string keys that fetch the different transformer models found in the mapping method_model.yaml file.
-  - **topk(int):** Number of top matches to return for each query term in the query list
-  - **other_params(dict):** This is like a kwargs dictionary that currently only takes a value for the key **test_or_prod**. In the future if more parameters are added to the model, then it will be updated in this dictionary.
-  - **cura_map(dict):** Is a dictionary of paired query and ontology terms for evaluating or testing in the 'test' environment. 
 
-- Output: Dataframe containing top 5 matches for each query term and their scores.
+**Using a non-NCIt ontology (e.g. MONDO):**
+
+```python
+engine = OntoMapEngine(
+    category="disease",
+    query=query_list,
+    cura_map=cura_map,
+    s2_method="sap-bert",
+    s2_strategy="st",
+    s3_strategy="rag",
+    test_or_prod="test",
+    ontology_source="mondo",  # uses EBI OLS4 API
+)
+results = engine.run()
+```
+
+**Custom corpus (advanced):**
+
+```python
+# Provide your own corpus_df — ontology_source is inferred from code prefixes.
+# A content hash isolates user tables from the official ones, so different
+# corpora never cross-contaminate each other or the built-in tables.
+my_corpus = pd.read_csv("my_custom_corpus.csv")  # must have 'label' and 'obo_id' columns
+engine = OntoMapEngine(
+    category="disease",
+    query=query_list,
+    cura_map=cura_map,
+    s2_strategy="lm",
+    test_or_prod="test",
+    corpus_df=my_corpus,
+    output_dir="data/outputs/my_run",  # optional: auto-save results to this directory
+)
+results = engine.run()
+```
+
+For more examples, see `demo_nb/ontology_mapper_workflow.ipynb`.
+
+**Offline corpus building (OLS ontologies):**
+
+```bash
+python scripts/build_ols_corpus.py \
+    --term UBERON:0001062 --category bodysite --ontology uberon \
+    --include-hierarchy
+```
+
+This fetches the full ontology tree once and caches it locally so subsequent pipeline runs require no API calls.
+
+- **Parameters:**
+  - **category** (str): Ontology category — `disease`, `bodysite`, or `treatment`.
+  - **query** (list): List of query terms to map.
+  - **cura_map** (dict): Mapping of query terms to curated ontology values (for evaluation in `test` mode).
+  - **corpus** (list, optional): Explicit list of corpus terms for Stage 2 matching. Auto-derived from `corpus_df` when omitted.
+  - **corpus_df** (DataFrame, optional): DataFrame with `label` and `obo_id` columns. Auto-loaded from cached CSV or built from API when omitted.
+  - **ontology_source** (str, default `"ncit"`): Ontology backend. Supported: `ncit` (NCI Thesaurus via EVSREST), `mondo`, `uberon` (via EBI OLS4 API). When `corpus_df` is provided, this is inferred from code prefixes.
+  - **s2_strategy** (str): Stage 2 strategy — `lm` (CLS-token pooling) or `st` (SentenceTransformer mean pooling).
+  - **s2_method** (str): Transformer model key from `method_model.yaml` (e.g. `sap-bert`, `pubmed-bert`).
+  - **s3_strategy** (str, optional): Stage 3 strategy — `rag`, `rag_bie`, or `None` to disable.
+  - **topk** (int, default 5): Number of top matches per query.
+  - **test_or_prod** (str): `test` includes curated_ontology in output for evaluation; `prod` omits it.
+  - **output_dir** (str, optional): Directory to auto-save result CSV. Filename pattern: `om_{ontology_source}_{category}_s2_{strategy}_{method}_{timestamp}.csv`.
+  - **persist_corpus** (bool, default `False`): When `True` and `corpus_df` is caller-provided, persist it to the cache CSV.
+
+- **Pipeline stages:**
+  - **Stage 1:** Exact matching against corpus.
+  - **Stage 2:** Embedding-based similarity (LM or ST strategy).
+  - **Stage 2.5:** Synonym verification — boosts low-confidence Stage 2 matches using synonym data from concept tables.
+  - **Stage 3** (optional): RAG-based re-matching with retrieved context from knowledge database.
+
+- **Output:** DataFrame with top-k matches, scores, and match levels for each query term.
 
 2. Schema mapping
 ```python

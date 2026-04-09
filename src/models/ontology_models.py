@@ -20,14 +20,18 @@ class OntoModelsBase:
         corpus: list,
         query_df: pd.DataFrame = None,
         corpus_df: pd.DataFrame = None,
+        ontology_source: str = 'ncit',
+        table_suffix: str = "",
     ) -> None:
         self.method = method
         self.category = category
+        self.ontology_source = ontology_source
         self.om_strategy = om_strategy
         self.query = query
         self.corpus = corpus
         self.query_df = query_df
         self.corpus_df = corpus_df
+        self.table_suffix = table_suffix
 
         if self.method is None:
             raise ValueError("Method name cannot be None")
@@ -65,7 +69,9 @@ class OntoModelsBase:
                        "_vs") or self._vs is None or self._vs.index is None:
             store = FAISSSQLiteSearch(method=self.method,
                                       category=self.category,
-                                      om_strategy=self.om_strategy)
+                                      om_strategy=self.om_strategy,
+                                      ontology_source=self.ontology_source,
+                                      table_suffix=self.table_suffix)
 
             # For rag & rag bie, use ConceptTableBuilder
             if self.om_strategy in ("rag", "rag_bie"):

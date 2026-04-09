@@ -13,7 +13,9 @@ from src.utils.model_loader import get_embedding_model_cached
 from src.KnowledgeDb import ensure_knowledge_db
 from src.KnowledgeDb.db_clients.nci_db import NCIDb  # kept for backward compat
 from src.KnowledgeDb.concept_table_builder import ConceptTableBuilder
+from src.KnowledgeDb.db_clients.ols_db import validate_identifier, validate_table_suffix
 from src.CustomLogger.custom_logger import CustomLogger
+from src._async_utils import run_async
 
 # -------- ENV / CONSTS --------
 BASE_DB = os.getenv("VECTOR_DB_PATH") or "src/KnowledgeDb/vector_db.sqlite"
@@ -26,13 +28,17 @@ class SynonymDict:
     SQLite + FAISS based synonym dictionary with proper ID mapping.
     """
 
-    def __init__(self, category: str, method: str):
+    def __init__(self, category: str, method: str, ontology_source: str = 'ncit',
+                 table_suffix: str = ""):
         ensure_knowledge_db()
-        self.category = category
+        self.category = validate_identifier(category, "category")
         self.method = method
-        self.table_name = f"synonym_{category}"
+        self.ontology_source = validate_identifier(ontology_source, "ontology_source")
+        validate_table_suffix(table_suffix)
+        self.table_suffix = table_suffix
+        self.table_name = f"{ontology_source}_synonym_{category}{table_suffix}"
         method_clean = method.replace('-', '_')
-        self.index_name = f"synonym_{method_clean}_{category}.index"
+        self.index_name = f"synonym_{method_clean}_{ontology_source}_{category}{table_suffix}.index"
 
         self.db_path = BASE_DB
         self.index_path = os.path.join(BASE_IDX_DIR, self.index_name)
@@ -256,7 +262,8 @@ class SynonymDict:
         """Build FAISS index from NCI codes asynchronously."""
 
         # 1. Ensure the synonym table is built
-        builder = ConceptTableBuilder(self.category)
+        builder = ConceptTableBuilder(self.category, ontology_source=self.ontology_source,
+                                      table_suffix=self.table_suffix)
         await builder.fetch_and_build_tables(codes,
                                              force_rebuild=force_rebuild)
 
@@ -291,7 +298,7 @@ class SynonymDict:
                                codes: List[str],
                                force_rebuild: bool = False):
         """Synchronous wrapper for build_index_from_codes_async."""
-        asyncio.run(self.build_index_from_codes_async(codes, force_rebuild))
+        run_async(self.build_index_from_codes_async(codes, force_rebuild))
 
     # ---------------- Warm Run ----------------
     def warm_run(self, codes: List[str], force_rebuild: bool = False):
@@ -304,15 +311,11 @@ class SynonymDict:
         3. If needed, build the index from the table
         """
         # ✅ 1. Ensure the table is created and populated
-        builder = ConceptTableBuilder(self.category)
+        builder = ConceptTableBuilder(self.category, ontology_source=self.ontology_source,
+                                      table_suffix=self.table_suffix)
 
-        loop = asyncio.new_event_loop()
-        try:
-            loop.run_until_complete(
-                builder.fetch_and_build_tables(codes,
-                                               force_rebuild=force_rebuild))
-        finally:
-            loop.close()
+        run_async(builder.fetch_and_build_tables(codes,
+                                                  force_rebuild=force_rebuild))
 
         # ✅ 2. Check if the table has data
         if not self.has_synonym_data():

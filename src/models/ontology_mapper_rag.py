@@ -21,6 +21,8 @@ class OntoMapRAG(OntoModelsBase):
         reranker_topk: int,
         topk: int = 5,
         om_strategy: str = 'rag',
+        ontology_source: str = 'ncit',
+        table_suffix: str = "",
     ):
         super().__init__(method,
                          category,
@@ -28,7 +30,9 @@ class OntoMapRAG(OntoModelsBase):
                          topk,
                          query,
                          corpus,
-                         corpus_df=corpus_df)
+                         corpus_df=corpus_df,
+                         ontology_source=ontology_source,
+                         table_suffix=table_suffix)
         self._init_reranker(use_reranker, reranker_method, reranker_topk)
         self.logger.info(
             f"Initialized OntoMapRAG (reranker={'enabled:'+reranker_method if use_reranker else 'disabled'})"
