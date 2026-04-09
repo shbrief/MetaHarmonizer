@@ -9,11 +9,29 @@ import pandas as pd
 import numpy as np
 from datetime import datetime
 from src.CustomLogger.custom_logger import CustomLogger
-from src._paths import DATA_DIR
+from src._paths import DATA_DIR, corpus_path
+from src._async_utils import run_async
+from src.KnowledgeDb.concept_table_builder import ConceptTableBuilder
+from src.KnowledgeDb.corpus_builder import CorpusBuilder
+from src.KnowledgeDb.db_clients.ols_db import OLSDb, validate_identifier
 
 logger = CustomLogger()
 ABBR_DICT_PATH = DATA_DIR / "corpus" / "oncotree_code_to_name.csv"
 SYNONYM_MIN_CONFIDENCE = 0.9
+MAX_RETRIEVED_CONTEXT_ITEMS = 10
+
+# Known (category, ontology_source) → OBO root term ID.
+# NCIt entries use the NCI EVSREST API for corpus + concept tables.
+# Non-ncit entries use OLS4 API via CorpusBuilder.
+_CORPUS_REGISTRY: dict[tuple[str, str], str] = {
+    # NCIt
+    ("bodysite",  "ncit"):   "NCIT:C32221",
+    ("disease",   "ncit"):   "NCIT:C3262",
+    ("treatment", "ncit"):   "NCIT:C1909",
+    # OLS-based
+    ("disease",   "mondo"):  "MONDO:0000001",
+    ("bodysite",  "uberon"): "UBERON:0001062",
+}
 
 _BRITISH_TO_AMERICAN = [
     (r"(?i)leukaemia",   "leukemia"),
@@ -49,8 +67,8 @@ class OntoMapEngine:
     def __init__(self,
                  category: str,
                  query: list[str],
-                 corpus: list[str],
                  cura_map: dict,
+                 corpus: list[str] = None,
                  topk: int = 5,
                  s2_method: str = 'sap-bert',
                  s2_strategy: str = 'lm',
@@ -58,7 +76,6 @@ class OntoMapEngine:
                  s3_strategy: str = None,
                  s3_threshold: float = 0.9,
                  output_dir: str = None,
-                 filter_obsolete: bool = True,
                  **other_params: dict) -> None:
         """
         Initializes the OntoMapEngine class.
@@ -72,33 +89,13 @@ class OntoMapEngine:
             s2_strategy (str, optional): The strategy to use for stage 2 OntoMap. Defaults to 'lm'. Options are 'st' or 'lm'.
             s3_strategy (str, optional): The strategy to use for stage 3 OntoMap. Defaults to None. Options are 'rag', 'rag_bie', or None.
             s3_threshold (float, optional): The threshold for stage 3 OntoMap. Defaults to 0.9.
-            filter_obsolete (bool, optional): If True (default), terms whose
-                label begins with ``obsolete_`` are removed from the corpus,
-                corpus_df, and synonym search results. Set to False for
-                benchmarking against a pinned ontology version whose ground
-                truth still references obsolete labels.
             **other_params (dict): Other parameters to pass to the engine.
         """
         self.s2_method = s2_method
         self.s3_method = s3_method
         self.query = query
-        self.category = category
+        self.category = validate_identifier(category, "category")
         self.output_dir = output_dir
-        self.filter_obsolete = filter_obsolete
-        self.corpus = list(
-            dict.fromkeys(corpus))  # Remove duplicates while preserving order
-
-        # Filter out obsolete ontology terms (e.g. "obsolete_AIDS") that exist
-        # as valid entries in ontologies like EFO but should not be selected as
-        # matches.  Applies to all stages (exact, LM/ST, synonym, RAG).
-        pre_filter = len(self.corpus)
-        if self.filter_obsolete:
-            self.corpus = [
-                t for t in self.corpus
-                if not t.strip().lower().startswith("obsolete_")
-            ]
-        n_removed = pre_filter - len(self.corpus)
-
         self.topk = topk
         self.s2_strategy = s2_strategy
         self.s3_strategy = s3_strategy
@@ -113,55 +110,127 @@ class OntoMapEngine:
         self._test_or_prod = self.other_params['test_or_prod']
         self._logger = logger.custlogger(loglevel='INFO')
 
-        if n_removed:
-            self._logger.info(
-                f"Filtered {n_removed} obsolete terms from corpus "
-                f"({pre_filter} → {len(self.corpus)})"
-            )
-        elif not self.filter_obsolete:
-            self._logger.info(
-                "filter_obsolete=False: keeping obsolete_ terms in corpus"
-            )
-
-        corpus_df = self.other_params.get("corpus_df", None)
-
         if self.s2_strategy not in ('lm', 'st'):
             raise ValueError("s2_strategy must be 'lm' or 'st'")
-        if self.s3_strategy is not None:
-            if self.s3_strategy not in ('rag', 'rag_bie'):
+        if self.s3_strategy is not None and self.s3_strategy not in ('rag', 'rag_bie'):
+            raise ValueError("s3_strategy must be 'rag', 'rag_bie', or None")
+
+        # Ontology source validation (also guards f-string SQL in table names)
+        self._ontology_source = validate_identifier(
+            self.other_params.get("ontology_source", "ncit").lower(),
+            "ontology_source"
+        )
+
+        # Resolve corpus_df: use provided value or auto-load from CSV
+        corpus_df = self.other_params.get("corpus_df", None)
+        corpus_df_provided = corpus_df is not None
+        self._corpus_df_provided = corpus_df_provided
+
+        if corpus_df is None:
+            # Auto-resolve: registry must have the (category, ontology_source)
+            if (self.category, self._ontology_source) not in _CORPUS_REGISTRY:
+                supported = [
+                    f"(category='{c}', ontology_source='{o}')"
+                    for c, o in _CORPUS_REGISTRY
+                ]
                 raise ValueError(
-                    "s3_strategy must be 'rag', 'rag_bie', or None")
-            if corpus_df is None:
-                raise ValueError(
-                    "corpus_df must be provided for 'rag'/'rag_bie' for running stage 3"
+                    f"Unsupported combination: category='{self.category}', "
+                    f"ontology_source='{self._ontology_source}'. "
+                    f"Supported: {supported}."
                 )
-        self.enable_stage_25 = corpus_df is not None
-        if corpus_df is not None:
-            corpus_df = self._normalize_df(corpus_df, need_code=True)
+            corpus_df = self._resolve_corpus_df()
+            csv_src = corpus_path(self.category, self._ontology_source, "_corpus.csv")
+            self._logger.info(
+                f"Auto-loaded corpus_df ({len(corpus_df)} terms) from {csv_src}"
+            )
+        else:
+            self._logger.info(
+                f"Using caller-provided corpus_df ({len(corpus_df)} rows)."
+            )
+            self._validate_user_corpus(corpus_df)
 
-            # Filter obsolete terms from corpus_df (used by Stages 2.5 and 3)
-            if self.filter_obsolete:
-                obs_mask = corpus_df["official_label"].str.strip().str.lower().str.startswith("obsolete_")
-                n_obs = obs_mask.sum()
-                if n_obs:
-                    corpus_df = corpus_df[~obs_mask].reset_index(drop=True)
-                    self._logger.info(
-                        f"Filtered {n_obs} obsolete rows from corpus_df"
-                    )
+        corpus_df = self._normalize_df(corpus_df, need_code=True)
+        self.other_params["corpus_df"] = corpus_df
 
-            self.other_params["corpus_df"] = corpus_df
-            self.corpus_s3 = corpus_df["official_label"].astype(
-                str).unique().tolist()
+        # Content-hash suffix for user-uploaded corpus isolation.
+        # If the user corpus matches the official corpus, skip the suffix
+        # so pre-built tables are reused.
+        if corpus_df_provided:
+            from src.utils.corpus_hash import compute_corpus_hash
+            self._corpus_hash = compute_corpus_hash(corpus_df)
+            official_hash = self._compute_official_corpus_hash()
+            if official_hash and self._corpus_hash == official_hash:
+                self._table_suffix = ""
+                self._logger.info(
+                    f"User corpus matches official corpus (hash={self._corpus_hash}), "
+                    f"reusing standard tables."
+                )
+            else:
+                self._table_suffix = f"_{self._corpus_hash}"
+                self._logger.info(f"User corpus hash: {self._corpus_hash}")
+        else:
+            self._corpus_hash = None
+            self._table_suffix = ""
+
+        # When corpus_df is caller-provided, infer ontology_source from codes
+        if corpus_df_provided:
+            codes = corpus_df["clean_code"].dropna().unique().tolist()
+            if not codes:
+                raise ValueError(
+                    "User-provided corpus_df has no valid clean_code values "
+                    "after normalization."
+                )
+            groups = self._partition_codes(codes)
+            detected = sorted(groups.keys())
+            if len(detected) != 1:
+                raise ValueError(
+                    f"User-provided corpus_df contains codes from multiple "
+                    f"ontology sources: {detected}. All codes must share "
+                    f"the same prefix. Separate your corpus by ontology source."
+                )
+            inferred = detected[0]
+            if inferred != self._ontology_source:
+                import warnings
+                warnings.warn(
+                    f"ontology_source overridden: '{self._ontology_source}' → "
+                    f"'{inferred}' (inferred from corpus_df code prefixes)",
+                    UserWarning,
+                    stacklevel=2,
+                )
+                self._logger.warning(
+                    f"Overriding ontology_source: "
+                    f"'{self._ontology_source}' → '{inferred}' "
+                    f"(inferred from corpus_df code prefixes)"
+                )
+                self._ontology_source = validate_identifier(
+                    inferred, "ontology_source")
+        self.corpus_s3 = corpus_df["official_label"].astype(
+            str).unique().tolist()
+
+        if corpus_df_provided and self.other_params.get("persist_corpus", False):
+            self._persist_corpus_csv(corpus_df)
+
+        # Resolve corpus (stage 2 term list)
+        if corpus is not None:
+            self.corpus = list(dict.fromkeys(corpus))
+        else:
+            self.corpus = list(dict.fromkeys(
+                corpus_df["official_label"].astype(str).tolist()
+            ))
+        # Filter obsolete terms from corpus list (mirrors _normalize_df filter)
+        self.corpus = [
+            t for t in self.corpus
+            if not t.strip().lower().startswith("obsolete_")
+        ]
+
+        self._ensure_concept_tables(corpus_df)
 
         self._logger.info("Initialized OntoMap Engine")
         self._logger.info(f"Stage 1: Exact matching")
         self._logger.info(f"Stage 2: {self.s2_strategy.upper()}")
-        if self.enable_stage_25:
-            self._logger.info(
-                f"Stage 2.5: Synonym matching (confidence>={SYNONYM_MIN_CONFIDENCE})"
-            )
-        else:
-            self._logger.info("Stage 2.5: Disabled (corpus_df not provided)")
+        self._logger.info(
+            f"Stage 2.5: Synonym matching (confidence>={SYNONYM_MIN_CONFIDENCE})"
+        )
 
         if self.s3_strategy is not None:
             self._logger.info(
@@ -169,6 +238,375 @@ class OntoMapEngine:
             )
         else:
             self._logger.info("Stage 3: Disabled")
+
+    def _compute_official_corpus_hash(self) -> str | None:
+        """Compute the content hash of the official corpus CSV, if it exists."""
+        from src.utils.corpus_hash import compute_corpus_hash
+        csv_path = corpus_path(self.category, self._ontology_source, "_corpus.csv")
+        if not csv_path.exists():
+            return None
+        try:
+            official_df = self._normalize_df(
+                pd.read_csv(csv_path), need_code=True)
+            return compute_corpus_hash(official_df)
+        except Exception:
+            return None
+
+    # ------------------------------------------------------------------
+    # Corpus resolution
+    # ------------------------------------------------------------------
+
+    def _resolve_corpus_df(self) -> pd.DataFrame:
+        """Load or build the corpus CSV for (category, ontology_source).
+
+        Lookup order:
+        1. CSV at standard path → pd.read_csv
+        2. Build from API → save CSV → return DataFrame
+
+        For ncit: uses NCI EVSREST ``/descendants`` endpoint.
+        For non-ncit: uses ``CorpusBuilder`` (OLS4 API).
+        """
+        csv_path = corpus_path(self.category, self._ontology_source, "_corpus.csv")
+        if csv_path.exists():
+            self._logger.info(f"Loading corpus CSV: {csv_path}")
+            return pd.read_csv(csv_path)
+
+        root_term = _CORPUS_REGISTRY[(self.category, self._ontology_source)]
+
+        if self._ontology_source == "ncit":
+            df = self._build_ncit_corpus_csv(root_term)
+        else:
+            df = self._build_ols_corpus_csv(root_term)
+
+        return df
+
+    def _retrieved_json_path(self):
+        return corpus_path(self.category, self._ontology_source, ".json")
+
+    def _persist_corpus_csv(self, corpus_df: pd.DataFrame) -> None:
+        """Persist corpus_df to the standard CSV cache path."""
+        csv_path = corpus_path(self.category, self._ontology_source, "_corpus.csv")
+        csv_path.parent.mkdir(parents=True, exist_ok=True)
+        corpus_df.to_csv(csv_path, index=False)
+        self._logger.info(f"Saved corpus CSV ({len(corpus_df)} terms) to {csv_path}")
+
+    def _get_retrieved_ontology_metadata(self, root_term: str) -> dict:
+        """Fetch ontology/version metadata for the retrieved JSON envelope."""
+        # TODO: Use ontology_version/version_iri to detect stale cached corpora
+        # and implement incremental refresh/update behavior.
+        if self._ontology_source == "ncit":
+            from src.KnowledgeDb.db_clients.nci_db import NCIDb
+
+            nci = NCIDb(os.getenv("UMLS_API_KEY"))
+            return run_async(nci.get_ontology_metadata("ncit"))
+
+        return run_async(OLSDb().get_ontology_metadata(self._ontology_source))
+
+    @staticmethod
+    def _extract_names(items: list, key: str = "name",
+                       limit: int = MAX_RETRIEVED_CONTEXT_ITEMS,
+                       dedupe: bool = False) -> list[str]:
+        """Extract string values from a list of dicts, with optional dedup and limit."""
+        result = []
+        seen: set[str] = set()
+        for item in items:
+            if not isinstance(item, dict):
+                continue
+            value = str(item.get(key) or "").strip()
+            if not value:
+                continue
+            if dedupe:
+                if value in seen:
+                    continue
+                seen.add(value)
+            result.append(value)
+            if len(result) >= limit:
+                break
+        return result
+
+    def _nci_concepts_to_records(self, concept_map: dict[str, dict]) -> list[dict]:
+        """Convert NCIt concept payloads into retrieved-ontology JSON records."""
+        records = []
+        for code, concept in concept_map.items():
+            label = str(concept.get("name") or "").strip()
+            if not label:
+                continue
+
+            first_definition = ""
+            for item in concept.get("definitions", []):
+                if isinstance(item, dict):
+                    definition = str(item.get("definition") or "").strip()
+                    if definition:
+                        first_definition = definition
+                        break
+
+            synonyms = self._extract_names(
+                concept.get("synonyms", []), dedupe=True,
+                limit=MAX_RETRIEVED_CONTEXT_ITEMS)
+            parents = self._extract_names(concept.get("parents", []))
+            children = self._extract_names(concept.get("children", []))
+
+            roles = []
+            for item in concept.get("roles", []):
+                if not isinstance(item, dict):
+                    continue
+                role_type = str(item.get("type") or "").strip()
+                related_name = str(item.get("relatedName") or "").strip()
+                related_code = str(item.get("relatedCode") or "").strip()
+                if role_type or related_name or related_code:
+                    roles.append({
+                        "type": role_type,
+                        "related_name": related_name,
+                        "related_code": related_code,
+                    })
+                if len(roles) >= MAX_RETRIEVED_CONTEXT_ITEMS:
+                    break
+
+            records.append({
+                "iri": f"http://purl.obolibrary.org/obo/NCIT_{code}",
+                "ontology_name": "ncit",
+                "ontology_prefix": "NCIT",
+                "short_form": f"NCIT_{code}",
+                "label": label,
+                "obo_id": f"NCIT:{code}",
+                "definitions": [first_definition] if first_definition else [],
+                "description": first_definition or None,
+                "synonyms": synonyms,
+                "parents": parents,
+                "children": children,
+                "roles": roles,
+                "type": "class",
+            })
+
+        return records
+
+    def _save_retrieved_ontology_json(self,
+                                      records: list[dict],
+                                      root_term: str) -> None:
+        """Persist fetched ontology terms to the canonical JSON cache path."""
+        json_path = self._retrieved_json_path()
+        metadata_extra = self._get_retrieved_ontology_metadata(root_term)
+        CorpusBuilder().save(records,
+                             str(json_path),
+                             root_term_id=root_term,
+                             ontology=self._ontology_source,
+                             metadata_extra=metadata_extra)
+        self._logger.info(
+            f"Saved retrieved ontology JSON ({len(records)} terms) to {json_path}"
+        )
+
+    def _build_ncit_corpus_csv(self, root_term: str) -> pd.DataFrame:
+        """Fetch NCI descendants via EVSREST API and save corpus CSV + JSON.
+
+        1. ``get_descendants`` → list of codes
+        2. ``get_custom_concepts_by_codes`` → full concept data (single pass)
+        3. Derive both CSV (label + obo_id) and rich JSON from the concept data
+        """
+        from src.KnowledgeDb.db_clients.nci_db import NCIDb
+
+        code = root_term.split(":")[-1]  # "NCIT:C32221" → "C32221"
+        self._logger.info(
+            f"Building NCIt corpus for {root_term} via EVSREST API ..."
+        )
+
+        umls_key = os.getenv("UMLS_API_KEY")
+        nci = NCIDb(umls_key)
+        descendants = run_async(nci.get_descendants(code))
+
+        if not descendants:
+            raise RuntimeError(
+                f"NCI EVSREST returned no descendants for {root_term}. "
+                "Check the code and network connectivity."
+            )
+
+        # Include root concept (consistent with OLS which includes root by default)
+        concept_codes = [code] + [d["code"] for d in descendants]
+        self._logger.info(
+            f"Fetching full concept data for {len(concept_codes)} codes ..."
+        )
+        concept_map = run_async(
+            nci.get_custom_concepts_by_codes(concept_codes))
+
+        # Derive CSV rows: root + descendants
+        rows = []
+        all_entries = [{"code": code, "name": ""}] + descendants
+        seen_codes = set()
+        for d in all_entries:
+            c = d["code"]
+            if c in seen_codes:
+                continue
+            seen_codes.add(c)
+            concept = concept_map.get(c, {})
+            label = concept.get("name", d["name"]).strip()
+            if not label:
+                continue
+            rows.append({
+                "iri": f"http://purl.obolibrary.org/obo/NCIT_{c}",
+                "ontology_name": "ncit",
+                "ontology_prefix": "NCIT",
+                "short_form": f"NCIT_{c}",
+                "description": "",
+                "label": label,
+                "obo_id": f"NCIT:{c}",
+                "type": "class",
+            })
+
+        df = pd.DataFrame(rows)
+        self._persist_corpus_csv(df)
+
+        # Save rich JSON from the same concept data
+        self._save_retrieved_ontology_json(
+            self._nci_concepts_to_records(concept_map), root_term)
+        return df
+
+    def _build_ols_corpus_csv(self, root_term: str) -> pd.DataFrame:
+        """Fetch OLS descendants via CorpusBuilder and save as corpus CSV."""
+        self._logger.info(
+            f"Building OLS corpus for {root_term} via CorpusBuilder ..."
+        )
+        builder = CorpusBuilder()
+        records = builder.build_sync(root_term_id=root_term,
+                                     include_hierarchy=True)
+        if not records:
+            raise RuntimeError(
+                f"OLS returned no terms for root '{root_term}'. "
+                "Check the term ID and network connectivity."
+            )
+
+        df = pd.DataFrame(records)
+        # Keep columns consistent with NCIt CSV format
+        for col in ("iri", "ontology_name", "ontology_prefix", "short_form",
+                     "description", "label", "obo_id", "type"):
+            if col not in df.columns:
+                df[col] = ""
+        df = df[["iri", "ontology_name", "ontology_prefix", "short_form",
+                  "description", "label", "obo_id", "type"]]
+
+        self._persist_corpus_csv(df)
+        self._save_retrieved_ontology_json(records, root_term)
+        return df
+
+    # ------------------------------------------------------------------
+    # Concept table building (RAG + synonym)
+    # ------------------------------------------------------------------
+
+    @staticmethod
+    def _partition_codes(codes: list[str]) -> dict[str, list[str]]:
+        """Partition clean_codes by ontology source.
+
+        Bare codes (e.g. ``C12345``) → ``'ncit'``.
+        Prefixed codes (e.g. ``UBERON_0001062``) → looked up in
+        ``PREFIX_TO_ONTOLOGY`` (exact match first, then upper-cased
+        fallback); raises ``ValueError`` for unrecognised prefixes.
+        """
+        from src.KnowledgeDb.db_clients.ols_db import PREFIX_TO_ONTOLOGY
+
+        groups: dict[str, list[str]] = {}
+        unknown: list[str] = []
+        for code in codes:
+            if "_" in code:
+                prefix = code.split("_", 1)[0]
+                ont = (PREFIX_TO_ONTOLOGY.get(prefix)
+                       or PREFIX_TO_ONTOLOGY.get(prefix.upper()))
+                if ont is None:
+                    unknown.append(code)
+                    continue
+            else:
+                ont = "ncit"
+            groups.setdefault(ont, []).append(code)
+        if unknown:
+            raise ValueError(
+                f"Unknown ontology prefix in codes: {unknown[:5]}"
+                f"{'...' if len(unknown) > 5 else ''}. "
+                f"Supported prefixes: {sorted(PREFIX_TO_ONTOLOGY.keys())} "
+                f"and bare NCI codes (e.g. C12345)."
+            )
+        return groups
+
+    def _ensure_concept_tables(self, corpus_df: pd.DataFrame) -> None:
+        """Ensure RAG and synonym SQLite tables are populated for all codes.
+
+        Build strategy depends on ontology source and whether corpus was
+        user-provided:
+
+        - **NCIt** (always): fetch synonym + RAG context from NCI EVSREST API.
+        - **OLS + official corpus**: build from local JSON (contains full
+          synonym + context data from OLS API).
+        - **OLS + user-provided corpus**: fetch from OLS API (same as NCIt).
+        """
+        import sqlite3
+        from os import getenv
+
+        all_codes = corpus_df["clean_code"].dropna().unique().tolist()
+        if not all_codes:
+            return
+
+        db_path = getenv("VECTOR_DB_PATH") or "src/KnowledgeDb/vector_db.sqlite"
+        groups = self._partition_codes(all_codes)
+
+        for ont_source, codes in groups.items():
+            ont_source = validate_identifier(ont_source, "ontology_source")
+            rag_table = f"{ont_source}_rag_{self.category}{self._table_suffix}"
+            codes_set = set(codes)
+
+            # 1. Check if tables already have all codes
+            try:
+                with sqlite3.connect(db_path) as conn:
+                    stored = {r[0] for r in conn.execute(
+                        f"SELECT DISTINCT code FROM {rag_table}"
+                    ).fetchall()}
+            except sqlite3.OperationalError:
+                stored = set()
+
+            if codes_set.issubset(stored):
+                self._logger.info(
+                    f"Concept tables for '{ont_source}_{self.category}' "
+                    f"are up-to-date ({len(codes_set)} codes); skipping"
+                )
+                continue
+
+            # 2. Build tables
+            builder = ConceptTableBuilder(self.category, ont_source,
+                                          table_suffix=self._table_suffix)
+            missing = list(codes_set - stored)
+
+            # OLS + official corpus: build from local JSON (has synonym + context)
+            if (ont_source != "ncit"
+                    and not self._corpus_df_provided):
+                json_path = corpus_path(self.category, ont_source, ".json")
+                if json_path.exists():
+                    self._logger.info(
+                        f"Building concept tables from local JSON: {json_path}")
+                    builder.build_from_json(str(json_path))
+                    continue
+
+            # NCIt, or OLS + user corpus: fetch from API
+            self._logger.info(
+                f"Fetching {len(missing)} missing codes via API "
+                f"(ontology_source={ont_source})"
+            )
+            run_async(builder.fetch_and_build_tables(missing))
+
+    @staticmethod
+    def _validate_user_corpus(df: pd.DataFrame) -> None:
+        """Validate that a user-provided corpus_df has the required columns.
+
+        Must contain a label column (``official_label`` or ``label``) and
+        a code column (``clean_code`` or ``obo_id``).
+        """
+        has_label = "official_label" in df.columns or "label" in df.columns
+        has_code = "clean_code" in df.columns or "obo_id" in df.columns
+        missing = []
+        if not has_label:
+            missing.append("'official_label' or 'label'")
+        if not has_code:
+            missing.append("'clean_code' or 'obo_id'")
+        if missing:
+            raise ValueError(
+                f"User-provided corpus_df is missing required columns: "
+                f"{' and '.join(missing)}. "
+                f"Available columns: {list(df.columns)}"
+            )
 
     def _normalize_df(self, df: pd.DataFrame, need_code: bool) -> pd.DataFrame:
         """
@@ -192,26 +630,33 @@ class OntoMapEngine:
 
         # clean_code fallback
         if need_code:
+            def _curie_to_clean_code(x: str) -> str:
+                """Normalize CURIE-form codes to underscore form.
+
+                ``NCIT:C156482`` → ``C156482`` (strip prefix for NCI endpoints)
+                ``UBERON:0001062`` → ``UBERON_0001062`` (preserve non-NCIT prefixes)
+                Already-clean codes (no ``:``) pass through unchanged.
+                """
+                x = str(x)
+                if ":" not in x:
+                    return x
+                prefix, local = x.split(":", 1)
+                if prefix == "NCIT":
+                    return local
+                return f"{prefix}_{local}"
+
             if "clean_code" not in df.columns:
                 if "obo_id" in df.columns:
-                    # Extract code from obo_id:
-                    #   - "NCIT:C156482"   → "C156482"        (strip NCIT prefix for NCI endpoints)
-                    #   - "UBERON:0001062" → "UBERON_0001062" (preserve non-NCIT prefixes)
-                    def _obo_to_clean_code(x: str) -> str:
-                        x = str(x)
-                        if ":" not in x:
-                            return x
-                        prefix, local = x.split(":", 1)
-                        if prefix == "NCIT":
-                            return local
-                        return f"{prefix}_{local}"
-                    df["clean_code"] = df["obo_id"].astype(str).apply(_obo_to_clean_code)
+                    df["clean_code"] = df["obo_id"].astype(str).apply(_curie_to_clean_code)
                     self._logger.info(
                         "`clean_code` not found — generated from `obo_id`.")
                 else:
                     raise ValueError(
                         "DataFrame must contain 'clean_code' or 'obo_id' for RAG/RAG_BIE strategies"
                     )
+            else:
+                # Normalize existing clean_code values that may be in CURIE form
+                df["clean_code"] = df["clean_code"].astype(str).apply(_curie_to_clean_code)
 
         # Basic cleaning
         keep = ["official_label"] + (["clean_code"] if need_code else [])
@@ -219,6 +664,15 @@ class OntoMapEngine:
         df["official_label"] = df["official_label"].astype(str)
         if "clean_code" in df.columns:
             df["clean_code"] = df["clean_code"].astype(str)
+
+        # Filter out obsolete ontology terms (e.g. "obsolete_AIDS" in EFO)
+        obs_mask = (df["official_label"].str.strip().str.lower()
+                    .str.startswith("obsolete_"))
+        n_obs = obs_mask.sum()
+        if n_obs:
+            df = df[~obs_mask].reset_index(drop=True)
+            self._logger.info(
+                f"Filtered {n_obs} obsolete_ terms from corpus_df")
 
         return df
 
@@ -364,31 +818,37 @@ class OntoMapEngine:
         if strategy == 'lm':
             return oml.OntoMapLM(method=self.s2_method,
                                  category=self.category,
+                                 ontology_source=self._ontology_source,
                                  om_strategy='lm',
                                  query=non_exact_query_list,
                                  corpus=self.corpus,
-                                 topk=self.topk)
+                                 topk=self.topk,
+                                 table_suffix=self._table_suffix)
 
         elif strategy == 'st':
             return oms.OntoMapST(method=self.s2_method,
                                  category=self.category,
+                                 ontology_source=self._ontology_source,
                                  om_strategy='st',
                                  query=non_exact_query_list,
                                  corpus=self.corpus,
                                  topk=self.topk,
-                                 from_tokenizer=False)
+                                 from_tokenizer=False,
+                                 table_suffix=self._table_suffix)
         elif strategy == 'syn':
             return omsyn.OntoMapSynonym(method=self.s2_method,
                                         category=self.category,
+                                 ontology_source=self._ontology_source,
                                         om_strategy='syn',
                                         query=non_exact_query_list,
                                         corpus=self.corpus,
                                         topk=self.topk,
                                         corpus_df=corpus_df,
-                                        filter_obsolete=self.filter_obsolete)
+                                        table_suffix=self._table_suffix)
         elif strategy == 'rag':
             return omr.OntoMapRAG(method=self.s3_method,
                                   category=self.category,
+                                 ontology_source=self._ontology_source,
                                   om_strategy='rag',
                                   query=non_exact_query_list,
                                   corpus=self.corpus_s3,
@@ -396,16 +856,19 @@ class OntoMapEngine:
                                   corpus_df=corpus_df,
                                   use_reranker=use_reranker,
                                   reranker_method=reranker_method,
-                                  reranker_topk=reranker_topk)
+                                  reranker_topk=reranker_topk,
+                                  table_suffix=self._table_suffix)
         elif strategy == 'rag_bie':
             return ombe.OntoMapBIE(method=self.s3_method,
                                    category=self.category,
+                                 ontology_source=self._ontology_source,
                                    om_strategy='rag_bie',
                                    query=non_exact_query_list,
                                    corpus=self.corpus_s3,
                                    topk=self.topk,
                                    query_df=query_df,
-                                   corpus_df=corpus_df)
+                                   corpus_df=corpus_df,
+                                   table_suffix=self._table_suffix)
         else:
             raise ValueError(
                 f"strategy should be 'st', 'lm', 'rag', or 'rag_bie', got '{strategy}'"
@@ -428,10 +891,9 @@ class OntoMapEngine:
         self._logger.info(
             f"Stage 2 ({self.s2_strategy.upper()}): {s2_only} queries")
 
-        if self.enable_stage_25:
-            s25_boosted = len(stage2_results[stage2_results['stage'] == 2.5])
-            self._logger.info(
-                f"Stage 2.5 (Synonym boost): {s25_boosted} queries")
+        s25_boosted = len(stage2_results[stage2_results['stage'] == 2.5])
+        self._logger.info(
+            f"Stage 2.5 (Synonym boost): {s25_boosted} queries")
 
         if s3_res is not None:
             self._logger.info(
@@ -447,119 +909,114 @@ class OntoMapEngine:
         Returns:
             None (modifies s2_res in place)
         """
-        if not self.enable_stage_25:
-            self._logger.info("Stage 2.5: Skipped (corpus_df not provided)")
-            s2_res['top1_score_float'] = pd.to_numeric(
-                s2_res['match1_score'], errors='coerce').fillna(0)
-        else:
-            self._logger.info(
-                "Stage 2.5: Synonym Verification for Low Confidence Results")
+        self._logger.info(
+            "Stage 2.5: Synonym Verification for Low Confidence Results")
 
-            s2_res['top1_score_float'] = pd.to_numeric(
-                s2_res['match1_score'], errors='coerce').fillna(0)
+        s2_res['top1_score_float'] = pd.to_numeric(
+            s2_res['match1_score'], errors='coerce').fillna(0)
 
-            low_conf_mask = s2_res['top1_score_float'] < SYNONYM_MIN_CONFIDENCE
-            low_conf_queries = s2_res.loc[low_conf_mask,
-                                          'original_value'].tolist()
+        low_conf_mask = s2_res['top1_score_float'] < SYNONYM_MIN_CONFIDENCE
+        low_conf_queries = s2_res.loc[low_conf_mask,
+                                      'original_value'].tolist()
 
-            self._logger.info(
-                f"Found {len(low_conf_queries)} low-confidence queries "
-                f"(score < {SYNONYM_MIN_CONFIDENCE}) for synonym verification")
+        self._logger.info(
+            f"Found {len(low_conf_queries)} low-confidence queries "
+            f"(score < {SYNONYM_MIN_CONFIDENCE}) for synonym verification")
 
-            syn_boosted = []
+        syn_boosted = []
 
-            if low_conf_queries:
-                syn_model = self._om_model_from_strategy(
-                    'syn', low_conf_queries)
-                syn_results = syn_model.get_match_results(
-                    cura_map=self.cura_map,
-                    topk=self.topk,
-                    test_or_prod=self._test_or_prod)
+        if low_conf_queries:
+            syn_model = self._om_model_from_strategy(
+                'syn', low_conf_queries)
+            syn_results = syn_model.get_match_results(
+                cura_map=self.cura_map,
+                topk=self.topk,
+                test_or_prod=self._test_or_prod)
 
-                syn_dict = {}
-                for _, syn_row in syn_results.iterrows():
-                    orig_val = syn_row['original_value']
-                    syn_dict[orig_val] = syn_row
+            syn_dict = {}
+            for _, syn_row in syn_results.iterrows():
+                orig_val = syn_row['original_value']
+                syn_dict[orig_val] = syn_row
 
-                for idx, row in s2_res[low_conf_mask].iterrows():
-                    orig_val = row['original_value']
-                    curated = row['curated_ontology']
+            for idx, row in s2_res[low_conf_mask].iterrows():
+                orig_val = row['original_value']
+                curated = row['curated_ontology']
 
-                    combined_candidates = {}
+                combined_candidates = {}
+                for i in range(1, self.topk + 1):
+                    match = row[f'match{i}']
+                    score = float(row[f'match{i}_score'])
+                    if pd.notna(match) and match:
+                        combined_candidates[match] = score
+
+                syn_row = syn_dict.get(orig_val)
+
+                if syn_row is not None:
                     for i in range(1, self.topk + 1):
-                        match = row[f'match{i}']
-                        score = float(row[f'match{i}_score'])
+                        match = syn_row[f'match{i}']
+                        score = float(syn_row[f'match{i}_score'])
                         if pd.notna(match) and match:
-                            combined_candidates[match] = score
+                            if match in combined_candidates:
+                                combined_candidates[match] = max(
+                                    combined_candidates[match], score)
+                            else:
+                                combined_candidates[match] = score
 
-                    syn_row = syn_dict.get(orig_val)
+                    if not combined_candidates:
+                        self._logger.warning(
+                            f"No valid candidates for '{orig_val}' in Stage 2 or Synonym results, skipping boost"
+                        )
+                        continue
 
-                    if syn_row is not None:
+                    sorted_candidates = sorted(combined_candidates.items(),
+                                               key=lambda x: x[1],
+                                               reverse=True)[:self.topk]
+
+                    combined_matches = [
+                        match for match, _ in sorted_candidates
+                    ]
+                    combined_scores = [
+                        score for _, score in sorted_candidates
+                    ]
+
+                    while len(combined_matches) < self.topk:
+                        combined_matches.append(None)
+                        combined_scores.append(0.0)
+
+                    match_level = next(
+                        (i + 1 for i, term in enumerate(combined_matches)
+                         if (term or "").strip().lower() == (curated or "").strip().lower()), 99)
+
+                    old_top1_score = float(row['match1_score'])
+                    new_top1_score = combined_scores[0]
+                    old_match_level = int(row['match_level'])
+
+                    boosted = (new_top1_score > old_top1_score
+                               or match_level < old_match_level)
+
+                    if boosted:
+                        self._logger.info(
+                            f"Boosted '{orig_val}': "
+                            f"S2_top1={row['match1']}({old_top1_score:.3f}) → "
+                            f"Combined_top1={combined_matches[0]}({new_top1_score:.3f}), "
+                            f"match_level: {old_match_level} → {match_level}"
+                        )
+
                         for i in range(1, self.topk + 1):
-                            match = syn_row[f'match{i}']
-                            score = float(syn_row[f'match{i}_score'])
-                            if pd.notna(match) and match:
-                                if match in combined_candidates:
-                                    combined_candidates[match] = max(
-                                        combined_candidates[match], score)
-                                else:
-                                    combined_candidates[match] = score
+                            s2_res.at[idx,
+                                      f'match{i}'] = combined_matches[i -
+                                                                      1]
+                            s2_res.at[
+                                idx,
+                                f'match{i}_score'] = f"{combined_scores[i - 1]:.4f}"
 
-                        if not combined_candidates:
-                            self._logger.warning(
-                                f"No valid candidates for '{orig_val}' in Stage 2 or Synonym results, skipping boost"
-                            )
-                            continue
+                        s2_res.at[idx, 'match_level'] = match_level
+                        s2_res.at[idx, 'stage'] = 2.5
+                        s2_res.at[idx, 'top1_score_float'] = new_top1_score
+                        syn_boosted.append(orig_val)
 
-                        sorted_candidates = sorted(combined_candidates.items(),
-                                                   key=lambda x: x[1],
-                                                   reverse=True)[:self.topk]
-
-                        combined_matches = [
-                            match for match, _ in sorted_candidates
-                        ]
-                        combined_scores = [
-                            score for _, score in sorted_candidates
-                        ]
-
-                        while len(combined_matches) < self.topk:
-                            combined_matches.append(None)
-                            combined_scores.append(0.0)
-
-                        match_level = next(
-                            (i + 1 for i, term in enumerate(combined_matches)
-                             if (term or "").strip().lower() == (curated or "").strip().lower()), 99)
-
-                        old_top1_score = float(row['match1_score'])
-                        new_top1_score = combined_scores[0]
-                        old_match_level = int(row['match_level'])
-
-                        boosted = (new_top1_score > old_top1_score
-                                   or match_level < old_match_level)
-
-                        if boosted:
-                            self._logger.info(
-                                f"Boosted '{orig_val}': "
-                                f"S2_top1={row['match1']}({old_top1_score:.3f}) → "
-                                f"Combined_top1={combined_matches[0]}({new_top1_score:.3f}), "
-                                f"match_level: {old_match_level} → {match_level}"
-                            )
-
-                            for i in range(1, self.topk + 1):
-                                s2_res.at[idx,
-                                          f'match{i}'] = combined_matches[i -
-                                                                          1]
-                                s2_res.at[
-                                    idx,
-                                    f'match{i}_score'] = f"{combined_scores[i - 1]:.4f}"
-
-                            s2_res.at[idx, 'match_level'] = match_level
-                            s2_res.at[idx, 'stage'] = 2.5
-                            s2_res.at[idx, 'top1_score_float'] = new_top1_score
-                            syn_boosted.append(orig_val)
-
-            self._logger.info(
-                f"Stage 2.5: Boosted {len(syn_boosted)} queries with synonyms")
+        self._logger.info(
+            f"Stage 2.5: Boosted {len(syn_boosted)} queries with synonyms")
 
     def _save_result(self, df: pd.DataFrame) -> pd.DataFrame:
         """Save result DataFrame to output_dir with a timestamp if output_dir is set."""
@@ -568,7 +1025,7 @@ class OntoMapEngine:
             ts = datetime.now().strftime("%Y%m%d_%H%M%S")
 
             s2_method_clean = self.s2_method.replace('-', '_')
-            parts = [f"om_{self.category}", f"s2_{self.s2_strategy}_{s2_method_clean}"]
+            parts = [f"om_{self._ontology_source}_{self.category}", f"s2_{self.s2_strategy}_{s2_method_clean}"]
 
             if self.s3_strategy is not None:
                 s3_method_clean = self.s3_method.replace('-', '_')
@@ -751,7 +1208,7 @@ class OntoMapEngine:
             s3_res["curated_ontology"] = s3_res["original_value"].map(
                 self.cura_map).fillna("Not Found")
             s3_res = self._recompute_match_level(s3_res)
-            s3_res['stage'] = 3
+            s3_res['stage'] = 3.0
 
             self._logger.info(f"Stage 3 completed: {len(s3_res)} queries")
 

@@ -1,4 +1,5 @@
 import asyncio
+import re
 from typing import Dict, List
 from urllib.parse import quote_plus
 import httpx
@@ -9,6 +10,27 @@ from src.CustomLogger.custom_logger import CustomLogger
 
 OLS_CALLS = 10
 OLS_PERIOD = 1
+MAX_CONTEXT_ITEMS = 10
+
+_SAFE_IDENTIFIER = re.compile(r"^[a-z0-9_]+$")
+_SAFE_SUFFIX = re.compile(r"^(_[a-z0-9]+)?$")
+
+
+def validate_identifier(name: str, label: str = "identifier") -> str:
+    """Ensure a string is safe for use in SQLite table names and file paths."""
+    if not _SAFE_IDENTIFIER.match(name):
+        raise ValueError(
+            f"Unsafe {label}: {name!r}. Must match [a-z0-9_]+.")
+    return name
+
+
+def validate_table_suffix(suffix: str) -> str:
+    """Ensure a table suffix is empty or ``_`` followed by safe chars."""
+    if not _SAFE_SUFFIX.match(suffix):
+        raise ValueError(
+            f"Unsafe table_suffix: {suffix!r}. "
+            f"Must be empty or match _[a-z0-9]+.")
+    return suffix
 
 # Maps code prefix (as stored in clean_code, e.g. "EFO") to the OLS ontology id
 PREFIX_TO_ONTOLOGY = {
@@ -110,6 +132,123 @@ class OLSDb:
         """Fetch a batch of URLs concurrently."""
         tasks = [self.fetch_one(client, url) for url in urls]
         return await asyncio.gather(*tasks)
+
+    @staticmethod
+    def obo_id_to_iri(obo_id: str) -> str:
+        """Convert an OBO ID (e.g. 'MONDO:0000001') to a full IRI."""
+        prefix, local_id = obo_id.split(":", 1)
+        return _curie_to_iri(prefix, local_id)
+
+    @staticmethod
+    def infer_ontology(term_id: str) -> str:
+        """Infer ontology short name from OBO-format prefix."""
+        prefix = term_id.split(":", 1)[0]
+        return PREFIX_TO_ONTOLOGY.get(prefix, prefix.lower())
+
+    async def get_ontology_metadata(self,
+                                    ontology: str,
+                                    client: httpx.AsyncClient | None = None) -> dict:
+        """Fetch ontology-level metadata from OLS."""
+        url = f"{self._base_url}/ontologies/{ontology}"
+        if client is None:
+            async with httpx.AsyncClient() as c:
+                resp = await self.fetch_one(c, url)
+        else:
+            resp = await self.fetch_one(client, url)
+        if resp is None:
+            raise RuntimeError(
+                f"Failed to fetch ontology metadata for {ontology}: no successful HTTP response"
+            )
+
+        data = resp.json()
+        config = data.get("config") or {}
+        version_iri = config.get("versionIri")
+        version = data.get("version") or config.get("version")
+        if not version and version_iri:
+            match = re.search(r"/releases/([^/]+)/", version_iri)
+            if match:
+                version = match.group(1)
+
+        return {
+            "ontology": ontology,
+            "ontology_title": config.get("title"),
+            "ontology_version": version,
+            "version_iri": version_iri,
+            "loaded_at": data.get("loaded"),
+            "updated_at": data.get("updated"),
+            "source_api": url,
+        }
+
+    async def get_term(self, obo_id: str, ontology: str | None = None,
+                       client: httpx.AsyncClient | None = None) -> dict:
+        """Fetch raw metadata for a single term by OBO ID."""
+        ontology = ontology or self.infer_ontology(obo_id)
+        iri = self.obo_id_to_iri(obo_id)
+        encoded = quote_plus(quote_plus(iri))
+        url = f"{self._base_url}/ontologies/{ontology}/terms/{encoded}"
+        if client is None:
+            async with httpx.AsyncClient() as c:
+                resp = await self.fetch_one(c, url)
+        else:
+            resp = await self.fetch_one(client, url)
+        if resp is None:
+            raise RuntimeError(
+                f"Failed to fetch term {obo_id}: no successful HTTP response")
+        return resp.json()
+
+    async def get_descendants(self, obo_id: str,
+                              ontology: str | None = None,
+                              page_size: int = 200) -> list[dict]:
+        """Fetch all descendant terms of a root term via paginated OLS4 API."""
+        ontology = ontology or self.infer_ontology(obo_id)
+        iri = self.obo_id_to_iri(obo_id)
+        encoded = quote_plus(quote_plus(iri))
+        url = (f"{self._base_url}/ontologies/{ontology}"
+               f"/terms/{encoded}/descendants?size={page_size}")
+
+        all_terms: list[dict] = []
+        async with httpx.AsyncClient() as client:
+            while url:
+                resp = await self.fetch_one(client, url)
+                if resp is None:
+                    raise RuntimeError(
+                        f"OLS get_descendants({obo_id}): page fetch failed "
+                        f"after {len(all_terms)} terms. "
+                        f"Aborting to avoid an incomplete corpus."
+                    )
+                data = resp.json()
+                terms = data.get("_embedded", {}).get("terms", [])
+                all_terms.extend(terms)
+
+                page_info = data.get("page", {})
+                total = page_info.get("totalElements", "?")
+                pages = page_info.get("totalPages", "?")
+                current = page_info.get("number", 0) + 1
+                self.logger.info(
+                    f"Fetched page {current}/{pages} "
+                    f"({len(all_terms)}/{total} terms)")
+
+                url = data.get("_links", {}).get("next", {}).get("href")
+
+        return all_terms
+
+    async def get_term_neighbors(self, href: str,
+                                 client: httpx.AsyncClient) -> list[str]:
+        """Fetch labels of related terms from a pre-built _links href.
+
+        Used for parent/child label retrieval in CorpusBuilder.
+        Returns list of label strings; empty list on error.
+        """
+        try:
+            resp = await self.fetch_one(client, href)
+            if resp is None:
+                return []
+            data = resp.json()
+            terms = data.get("_embedded", {}).get("terms", [])
+            return [t["label"] for t in terms if t.get("label")]
+        except Exception as exc:
+            self.logger.debug(f"get_term_neighbors failed for {href}: {exc}")
+            return []
 
     def _build_url(self, clean_code: str) -> str | None:
         """Build an OLS term-lookup URL from a clean_code like 'EFO_0000239'."""
@@ -287,15 +426,6 @@ class OLSDb:
         """
         context = []
 
-        # Synonyms
-        syns = concept_data.get("synonyms", [])
-        syn_names = list({
-            item.get("name", "")
-            for item in syns if isinstance(item, dict) and item.get("name")
-        })
-        if syn_names:
-            context.append(f"synonyms: {'; '.join(syn_names)}")
-
         # Definitions
         defs = concept_data.get("definitions", [])
         seen = set()
@@ -315,7 +445,7 @@ class OLSDb:
             item.get("name", "")
             for item in parents
             if isinstance(item, dict) and item.get("name")
-        })[:10]
+        })[:MAX_CONTEXT_ITEMS]
         if parent_names:
             context.append(f"parents: {'; '.join(parent_names)}")
 
@@ -325,7 +455,7 @@ class OLSDb:
             item.get("name", "")
             for item in children
             if isinstance(item, dict) and item.get("name")
-        })[:10]
+        })[:MAX_CONTEXT_ITEMS]
         if child_names:
             context.append(f"children: {'; '.join(child_names)}")
 

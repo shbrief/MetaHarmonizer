@@ -25,7 +25,8 @@ class OntoMapFTS(otm.OntoModelsBase):
                  corpus: List[str],
                  om_strategy: str = 'fts',
                  topk: int = 5,
-                 corpus_df: pd.DataFrame = None) -> None:
+                 corpus_df: pd.DataFrame = None,
+                 ontology_source: str = 'ncit') -> None:
         """
         Initialize FTS ontology mapper.
         
@@ -46,7 +47,7 @@ class OntoMapFTS(otm.OntoModelsBase):
                          corpus,
                          corpus_df=corpus_df)
 
-        self.fts_db = FTSSynonymDb(category=category)
+        self.fts_db = FTSSynonymDb(category=category, ontology_source=ontology_source)
 
         # Build index if not exists
         if not self.fts_db.index_exists():
@@ -121,11 +122,11 @@ class OntoMapFTS(otm.OntoModelsBase):
                 row["match_level"] = match_level
 
                 # Add top-k matches
-                for i, (standard_term, nci_code,
+                for i, (standard_term, code,
                         confidence) in enumerate(results, start=1):
                     row[f"match{i}"] = standard_term
                     row[f"match{i}_score"] = f"{confidence:.4f}"
-                    row[f"match{i}_code"] = nci_code
+                    row[f"match{i}_code"] = code
 
                 # Fill remaining slots if fewer than topk results
                 for i in range(len(results) + 1, topk + 1):

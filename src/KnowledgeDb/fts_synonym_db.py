@@ -3,7 +3,7 @@ import os
 import math
 from typing import List, Tuple, Set
 from src.KnowledgeDb.db_clients.nci_db import NCIDb
-from src.KnowledgeDb.db_clients.ols_db import OLSDb, PREFIX_TO_ONTOLOGY
+from src.KnowledgeDb.db_clients.ols_db import OLSDb, validate_identifier
 from src.CustomLogger.custom_logger import CustomLogger
 
 BASE_DB = os.getenv("VECTOR_DB_PATH")
@@ -19,12 +19,13 @@ class FTSSynonymDb:
     Simplified version without metadata table.
     """
 
-    def __init__(self, category: str):
-        self.category = category
+    def __init__(self, category: str, ontology_source: str = 'ncit'):
+        self.category = validate_identifier(category, "category")
+        self.ontology_source = validate_identifier(ontology_source, "ontology_source")
         self.nci_db = NCIDb(UMLS_API_KEY)
         self.ols_db = OLSDb()
         self.db_path = BASE_DB
-        self.table_name = f"fts_synonyms_{category}"
+        self.table_name = f"{ontology_source}_fts_synonyms_{category}"
         self.logger = CustomLogger().custlogger(loglevel='INFO')
 
         self.conn = None
@@ -45,7 +46,7 @@ class FTSSynonymDb:
             CREATE VIRTUAL TABLE IF NOT EXISTS {self.table_name} USING fts5(
                 synonym,
                 standard_term,
-                nci_code,
+                code,
                 tokenize='trigram'
             )
         ''')
@@ -56,7 +57,7 @@ class FTSSynonymDb:
         Retrieve set of NCI codes already indexed in the FTS table.
         """
         cursor = self.conn.cursor()
-        cursor.execute(f"SELECT nci_code FROM {self.table_name}")
+        cursor.execute(f"SELECT code FROM {self.table_name}")
 
         return set(row[0] for row in cursor.fetchall())
 
@@ -66,33 +67,6 @@ class FTSSynonymDb:
         count = cursor.execute(
             f"SELECT COUNT(*) FROM {self.table_name}").fetchone()[0]
         return count > 0
-
-    @staticmethod
-    def _parse_prefix(code: str) -> str | None:
-        """Extract the ontology prefix from a code."""
-        if ":" in code:
-            return code.split(":", 1)[0]
-        if "_" in code:
-            return code.split("_", 1)[0]
-        return None
-
-    @staticmethod
-    def _partition_codes(codes: List[str]) -> dict:
-        """Split codes into NCI vs OLS groups based on prefix."""
-        nci_codes = []
-        ols_codes = []
-        for code in codes:
-            prefix = FTSSynonymDb._parse_prefix(code)
-            if prefix is None:
-                nci_codes.append(code)
-            elif prefix == "NCIT":
-                local = code.split(":", 1)[1] if ":" in code else code.split("_", 1)[1]
-                nci_codes.append(local)
-            elif prefix in PREFIX_TO_ONTOLOGY:
-                ols_codes.append(code)
-            else:
-                nci_codes.append(code)
-        return {"nci": nci_codes, "ols": ols_codes}
 
     async def build_index_from_codes(self,
                                      codes: List[str],
@@ -125,22 +99,16 @@ class FTSSynonymDb:
                 f"Fetching synonyms for {len(codes_to_fetch)} new codes "
                 f"(skipping {len(indexed_codes & codes_set)} already indexed)")
 
-        # Route codes to NCI or OLS API
-        partitioned = self._partition_codes(codes_to_fetch)
-        concept_data = {}
-
-        if partitioned["nci"]:
-            nci_data = await self.nci_db.get_custom_concepts_by_codes(
-                partitioned["nci"])
-            concept_data.update(nci_data)
-
-        if partitioned["ols"]:
-            ols_data = await self.ols_db.get_custom_concepts_by_codes(
-                partitioned["ols"])
-            concept_data.update(ols_data)
+        # Route all codes to the API determined by ontology_source
+        if self.ontology_source != "ncit":
+            concept_data = await self.ols_db.get_custom_concepts_by_codes(
+                codes_to_fetch)
+        else:
+            concept_data = await self.nci_db.get_custom_concepts_by_codes(
+                codes_to_fetch)
 
         if not concept_data:
-            self.logger.warning("No concept data fetched from NCI or OLS")
+            self.logger.warning("No concept data fetched")
             return
 
         # Extract synonyms and insert into FTS table
@@ -167,7 +135,7 @@ class FTSSynonymDb:
 
             for synonym in synonym_set:
                 cursor.execute(
-                    f'INSERT INTO {self.table_name}(synonym, standard_term, nci_code) VALUES (?, ?, ?)',
+                    f'INSERT INTO {self.table_name}(synonym, standard_term, code) VALUES (?, ?, ?)',
                     (synonym, standard_term, code))
                 insert_count += 1
 
@@ -187,7 +155,7 @@ class FTSSynonymDb:
             limit: Maximum number of results
         
         Returns:
-            List of (standard_term, nci_code, confidence_score) tuples
+            List of (standard_term, code, confidence_score) tuples
         """
         if not self.index_exists():
             self.logger.warning("FTS index is empty")
@@ -202,7 +170,7 @@ class FTSSynonymDb:
         try:
             results = cursor.execute(
                 f'''
-                SELECT standard_term, nci_code, rank
+                SELECT standard_term, code, rank
                 FROM {self.table_name}
                 WHERE {self.table_name} MATCH ?
                 ORDER BY rank
@@ -216,7 +184,7 @@ class FTSSynonymDb:
             try:
                 results = cursor.execute(
                     f'''
-                    SELECT standard_term, nci_code, rank
+                    SELECT standard_term, code, rank
                     FROM {self.table_name}
                     WHERE {self.table_name} MATCH ?
                     ORDER BY rank

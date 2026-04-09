@@ -50,9 +50,16 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+notebook = [
+    "nest-asyncio",
+]
 dev = [
     "pytest",
     "pytest-cov",
+    "nest-asyncio",
+]
+eval = [
+    "scipy",
 ]
 
 # Keep src.* import paths working without renaming the source directory.
