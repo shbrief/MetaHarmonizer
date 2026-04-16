@@ -28,7 +28,7 @@ class OntoMapLLM:
         category: str,
         s2_model,
         query_df: pd.DataFrame = None,
-        term_col: str = None,
+        query_col: str = None,
         topk: int = 5,
         model_key: str = "gemma-12b",
         max_retries: int = 5,
@@ -36,7 +36,7 @@ class OntoMapLLM:
         self.category = category
         self.s2_model = s2_model
         self.query_df = query_df
-        self._term_col = term_col
+        self._query_col = query_col
         self.topk = topk
         self.max_retries = max_retries
         self.logger = logger.custlogger(loglevel='INFO')
@@ -74,10 +74,10 @@ class OntoMapLLM:
         Skips high-cardinality and identifier-like columns, and caps total
         context length to avoid exceeding LLM token limits.
         """
-        if self.query_df is None or self._term_col is None:
+        if self.query_df is None or self._query_col is None:
             return ""
 
-        mask = self.query_df[self._term_col].astype(str) == str(query)
+        mask = self.query_df[self._query_col].astype(str) == str(query)
         rows = self.query_df.loc[mask]
         if rows.empty:
             return ""
@@ -86,7 +86,7 @@ class OntoMapLLM:
         parts = []
         total_len = 0
         for col in self.query_df.columns:
-            if col == self._term_col:
+            if col == self._query_col:
                 continue
             # Skip high-cardinality columns (likely IDs or free text)
             if self.query_df[col].nunique() > self._HIGH_CARDINALITY_THRESHOLD:

@@ -22,7 +22,7 @@ class OntoMapBIE(OntoModelsBase):
         corpus: list[str],
         query_df: pd.DataFrame,
         corpus_df: pd.DataFrame,
-        term_col: str = None,
+        query_col: str = None,
         topk: int = 5,
         om_strategy: str = 'rag_bie',
         use_reranker: bool = False,
@@ -41,15 +41,15 @@ class OntoMapBIE(OntoModelsBase):
                          corpus_df=corpus_df,
                          ontology_source=ontology_source,
                          table_suffix=table_suffix)
-        if term_col is None:
+        if query_col is None:
             raise ValueError(
-                "term_col is required for OntoMapBIE — specify which "
+                "query_col is required for OntoMapBIE — specify which "
                 "column in query_df contains the query terms")
-        if term_col not in query_df.columns:
+        if query_col not in query_df.columns:
             raise ValueError(
-                f"term_col '{term_col}' not found in query_df. "
+                f"query_col '{query_col}' not found in query_df. "
                 f"Available: {list(query_df.columns)}")
-        self._term_col = term_col
+        self._query_col = query_col
         self._init_reranker(use_reranker, reranker_method, reranker_topk)
         self.logger.info(
             f"Initialized Bi-Encoder (reranker="
@@ -121,11 +121,11 @@ class OntoMapBIE(OntoModelsBase):
         max_ctx_chars = 500
         enriched = []
         for _, row in query_df.iterrows():
-            term = str(row[self._term_col]).strip()
+            term = str(row[self._query_col]).strip()
             parts = [term]
             total_len = len(term)
             for col in self._ctx_cols:
-                if col == self._term_col:
+                if col == self._query_col:
                     continue
                 val = str(row.get(col, "")).strip()
                 if not val or val.lower() in ("nan", "none", ""):
@@ -157,7 +157,7 @@ class OntoMapBIE(OntoModelsBase):
             self.logger.warning("No enriched_query column found. Adding context now.")
             self.query_df = self.add_context_to_query(self.query_df)
 
-        orig_queries = self.query_df[self._term_col].tolist()
+        orig_queries = self.query_df[self._query_col].tolist()
         ctx_queries = self.query_df['enriched_query'].tolist()
 
         for ctx_q in tqdm(ctx_queries, desc="Processing queries (Bi-Encoder)", leave=False):

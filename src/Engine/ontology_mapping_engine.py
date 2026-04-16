@@ -923,7 +923,7 @@ class OntoMapEngine:
                                    topk=self.topk,
                                    query_df=query_df,
                                    corpus_df=corpus_df,
-                                   term_col=self.query_col,
+                                   query_col=self.query_col,
                                    table_suffix=self._table_suffix)
         else:
             raise ValueError(
@@ -993,7 +993,7 @@ class OntoMapEngine:
             category=self.category,
             s2_model=s2_model,
             query_df=self.query_df,
-            term_col=self.query_col,
+            query_col=self.query_col,
             topk=self.topk,
             model_key=self.s4_model,
         )

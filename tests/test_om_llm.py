@@ -77,7 +77,7 @@ CORPUS_TERMS = [
 ]
 
 
-def _make_llm(strategy='lm', query_df=None, term_col=None):
+def _make_llm(strategy='lm', query_df=None, query_col=None):
     """Create an OntoMapLLM instance bypassing __init__."""
     m = OntoMapLLM.__new__(OntoMapLLM)
     m.category = "disease"
@@ -85,7 +85,7 @@ def _make_llm(strategy='lm', query_df=None, term_col=None):
     m.max_retries = 3
     m.logger = _LoggerStub()
     m.query_df = query_df
-    m._term_col = term_col
+    m._query_col = query_col
 
     # Fake S2 model
     s2 = SimpleNamespace()
@@ -268,7 +268,7 @@ class TestContextExtraction:
             "CANCER_TYPE": ["THYMIC TUMOR", "GLIOMA"],
             "BODY_SITE": ["THYMUS", "BRAIN"],
         })
-        m = _make_llm(query_df=query_df, term_col="original_value")
+        m = _make_llm(query_df=query_df, query_col="original_value")
         ctx = m._get_context_for_query("TC:SCC")
         assert "THYMIC TUMOR" in ctx
         assert "THYMUS" in ctx
@@ -283,7 +283,7 @@ class TestContextExtraction:
             "original_value": ["OTHER"],
             "CANCER_TYPE": ["X"],
         })
-        m = _make_llm(query_df=query_df, term_col="original_value")
+        m = _make_llm(query_df=query_df, query_col="original_value")
         ctx = m._get_context_for_query("TC:SCC")
         assert ctx == ""
 
@@ -293,7 +293,7 @@ class TestContextExtraction:
             "CANCER_TYPE": ["THYMIC TUMOR"],
             "NOTES": [float('nan')],
         })
-        m = _make_llm(query_df=query_df, term_col="original_value")
+        m = _make_llm(query_df=query_df, query_col="original_value")
         ctx = m._get_context_for_query("TC:SCC")
         assert "THYMIC TUMOR" in ctx
         assert "nan" not in ctx.lower()
