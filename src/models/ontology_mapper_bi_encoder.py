@@ -41,6 +41,14 @@ class OntoMapBIE(OntoModelsBase):
                          corpus_df=corpus_df,
                          ontology_source=ontology_source,
                          table_suffix=table_suffix)
+        if term_col is None:
+            raise ValueError(
+                "term_col is required for OntoMapBIE — specify which "
+                "column in query_df contains the query terms")
+        if term_col not in query_df.columns:
+            raise ValueError(
+                f"term_col '{term_col}' not found in query_df. "
+                f"Available: {list(query_df.columns)}")
         self._term_col = term_col
         self._init_reranker(use_reranker, reranker_method, reranker_topk)
         self.logger.info(
@@ -110,17 +118,24 @@ class OntoMapBIE(OntoModelsBase):
         if not hasattr(self, '_ctx_cols'):
             self._ctx_cols = self._llm_select_columns(query_df)
 
+        max_ctx_chars = 500
         enriched = []
         for _, row in query_df.iterrows():
             term = str(row[self._term_col]).strip()
             parts = [term]
+            total_len = len(term)
             for col in self._ctx_cols:
                 if col == self._term_col:
                     continue
                 val = str(row.get(col, "")).strip()
-                if val and val.lower() not in ("nan", "none", ""):
-                    label = col.replace("_", " ").title()
-                    parts.append(f"{label}: {val}")
+                if not val or val.lower() in ("nan", "none", ""):
+                    continue
+                label = col.replace("_", " ").title()
+                part = f"{label}: {val}"
+                total_len += len(part)
+                if total_len > max_ctx_chars:
+                    break
+                parts.append(part)
             enriched.append("; ".join(parts))
 
         out = query_df.copy()

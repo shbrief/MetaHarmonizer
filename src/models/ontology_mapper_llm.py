@@ -63,8 +63,17 @@ class OntoMapLLM:
 
     # ── Context extraction ────────────────────────────────────────────────
 
+    # Max characters for context string to avoid blowing token limits
+    _MAX_CONTEXT_CHARS = 500
+    # Skip columns whose unique-value count exceeds this (likely IDs / free text)
+    _HIGH_CARDINALITY_THRESHOLD = 50
+
     def _get_context_for_query(self, query: str) -> str:
-        """Extract clinical context string from query_df for a given query."""
+        """Extract clinical context string from query_df for a given query.
+
+        Skips high-cardinality and identifier-like columns, and caps total
+        context length to avoid exceeding LLM token limits.
+        """
         if self.query_df is None or self._term_col is None:
             return ""
 
@@ -75,13 +84,22 @@ class OntoMapLLM:
 
         row = rows.iloc[0]
         parts = []
+        total_len = 0
         for col in self.query_df.columns:
             if col == self._term_col:
                 continue
+            # Skip high-cardinality columns (likely IDs or free text)
+            if self.query_df[col].nunique() > self._HIGH_CARDINALITY_THRESHOLD:
+                continue
             val = str(row.get(col, "")).strip()
-            if val and val.lower() not in ("nan", "none", ""):
-                label = col.replace("_", " ").title()
-                parts.append(f"{label}: {val}")
+            if not val or val.lower() in ("nan", "none", ""):
+                continue
+            label = col.replace("_", " ").title()
+            part = f"{label}: {val}"
+            total_len += len(part)
+            if total_len > self._MAX_CONTEXT_CHARS:
+                break
+            parts.append(part)
         return "; ".join(parts)
 
     # ── Rate limit handling ────────────────────────────────────────────────

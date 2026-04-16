@@ -66,8 +66,8 @@ class OntoMapEngine:
 
     def __init__(self,
                  category: str,
-                 query: list[str],
-                 cura_map: dict,
+                 query: list[str] = None,
+                 cura_map: dict = None,
                  corpus: list[str] = None,
                  topk: int = 5,
                  s2_method: str = 'sap-bert',
@@ -132,8 +132,9 @@ class OntoMapEngine:
             self.query_col = query_col
             # DataFrame mode: extract query list from specified column
             if query is None:
-                self.query = (query_df[query_col]
-                              .dropna().astype(str).unique().tolist())
+                raw = query_df[query_col].dropna().astype(str).str.strip()
+                self.query = (raw[~raw.isin(["", "nan", "NaN", "None"])]
+                              .unique().tolist())
             else:
                 self.query = query
         else:
