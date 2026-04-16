@@ -18,10 +18,11 @@ class OntoMapBIE(OntoModelsBase):
         self,
         method: str,
         category: str,
-        query: list[str],  # TODO: confirm input format
+        query: list[str],
         corpus: list[str],
         query_df: pd.DataFrame,
         corpus_df: pd.DataFrame,
+        term_col: str = None,
         topk: int = 5,
         om_strategy: str = 'rag_bie',
         use_reranker: bool = False,
@@ -40,6 +41,7 @@ class OntoMapBIE(OntoModelsBase):
                          corpus_df=corpus_df,
                          ontology_source=ontology_source,
                          table_suffix=table_suffix)
+        self._term_col = term_col
         self._init_reranker(use_reranker, reranker_method, reranker_topk)
         self.logger.info(
             f"Initialized Bi-Encoder (reranker="
@@ -100,21 +102,6 @@ class OntoMapBIE(OntoModelsBase):
         self.logger.warning(f"LLM column selection failed after {max_attempts} attempts ({last_exc}), falling back to all columns")
         return list(df.columns)
 
-    def _detect_term_column(self, df: pd.DataFrame) -> str:
-        """
-        Find the df column that best overlaps with self.query (the join key).
-        """
-        query_set = set(self.query)
-        best_col, best_overlap = None, 0
-        for col in df.columns:
-            overlap = df[col].astype(str).isin(query_set).sum()
-            if overlap > best_overlap:
-                best_overlap, best_col = overlap, col
-        if best_col is None:
-            raise ValueError("Could not detect query term column in query_df")
-        self.logger.info(f"Detected term column: '{best_col}' ({best_overlap}/{len(self.query)} matches)")
-        return best_col
-
     def add_context_to_query(self, query_df: pd.DataFrame) -> pd.DataFrame:
         """
         Return a new DataFrame with one extra column: enriched_query.
@@ -122,8 +109,6 @@ class OntoMapBIE(OntoModelsBase):
         """
         if not hasattr(self, '_ctx_cols'):
             self._ctx_cols = self._llm_select_columns(query_df)
-        if not hasattr(self, '_term_col'):
-            self._term_col = self._detect_term_column(query_df)
 
         enriched = []
         for _, row in query_df.iterrows():
@@ -156,10 +141,6 @@ class OntoMapBIE(OntoModelsBase):
         if 'enriched_query' not in self.query_df.columns:
             self.logger.warning("No enriched_query column found. Adding context now.")
             self.query_df = self.add_context_to_query(self.query_df)
-
-        # _term_col may not be set if query_df was pre-enriched externally
-        if not hasattr(self, '_term_col'):
-            self._term_col = self._detect_term_column(self.query_df)
 
         orig_queries = self.query_df[self._term_col].tolist()
         ctx_queries = self.query_df['enriched_query'].tolist()

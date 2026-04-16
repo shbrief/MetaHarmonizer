@@ -28,6 +28,7 @@ class OntoMapLLM:
         category: str,
         s2_model,
         query_df: pd.DataFrame = None,
+        term_col: str = None,
         topk: int = 5,
         model_key: str = "gemma-12b",
         max_retries: int = 5,
@@ -35,6 +36,7 @@ class OntoMapLLM:
         self.category = category
         self.s2_model = s2_model
         self.query_df = query_df
+        self._term_col = term_col
         self.topk = topk
         self.max_retries = max_retries
         self.logger = logger.custlogger(loglevel='INFO')
@@ -63,12 +65,8 @@ class OntoMapLLM:
 
     def _get_context_for_query(self, query: str) -> str:
         """Extract clinical context string from query_df for a given query."""
-        if self.query_df is None:
+        if self.query_df is None or self._term_col is None:
             return ""
-
-        # Find the column containing the query terms
-        if not hasattr(self, '_term_col'):
-            self._term_col = self._detect_term_column(self.query_df)
 
         mask = self.query_df[self._term_col].astype(str) == str(query)
         rows = self.query_df.loc[mask]
@@ -85,19 +83,6 @@ class OntoMapLLM:
                 label = col.replace("_", " ").title()
                 parts.append(f"{label}: {val}")
         return "; ".join(parts)
-
-    def _detect_term_column(self, df: pd.DataFrame) -> str:
-        """Find the df column that best overlaps with the queries we'll process."""
-        # Try 'original_value' first (common in match99 test sets)
-        if 'original_value' in df.columns:
-            return 'original_value'
-        # Fall back to overlap detection
-        best_col, best_overlap = None, 0
-        for col in df.columns:
-            overlap = df[col].astype(str).isin(set(df[df.columns[0]])).sum()
-            if overlap > best_overlap:
-                best_overlap, best_col = overlap, col
-        return best_col or df.columns[0]
 
     # ── Rate limit handling ────────────────────────────────────────────────
 
@@ -162,13 +147,14 @@ class OntoMapLLM:
                 if term:
                     terms.append(term)
             elif isinstance(item, str):
-                terms.append(item.strip())
+                item = item.strip()
+                if item:
+                    terms.append(item)
         return terms
 
     def _rewrite_single(self, query: str, context: str, k: int = 5) -> list[str]:
-        """Call LLM for one query with retry loop and rate-limit backoff."""
+        """Call LLM for one query with retry loop and exponential backoff."""
         import time
-        import re
 
         prompt = self._build_prompt(query, context, k=k)
         last_exc = None
@@ -187,19 +173,14 @@ class OntoMapLLM:
                 )
             except Exception as e:
                 last_exc = e
-                # Extract retry_delay from 429 error and sleep
-                delay = self._extract_retry_delay(e)
                 if attempt < self.max_retries:
-                    if delay:
-                        self.logger.warning(
-                            f"[S4] Rate limited for \"{query}\" (attempt {attempt}), "
-                            f"sleeping {delay}s"
-                        )
-                        time.sleep(delay)
-                    else:
-                        self.logger.warning(
-                            f"[S4] LLM attempt {attempt} failed for \"{query}\": {e}"
-                        )
+                    # Use server-suggested delay for 429, else exponential backoff
+                    delay = self._extract_retry_delay(e) or (2 ** attempt)
+                    self.logger.warning(
+                        f"[S4] LLM attempt {attempt} failed for \"{query}\": {e}, "
+                        f"retrying in {delay}s"
+                    )
+                    time.sleep(delay)
 
         self.logger.warning(
             f"[S4] LLM failed after {self.max_retries} attempts for \"{query}\": {last_exc}"
@@ -234,20 +215,29 @@ class OntoMapLLM:
         D, I = idx.search(mat, topk)
         return D, I
 
+    def _get_id_term_map(self) -> dict:
+        """Preload id→term mapping from SQLite (cached)."""
+        if not hasattr(self, '_id_term_map'):
+            vs = self.s2_model.vector_store
+            rows = vs.cursor.execute(
+                f"SELECT id, term FROM {vs.table_name}"
+            ).fetchall()
+            self._id_term_map = {row[0]: row[1] for row in rows}
+        return self._id_term_map
+
     def _faiss_indices_to_terms(self, I_row, D_row) -> list[tuple]:
         """Map FAISS index positions to (term, score) pairs."""
         vs = self.s2_model.vector_store
+        n_ids = len(vs._ids)
+        id_term = self._get_id_term_map()
         results = []
         for faiss_idx, score in zip(I_row, D_row):
-            if faiss_idx == -1:
+            if faiss_idx == -1 or faiss_idx >= n_ids:
                 continue
             db_id = vs._ids[faiss_idx]
-            row = vs.cursor.execute(
-                f"SELECT term FROM {vs.table_name} WHERE id = ?",
-                (db_id,)
-            ).fetchone()
-            if row:
-                results.append((row[0], float(score)))
+            term = id_term.get(db_id)
+            if term:
+                results.append((term, float(score)))
         return results
 
     # ── Main entry point ─────────────────────────────────────────────────

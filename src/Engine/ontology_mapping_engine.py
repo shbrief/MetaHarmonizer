@@ -99,7 +99,6 @@ class OntoMapEngine:
         """
         self.s2_method = s2_method
         self.s3_method = s3_method
-        self.query = query
         self.category = validate_identifier(category, "category")
         self.output_dir = output_dir
         self.topk = topk
@@ -109,7 +108,6 @@ class OntoMapEngine:
         self.s4_strategy = s4_strategy
         self.s4_threshold = s4_threshold
         self.s4_model = s4_model
-        self.cura_map = cura_map
         self.other_params = other_params
         if 'test_or_prod' not in self.other_params.keys():
             raise ValueError(
@@ -117,6 +115,44 @@ class OntoMapEngine:
             )
 
         self._test_or_prod = self.other_params['test_or_prod']
+
+        # --- Parse query_df / query_col from other_params ---
+        query_df = self.other_params.get('query_df', None)
+        query_col = self.other_params.get('query_col', None)
+
+        if query_df is not None:
+            if query_col is None:
+                raise ValueError(
+                    "query_col must be specified when passing query_df")
+            if query_col not in query_df.columns:
+                raise ValueError(
+                    f"Column '{query_col}' not found in query_df. "
+                    f"Available: {list(query_df.columns)}")
+            self.query_df = query_df
+            self.query_col = query_col
+            # DataFrame mode: extract query list from specified column
+            if query is None:
+                self.query = (query_df[query_col]
+                              .dropna().astype(str).unique().tolist())
+            else:
+                self.query = query
+        else:
+            self.query_df = None
+            self.query_col = None
+            self.query = query
+
+        if self.query is None or len(self.query) == 0:
+            raise ValueError(
+                "No queries provided. Pass query (list) or "
+                "query_df + query_col via other_params.")
+
+        # cura_map: required in test mode, auto-generated in prod mode
+        if cura_map is not None:
+            self.cura_map = cura_map
+        elif self._test_or_prod == 'test':
+            raise ValueError("cura_map is required in test mode")
+        else:
+            self.cura_map = {q: "Not Found" for q in self.query}
         self._logger = logger.custlogger(loglevel='INFO')
 
         if self.s2_strategy not in ('lm', 'st'):
@@ -827,7 +863,7 @@ class OntoMapEngine:
         Returns:
             object: The OntoMap model instance.
         """
-        query_df = self.other_params.get('query_df', None)
+        query_df = self.query_df
         corpus_df = self.other_params.get('corpus_df', None)
         use_reranker = self.other_params.get('use_reranker', True)
         reranker_method = self.other_params.get('reranker_method', 'minilm')
@@ -886,6 +922,7 @@ class OntoMapEngine:
                                    topk=self.topk,
                                    query_df=query_df,
                                    corpus_df=corpus_df,
+                                   term_col=self.query_col,
                                    table_suffix=self._table_suffix)
         else:
             raise ValueError(
@@ -950,12 +987,12 @@ class OntoMapEngine:
             return None, []
 
         from src.models.ontology_mapper_llm import OntoMapLLM
-        query_df = self.other_params.get('query_df', None)
 
         s4_model = OntoMapLLM(
             category=self.category,
             s2_model=s2_model,
-            query_df=query_df,
+            query_df=self.query_df,
+            term_col=self.query_col,
             topk=self.topk,
             model_key=self.s4_model,
         )
@@ -1114,7 +1151,7 @@ class OntoMapEngine:
                     parts.append(f"reranker_{reranker_method}")
 
             if self.s4_strategy is not None:
-                s4_model_clean = self.s4_model.replace('-', '_')
+                s4_model_clean = re.sub(r'[^A-Za-z0-9_]', '_', self.s4_model)
                 parts.append(f"s4_{self.s4_strategy}_{s4_model_clean}")
 
             parts.append(ts)

@@ -43,7 +43,11 @@ class _FakeCursor:
             db_id = params[0]
             if db_id < len(self._terms):
                 return SimpleNamespace(fetchone=lambda: (self._terms[db_id],))
-        return SimpleNamespace(fetchone=lambda: None)
+            return SimpleNamespace(fetchone=lambda: None)
+        # Bulk query: SELECT id, term FROM ...
+        return SimpleNamespace(
+            fetchall=lambda: [(i, t) for i, t in enumerate(self._terms)]
+        )
 
 
 class _FakeVS:
@@ -73,7 +77,7 @@ CORPUS_TERMS = [
 ]
 
 
-def _make_llm(strategy='lm', query_df=None):
+def _make_llm(strategy='lm', query_df=None, term_col=None):
     """Create an OntoMapLLM instance bypassing __init__."""
     m = OntoMapLLM.__new__(OntoMapLLM)
     m.category = "disease"
@@ -81,6 +85,7 @@ def _make_llm(strategy='lm', query_df=None):
     m.max_retries = 3
     m.logger = _LoggerStub()
     m.query_df = query_df
+    m._term_col = term_col
 
     # Fake S2 model
     s2 = SimpleNamespace()
@@ -263,7 +268,7 @@ class TestContextExtraction:
             "CANCER_TYPE": ["THYMIC TUMOR", "GLIOMA"],
             "BODY_SITE": ["THYMUS", "BRAIN"],
         })
-        m = _make_llm(query_df=query_df)
+        m = _make_llm(query_df=query_df, term_col="original_value")
         ctx = m._get_context_for_query("TC:SCC")
         assert "THYMIC TUMOR" in ctx
         assert "THYMUS" in ctx
@@ -278,7 +283,7 @@ class TestContextExtraction:
             "original_value": ["OTHER"],
             "CANCER_TYPE": ["X"],
         })
-        m = _make_llm(query_df=query_df)
+        m = _make_llm(query_df=query_df, term_col="original_value")
         ctx = m._get_context_for_query("TC:SCC")
         assert ctx == ""
 
@@ -288,7 +293,7 @@ class TestContextExtraction:
             "CANCER_TYPE": ["THYMIC TUMOR"],
             "NOTES": [float('nan')],
         })
-        m = _make_llm(query_df=query_df)
+        m = _make_llm(query_df=query_df, term_col="original_value")
         ctx = m._get_context_for_query("TC:SCC")
         assert "THYMIC TUMOR" in ctx
         assert "nan" not in ctx.lower()
