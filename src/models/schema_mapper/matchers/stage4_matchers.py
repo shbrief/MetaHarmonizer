@@ -2,7 +2,6 @@
 import os
 import json
 from typing import List, Tuple, Optional
-import google.generativeai as genai
 from .base import BaseMatcher
 from ..config import LLM_MODEL
 from src.CustomLogger.custom_logger import CustomLogger
@@ -29,8 +28,14 @@ class LLMMatcher(BaseMatcher):
                 "GEMINI_API_KEY not found in environment variables. "
                 "Please set it in your .env file."
             )
-        
-        # Configure Gemini
+
+        try:
+            import google.generativeai as genai
+        except ImportError as e:
+            raise ImportError(
+                "LLMMatcher requires google-generativeai. "
+                "Install with: pip install metaharmonizer[llm-gemini]"
+            ) from e
         genai.configure(api_key=api_key)
         
         self.model = genai.GenerativeModel(LLM_MODEL)

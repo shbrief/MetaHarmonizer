@@ -1,10 +1,11 @@
 """Loaders for dictionary data."""
 import pandas as pd
 from pathlib import Path
+from typing import Optional, Union
 from sentence_transformers import SentenceTransformer
 from src.utils.schema_mapper_utils import normalize
 from .. import config as _config
-from ..config import ALIAS_DICT_PATH, FIELD_MODEL
+from ..config import FIELD_MODEL
 from src.CustomLogger.custom_logger import CustomLogger
 
 logger = CustomLogger().custlogger(loglevel='WARNING')
@@ -12,39 +13,60 @@ logger = CustomLogger().custlogger(loglevel='WARNING')
 
 class DictLoader:
     """Load and prepare dictionary data."""
-    
+
     @staticmethod
-    def load_standard_dict():
+    def load_standard_dict(path: Optional[Union[str, Path]] = None):
         """
         Load standard fields dictionary.
-        
+
+        Args:
+            path: Path to curated CSV. If None, falls back to config.CURATED_DICT_PATH.
+
         Returns:
             tuple: (standard_fields, standard_fields_normed, normed_std_to_std, curated_df)
         """
-        curated_df = pd.read_csv(_config.CURATED_DICT_PATH)
+        resolved = Path(path) if path else Path(_config.CURATED_DICT_PATH)
+        if not resolved.exists():
+            raise FileNotFoundError(
+                f"Curated schema CSV not found at {resolved}. "
+                "Pass curated_dict_path=... to SchemaMapEngine, "
+                "or set METAHARMONIZER_DATA_DIR so the default path resolves."
+            )
+        curated_df = pd.read_csv(resolved)
         standard_fields = curated_df['field_name'].dropna().unique().tolist()
         standard_fields_normed = [normalize(f) for f in standard_fields]
         normed_std_to_std = {normalize(f): f for f in standard_fields}
-        
-        logger.info(f"[DictLoader] Loaded {len(standard_fields)} standard fields")
+
+        logger.info(f"[DictLoader] Loaded {len(standard_fields)} standard fields from {resolved}")
         return standard_fields, standard_fields_normed, normed_std_to_std, curated_df
-    
+
     @staticmethod
-    def load_alias_dict():
+    def load_alias_dict(path: Optional[Union[str, Path]] = None):
         """
         Load alias dictionary.
-        
+
+        Args:
+            path: Path to alias CSV. If None, falls back to config.ALIAS_DICT_PATH.
+                  Pass "" to disable alias matching explicitly.
+
         Returns:
             tuple: (sources_to_fields, sources_keys, normed_source_to_source, has_alias)
-            If alias dict doesn't exist, returns empty structures and has_alias=False
+            If alias dict doesn't exist or is disabled, returns empty structures and has_alias=False.
         """
-        # Check if alias dict exists
-        if not ALIAS_DICT_PATH or not Path(ALIAS_DICT_PATH).exists():
-            logger.warning(f"[DictLoader] Alias dictionary not found at {ALIAS_DICT_PATH}, skipping alias matching")
+        resolved = path if path is not None else _config.ALIAS_DICT_PATH
+
+        # Explicit disable: empty string or falsy (but not None, handled above)
+        if not resolved:
+            logger.info("[DictLoader] Alias dictionary disabled, skipping alias matching")
             return {}, [], {}, False
-        
+
+        resolved = Path(resolved)
+        if not resolved.exists():
+            logger.warning(f"[DictLoader] Alias dictionary not found at {resolved}, skipping alias matching")
+            return {}, [], {}, False
+
         try:
-            df_dict = pd.read_csv(ALIAS_DICT_PATH)
+            df_dict = pd.read_csv(resolved)
         except Exception as e:
             logger.warning(f"[DictLoader] Failed to load alias dictionary: {e}, skipping alias matching")
             return {}, [], {}, False

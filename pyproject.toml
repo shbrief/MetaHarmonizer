@@ -29,9 +29,6 @@ dependencies = [
     "scikit-learn",
     # Vector search
     "faiss-cpu==1.11.0",
-    # RAG and LLM
-    "langchain",
-    "google-generativeai",
     # Fuzzy matching
     "rapidfuzz",
     "thefuzz",
@@ -60,6 +57,18 @@ dev = [
 ]
 eval = [
     "scipy",
+]
+# LLM backends are optional. Stage-4 matchers (OntoMapLLM, LLMMatcher,
+# bi-encoder column inference, expand_terms_with_gemini) require Gemini.
+# Semantic-clustering LLM fallback in FieldSuggester uses OpenAI.
+llm-gemini = [
+    "google-generativeai",
+]
+llm-openai = [
+    "openai",
+]
+all = [
+    "metaharmonizer[notebook,eval,llm-gemini,llm-openai]",
 ]
 
 # Keep src.* import paths working without renaming the source directory.
