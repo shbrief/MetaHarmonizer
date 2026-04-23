@@ -1,4 +1,3 @@
-from langchain.embeddings.base import Embeddings
 from typing import List, Any
 import numpy as np
 from transformers import AutoTokenizer
@@ -6,11 +5,12 @@ from transformers import AutoTokenizer
 import torch
 
 
-class EmbeddingAdapter(Embeddings):
+class EmbeddingAdapter:
     """
-    Generic embedding adapter that supports both SentenceTransformer and LangChain style models:
-    - SentenceTransformer: encode(texts: List[str], normalize_embeddings=True)
-    - LangChain: embed_documents(texts: List[str]) and embed_query(text: str)
+    Embedding adapter that exposes embed_documents / embed_query over two
+    backends, selected by om_strategy:
+    - "st": a SentenceTransformer (uses model.encode with L2 normalization)
+    - "lm": a raw HuggingFace AutoModel (CLS-token pooling + manual L2 norm)
     """
 
     def __init__(self, model: Any, om_strategy: str = "st"):

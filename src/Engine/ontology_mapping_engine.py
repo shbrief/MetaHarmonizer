@@ -66,8 +66,8 @@ class OntoMapEngine:
 
     def __init__(self,
                  category: str,
-                 query: list[str],
-                 cura_map: dict,
+                 query: list[str] = None,
+                 cura_map: dict = None,
                  corpus: list[str] = None,
                  topk: int = 5,
                  s2_method: str = 'sap-bert',
@@ -75,6 +75,9 @@ class OntoMapEngine:
                  s3_method: str = 'pubmed-bert',
                  s3_strategy: str = None,
                  s3_threshold: float = 0.9,
+                 s4_strategy: str = None,
+                 s4_threshold: float = 0.6,
+                 s4_model: str = 'gemma-12b',
                  output_dir: str = None,
                  filter_obsolete: bool = False,
                  **other_params: dict) -> None:
@@ -90,11 +93,13 @@ class OntoMapEngine:
             s2_strategy (str, optional): The strategy to use for stage 2 OntoMap. Defaults to 'lm'. Options are 'st' or 'lm'.
             s3_strategy (str, optional): The strategy to use for stage 3 OntoMap. Defaults to None. Options are 'rag', 'rag_bie', or None.
             s3_threshold (float, optional): The threshold for stage 3 OntoMap. Defaults to 0.9.
+            s4_strategy (str, optional): The strategy to use for stage 4 LLM rewriting. Defaults to None. Options are 'llm' or None.
+            s4_threshold (float, optional): The threshold for stage 4. Defaults to 0.6.
+            s4_model (str, optional): The LLM model key for stage 4. Defaults to 'gemma-12b'.
             **other_params (dict): Other parameters to pass to the engine.
         """
         self.s2_method = s2_method
         self.s3_method = s3_method
-        self.query = query
         self.category = validate_identifier(category, "category")
         self.output_dir = output_dir
         self.topk = topk
@@ -102,7 +107,9 @@ class OntoMapEngine:
         self.s2_strategy = s2_strategy
         self.s3_strategy = s3_strategy
         self.s3_threshold = s3_threshold
-        self.cura_map = cura_map
+        self.s4_strategy = s4_strategy
+        self.s4_threshold = s4_threshold
+        self.s4_model = s4_model
         self.other_params = other_params
         if 'test_or_prod' not in self.other_params.keys():
             raise ValueError(
@@ -110,12 +117,53 @@ class OntoMapEngine:
             )
 
         self._test_or_prod = self.other_params['test_or_prod']
+
+        # --- Parse query_df / query_col from other_params ---
+        query_df = self.other_params.get('query_df', None)
+        query_col = self.other_params.get('query_col', None)
+
+        if query_df is not None:
+            if query_col is None:
+                raise ValueError(
+                    "query_col must be specified when passing query_df")
+            if query_col not in query_df.columns:
+                raise ValueError(
+                    f"Column '{query_col}' not found in query_df. "
+                    f"Available: {list(query_df.columns)}")
+            self.query_df = query_df
+            self.query_col = query_col
+            # DataFrame mode: extract query list from specified column
+            if query is None:
+                raw = query_df[query_col].dropna().astype(str).str.strip()
+                self.query = (raw[~raw.isin(["", "nan", "NaN", "None"])]
+                              .unique().tolist())
+            else:
+                self.query = query
+        else:
+            self.query_df = None
+            self.query_col = None
+            self.query = query
+
+        if self.query is None or len(self.query) == 0:
+            raise ValueError(
+                "No queries provided. Pass query (list) or "
+                "query_df + query_col via other_params.")
+
+        # cura_map: required in test mode, auto-generated in prod mode
+        if cura_map is not None:
+            self.cura_map = cura_map
+        elif self._test_or_prod == 'test':
+            raise ValueError("cura_map is required in test mode")
+        else:
+            self.cura_map = {q: "Not Found" for q in self.query}
         self._logger = logger.custlogger(loglevel='INFO')
 
         if self.s2_strategy not in ('lm', 'st'):
             raise ValueError("s2_strategy must be 'lm' or 'st'")
         if self.s3_strategy is not None and self.s3_strategy not in ('rag', 'rag_bie'):
             raise ValueError("s3_strategy must be 'rag', 'rag_bie', or None")
+        if self.s4_strategy is not None and self.s4_strategy not in ('llm',):
+            raise ValueError("s4_strategy must be 'llm' or None")
 
         # Ontology source validation (also guards f-string SQL in table names)
         self._ontology_source = validate_identifier(
@@ -243,6 +291,13 @@ class OntoMapEngine:
             )
         else:
             self._logger.info("Stage 3: Disabled")
+
+        if self.s4_strategy is not None:
+            self._logger.info(
+                f"Stage 4: {self.s4_strategy.upper()} (threshold={self.s4_threshold}, model={self.s4_model})"
+            )
+        else:
+            self._logger.info("Stage 4: Disabled")
 
     def _compute_official_corpus_hash(self) -> str | None:
         """Compute the content hash of the official corpus CSV, if it exists."""
@@ -818,7 +873,7 @@ class OntoMapEngine:
         Returns:
             object: The OntoMap model instance.
         """
-        query_df = self.other_params.get('query_df', None)
+        query_df = self.query_df
         corpus_df = self.other_params.get('corpus_df', None)
         use_reranker = self.other_params.get('use_reranker', True)
         reranker_method = self.other_params.get('reranker_method', 'minilm')
@@ -877,19 +932,21 @@ class OntoMapEngine:
                                    topk=self.topk,
                                    query_df=query_df,
                                    corpus_df=corpus_df,
+                                   query_col=self.query_col,
                                    table_suffix=self._table_suffix)
         else:
             raise ValueError(
                 f"strategy should be 'st', 'lm', 'rag', or 'rag_bie', got '{strategy}'"
             )
 
-    def _log_final_summary(self, exact_df, stage2_results, s3_res=None):
+    def _log_final_summary(self, exact_df, stage2_results, s3_res=None, s4_res=None):
         """Log final summary statistics.
-        
+
         Args:
             exact_df: Stage 1 exact match results
             stage2_results: Stage 2/2.5 results (may be filtered if Stage 3 exists)
             s3_res: Stage 3 results (optional)
+            s4_res: Stage 4 results (optional)
         """
         self._logger.info("=" * 50)
         self._logger.info("FINAL SUMMARY")
@@ -907,6 +964,66 @@ class OntoMapEngine:
         if s3_res is not None:
             self._logger.info(
                 f"Stage 3 ({self.s3_strategy.upper()}): {len(s3_res)} queries")
+
+        if s4_res is not None:
+            self._logger.info(
+                f"Stage 4 ({self.s4_strategy.upper()}): {len(s4_res)} queries")
+
+    def _run_stage4(self, prior_res, s2_model):
+        """Run Stage 4 LLM query rewriting on low-confidence results.
+
+        Args:
+            prior_res: DataFrame with prior stage results (must have 'top1_score_float')
+            s2_model: The Stage 2 model object (for FAISS re-search)
+
+        Returns:
+            (s4_valid, queries_for_s4): improved rows DataFrame and query list,
+            or (None, []) if Stage 4 is disabled or no queries need it.
+        """
+        if self.s4_strategy is None:
+            return None, []
+
+        self._logger.info(f"Stage 4: {self.s4_strategy.upper()} Query Rewriting")
+
+        low_conf_mask = prior_res['top1_score_float'] < self.s4_threshold
+        queries_for_s4 = prior_res.loc[low_conf_mask, 'original_value'].tolist()
+
+        self._logger.info(
+            f"Queries with match1_score < {self.s4_threshold}: {len(queries_for_s4)}"
+        )
+
+        if not queries_for_s4:
+            self._logger.info("No queries require Stage 4.")
+            return None, []
+
+        from src.models.ontology_mapper_llm import OntoMapLLM
+
+        s4_model = OntoMapLLM(
+            category=self.category,
+            s2_model=s2_model,
+            query_df=self.query_df,
+            query_col=self.query_col,
+            topk=self.topk,
+            model_key=self.s4_model,
+        )
+        s4_res = s4_model.get_match_results(
+            queries=queries_for_s4,
+            topk=self.topk,
+        )
+        # Add eval columns (same as other stages — engine's responsibility)
+        s4_res['stage'] = 4.0
+        s4_res['curated_ontology'] = s4_res['original_value'].map(
+            self.cura_map).fillna("Not Found")
+        s4_res = self._recompute_match_level(s4_res)
+
+        # Drop rows where LLM returned no results (keep prior for those)
+        s4_valid = s4_res[s4_res['match1'] != 'N/A'].copy()
+
+        self._logger.info(
+            f"Stage 4 completed: {len(queries_for_s4)} queries processed, "
+            f"{len(s4_valid)} with results"
+        )
+        return s4_valid, queries_for_s4
 
     def _apply_synonym_boost(self, s2_res):
         """
@@ -1119,6 +1236,10 @@ class OntoMapEngine:
                     reranker_method = self.other_params.get('reranker_method', 'minilm')
                     parts.append(f"reranker_{reranker_method}")
 
+            if self.s4_strategy is not None:
+                s4_model_clean = re.sub(r'[^A-Za-z0-9_]', '_', self.s4_model)
+                parts.append(f"s4_{self.s4_strategy}_{s4_model_clean}")
+
             parts.append(ts)
             fname = "_".join(parts) + ".csv"
             path = os.path.join(self.output_dir, fname)
@@ -1191,6 +1312,7 @@ class OntoMapEngine:
         # Run Stage 2 model
         s2_model = self._om_model_from_strategy(self.s2_strategy,
                                                 updated_queries)
+        self._s2_model = s2_model  # Retain for Stage 4 re-search
         s2_res = s2_model.get_match_results(cura_map=updated_cura_map,
                                             topk=self.topk,
                                             test_or_prod=self._test_or_prod)
@@ -1217,10 +1339,23 @@ class OntoMapEngine:
             # No Stage 3, combine Stage 1 + Stage 2
             self._logger.info("Stage 3: Disabled")
 
-            s2_res.drop(columns=['top1_score_float'], inplace=True)
-            combined_results = pd.concat([exact_df, s2_res], ignore_index=True)
+            # ========== Stage 4: LLM Query Rewriting (Optional) ==========
+            s4_valid, queries_for_s4 = self._run_stage4(s2_res, s2_model)
 
-            self._log_final_summary(exact_df, s2_res)
+            if s4_valid is not None and not s4_valid.empty:
+                s2_res_filtered = s2_res[
+                    ~s2_res['original_value'].isin(
+                        s4_valid['original_value'])
+                ].copy()
+                s2_res_filtered.drop(columns=['top1_score_float'], inplace=True)
+                combined_results = pd.concat(
+                    [exact_df, s2_res_filtered, s4_valid], ignore_index=True)
+                self._log_final_summary(exact_df, s2_res_filtered, s4_res=s4_valid)
+            else:
+                s2_res.drop(columns=['top1_score_float'], inplace=True)
+                combined_results = pd.concat([exact_df, s2_res], ignore_index=True)
+                self._log_final_summary(exact_df, s2_res)
+
             return self._save_result(self._finalize_results(combined_results))
 
         else:
@@ -1309,13 +1444,43 @@ class OntoMapEngine:
             s2_res_filtered = s2_res[~s2_res['original_value'].
                                      isin(queries_for_s3)].copy()
 
-            # Drop temp column from filtered results
-            s2_res_filtered.drop(columns=['top1_score_float'], inplace=True)
+            # ========== Stage 4: LLM Query Rewriting (Optional) ==========
+            # Build combined prior results (S2 filtered + S3) for threshold check
+            # Need top1_score_float on S3 results for Stage 4 filtering
+            s3_res['top1_score_float'] = pd.to_numeric(
+                s3_res['match1_score'], errors='coerce').fillna(0)
+            prior_for_s4 = pd.concat(
+                [s2_res_filtered, s3_res], ignore_index=True)
 
-            # Combine all stages
-            combined_results = pd.concat([exact_df, s2_res_filtered, s3_res],
-                                         ignore_index=True)
+            s4_valid, queries_for_s4 = self._run_stage4(
+                prior_for_s4, s2_model)
 
-            # Final summary
-            self._log_final_summary(exact_df, s2_res_filtered, s3_res)
+            if s4_valid is not None and not s4_valid.empty:
+                # Remove prior results for queries improved by S4
+                prior_filtered = prior_for_s4[
+                    ~prior_for_s4['original_value'].isin(
+                        s4_valid['original_value'])
+                ].copy()
+                prior_filtered.drop(
+                    columns=['top1_score_float'], inplace=True, errors='ignore')
+                combined_results = pd.concat(
+                    [exact_df, prior_filtered, s4_valid], ignore_index=True)
+
+                # For summary: split prior_filtered back to s2/s3 counts
+                s2_for_log = prior_filtered[
+                    prior_filtered['stage'].isin([2.0, 2.5])]
+                s3_for_log = prior_filtered[prior_filtered['stage'] == 3.0]
+                self._log_final_summary(
+                    exact_df, s2_for_log, s3_for_log, s4_valid)
+            else:
+                # Drop temp columns
+                s2_res_filtered.drop(
+                    columns=['top1_score_float'], inplace=True, errors='ignore')
+                s3_res.drop(
+                    columns=['top1_score_float'], inplace=True, errors='ignore')
+
+                combined_results = pd.concat(
+                    [exact_df, s2_res_filtered, s3_res], ignore_index=True)
+                self._log_final_summary(exact_df, s2_res_filtered, s3_res)
+
             return self._save_result(self._finalize_results(combined_results))

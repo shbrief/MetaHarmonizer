@@ -2,7 +2,6 @@ import pandas as pd
 import os
 import json
 import time
-import google.generativeai as genai
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -29,6 +28,13 @@ def expand_terms_with_gemini(input_terms, api_key=None, batch_size=50):
     if not api_key:
         raise ValueError("Please provide API key or set GEMINI_API_KEY")
 
+    try:
+        import google.generativeai as genai
+    except ImportError as e:
+        raise ImportError(
+            "expand_terms_with_gemini requires google-generativeai. "
+            "Install with: pip install metaharmonizer[llm-gemini]"
+        ) from e
     genai.configure(api_key=api_key)
     print("✓ Gemini API configured")
 

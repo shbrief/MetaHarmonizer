@@ -601,25 +601,26 @@ class SemanticClusteringEngine:
 
         try:
             import openai
-
-            client = openai.OpenAI()
-            response = client.chat.completions.create(
-                model=self.config.llm_model,
-                temperature=self.config.llm_temperature,
-                messages=[
-                    {
-                        "role": "system",
-                        "content": "You are a biomedical metadata expert.",
-                    },
-                    {"role": "user", "content": prompt},
-                ],
-            )
-            return response.choices[0].message.content
-        except ImportError:
+        except ImportError as e:
             raise RuntimeError(
-                "openai package not installed. Install it or provide a custom "
-                "llm_client to SemanticClusteringEngine."
-            )
+                "openai package not installed. "
+                "Install with: pip install metaharmonizer[llm-openai], "
+                "or provide a custom llm_client to SemanticClusteringEngine."
+            ) from e
+
+        client = openai.OpenAI()
+        response = client.chat.completions.create(
+            model=self.config.llm_model,
+            temperature=self.config.llm_temperature,
+            messages=[
+                {
+                    "role": "system",
+                    "content": "You are a biomedical metadata expert.",
+                },
+                {"role": "user", "content": prompt},
+            ],
+        )
+        return response.choices[0].message.content
 
     @staticmethod
     def _parse_scs_response(response: str) -> float:
