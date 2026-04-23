@@ -3,14 +3,16 @@ import os
 import time
 import yaml
 import pandas as pd
+from pathlib import Path
 from datetime import datetime
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List, Optional, Union
 from functools import lru_cache
 from sentence_transformers import SentenceTransformer, util
 import torch
 
+from . import config as _config
 from .config import (
-    FUZZY_THRESH, NOISE_VALUES, OUTPUT_DIR, ALIAS_DICT_PATH, FIELD_MODEL, LLM_MODEL,
+    FUZZY_THRESH, NOISE_VALUES, OUTPUT_DIR, FIELD_MODEL, LLM_MODEL,
     NUMERIC_THRESH, FIELD_ALIAS_THRESH, VALUE_PERCENTAGE_THRESH,
     LLM_THRESHOLD
 )
@@ -58,32 +60,55 @@ class SchemaMapEngine:
     - Stage 4: LLM fallback (auto mode only)
     """
     
-    def __init__(self, clinical_data_path: str, mode: str = "auto", top_k: int = 5):
+    def __init__(
+        self,
+        clinical_data_path: str,
+        mode: str = "auto",
+        top_k: int = 5,
+        *,
+        curated_dict_path: Optional[Union[str, Path]] = None,
+    ):
         """
         Initialize the schema mapping engine.
-        
+
         Args:
-            clinical_data_path: Path to clinical data CSV/TSV file
-            mode: Execution mode ('auto' or 'manual')
-            top_k: Number of top matches to return
+            clinical_data_path: Path to clinical data CSV/TSV file.
+            mode: Execution mode ('auto' or 'manual').
+            top_k: Number of top matches to return.
+            curated_dict_path: Optional override for the curated schema CSV.
+                If None, uses the bundled default (config.CURATED_DICT_PATH) and
+                the bundled alias / value dicts are used as-is. If overridden:
+                  * alias dict is disabled (it's keyed to the default schema;
+                    future: auto-generated from the user schema via LLM).
+                  * value dict is still loaded but filtered to the user schema's
+                    fields; if no overlap, value matching is skipped.
         """
         # Load data
         if clinical_data_path.endswith(".tsv"):
             self.df = pd.read_csv(clinical_data_path, sep="\t", dtype=str)
         else:
             self.df = pd.read_csv(clinical_data_path, sep=",", dtype=str)
-        
+
         logger.info(f"[Load] df_shape={self.df.shape} first_cols={list(self.df.columns[:5])}")
-        
+
         self.top_k = top_k
         self.mode = mode
-        
+
+        # Resolve dictionary paths.
+        user_schema = curated_dict_path is not None
+        self.curated_dict_path = (
+            Path(curated_dict_path) if user_schema else _config.CURATED_DICT_PATH
+        )
+        # Alias is tied to the bundled curated schema.
+        self.alias_dict_path = None if user_schema else _config.ALIAS_DICT_PATH
+        self.value_dict_path = _config.VALUE_DICT_PATH
+
         # Setup output
         os.makedirs(OUTPUT_DIR, exist_ok=True)
         base = os.path.basename(clinical_data_path)
         root, _ = os.path.splitext(base)
         self.output_file = os.path.join(OUTPUT_DIR, f"{root}.csv")
-        
+
         # Load dictionaries
         self._load_dictionaries()
         
@@ -112,19 +137,19 @@ class SchemaMapEngine:
         (self.standard_fields,
         self.standard_fields_normed,
         self.normed_std_to_std,
-        self.curated_df) = DictLoader.load_standard_dict()
-        
-        # Alias dict (may not exist)
+        self.curated_df) = DictLoader.load_standard_dict(self.curated_dict_path)
+
+        # Alias dict (may be disabled or missing)
         (self.sources_to_fields,
         self.sources_keys,
         self.normed_source_to_source,
-        self.has_alias_dict) = DictLoader.load_alias_dict()
-        
+        self.has_alias_dict) = DictLoader.load_alias_dict(self.alias_dict_path)
+
         # Load full alias DataFrame for numeric matching (only if alias dict exists)
         if self.has_alias_dict:
-            self.df_dict = pd.read_csv(ALIAS_DICT_PATH)
+            self.df_dict = pd.read_csv(self.alias_dict_path)
             self.df_num, self.numeric_sources = DictLoader.load_numeric_dict(self.df_dict)
-            
+
             # Encode alias keys
             self.alias_embs = DictLoader.encode_fields(self.sources_keys)
         else:
@@ -133,9 +158,13 @@ class SchemaMapEngine:
             self.numeric_sources = []
             self.alias_embs = None
             logger.warning("[Engine] Alias dictionary not available, alias-based matching will be skipped")
-        
-        # Load value dict
-        ValueLoader.load_value_dict(self)
+
+        # Load value dict (filtered to the effective curated schema fields)
+        ValueLoader.load_value_dict(
+            self,
+            json_path=self.value_dict_path,
+            allowed_fields=self.standard_fields,
+        )
     
     def _init_matchers(self):
         """Initialize all matcher instances."""
@@ -425,14 +454,14 @@ class SchemaMapEngine:
         
         for col in self.df.columns:
             # Check invalid
-            is_invalid = check_invalid(self.df, col)
-            if is_invalid:
-                results.append({
-                    "query": col,
-                    "stage": "invalid",
-                    "method": is_invalid
-                })
-                continue
+            # is_invalid = check_invalid(self.df, col)
+            # if is_invalid:
+            #     results.append({
+            #         "query": col,
+            #         "stage": "invalid",
+            #         "method": is_invalid
+            #     })
+            #     continue
             
             # Stage 1: Dictionary matching
             t0 = time.perf_counter()

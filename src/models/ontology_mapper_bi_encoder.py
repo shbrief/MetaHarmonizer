@@ -73,10 +73,21 @@ class OntoMapBIE(OntoModelsBase):
             "No explanation, no markdown, pure JSON only."
         )
         api_key = os.getenv("GEMINI_API_KEY")
+        # Label/answer columns must be excluded to prevent data leakage in test mode.
+        # In prod these columns won't exist, so the filter is a no-op.
+        _label_keywords = {"official_label", "curated", "ref_match", "ontology_term_id"}
+
         if not api_key:
             self.logger.warning("GEMINI_API_KEY not set, falling back to all columns")
-            return list(df.columns)
-        import google.generativeai as genai
+            return [c for c in df.columns
+                    if not any(kw in c.lower() for kw in _label_keywords)]
+        try:
+            import google.generativeai as genai
+        except ImportError as e:
+            raise ImportError(
+                "LLM-based column inference requires google-generativeai. "
+                "Install with: pip install metaharmonizer[llm-gemini]"
+            ) from e
         genai.configure(api_key=api_key)
         model = genai.GenerativeModel(_BIE_LLM_MODEL)
         max_attempts = 3
@@ -101,6 +112,13 @@ class OntoMapBIE(OntoModelsBase):
                     )
                     raise ValueError(f"Hallucinated columns: {hallucinated}")
                 valid = [c for c in cols if isinstance(c, str) and c in df.columns]
+                # Filter out label/answer columns to prevent data leakage in test mode.
+                # In prod this filter is unnecessary since those columns won't exist,
+                # but it's harmless to keep it.
+                valid = [
+                    c for c in valid
+                    if not any(kw in c.lower() for kw in _label_keywords)
+                ]
                 self.logger.info(f"LLM selected context columns: {valid}")
                 return valid
             except Exception as e:
@@ -108,7 +126,8 @@ class OntoMapBIE(OntoModelsBase):
                 if attempt < max_attempts:
                     self.logger.warning(f"LLM column selection attempt {attempt} failed ({e}), retrying...")
         self.logger.warning(f"LLM column selection failed after {max_attempts} attempts ({last_exc}), falling back to all columns")
-        return list(df.columns)
+        return [c for c in df.columns
+                if not any(kw in c.lower() for kw in _label_keywords)]
 
     def add_context_to_query(self, query_df: pd.DataFrame) -> pd.DataFrame:
         """

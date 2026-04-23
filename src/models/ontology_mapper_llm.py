@@ -52,7 +52,13 @@ class OntoMapLLM:
                 "GEMINI_API_KEY not found in environment variables. "
                 "Please set it in your .env file."
             )
-        import google.generativeai as genai
+        try:
+            import google.generativeai as genai
+        except ImportError as e:
+            raise ImportError(
+                "OntoMapLLM requires google-generativeai. "
+                "Install with: pip install metaharmonizer[llm-gemini]"
+            ) from e
         genai.configure(api_key=api_key)
         self._genai_model = genai.GenerativeModel(self._llm_model_name)
 
