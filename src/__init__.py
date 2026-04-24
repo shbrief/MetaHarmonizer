@@ -16,7 +16,7 @@ from importlib.metadata import version, PackageNotFoundError
 try:
     __version__ = version("MetaHarmonizer")
 except PackageNotFoundError:
-    __version__ = "0.0.0-unknown"
+    __version__ = "0.1.0"
 
 __all__ = [
     "__version__",
