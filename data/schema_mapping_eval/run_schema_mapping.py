@@ -37,7 +37,7 @@ except ImportError:
 
 # Import SchemaMapEngine
 try:
-    from src.models.schema_mapper import SchemaMapEngine
+    from metaharmonizer.models.schema_mapper import SchemaMapEngine
 except ImportError as e:
     print(f"[ERROR] Cannot import SchemaMapEngine: {e}", file=sys.stderr)
     print("[ERROR] Make sure PYTHONPATH is set correctly", file=sys.stderr)

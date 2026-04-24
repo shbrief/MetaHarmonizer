@@ -14,10 +14,10 @@ Usage::
 import argparse
 import sys
 
-from src.KnowledgeDb.corpus_builder import CorpusBuilder
-from src.KnowledgeDb.concept_table_builder import ConceptTableBuilder
-from src.KnowledgeDb.db_clients.ols_db import validate_identifier
-from src._paths import corpus_path
+from metaharmonizer.KnowledgeDb.corpus_builder import CorpusBuilder
+from metaharmonizer.KnowledgeDb.concept_table_builder import ConceptTableBuilder
+from metaharmonizer.KnowledgeDb.db_clients.ols_db import validate_identifier
+from metaharmonizer._paths import corpus_path
 
 
 def main() -> None:

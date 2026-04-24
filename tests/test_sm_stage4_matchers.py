@@ -8,7 +8,7 @@ import pytest
 from types import SimpleNamespace
 from unittest.mock import MagicMock
 
-from src.models.schema_mapper.matchers.stage4_matchers import LLMMatcher
+from metaharmonizer.models.schema_mapper.matchers.stage4_matchers import LLMMatcher
 
 
 # ── Stub helpers ───────────────────────────────────────────────────────────────

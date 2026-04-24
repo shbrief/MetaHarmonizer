@@ -226,7 +226,7 @@ class TestHashIsolation:
         os.environ["VECTOR_DB_PATH"] = self.db_path
         # Patch BASE_DB in concept_table_builder module
         self._patches = [
-            patch("src.KnowledgeDb.concept_table_builder.BASE_DB", self.db_path),
+            patch("metaharmonizer.KnowledgeDb.concept_table_builder.BASE_DB", self.db_path),
         ]
         for p in self._patches:
             p.start()
@@ -265,7 +265,7 @@ class TestHashIsolation:
                 return []
 
     def test_different_suffix_tables_are_isolated(self, tmp_path):
-        from src.KnowledgeDb.concept_table_builder import ConceptTableBuilder
+        from metaharmonizer.KnowledgeDb.concept_table_builder import ConceptTableBuilder
 
         terms_a = [
             {"label": "Disease A", "obo_id": "MONDO:0000001",
@@ -300,7 +300,7 @@ class TestHashIsolation:
         assert len(rag_default) == 0
 
     def test_suffix_tables_synonym_isolated(self, tmp_path):
-        from src.KnowledgeDb.concept_table_builder import ConceptTableBuilder
+        from metaharmonizer.KnowledgeDb.concept_table_builder import ConceptTableBuilder
 
         terms = [
             {"label": "Disease X", "obo_id": "MONDO:0000099",
@@ -321,7 +321,7 @@ class TestHashIsolation:
 
     def test_same_suffix_is_idempotent(self, tmp_path):
         """Building the same corpus twice with same suffix should not duplicate."""
-        from src.KnowledgeDb.concept_table_builder import ConceptTableBuilder
+        from metaharmonizer.KnowledgeDb.concept_table_builder import ConceptTableBuilder
 
         terms = [
             {"label": "Disease Y", "obo_id": "MONDO:0000050",
@@ -349,12 +349,12 @@ class TestTableSuffixPropagation:
 
     def test_faiss_sqlite_search_stores_suffix(self):
         """FAISSSQLiteSearch must expose self.table_suffix."""
-        from src.KnowledgeDb.faiss_sqlite_pipeline import FAISSSQLiteSearch
+        from metaharmonizer.KnowledgeDb.faiss_sqlite_pipeline import FAISSSQLiteSearch
 
-        with patch("src.KnowledgeDb.faiss_sqlite_pipeline.ensure_knowledge_db"):
-            with patch("src.KnowledgeDb.faiss_sqlite_pipeline.faiss") as mock_faiss:
+        with patch("metaharmonizer.KnowledgeDb.faiss_sqlite_pipeline.ensure_knowledge_db"):
+            with patch("metaharmonizer.KnowledgeDb.faiss_sqlite_pipeline.faiss") as mock_faiss:
                 mock_faiss.get_num_gpus.return_value = 0
-                with patch("src.KnowledgeDb.faiss_sqlite_pipeline.NCIDb"):
+                with patch("metaharmonizer.KnowledgeDb.faiss_sqlite_pipeline.NCIDb"):
                     with patch("sqlite3.connect"):
                         with patch("os.path.exists", return_value=False):
                             store = FAISSSQLiteSearch.__new__(FAISSSQLiteSearch)
@@ -364,7 +364,7 @@ class TestTableSuffixPropagation:
 
     def test_faiss_sqlite_search_table_name_includes_suffix(self):
         """table_name must include the suffix."""
-        from src.KnowledgeDb.faiss_sqlite_pipeline import FAISSSQLiteSearch
+        from metaharmonizer.KnowledgeDb.faiss_sqlite_pipeline import FAISSSQLiteSearch
 
         store = FAISSSQLiteSearch.__new__(FAISSSQLiteSearch)
         # Simulate the relevant __init__ assignments
@@ -378,12 +378,12 @@ class TestTableSuffixPropagation:
 
     def test_synonym_dict_stores_suffix(self):
         """SynonymDict must expose self.table_suffix and include it in table_name."""
-        from src.KnowledgeDb.synonym_dict import SynonymDict
+        from metaharmonizer.KnowledgeDb.synonym_dict import SynonymDict
 
-        with patch("src.KnowledgeDb.synonym_dict.ensure_knowledge_db"):
-            with patch("src.KnowledgeDb.synonym_dict.get_embedding_model_cached"):
-                with patch("src.KnowledgeDb.synonym_dict.EmbeddingAdapter"):
-                    with patch("src.KnowledgeDb.synonym_dict.NCIDb"):
+        with patch("metaharmonizer.KnowledgeDb.synonym_dict.ensure_knowledge_db"):
+            with patch("metaharmonizer.KnowledgeDb.synonym_dict.get_embedding_model_cached"):
+                with patch("metaharmonizer.KnowledgeDb.synonym_dict.EmbeddingAdapter"):
+                    with patch("metaharmonizer.KnowledgeDb.synonym_dict.NCIDb"):
                         with patch("sqlite3.connect"):
                             sd = SynonymDict(
                                 category="disease",
@@ -403,7 +403,7 @@ class TestOlsContextExcludesSynonyms:
     """After the fix, ols_db.create_context_list must NOT include synonyms."""
 
     def test_synonyms_not_in_context(self):
-        from src.KnowledgeDb.db_clients.ols_db import OLSDb
+        from metaharmonizer.KnowledgeDb.db_clients.ols_db import OLSDb
 
         ols = OLSDb()
         concept = {
@@ -419,7 +419,7 @@ class TestOlsContextExcludesSynonyms:
         assert "Alias 2" not in ctx
 
     def test_definitions_present(self):
-        from src.KnowledgeDb.db_clients.ols_db import OLSDb
+        from metaharmonizer.KnowledgeDb.db_clients.ols_db import OLSDb
 
         ols = OLSDb()
         concept = {
@@ -434,7 +434,7 @@ class TestOlsContextExcludesSynonyms:
         assert "children: Child A" in ctx
 
     def test_empty_concept(self):
-        from src.KnowledgeDb.db_clients.ols_db import OLSDb
+        from metaharmonizer.KnowledgeDb.db_clients.ols_db import OLSDb
 
         ols = OLSDb()
         concept = {

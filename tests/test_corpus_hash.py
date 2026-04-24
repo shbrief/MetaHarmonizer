@@ -2,7 +2,7 @@
 
 import pandas as pd
 import pytest
-from src.utils.corpus_hash import compute_corpus_hash
+from metaharmonizer.utils.corpus_hash import compute_corpus_hash
 
 
 @pytest.fixture
