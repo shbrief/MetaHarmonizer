@@ -47,7 +47,7 @@
 
 ### 2. Usage
 
-In order to use schema and/Or ontology mapping functionality in metaharmonizer, please follow the steps below.
+In order to use schema and/or ontology mapping functionality in metaharmonizer, please follow the steps below.
 
 #### 2.1. Installation
 
@@ -97,15 +97,26 @@ mappers. `python-dotenv` auto-loads `.env` on import.
 | `FAISS_INDEX_DIR` | FAISS index cache | `$KNOWLEDGE_DB_DIR/faiss_indexes` | — |
 | `KNOWLEDGE_DB_DIR` | Root dir override for KnowledgeDb assets | `~/.metaharmonizer/KnowledgeDb` | — |
 | `METHOD_MODEL_YAML` | Method→model registry | bundled `metaharmonizer/models/method_model.yaml` | — |
-| `MODEL_CACHE_ROOT` / `MODEL_CACHE_DIR` | Hugging Face model cache | `./model_cache` | — |
+| `MODEL_CACHE_ROOT` / `MODEL_CACHE_DIR` | Hugging Face model cache | `~/.metaharmonizer/model_cache` | `MODEL_CACHE_ROOT` takes precedence; `MODEL_CACHE_DIR` is a fallback. |
 | `FIELD_MODEL` | Sentence-transformer for `FieldSuggester` | `all-MiniLM-L6-v2` | — |
 | `NCIT_POOL_SIZE` | NCI async client connection pool | `8` | Raise for bulk corpus builds. |
 | `LOG_FILE` / `LOG_ENV` | Logger config | `out.log` / `development` | — |
 
 #### 2.3. Quickstart
 
-Minimal runnable snippet — lands results in memory, no API keys needed for
-Stage 1–2 (exact + embedding match on the bundled corpus):
+The snippets below assume you cloned the repo (so `data/` is on disk and the
+cached ontology corpus under `data/corpus/retrieved_ontologies/` is available).
+For wheel-only installs:
+- replace the input paths with your own files (or point
+  `METAHARMONIZER_DATA_DIR` at a local copy of `data/`),
+- and pass `corpus_df=` to `OntoMapEngine` or set `UMLS_API_KEY` so the engine
+  can fetch the ontology on first use. A small reference dataset
+  (`schema/curated_fields.csv`, `corpus/oncotree_code_to_name.csv`) is bundled
+  inside the wheel for `SchemaMapEngine` and OncoTree lookups, but **the full
+  ontology corpus is not**.
+
+Minimal `OntoMapEngine` example (Stage 1–2; no API key needed when the cached
+NCIT corpus is present locally):
 
 ```python
 import pandas as pd
