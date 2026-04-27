@@ -80,6 +80,7 @@ class OntoMapEngine:
                  s4_threshold: float = 0.6,
                  s4_model: str = 'gemma-12b',
                  output_dir: str = None,
+                 filter_obsolete: bool = False,
                  **other_params: dict) -> None:
         """
         Initializes the OntoMapEngine class.
@@ -103,6 +104,7 @@ class OntoMapEngine:
         self.category = validate_identifier(category, "category")
         self.output_dir = output_dir
         self.topk = topk
+        self.filter_obsolete = filter_obsolete
         self.s2_strategy = s2_strategy
         self.s3_strategy = s3_strategy
         self.s3_threshold = s3_threshold
@@ -266,11 +268,14 @@ class OntoMapEngine:
             self.corpus = list(dict.fromkeys(
                 corpus_df["official_label"].astype(str).tolist()
             ))
-        # Filter obsolete terms from corpus list (mirrors _normalize_df filter)
-        self.corpus = [
-            t for t in self.corpus
-            if not t.strip().lower().startswith("obsolete_")
-        ]
+        # Filter obsolete terms from corpus list (mirrors _normalize_df filter).
+        # Gated by self.filter_obsolete so version-pinned benchmarks whose
+        # ground truth still references obsolete_* labels can keep them.
+        if self.filter_obsolete:
+            self.corpus = [
+                t for t in self.corpus
+                if not t.strip().lower().startswith("obsolete_")
+            ]
 
         self._ensure_concept_tables(corpus_df)
 
@@ -721,14 +726,16 @@ class OntoMapEngine:
         if "clean_code" in df.columns:
             df["clean_code"] = df["clean_code"].astype(str)
 
-        # Filter out obsolete ontology terms (e.g. "obsolete_AIDS" in EFO)
-        obs_mask = (df["official_label"].str.strip().str.lower()
-                    .str.startswith("obsolete_"))
-        n_obs = obs_mask.sum()
-        if n_obs:
-            df = df[~obs_mask].reset_index(drop=True)
-            self._logger.info(
-                f"Filtered {n_obs} obsolete_ terms from corpus_df")
+        # Filter out obsolete ontology terms (e.g. "obsolete_AIDS" in EFO).
+        # Gated by self.filter_obsolete.
+        if self.filter_obsolete:
+            obs_mask = (df["official_label"].str.strip().str.lower()
+                        .str.startswith("obsolete_"))
+            n_obs = obs_mask.sum()
+            if n_obs:
+                df = df[~obs_mask].reset_index(drop=True)
+                self._logger.info(
+                    f"Filtered {n_obs} obsolete_ terms from corpus_df")
 
         return df
 
@@ -844,8 +851,10 @@ class OntoMapEngine:
             curated = self.cura_map.get(row["original_value"])
             if not curated:
                 return 99
+            curated_key = curated.strip().lower()
             for i, col in enumerate(match_cols, start=1):
-                if row.get(col) == curated:
+                term = row.get(col)
+                if term and term.strip().lower() == curated_key:
                     return i
             return 99
 
@@ -1074,6 +1083,9 @@ class OntoMapEngine:
                         match = syn_row[f'match{i}']
                         score = float(syn_row[f'match{i}_score'])
                         if pd.notna(match) and match:
+                            if self.filter_obsolete and str(match).strip(
+                                    ).lower().startswith("obsolete_"):
+                                continue
                             if match in combined_candidates:
                                 combined_candidates[match] = max(
                                     combined_candidates[match], score)
@@ -1135,6 +1147,79 @@ class OntoMapEngine:
 
         self._logger.info(
             f"Stage 2.5: Boosted {len(syn_boosted)} queries with synonyms")
+
+    def _rrf_merge_s2_s3(self, s2_res: pd.DataFrame,
+                         s3_res: pd.DataFrame,
+                         rrf_k: int = 60) -> pd.DataFrame:
+        """Fuse S2 and S3 candidates via Reciprocal Rank Fusion.
+
+        For each query that went to Stage 3, combine its S2 top-k and S3 top-k
+        candidates using RRF (scale-free rank fusion), then rebuild match
+        columns using the fused ranking. Preserves S2 scores when available
+        (keeps the score column on the sap-bert scale).
+        """
+        s2_by_orig = (s2_res.drop_duplicates(subset='original_value',
+                                             keep='first')
+                            .set_index('original_value', drop=False))
+        merged_rows = []
+
+        def _get_score(val) -> float:
+            try:
+                return float(val)
+            except (TypeError, ValueError):
+                return 0.0
+
+        for _, s3_row in s3_res.iterrows():
+            orig = s3_row['original_value']
+            rrf_scores: dict = {}
+            s2_score_of: dict = {}
+            s3_score_of: dict = {}
+
+            if orig in s2_by_orig.index:
+                s2_row = s2_by_orig.loc[orig]
+                for i in range(1, self.topk + 1):
+                    lbl = s2_row.get(f'match{i}')
+                    if pd.notna(lbl) and lbl:
+                        rrf_scores[lbl] = rrf_scores.get(lbl, 0.0) + 1.0 / (rrf_k + i)
+                        s2_score_of[lbl] = _get_score(s2_row.get(f'match{i}_score'))
+
+            for i in range(1, self.topk + 1):
+                lbl = s3_row.get(f'match{i}')
+                if pd.notna(lbl) and lbl:
+                    rrf_scores[lbl] = rrf_scores.get(lbl, 0.0) + 1.0 / (rrf_k + i)
+                    s3_score_of[lbl] = _get_score(s3_row.get(f'match{i}_score'))
+
+            sorted_lbls = sorted(rrf_scores.items(), key=lambda x: x[1],
+                                 reverse=True)[:self.topk]
+
+            new_row = s3_row.copy()
+            for i in range(1, self.topk + 1):
+                if i - 1 < len(sorted_lbls):
+                    lbl, _ = sorted_lbls[i - 1]
+                    scr = s2_score_of.get(lbl, s3_score_of.get(lbl, 0.0))
+                    new_row[f'match{i}'] = lbl
+                    new_row[f'match{i}_score'] = f"{scr:.4f}"
+                else:
+                    new_row[f'match{i}'] = None
+                    new_row[f'match{i}_score'] = "0.0000"
+
+            curated = str(new_row.get('curated_ontology') or '').strip().lower()
+            ml = 99
+            for i in range(1, self.topk + 1):
+                lbl = new_row.get(f'match{i}')
+                if lbl and str(lbl).strip().lower() == curated:
+                    ml = i
+                    break
+            new_row['match_level'] = ml
+            new_row['stage'] = 3.5
+            merged_rows.append(new_row)
+
+        merged_df = pd.DataFrame(merged_rows).reset_index(drop=True)
+        self._logger.info(
+            f"Stage 3 rescue-merge: fused {len(merged_df)} queries "
+            f"with S2 candidates via RRF (k={rrf_k})"
+        )
+        return merged_df
 
     def _save_result(self, df: pd.DataFrame) -> pd.DataFrame:
         """Save result DataFrame to output_dir with a timestamp if output_dir is set."""
@@ -1245,7 +1330,10 @@ class OntoMapEngine:
         self._logger.info(f"Stage 2 completed: {len(s2_res)} queries")
 
         # ========== Stage 2.5: Synonym Verification ==========
-        self._apply_synonym_boost(s2_res)
+        if self.other_params.get("skip_stage25", False):
+            self._logger.info("Stage 2.5: Disabled (skip_stage25=True)")
+        else:
+            self._apply_synonym_boost(s2_res)
 
         # ========== Stage 3: RAG/RAG_BIE (Optional) ==========
         if self.s3_strategy is None:
@@ -1347,6 +1435,11 @@ class OntoMapEngine:
             s3_res['stage'] = 3.0
 
             self._logger.info(f"Stage 3 completed: {len(s3_res)} queries")
+
+            # Rescue-only merge: fuse S3 candidates with S2 candidates via RRF
+            # instead of replacing them wholesale.
+            if self.other_params.get('s3_merge', False):
+                s3_res = self._rrf_merge_s2_s3(s2_res, s3_res)
 
             # Remove Stage 2 results for queries that went to Stage 3
             s2_res_filtered = s2_res[~s2_res['original_value'].
