@@ -4,7 +4,7 @@ import pytest
 from pathlib import Path
 from unittest.mock import patch
 
-from src._paths import corpus_path, DATA_DIR, RETRIEVED_ONTOLOGIES_DIR
+from metaharmonizer._paths import corpus_path, DATA_DIR, RETRIEVED_ONTOLOGIES_DIR
 
 
 class TestCorpusPath:
