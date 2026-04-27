@@ -224,9 +224,12 @@ class TestHashIsolation:
         self.db_path = str(tmp_path / "test.sqlite")
         self._orig_db = os.environ.get("VECTOR_DB_PATH")
         os.environ["VECTOR_DB_PATH"] = self.db_path
-        # Patch BASE_DB in concept_table_builder module
+        # Patch path constants frozen at module import in both consumers.
+        # Setting os.environ["VECTOR_DB_PATH"] above is not enough because
+        # nci_db.VECTOR_DB_PATH is captured from _paths at import time.
         self._patches = [
             patch("metaharmonizer.KnowledgeDb.concept_table_builder.BASE_DB", self.db_path),
+            patch("metaharmonizer.KnowledgeDb.db_clients.nci_db.VECTOR_DB_PATH", self.db_path),
         ]
         for p in self._patches:
             p.start()

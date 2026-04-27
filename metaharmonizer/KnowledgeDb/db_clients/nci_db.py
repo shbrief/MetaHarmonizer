@@ -53,6 +53,11 @@ class NCIDb:
 
     def _ensure_cache_table(self):
         """Build cache table if not exists."""
+        # sqlite3.connect creates the file but not the parent directory.
+        # On fresh installs the per-user KnowledgeDb dir may not exist yet.
+        parent = os.path.dirname(self.cache_db_path)
+        if parent:
+            os.makedirs(parent, exist_ok=True)
         with sqlite3.connect(self.cache_db_path) as conn:
             conn.execute("""
                 CREATE TABLE IF NOT EXISTS nci_concept_cache (
