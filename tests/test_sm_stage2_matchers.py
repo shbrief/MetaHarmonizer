@@ -4,11 +4,11 @@ import pytest
 import torch
 from unittest.mock import MagicMock
 
-from src.models.schema_mapper.matchers.stage2_matchers import (
+from metaharmonizer.models.schema_mapper.matchers.stage2_matchers import (
     ValueDictMatcher,
     OntologyMatcher,
 )
-from src.models.schema_mapper.config import VALUE_UNIQUE_CAP, VALUE_PERCENTAGE_THRESH
+from metaharmonizer.models.schema_mapper.config import VALUE_UNIQUE_CAP, VALUE_PERCENTAGE_THRESH
 
 
 # ── ValueDictMatcher helpers ───────────────────────────────────────────────────

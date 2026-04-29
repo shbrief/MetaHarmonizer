@@ -9,7 +9,7 @@ import pytest
 from types import SimpleNamespace
 from unittest.mock import MagicMock
 
-from src.models.ontology_mapper_llm import OntoMapLLM
+from metaharmonizer.models.ontology_mapper_llm import OntoMapLLM
 
 
 # ── Stubs ──────────────────────────────────────────────────────────────────────

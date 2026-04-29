@@ -10,7 +10,7 @@ shared output contract (columns, match_level, prod mode).
 import numpy as np
 import pytest
 
-from src.models.ontology_mapper_st import OntoMapST
+from metaharmonizer.models.ontology_mapper_st import OntoMapST
 
 
 # ── Stubs ──────────────────────────────────────────────────────────────────────

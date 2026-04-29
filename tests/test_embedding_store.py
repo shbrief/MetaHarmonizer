@@ -7,7 +7,7 @@ from unittest.mock import MagicMock, patch
 import numpy as np
 import pytest
 
-from src.utils.embedding_store import EmbeddingRecord, EmbeddingStore
+from metaharmonizer.utils.embedding_store import EmbeddingRecord, EmbeddingStore
 
 
 # ── Helpers ──────────────────────────────────────────────────────────

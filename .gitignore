@@ -32,6 +32,9 @@ dist/
 *.egg-info/
 .eggs/
 
+# Local env file (use .env.example as template; never commit real values)
+.env
+
 # Model cache
 model_cache/
 *.html
