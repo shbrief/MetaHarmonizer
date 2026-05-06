@@ -1,0 +1,411 @@
+import os
+import re
+import sqlite3
+from typing import Dict, List
+import asyncio
+import httpx
+import json
+from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
+import json
+from metaharmonizer.CustomLogger.custom_logger import CustomLogger
+from aiolimiter import AsyncLimiter
+
+from metaharmonizer.KnowledgeDb.db_clients.umls_db import UMLSDb
+from metaharmonizer._paths import VECTOR_DB_PATH as _VECTOR_DB_PATH
+
+NCI_CALLS = 18
+NCI_PERIOD = 1
+MAX_CONTEXT_ITEMS = 10
+LIST_OF_CONCEPTS = [
+    "synonyms",
+    "definitions",
+    "parents",
+    "children",
+    "roles",
+]
+VECTOR_DB_PATH = str(_VECTOR_DB_PATH)
+
+
+class NCIDb:
+    """A class to interact with the NCI (National Cancer Institute) API for fetching concept data.
+    This class provides methods to fetch concepts by their codes, create context strings from the fetched data,
+    and manage rate limiting for API calls.
+    Attributes:
+        _base_url (str): The base URL for the NCI API.
+        _umls_db (UMLSDb): An instance of the UMLSDb class for interacting with the UMLS database.
+        logger (CustomLogger): An instance of CustomLogger for logging messages.
+        rate_limiter (AsyncLimiter): An instance of AsyncLimiter to manage rate limiting for API calls.
+        batch_size (int): The number of codes to fetch in a single batch.
+        concurrency (int): The number of concurrent requests allowed.
+    """
+
+    def __init__(self, umls_api_key):
+        self.base_url = "https://api-evsrest.nci.nih.gov/api/v1"
+        self._umls_db = UMLSDb(umls_api_key)
+        self.logger = CustomLogger().custlogger(loglevel='INFO')
+        self.rate_limiter = AsyncLimiter(NCI_CALLS, time_period=NCI_PERIOD)
+        self.batch_size = 50
+        self.concurrency = 4
+        self.list_of_concepts = LIST_OF_CONCEPTS
+
+        self.cache_db_path = VECTOR_DB_PATH
+        self._ensure_cache_table()
+
+    def _ensure_cache_table(self):
+        """Build cache table if not exists."""
+        # sqlite3.connect creates the file but not the parent directory.
+        # On fresh installs the per-user KnowledgeDb dir may not exist yet.
+        parent = os.path.dirname(self.cache_db_path)
+        if parent:
+            os.makedirs(parent, exist_ok=True)
+        with sqlite3.connect(self.cache_db_path) as conn:
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS nci_concept_cache (
+                    code TEXT PRIMARY KEY,
+                    name TEXT,
+                    data_json TEXT,
+                    fetched_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                );
+            """)
+            conn.execute("""
+                CREATE INDEX IF NOT EXISTS idx_nci_cache_code 
+                ON nci_concept_cache(code);
+            """)
+
+    @retry(
+        stop=stop_after_attempt(3),
+        wait=wait_exponential(multiplier=1, min=2, max=10),
+        retry=retry_if_exception_type(
+            (httpx.TimeoutException, httpx.ConnectError, httpx.HTTPStatusError)),
+        retry_error_callback=lambda retry_state: None,
+    )
+    async def fetch_one(self, client, url):
+        """Fetch a single URL with rate limiting and per-URL retry on transient errors.
+
+        Raises on 429 / 5xx so tenacity retries with exponential backoff.
+        Returns None for permanent failures (4xx other than 429) and after
+        exhausting all retry attempts.
+
+        Args:
+            client (httpx.AsyncClient): The HTTP client to use for the request.
+            url (str): The URL to fetch.
+        Returns:
+            httpx.Response: The response object on success.
+            None: On permanent failure or after all retries are exhausted.
+        """
+        async with self.rate_limiter:
+            r = await client.get(url, timeout=10.0)
+            if r.status_code == 429:
+                self.logger.warning(f"NCIDb: Rate limited for {url}, retrying after backoff")
+                raise httpx.HTTPStatusError("429 Too Many Requests",
+                                            request=r.request,
+                                            response=r)
+            if r.status_code >= 500:
+                self.logger.warning(f"NCIDb: Server error {r.status_code} for {url}, retrying")
+                raise httpx.HTTPStatusError(f"{r.status_code} Server Error",
+                                            request=r.request,
+                                            response=r)
+            if r.status_code != 200:
+                self.logger.warning(f"NCIDb: Non-200 response {r.status_code} for {url}")
+                return None
+            return r
+
+    async def fetch_batch(self, client, urls):
+        """Fetch a batch of URLs concurrently. Each URL retries independently via fetch_one.
+
+        Args:
+            client (httpx.AsyncClient): The HTTP client to use for the requests.
+            urls (List[str]): A list of URLs to fetch.
+        Returns:
+            List[httpx.Response | None]: Response per URL; None for failed fetches.
+        """
+        tasks = [self.fetch_one(client, url) for url in urls]
+        return await asyncio.gather(*tasks)
+
+    async def get_custom_concepts_by_codes(self, codes, client=None):
+        """Fetch concept data for a list of codes from the NCI API.
+        Args:
+            codes (List[str]): A list of NCI codes to fetch concept data for.
+        Returns:
+            Dict[str, dict]: A dictionary mapping each code to its corresponding concept data.
+        """
+        if not codes:
+            self.logger.info("No codes provided for fetching concepts.")
+            return {}
+
+        self.logger.info(
+            f"Fetching concept data for {len(codes)} codes in batches of {self.batch_size}"
+        )
+        result = {}
+        semaphore = asyncio.Semaphore(self.concurrency)
+
+        async def fetch_and_parse(batch_codes, batch_idx, http_client):
+            async with semaphore:
+                urls = [
+                    f"{self.base_url}/concept/ncit/{code}?include={','.join(self.list_of_concepts)}"
+                    for code in batch_codes
+                ]
+                responses = await self.fetch_batch(http_client, urls)
+                batch_result = {}
+                for code, response in zip(batch_codes, responses):
+                    if response and response.status_code == 200:
+                        try:
+                            batch_result[code] = response.json()
+                        except json.JSONDecodeError as e:
+                            self.logger.warning(
+                                f"Failed to parse JSON for code {code}: {e}")
+                    else:
+                        self.logger.warning(
+                            f"Failed to fetch code {code}: "
+                            f"{response.status_code if response else 'No response'}"
+                        )
+                self.logger.info(
+                    f"Processed batch {batch_idx + 1} of {len(batches)}")
+                return batch_result
+
+        batches = [
+            codes[i:i + self.batch_size]
+            for i in range(0, len(codes), self.batch_size)
+        ]
+
+        if client is None:
+            async with httpx.AsyncClient(
+                    limits=httpx.Limits(max_connections=self.concurrency *
+                                        self.batch_size)) as owned_client:
+                tasks = [
+                    fetch_and_parse(batch, i, owned_client)
+                    for i, batch in enumerate(batches)
+                ]
+                all_results = await asyncio.gather(*tasks,
+                                                   return_exceptions=True)
+        else:
+            tasks = [
+                fetch_and_parse(batch, i, client)
+                for i, batch in enumerate(batches)
+            ]
+            all_results = await asyncio.gather(*tasks, return_exceptions=True)
+
+        for i, r in enumerate(all_results):
+            if isinstance(r, dict):
+                result.update(r)
+            else:
+                self.logger.warning(f"Batch {i + 1} failed: {r}")
+
+        self.logger.info(f"Retrieved {len(result)} concept data entries")
+        return result
+
+    async def get_concept(self,
+                          code: str,
+                          client: httpx.AsyncClient = None) -> dict:
+        """Fetch one NCIt concept with the standard include set."""
+        url = (f"{self.base_url}/concept/ncit/{code}"
+               f"?include={','.join(self.list_of_concepts)}")
+        if client is None:
+            async with httpx.AsyncClient() as owned_client:
+                resp = await self.fetch_one(owned_client, url)
+        else:
+            resp = await self.fetch_one(client, url)
+        if resp is None:
+            raise RuntimeError(
+                f"Failed to fetch NCIt concept {code}: no successful HTTP response"
+            )
+        return resp.json()
+
+    def create_context_list(self, concept_data: dict) -> str:
+        """
+        Convert a concept dictionary into a structured context string.
+        Args:
+            concept_data (dict): The concept data fetched from the NCI API.
+        Returns:
+            str: A string representation of the context, formatted as "concept: item1, item2, ...".
+        """
+        context = []
+        excluded_prefixes = set([
+            "Gene_", "Allele_", "Molecular_Abnormality_Involves_Gene",
+            "Cytogenetic_Abnormality_Involves_Chromosome", "EO_Disease_",
+            "Conceptual_Part_Of", "Chemotherapy_Regimen_Has_Component",
+            "Biological_Process_"
+        ])
+
+        for concept in self.list_of_concepts:
+            if concept not in concept_data:
+                continue
+            parts = []
+            if concept == "roles":
+                role_map = {}
+                for item in concept_data[concept]:
+                    if isinstance(item, dict):
+                        role_type = item.get("type")
+                        role_target = item.get("relatedName")
+                        if any(
+                                role_type.startswith(prefix)
+                                for prefix in excluded_prefixes):
+                            continue
+                        if role_type and role_target:
+                            role_map.setdefault(role_type,
+                                                []).append(role_target)
+                simplified_role_map = {}
+                for role_type, targets in role_map.items():
+                    key = re.sub(
+                        r"^(?:Disease_|Procedure_)?(?:Has|Is|May_Have|Mapped_To|Excludes|Has_Accepted_Use_For)?_?",
+                        "", role_type)
+                    simplified_role_map.setdefault(key, set()).update(targets)
+                for role_type, target_set in simplified_role_map.items():
+                    target_list = list(target_set)[:MAX_CONTEXT_ITEMS]
+                    parts.append(f"{role_type}: {'; '.join(target_list)}")
+            elif concept == "definitions":
+                seen_defs = set()
+                for item in concept_data[concept]:
+                    if isinstance(item, dict):
+                        definition = item.get("definition", "")
+                        if definition:
+                            cleaned_def = definition.strip()
+                            cleaned_def = re.sub(r'[.;\s]+$', '', cleaned_def)
+                            norm_def = ' '.join(cleaned_def.split())
+                            norm_def = re.sub(r'[\s\.;,:-]*\(?NCI\)?$',
+                                              '',
+                                              norm_def,
+                                              flags=re.IGNORECASE)
+                            norm_def_lower = norm_def.lower()
+                            if norm_def_lower not in seen_defs:
+                                seen_defs.add(norm_def_lower)
+                                parts.append(norm_def)
+            else:
+                names = []
+                for item in concept_data[concept]:
+                    if isinstance(item, dict):
+                        name = item.get("name", "")
+                        if name:
+                            names.append(name)
+                parts = list(set(names)) if concept == "synonyms" else list(
+                    set(names))[:MAX_CONTEXT_ITEMS]
+            if parts:
+                context.append(f"{concept}: {'; '.join(parts)}")
+        return ". ".join(context)
+
+    async def get_context_map_by_codes(self,
+                                       codes: List[str]) -> Dict[str, str]:
+        """
+        Fetch context data for a list of NCI codes and create a mapping of codes to context strings.
+        Args:
+            codes (List[str]): A list of NCI codes to fetch context data for.
+        Returns:
+            Dict[str, str]: A dictionary mapping each code to its corresponding context string.
+        """
+        concept_map = await self.get_custom_concepts_by_codes(codes)
+        return {
+            code: self.create_context_list(data)
+            for code, data in concept_map.items()
+        }
+
+    async def get_ontology_metadata(
+        self,
+        terminology: str = "ncit",
+        client: httpx.AsyncClient | None = None,
+    ) -> dict:
+        """Fetch terminology-level metadata from the EVS REST API.
+
+        Returns a dict with keys matching the OLS metadata shape:
+        ontology, ontology_title, ontology_version, version_iri, source_api.
+        """
+        url = f"{self.base_url}/metadata/terminologies"
+
+        async def _fetch(http_client: httpx.AsyncClient) -> dict:
+            resp = await self.fetch_one(http_client, url)
+            if resp is None:
+                raise RuntimeError(
+                    f"Failed to fetch EVS terminology metadata from {url}"
+                )
+            return resp.json()
+
+        if client is None:
+            async with httpx.AsyncClient() as owned_client:
+                data = await _fetch(owned_client)
+        else:
+            data = await _fetch(client)
+
+        # data is a list of terminology objects; find the requested one
+        entry = next(
+            (t for t in data if t.get("terminology", "").lower() == terminology.lower()),
+            None,
+        )
+        if entry is None:
+            raise RuntimeError(
+                f"Terminology '{terminology}' not found in EVS metadata response"
+            )
+
+        return {
+            "ontology": terminology,
+            "ontology_title": entry.get("name") or terminology,
+            "ontology_version": entry.get("version"),
+            "version_iri": entry.get("graph"),
+            "source_api": url,
+        }
+
+    async def get_descendants(
+        self,
+        code: str,
+        client: httpx.AsyncClient = None,
+        max_level: int = 50,
+        page_size: int = 1000,
+    ) -> List[dict]:
+        """Fetch all descendants of an NCI concept via the EVSREST API.
+
+        Returns a list of dicts with keys: code, name, level, leaf.
+        """
+        results: List[dict] = []
+        from_record = 0
+
+        async def _fetch_all(http_client: httpx.AsyncClient):
+            nonlocal from_record
+            while True:
+                url = (
+                    f"{self.base_url}/concept/ncit/{code}/descendants"
+                    f"?maxLevel={max_level}"
+                    f"&fromRecord={from_record}&pageSize={page_size}"
+                )
+                async with self.rate_limiter:
+                    r = await http_client.get(url, timeout=60.0)
+                if r.status_code != 200:
+                    raise RuntimeError(
+                        f"NCI get_descendants({code}): HTTP {r.status_code} "
+                        f"after {len(results)} descendants. "
+                        f"Aborting to avoid an incomplete corpus."
+                    )
+                page = r.json()
+                if not page:
+                    break
+                results.extend(page)
+                self.logger.info(
+                    f"Fetched {len(results)} descendants so far for {code}"
+                )
+                if len(page) < page_size:
+                    break
+                from_record += page_size
+
+        if client is None:
+            async with httpx.AsyncClient() as owned_client:
+                await _fetch_all(owned_client)
+        else:
+            await _fetch_all(client)
+
+        self.logger.info(
+            f"Retrieved {len(results)} total descendants for {code}"
+        )
+        return results
+
+    async def get_labels_by_codes(self, codes: List[str]) -> Dict[str, str]:
+        """
+        Fetch labels for a list of NCI codes and create a mapping of codes to their preferred names.
+        Args:
+            codes (List[str]): A list of NCI codes to fetch labels for.
+        Returns:
+            Dict[str, str]: A dictionary mapping each code to its corresponding preferred name.
+        """
+        concept_data = await self.get_custom_concepts_by_codes(codes)
+        code_to_label = {}
+        for code, data in concept_data.items():
+            label = data.get("name")
+            if label:
+                code_to_label[code] = label.strip()
+        return code_to_label

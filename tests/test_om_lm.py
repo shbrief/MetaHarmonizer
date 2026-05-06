@@ -6,7 +6,7 @@ LM does NOT L2-normalise query embeddings before FAISS search.
 import numpy as np
 import pytest
 
-from src.models.ontology_mapper_lm import OntoMapLM
+from metaharmonizer.models.ontology_mapper_lm import OntoMapLM
 
 
 # ── Stubs ──────────────────────────────────────────────────────────────────────

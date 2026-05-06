@@ -5,8 +5,8 @@ import pandas as pd
 import pytest
 import torch
 
-from src.utils.schema_mapper_utils import normalize
-from src.models.schema_mapper.matchers.stage3_matchers import (
+from metaharmonizer.utils.schema_mapper_utils import normalize
+from metaharmonizer.models.schema_mapper.matchers.stage3_matchers import (
     NumericCombinedMatcher,
     NumericStandardMatcher,
     SemanticCombinedMatcher,

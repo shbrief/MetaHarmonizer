@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "metaharmonizer"
-version = "0.2.4"
+version = "0.3.0"
 description = "Biomedical metadata harmonization: ontology mapping, schema mapping, and field suggestion"
 requires-python = ">=3.10"
 readme = "readme.md"
@@ -71,20 +71,23 @@ all = [
     "metaharmonizer[notebook,eval,llm-gemini,llm-openai]",
 ]
 
-# Keep src.* import paths working without renaming the source directory.
-# After `pip install -e .` or `pip install git+https://github.com/...`,
-# `from src.field_suggester import FieldSuggester` continues to work.
 [tool.setuptools]
 package-dir = { "" = "." }
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["src*"]
+include = ["metaharmonizer*"]
 
 [tool.setuptools.package-data]
-# Bundle the method→model YAML that lives inside src/models/.
-# The data/ corpus directory at the repo root is NOT bundled in the wheel;
-# installed users must set METAHARMONIZER_DATA_DIR to their local copy.
-"src.models" = ["method_model.yaml"]
+# Bundle the method→model YAML that lives inside metaharmonizer/models/.
+"metaharmonizer.models" = ["method_model.yaml"]
+# Small reference files shipped for "zero-config" first use. Accessed via
+# metaharmonizer._paths.resolve_data_file() / bundled_file(). Large corpora
+# and FAISS indexes are NOT bundled — users either rebuild locally or set
+# METAHARMONIZER_DATA_DIR / KNOWLEDGE_DB_DIR to point at existing copies.
+"metaharmonizer._bundled_data" = [
+    "corpus/oncotree_code_to_name.csv",
+    "schema/curated_fields.csv",
+]
 
 [tool.pytest.ini_options]

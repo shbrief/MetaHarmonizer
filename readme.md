@@ -47,22 +47,112 @@
 
 ### 2. Usage
 
-In order to use schema and/Or ontology mapping functionality in metaharmonizer, please follow the steps below. 
+In order to use schema and/or ontology mapping functionality in metaharmonizer, please follow the steps below.
 
-#### 2.1. Environment setup
+#### 2.1. Installation
 
-- First create a `conda create -n demo_env python=3.10 -y` 
-- Activate the environment as `conda activate demo_env`
-- Install the dependencies `pip install -e ".[full]"` after `pip install --upgrade pip`
-
-#### 2.2. Cloning the repository
-
-```
+```bash
+# 1. Clone
 git clone https://github.com/shbrief/MetaHarmonizer
+cd MetaHarmonizer
+
+# 2. Create a Python 3.10 environment
+conda create -n mh python=3.10 -y
+conda activate mh
+pip install --upgrade pip
+
+# 3. Install the package. Pick one of:
+pip install -e .                       # core only (no LLM backends)
+pip install -e ".[llm-gemini]"         # + Gemini (Stage-4 LLM, OntoMapLLM, etc.)
+pip install -e ".[llm-openai]"         # + OpenAI (FieldSuggester semantic clustering)
+pip install -e ".[notebook]"           # + nest-asyncio for Jupyter workflows
+pip install -e ".[dev]"                # + pytest & coverage
+pip install -e ".[eval]"               # + scipy for evaluation scripts
+pip install -e ".[all]"                # notebook + eval + both LLM backends
 ```
 
+Install directly from GitHub (non-editable):
+```bash
+pip install "git+https://github.com/shbrief/MetaHarmonizer#egg=metaharmonizer[llm-gemini]"
+```
 
-#### 2.3 Datasets
+> The `data/` corpus directory is **not bundled** in the wheel. Installed users
+> should either clone the repo alongside the install, or set
+> `METAHARMONIZER_DATA_DIR` (see [2.2](#22-environment-variables)) to a local
+> copy.
+
+#### 2.2. Environment variables
+
+Copy `.env.example` → `.env` (or export in your shell) before running the
+mappers. `python-dotenv` auto-loads `.env` on import.
+
+| Variable | Required for | Default | Notes |
+|---|---|---|---|
+| `GEMINI_API_KEY` | Stage-4 LLM matcher, `OntoMapLLM`, bi-encoder column inference, `expand_terms_with_gemini` | — | Needed whenever the `llm-gemini` extra is exercised. |
+| `UMLS_API_KEY` | NCI Thesaurus lookups, concept-table builder, `update_term_via_code` | — | Required for `ontology_source="ncit"` pipeline stages that hit the live API. |
+| `METAHARMONIZER_DATA_DIR` | Locating corpus + schema reference files (`oncotree_code_to_name.csv`, `curated_fields.csv`, etc.) | `~/.metaharmonizer/data` | Dev tip: point at `<repo>/data` in your `.env` to reuse the repo's bundled examples. Small reference files ship inside the wheel as a fallback when this dir is empty. |
+| `SM_OUTPUT_DIR` | `SchemaMapEngine` output path | `$METAHARMONIZER_DATA_DIR/schema_mapping_eval` | Overrides where CSV results are written. |
+| `FIELD_VALUE_JSON` | Schema-mapper value dictionary | `$METAHARMONIZER_DATA_DIR/schema/field_value_dict.json` | Point at an alternative value dict. |
+| `VECTOR_DB_PATH` | Knowledge-DB SQLite file | `$KNOWLEDGE_DB_DIR/vector_db.sqlite` | — |
+| `FAISS_INDEX_DIR` | FAISS index cache | `$KNOWLEDGE_DB_DIR/faiss_indexes` | — |
+| `KNOWLEDGE_DB_DIR` | Root dir override for KnowledgeDb assets | `~/.metaharmonizer/KnowledgeDb` | — |
+| `METHOD_MODEL_YAML` | Method→model registry | bundled `metaharmonizer/models/method_model.yaml` | — |
+| `MODEL_CACHE_ROOT` / `MODEL_CACHE_DIR` | Hugging Face model cache | `~/.metaharmonizer/model_cache` | `MODEL_CACHE_ROOT` takes precedence; `MODEL_CACHE_DIR` is a fallback. |
+| `FIELD_MODEL` | Sentence-transformer for `FieldSuggester` | `all-MiniLM-L6-v2` | — |
+| `NCIT_POOL_SIZE` | NCI async client connection pool | `8` | Raise for bulk corpus builds. |
+| `LOG_FILE` / `LOG_ENV` | Logger config | `out.log` / `development` | — |
+
+#### 2.3. Quickstart
+
+The snippets below assume you cloned the repo (so `data/` is on disk and the
+cached ontology corpus under `data/corpus/retrieved_ontologies/` is available).
+For wheel-only installs:
+- replace the input paths with your own files (or point
+  `METAHARMONIZER_DATA_DIR` at a local copy of `data/`),
+- and pass `corpus_df=` to `OntoMapEngine` or set `UMLS_API_KEY` so the engine
+  can fetch the ontology on first use. A small reference dataset
+  (`schema/curated_fields.csv`, `corpus/oncotree_code_to_name.csv`) is bundled
+  inside the wheel for `SchemaMapEngine` and OncoTree lookups, but **the full
+  ontology corpus is not**.
+
+Minimal `OntoMapEngine` example (Stage 1–2; no API key needed when the cached
+NCIT corpus is present locally):
+
+```python
+import pandas as pd
+from metaharmonizer import OntoMapEngine
+
+df = pd.read_csv("data/corpus/cbio_disease/disease_query_updated.csv")
+engine = OntoMapEngine(
+    category="disease",
+    query=df["original_value"].tolist(),
+    cura_map=dict(zip(df["original_value"], df["curated_ontology"])),
+    s2_method="sap-bert",
+    s2_strategy="st",
+    test_or_prod="test",
+)
+results = engine.run()
+print(results.head())
+```
+
+Schema mapper in one call:
+
+```python
+from metaharmonizer import SchemaMapEngine
+
+engine = SchemaMapEngine(
+    clinical_data_path="data/schema/test.csv",
+    mode="manual",   # "auto" to auto-run Stage-4 LLM on low-confidence rows
+    top_k=5,
+)
+engine.run_schema_mapping()
+```
+
+Richer examples (custom corpus, MONDO/UBERON sources, Stage-4 LLM review) live
+in [2.5 Setting up the mappers](#25-setting-up-the-mappers) and the notebooks
+under `demo_nb/`.
+
+#### 2.4 Datasets
 - The datasets in this repository are encrypted to prevent contamination of the gold standard.  
 - For **ontology mapping**, you must provide:
   - A list of `query_terms`  
@@ -71,7 +161,7 @@ git clone https://github.com/shbrief/MetaHarmonizer
   - The schema mapping dictionary is available in the `/data` folder.  
 - ⚠️ You will not be able to use the encrypted demo datasets without authorization, but you can supply your own query and corpus lists.
   
-#### 2.4 Setting up the mappers 
+#### 2.5 Setting up the mappers 
 
 1. Ontology Mapping
 
@@ -81,7 +171,7 @@ git clone https://github.com/shbrief/MetaHarmonizer
 %cd <user_path>/MetaHarmonizer/
 
 import pandas as pd
-from src.Engine import get_ontology_engine
+from metaharmonizer.Engine import get_ontology_engine
 
 OntoMapEngine = get_ontology_engine()
 
@@ -173,7 +263,7 @@ This fetches the full ontology tree once and caches it locally so subsequent pip
 
 2. Schema mapping
 ```python
-from src.models.schema_mapper import SchemaMapEngine
+from metaharmonizer.models.schema_mapper import SchemaMapEngine
 
 # Initialize the engine
 engine = SchemaMapEngine(
@@ -203,7 +293,7 @@ engine.run_llm_on_file(
   - top_k (int): Number of top matches returned for each column.
 
 - Output  
-  - CSV File: Results saved to OUTPUT_DIR (configured in src/models/schema_mapper/config.py). Filename pattern from `run_schema_mapping()` is:  
+  - CSV File: Results saved to OUTPUT_DIR (configured in metaharmonizer/models/schema_mapper/config.py). Filename pattern from `run_schema_mapping()` is:  
 `<input_root>_s3_<field_model_short>_<mode>_<YYYYMMDD_HHMMSS>.csv` (manual mode)  
 `<input_root>_s3_<field_model_short>_s4_<llm_model_short>_<mode>_<YYYYMMDD_HHMMSS>.csv` (auto mode)  
   - If Stage 4 is run manually via `run_llm_on_file(...)`, use `output_csv` to control the output filename and location.  
@@ -213,7 +303,7 @@ stage (stage1, stage2, stage3  )
 method (dict, fuzzy, numeric, alias, bert, freq)  
 match{i}, match{i}_score, match{i}_source (for top-k matches)
 
-#### 2.5. Demo Notebooks For Schema and Ontology Mapping
+#### 2.6. Demo Notebooks For Schema and Ontology Mapping
 
 The demo notebooks are located across `/demo_nb` folder
 

@@ -6,7 +6,7 @@ independently, so match_level logic and min_score filtering are tested here.
 import pytest
 import pandas as pd
 
-from src.models.ontology_mapper_synonym import OntoMapSynonym
+from metaharmonizer.models.ontology_mapper_synonym import OntoMapSynonym
 
 
 # ── Stubs ──────────────────────────────────────────────────────────────────────

@@ -2,7 +2,7 @@
 import asyncio
 import pytest
 
-from src._async_utils import run_async
+from metaharmonizer._async_utils import run_async
 
 
 async def _echo(value):

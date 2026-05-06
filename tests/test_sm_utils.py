@@ -2,7 +2,7 @@
 import pandas as pd
 import pytest
 
-from src.utils.schema_mapper_utils import normalize, extract_valid_value, is_numeric_column
+from metaharmonizer.utils.schema_mapper_utils import normalize, extract_valid_value, is_numeric_column
 
 
 class TestNormalize:

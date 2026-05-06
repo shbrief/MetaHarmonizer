@@ -2,13 +2,13 @@
 import pytest
 from unittest.mock import MagicMock
 
-from src.models.schema_mapper.matchers.stage1_matchers import (
+from metaharmonizer.models.schema_mapper.matchers.stage1_matchers import (
     StandardExactMatcher,
     AliasExactMatcher,
     StandardFuzzyMatcher,
     AliasFuzzyMatcher,
 )
-from src.utils.schema_mapper_utils import normalize
+from metaharmonizer.utils.schema_mapper_utils import normalize
 
 
 def _make_engine(has_alias: bool = False, top_k: int = 3):

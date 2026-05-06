@@ -3,7 +3,7 @@ import pytest
 import pandas as pd
 import numpy as np
 
-from src.field_suggester import FieldSuggester
+from metaharmonizer.field_suggester import FieldSuggester
 
 
 # ======================================================================

@@ -7,7 +7,7 @@ import numpy as np
 import pytest
 from types import SimpleNamespace
 
-from src.models.ontology_mapper_rag import OntoMapRAG
+from metaharmonizer.models.ontology_mapper_rag import OntoMapRAG
 
 
 # ── Stubs ──────────────────────────────────────────────────────────────────────

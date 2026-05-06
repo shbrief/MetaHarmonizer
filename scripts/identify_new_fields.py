@@ -2,8 +2,8 @@
 
 import argparse
 import pandas as pd
-from src.models.schema_mapper.engine import SchemaMapEngine
-from src.field_suggester import suggest_from_schema_mapper
+from metaharmonizer.models.schema_mapper.engine import SchemaMapEngine
+from metaharmonizer.field_suggester import suggest_from_schema_mapper
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(

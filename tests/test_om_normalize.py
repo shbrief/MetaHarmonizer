@@ -1,6 +1,6 @@
 """Unit tests for OntoMapEngine._normalize_query()."""
 import pytest
-from src.Engine.ontology_mapping_engine import OntoMapEngine
+from metaharmonizer.Engine.ontology_mapping_engine import OntoMapEngine
 
 
 def _engine(category: str = "disease"):

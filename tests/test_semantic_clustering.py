@@ -3,7 +3,7 @@
 import numpy as np
 import pytest
 
-from src.field_suggester.semantic_clustering import (
+from metaharmonizer.field_suggester.semantic_clustering import (
     SCSMode,
     SemanticCluster,
     SemanticClusteringConfig,
