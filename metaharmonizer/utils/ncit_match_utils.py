@@ -19,8 +19,8 @@ NCIT_DICT = {
     "C2991": "disease",
     "C3262": "cancer_type"
 }
-from metaharmonizer._paths import DATA_DIR
-NCIT_DESC_PATH = DATA_DIR / "schema" / "ncit_descendants.json"
+from metaharmonizer._paths import resolve_data_file
+NCIT_DESC_PATH = resolve_data_file("schema/ncit_descendants.json")
 
 
 class NCIClientSync:

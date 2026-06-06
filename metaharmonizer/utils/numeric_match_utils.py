@@ -12,7 +12,7 @@ AGE_HINTS = re.compile(r"\bage\b|\bage[_\s-]?at\b|\bdiagnosis[_\s-]?age\b",
 TIME_HINTS = re.compile(
     r"\b(date|day|days|month|months|year|years|start|end|duration|freq(uency)?|interval)\b",
     re.I)
-DOSE_HINTS = re.compile(r"\b(dose|auc|gy|mg|m2|m²|regimen|cycle)\b", re.I)
+DOSE_HINTS = re.compile(r"\b(dose|auc|gy|mg|ml|m2|m²|regimen|cycle)\b", re.I)
 
 
 def strip_units_and_tags(text: str):

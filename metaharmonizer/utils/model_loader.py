@@ -10,9 +10,12 @@ from huggingface_hub import snapshot_download
 from metaharmonizer._paths import MODEL_CACHE_DIR
 
 # method→repo registry: bundled YAML by default; override via METHOD_MODEL_YAML.
+# .resolve() guards against __file__ being relative under dev installs / certain
+# pytest invocations — without it, the path stays relative to CWD and breaks
+# when callers run from outside the project root.
 DEFAULT_YAML_PATH = os.getenv(
     "METHOD_MODEL_YAML",
-    str(Path(__file__).parent.parent / "models" / "method_model.yaml"),
+    str(Path(__file__).resolve().parent.parent / "models" / "method_model.yaml"),
 )
 CACHE_ROOT = str(MODEL_CACHE_DIR)
 

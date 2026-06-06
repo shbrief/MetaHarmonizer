@@ -7,13 +7,13 @@ from metaharmonizer.utils.embeddings import EmbeddingAdapter
 from metaharmonizer.utils.model_loader import get_embedding_model_cached
 from metaharmonizer.utils.schema_mapper_utils import normalize
 from metaharmonizer.CustomLogger.custom_logger import CustomLogger
-from metaharmonizer._paths import VECTOR_DB_PATH, FAISS_INDEX_DIR
+from metaharmonizer._paths import VECTOR_DB_PATH, FAISS_INDEX_DIR, resolve_data_file
 
 # -------- ENV / CONSTS --------
 BASE_DB = str(VECTOR_DB_PATH)
 BASE_IDX_DIR = str(FAISS_INDEX_DIR)
 MODEL_NAME = "mt-sap-bert"
-JSON_VOCAB = os.getenv("FIELD_VALUE_JSON") or "field_value_dict.json"
+JSON_VOCAB = os.getenv("FIELD_VALUE_JSON") or str(resolve_data_file("schema/field_value_dict.json"))
 IDX_NAME = "dict_value.index"
 
 

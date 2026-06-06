@@ -12,10 +12,14 @@ OUTPUT_DIR = Path(os.getenv("SM_OUTPUT_DIR", DATA_DIR / "schema_mapping_eval"))
 # ships inside the wheel (resolve_data_file falls back automatically). Users
 # typically override this via SchemaMapEngine(curated_dict_path=...).
 CURATED_DICT_PATH = resolve_data_file("schema/curated_fields.csv")
-# Alias dict is keyed to the bundled curated schema; no bundled copy, so only
-# honored when METAHARMONIZER_DATA_DIR points at a dir that contains it.
-ALIAS_DICT_PATH = DATA_DIR / "schema" / "curated_fields_source_latest_with_flags.csv"
-VALUE_DICT_PATH = os.getenv("FIELD_VALUE_JSON") or DATA_DIR / "schema" / "field_value_dict.json"
+# Alias dict is keyed to the bundled curated schema. engine.py disables it
+# when the user supplies their own schema, so the bundled fallback is only
+# read alongside the bundled curated_fields.csv.
+ALIAS_DICT_PATH = resolve_data_file("schema/curated_fields_source_latest_with_flags.csv")
+# Value dict is filtered against the active curated schema by ValueLoader
+# (allowed_fields=standard_fields), so the bundled copy is safe to fall
+# through to a user-supplied schema — disjoint keys are skipped automatically.
+VALUE_DICT_PATH = os.getenv("FIELD_VALUE_JSON") or resolve_data_file("schema/field_value_dict.json")
 
 # === Models ===
 FIELD_MODEL = _method_model_dict["minilm-l6"]
