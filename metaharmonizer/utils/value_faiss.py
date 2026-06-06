@@ -13,7 +13,11 @@ from metaharmonizer._paths import VECTOR_DB_PATH, FAISS_INDEX_DIR, resolve_data_
 BASE_DB = str(VECTOR_DB_PATH)
 BASE_IDX_DIR = str(FAISS_INDEX_DIR)
 MODEL_NAME = "mt-sap-bert"
-JSON_VOCAB = os.getenv("FIELD_VALUE_JSON") or str(resolve_data_file("schema/field_value_dict.json"))
+try:
+    JSON_VOCAB = os.getenv("FIELD_VALUE_JSON") or str(resolve_data_file("schema/field_value_dict.json"))
+except FileNotFoundError:
+    # Keep module importable even if package data is missing; sync step will log+skip.
+    JSON_VOCAB = os.getenv("FIELD_VALUE_JSON") or "schema/field_value_dict.json"
 IDX_NAME = "dict_value.index"
 
 
