@@ -85,9 +85,17 @@ include = ["metaharmonizer*"]
 # metaharmonizer._paths.resolve_data_file() / bundled_file(). Large corpora
 # and FAISS indexes are NOT bundled — users either rebuild locally or set
 # METAHARMONIZER_DATA_DIR / KNOWLEDGE_DB_DIR to point at existing copies.
+#
+# Schema bundle: alias dict is keyed to the bundled curated_fields and is
+# auto-disabled in engine.py when the user supplies their own schema; value
+# dict is filtered against the active curated schema by ValueLoader; ncit
+# descendants is a NCIt root→descendants table independent of user schema.
 "metaharmonizer._bundled_data" = [
     "corpus/oncotree_code_to_name.csv",
     "schema/curated_fields.csv",
+    "schema/curated_fields_source_latest_with_flags.csv",
+    "schema/field_value_dict.json",
+    "schema/ncit_descendants.json",
 ]
 
 [tool.pytest.ini_options]
