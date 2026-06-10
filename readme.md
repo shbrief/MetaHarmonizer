@@ -155,8 +155,8 @@ under `demo_nb/`.
 #### 2.4 Datasets
 - The datasets in this repository are encrypted to prevent contamination of the gold standard.  
 - For **ontology mapping**, you must provide:
-  - A list of `query_terms`  
-  - A `corpus` list and/or `corpus_df` are **optional** — the engine auto-resolves them from cached CSV or API when not provided  
+  - A list of query terms via the `query` parameter (or a `query_df` + `query_col` pair)
+  - A `corpus` list and/or `corpus_df` are **optional** constructor parameters — the engine auto-resolves them from cached CSV or API when not provided  
 - For **schema mapping**, provide a clinical metadata file.  
   - The schema mapping dictionary is available in the `/data` folder.  
 - ⚠️ You will not be able to use the encrypted demo datasets without authorization, but you can supply your own query and corpus lists.
@@ -241,8 +241,10 @@ This fetches the full ontology tree once and caches it locally so subsequent pip
 - **Parameters:**
   - **category** (str): Ontology category — `disease`, `bodysite`, or `treatment`.
   - **query** (list): List of query terms to map.
+  - **query_df** (DataFrame, optional): DataFrame query mode (alternative to `query`); requires `query_col`.
+  - **query_col** (str, optional): Column in `query_df` holding the query terms.
   - **cura_map** (dict): Mapping of query terms to curated ontology values (for evaluation in `test` mode).
-  - **corpus** (list, optional): Explicit list of corpus terms for Stage 2 matching. Auto-derived from `corpus_df` when omitted.
+  - **corpus** (list, optional): Explicit list of corpus terms for **Stage 2 matching only** (Stage 3 always uses `corpus_df`). Auto-derived from `corpus_df` when omitted.
   - **corpus_df** (DataFrame, optional): DataFrame with `label` and `obo_id` columns. Auto-loaded from cached CSV or built from API when omitted.
   - **ontology_source** (str, default `"ncit"`): Ontology backend. Supported: `ncit` (NCI Thesaurus via EVSREST), `mondo`, `uberon` (via EBI OLS4 API). When `corpus_df` is provided, this is inferred from code prefixes.
   - **s2_strategy** (str): Stage 2 strategy — `lm` (CLS-token pooling) or `st` (SentenceTransformer mean pooling).
