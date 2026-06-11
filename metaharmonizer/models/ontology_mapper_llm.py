@@ -4,11 +4,11 @@ Uses an LLM to interpret ambiguous queries (abbreviations, typos, informal names
 with clinical context, then re-searches the existing Stage 2 FAISS index with the
 rewritten terms.
 """
-import os
 import json
 import numpy as np
 import pandas as pd
 from metaharmonizer.utils.model_loader import load_method_model_dict
+from metaharmonizer.utils.llm_client import call_gemini, resolve_api_key
 from metaharmonizer.CustomLogger.custom_logger import CustomLogger
 
 _S4_LLM_MODEL = load_method_model_dict()["gemma-12b"]
@@ -45,22 +45,9 @@ class OntoMapLLM:
         model_dict = load_method_model_dict()
         self._llm_model_name = model_dict.get(model_key, _S4_LLM_MODEL)
 
-        # Init Gemini
-        api_key = os.getenv("GEMINI_API_KEY")
-        if not api_key:
-            raise ValueError(
-                "GEMINI_API_KEY not found in environment variables. "
-                "Please set it in your .env file."
-            )
-        try:
-            import google.generativeai as genai
-        except ImportError as e:
-            raise ImportError(
-                "OntoMapLLM requires google-generativeai. "
-                "Install with: pip install metaharmonizer[llm-gemini]"
-            ) from e
-        genai.configure(api_key=api_key)
-        self._genai_model = genai.GenerativeModel(self._llm_model_name)
+        # Resolve Gemini API key now so misconfiguration fails fast at init.
+        # The provider call happens via metaharmonizer.utils.llm_client.
+        self._api_key = resolve_api_key(None, "gemini")
 
         self.logger.info(
             f"Initialized OntoMapLLM (model={self._llm_model_name}, "
@@ -176,6 +163,24 @@ class OntoMapLLM:
                     terms.append(item)
         return terms
 
+    # Max tokens reserved for the rewriter's small JSON output. Generous;
+    # the response is typically ~50–200 tokens.
+    _REWRITE_MAX_TOKENS = 2048
+
+    def _call_provider(self, prompt: str) -> str:
+        """Provider call seam — single-shot LLM completion. Returns raw text.
+
+        Isolated so tests can patch this without reaching for the underlying
+        SDK. Currently routes through
+        :func:`metaharmonizer.utils.llm_client.call_gemini`.
+        """
+        return call_gemini(
+            self._api_key,
+            prompt,
+            self._llm_model_name,
+            max_tokens=self._REWRITE_MAX_TOKENS,
+        )
+
     def _rewrite_single(self, query: str, context: str, k: int = 5) -> list[str]:
         """Call LLM for one query with retry loop and exponential backoff."""
         import time
@@ -185,8 +190,8 @@ class OntoMapLLM:
 
         for attempt in range(1, self.max_retries + 1):
             try:
-                resp = self._genai_model.generate_content(prompt)
-                terms = self._parse_response(resp.text)
+                text = self._call_provider(prompt)
+                terms = self._parse_response(text)
                 if terms:
                     self.logger.info(
                         f"[S4] LLM rewrote \"{query}\" → {terms} (attempt {attempt})"

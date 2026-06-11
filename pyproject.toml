@@ -67,8 +67,11 @@ llm-gemini = [
 llm-openai = [
     "openai",
 ]
+llm-anthropic = [
+    "anthropic",
+]
 all = [
-    "metaharmonizer[notebook,eval,llm-gemini,llm-openai]",
+    "metaharmonizer[notebook,eval,llm-gemini,llm-openai,llm-anthropic]",
 ]
 
 [tool.setuptools]

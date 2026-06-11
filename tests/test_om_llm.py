@@ -94,9 +94,10 @@ def _make_llm(strategy='lm', query_df=None, query_col=None):
     s2.vector_store = _FakeVS(CORPUS_TERMS)
     m.s2_model = s2
 
-    # Fake LLM model
-    m._genai_model = MagicMock()
+    # Fake provider call (the seam exposed by OntoMapLLM._call_provider).
+    m._api_key = "test-key"
     m._llm_model_name = "test-model"
+    m._call_provider = MagicMock()
 
     return m
 
@@ -222,8 +223,8 @@ class TestFaissIndicesToTerms:
 class TestGetMatchResults:
     def test_output_has_expected_columns(self):
         m = _make_llm()
-        m._genai_model.generate_content.return_value = SimpleNamespace(
-            text='[{"term": "Thymus SCC", "reasoning": "abbrev"}]'
+        m._call_provider.return_value = (
+            '[{"term": "Thymus SCC", "reasoning": "abbrev"}]'
         )
         df = m.get_match_results(queries=["TC:SCC"], topk=3)
         for col in ("original_value",
@@ -236,8 +237,8 @@ class TestGetMatchResults:
 
     def test_returns_faiss_matches(self):
         m = _make_llm()
-        m._genai_model.generate_content.return_value = SimpleNamespace(
-            text='[{"term": "Thymus Squamous Cell Carcinoma"}]'
+        m._call_provider.return_value = (
+            '[{"term": "Thymus Squamous Cell Carcinoma"}]'
         )
         df = m.get_match_results(queries=["TC:SCC"], topk=5)
         # match1 from FAISS should be a real corpus term (not N/A)
@@ -245,16 +246,14 @@ class TestGetMatchResults:
 
     def test_llm_failure_produces_empty_row(self):
         m = _make_llm()
-        m._genai_model.generate_content.side_effect = Exception("API error")
+        m._call_provider.side_effect = Exception("API error")
         df = m.get_match_results(queries=["FAIL"], topk=3)
         assert len(df) == 1
         assert df.loc[0, "match1"] == "N/A"
 
     def test_multiple_queries(self):
         m = _make_llm()
-        m._genai_model.generate_content.return_value = SimpleNamespace(
-            text='[{"term": "Test Term"}]'
-        )
+        m._call_provider.return_value = '[{"term": "Test Term"}]'
         df = m.get_match_results(queries=["Q1", "Q2", "Q3"], topk=3)
         assert len(df) == 3
 
