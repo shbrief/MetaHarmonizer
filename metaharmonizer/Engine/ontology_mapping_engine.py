@@ -70,6 +70,11 @@ class OntoMapEngine:
                  query: list[str] = None,
                  cura_map: dict = None,
                  corpus: list[str] = None,
+                 corpus_df: "pd.DataFrame" = None,
+                 ontology_source: str = None,
+                 query_df: "pd.DataFrame" = None,
+                 query_col: str = None,
+                 persist_corpus: bool = None,
                  topk: int = 5,
                  s2_method: str = 'sap-bert',
                  s2_strategy: str = 'lm',
@@ -88,7 +93,22 @@ class OntoMapEngine:
         Args:
             method (str): The name of the method.
             query (list[str]): The list of queries.
-            corpus (list[str]): The list of corpus.
+            corpus (list[str], optional): Explicit term list overriding **Stage 2**
+                matching only. Stage 3 always uses ``corpus_df``. Auto-derived from
+                ``corpus_df`` when omitted.
+            corpus_df (pd.DataFrame, optional): Full custom corpus. Must contain a
+                label column (``official_label`` or ``label``) and a code column
+                (``clean_code`` or ``obo_id``). When provided, ``ontology_source`` is
+                auto-inferred from the code prefixes. Auto-loaded from the cached CSV or
+                built from the API when omitted.
+            ontology_source (str, optional): Ontology backend; defaults to ``"ncit"``.
+                Supported: ``ncit`` (NCI EVSREST), ``mondo``, ``uberon`` (EBI OLS4),
+                per ``_CORPUS_REGISTRY``. Ignored/overridden when ``corpus_df`` is given.
+            query_df (pd.DataFrame, optional): DataFrame query mode (alternative to the
+                ``query`` list); requires ``query_col``.
+            query_col (str, optional): Column in ``query_df`` holding the query terms.
+            persist_corpus (bool, optional): When ``True`` with a caller-provided
+                ``corpus_df``, persist it to the canonical cache CSV. Defaults to ``False``.
             cura_map (dict): The dictionary containing the mapping of queries to curated values.
             topk (int, optional): The number of top matches to return. Defaults to 5.
             s2_strategy (str, optional): The strategy to use for stage 2 OntoMap. Defaults to 'lm'. Options are 'st' or 'lm'.
@@ -111,6 +131,17 @@ class OntoMapEngine:
         self.s4_strategy = s4_strategy
         self.s4_threshold = s4_threshold
         self.s4_model = s4_model
+        # Promote formerly other_params-only options to explicit parameters.
+        # Explicit args take precedence; omitted (None) args fall back to
+        # **other_params so existing callers that pass these via other_params
+        # keep working. The rest of __init__ continues to read from other_params.
+        for _key, _val in (("corpus_df", corpus_df),
+                           ("ontology_source", ontology_source),
+                           ("query_df", query_df),
+                           ("query_col", query_col),
+                           ("persist_corpus", persist_corpus)):
+            if _val is not None:
+                other_params[_key] = _val
         self.other_params = other_params
         if 'test_or_prod' not in self.other_params.keys():
             raise ValueError(
