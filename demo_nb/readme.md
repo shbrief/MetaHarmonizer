@@ -18,8 +18,3 @@ These notebooks were used in earlier experiments and are kept for reference only
 - **query_term_normalization.ipynb** –  
   Checks for alignment issues between **query data** and **corpus data**.  
   Misalignments may affect the accuracy evaluation, so running this notebook before large-scale evaluation is recommended.
-
----
-
-**Note:**  
-Deprecated notebooks are preserved for historical reference and may contain outdated APIs or workflow steps. For the most accurate and stable workflow, please use the current demo listed above.

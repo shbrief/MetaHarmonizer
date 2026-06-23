@@ -1,3 +1,6 @@
+## MetaHarmonizer: robust biomedical metadata harmonization and a contamination control for inflated LLM performance on public benchmarks
+The pre-print is now available [HERE](https://www.biorxiv.org/content/10.64898/2026.06.13.732088v1)!
+
 ### 1. Codebase folder structure
 
 ```md
