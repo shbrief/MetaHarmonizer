@@ -1,58 +1,8 @@
-## MetaHarmonizer: robust biomedical metadata harmonization and a contamination control for inflated LLM performance on public benchmarks
+# MetaHarmonizer: robust biomedical metadata harmonization and a contamination control for inflated LLM performance on public benchmarks
 The pre-print is now available [HERE](https://www.biorxiv.org/content/10.64898/2026.06.13.732088v1)!
 
-### 1. Codebase folder structure
 
-```md
-
-├── data
-├── demo_nb
-├── scripts
-├── EDA
-├── evaluation
-├── src
-│   ├── models
-│   │   ├── init.py
-│   │   ├── ontology_models.py
-│   │   ├── ontology_mapper_rag.py
-│   │   ├── ontology_mapper_lm.py
-│   │   ├── ontology_mapper_st.py
-│   │   ├── ontology_mapper_bi_encoder.py
-│   │   ├── ontology_mapper_fts.py
-│   │   ├── ontology_mapper_synonym.py
-│   │   ├── reranker.py
-│   │   ├── method_model.yaml
-│   │   ├── schema_mapper
-│   │   │   ├── engine.py
-│   │   │   ├── config.py
-│   │   │   ├── loaders
-│   │   │   └── matchers
-│   ├── Engine
-│   │   ├── ontology_mapping_engine.py
-│   ├── CustomLogger
-│   ├── KnowledgeDb
-│   │   ├── faiss_sqlite_pipeline.py
-│   │   ├── corpus_builder.py
-│   │   ├── concept_table_builder.py
-│   │   ├── synonym_dict.py
-│   │   ├── fts_synonym_db.py
-│   │   └── db_clients
-│   │       ├── nci_db.py
-│   │       ├── ols_db.py
-│   │       └── umls_db.py
-│   ├── _paths.py
-│   ├── _async_utils.py
-│   ├── utils
-│   ├── Plotter
-├── pyproject.toml
-└── readme.md
-```
-
-### 2. Usage
-
-In order to use schema and/or ontology mapping functionality in metaharmonizer, please follow the steps below.
-
-#### 2.1. Installation
+### 1. Installation
 
 ```bash
 # 1. Clone
@@ -68,10 +18,11 @@ pip install --upgrade pip
 pip install -e .                       # core only (no LLM backends)
 pip install -e ".[llm-gemini]"         # + Gemini (Stage-4 LLM, OntoMapLLM, etc.)
 pip install -e ".[llm-openai]"         # + OpenAI (FieldSuggester semantic clustering)
+pip install -e ".[llm-anthropic]"      # + Anthropic (Claude LLM backend)
 pip install -e ".[notebook]"           # + nest-asyncio for Jupyter workflows
 pip install -e ".[dev]"                # + pytest & coverage
 pip install -e ".[eval]"               # + scipy for evaluation scripts
-pip install -e ".[all]"                # notebook + eval + both LLM backends
+pip install -e ".[all]"                # notebook + eval + all three LLM backends
 ```
 
 Install directly from GitHub (non-editable):
@@ -81,13 +32,17 @@ pip install "git+https://github.com/shbrief/MetaHarmonizer#egg=metaharmonizer[ll
 
 > The `data/` corpus directory is **not bundled** in the wheel. Installed users
 > should either clone the repo alongside the install, or set
-> `METAHARMONIZER_DATA_DIR` (see [2.2](#22-environment-variables)) to a local
-> copy.
+> `METAHARMONIZER_DATA_DIR` (see [2. Environment variables](#2-environment-variables)) 
+> to a local copy.
 
-#### 2.2. Environment variables
+### 2. Environment variables
 
 Copy `.env.example` → `.env` (or export in your shell) before running the
 mappers. `python-dotenv` auto-loads `.env` on import.
+
+```
+cp .env.example .env
+```
 
 | Variable | Required for | Default | Notes |
 |---|---|---|---|
@@ -105,7 +60,7 @@ mappers. `python-dotenv` auto-loads `.env` on import.
 | `NCIT_POOL_SIZE` | NCI async client connection pool | `8` | Raise for bulk corpus builds. |
 | `LOG_FILE` / `LOG_ENV` | Logger config | `out.log` / `development` | — |
 
-#### 2.3. Quickstart
+### 3. Quickstart
 
 The snippets below assume you cloned the repo (so `data/` is on disk and the
 cached ontology corpus under `data/corpus/retrieved_ontologies/` is available).
@@ -152,10 +107,10 @@ engine.run_schema_mapping()
 ```
 
 Richer examples (custom corpus, MONDO/UBERON sources, Stage-4 LLM review) live
-in [2.5 Setting up the mappers](#25-setting-up-the-mappers) and the notebooks
+in [5 Setting up the mappers](#5-setting-up-the-mappers) and the notebooks
 under `demo_nb/`.
 
-#### 2.4 Datasets
+### 4 Datasets
 - The datasets in this repository are encrypted to prevent contamination of the gold standard.  
 - For **ontology mapping**, you must provide:
   - A list of query terms via the `query` parameter (or a `query_df` + `query_col` pair)
@@ -164,7 +119,7 @@ under `demo_nb/`.
   - The schema mapping dictionary is available in the `/data` folder.  
 - ⚠️ You will not be able to use the encrypted demo datasets without authorization, but you can supply your own query and corpus lists.
   
-#### 2.5 Setting up the mappers 
+### 5 Setting up the mappers 
 
 1. Ontology Mapping
 
@@ -308,49 +263,6 @@ stage (stage1, stage2, stage3  )
 method (dict, fuzzy, numeric, alias, bert, freq)  
 match{i}, match{i}_score, match{i}_source (for top-k matches)
 
-#### 2.6. Demo Notebooks For Schema and Ontology Mapping
+### 6. Demo Notebooks For Schema and Ontology Mapping
 
 The demo notebooks are located across `/demo_nb` folder
-
-### 3. Resources
-| Topic | Links | Resource Type |
-|----------|----------|----------|
-| Review paper on all pretrained biomedical BERT models | [Link](https://www.sciencedirect.com/science/article/pii/S1532046421003117) | paper |
-| Review of deep learning approaches for biomedical entity recognition | [Link](https://academic.oup.com/bib/article/22/6/bbab282/6326536?login=false) | paper |
-| Comprehensive Review of pre-trained foundation models | [Link](https://arxiv.org/pdf/2302.09419) | paper |
-| KERMIT Knowledge graphs | [Link](https://arxiv.org/pdf/2204.13931) | paper |
-| LLMs4OM (Uses RAG Framework for matching concepts)| [Link](https://arxiv.org/pdf/2404.10317v1) | paper |
-| DeepOnto | [Link](https://arxiv.org/html/2307.03067v2) | computational_tool |
-| Text2Onto | [Link](https://github.com/krishnanlab/txt2onto) | computational_tool |
-| SapBert | [Link](https://aclanthology.org/2021.naacl-main.334/) | computational_tool |
-| Ontology mapping with LLM’s | [Link](https://dl.acm.org/doi/fullHtml/10.1145/3587259.3627571) | computational_tool |
-| Exploring LLM’s for ontology alignment | [Link](https://arxiv.org/pdf/2309.07172) | computational_tool |
-| Ontology alignment evaluation initiative | [Link](https://ceur-ws.org/Vol-3324/oaei22_paper0.pdf) | dataset |
-| Commonly used dataset for benchmarking of new methods | [Link](https://github.com/chanzuckerberg/MedMentions) | dataset |
-| NCIT Ontologies | [Link](https://www.ebi.ac.uk/ols4/ontologies/ncit) | dataset |
-| ML Friendly datasets for equivalence and subsumption mapping | [Link](https://arxiv.org/pdf/2205.03447) | dataset |
-| Positive and Negative Sampling Strategies for Representation Learning in Semantic Search | [Link](https://blog.reachsumit.com/posts/2023/03/pairing-for-representation/) | blog |
-| How to train sentence transformers | [Link](https://huggingface.co/blog/how-to-train-sentence-transformers) | blog |
-
-
----
-
-### R Interface
-
-R users can access MetaHarmonizer via the
-[**MetaHarmonizerR**](https://github.com/shbrief/MetaHarmonizerR) package, which
-wraps the Python engines using `{reticulate}`.
-
-```bash
-# Install the Python backend first
-pip install git+https://github.com/shbrief/MetaHarmonizer
-```
-
-```r
-# Install the R wrapper
-remotes::install_github("shbrief/MetaHarmonizerR")
-library(MetaHarmonizerR)
-
-init_field_suggester()
-suggestions <- suggest_fields(unmapped_columns = c("age_at_diagnosis", "tumor_size"))
-```
