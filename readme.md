@@ -1,8 +1,10 @@
-# MetaHarmonizer: robust biomedical metadata harmonization and a contamination control for inflated LLM performance on public benchmarks
-The pre-print is now available [HERE](https://www.biorxiv.org/content/10.64898/2026.06.13.732088v1)!
+# MetaHarmonizer: a robust, fully local biomedical metadata harmonization system
+The pre-print is now available.
+
+[MetaHarmonizer: robust biomedical metadata harmonization and a contamination control for inflated LLM performance on public benchmarks](https://www.biorxiv.org/content/10.64898/2026.06.13.732088v1)
 
 
-### 1. Installation
+# 1. Installation
 
 ```bash
 # 1. Clone
@@ -30,12 +32,12 @@ Install directly from GitHub (non-editable):
 pip install "git+https://github.com/shbrief/MetaHarmonizer#egg=metaharmonizer[llm-gemini]"
 ```
 
-> The `data/` corpus directory is **not bundled** in the wheel. Installed users
+> The `data/` corpus directory is **not bundled** in the wheel. Users
 > should either clone the repo alongside the install, or set
-> `METAHARMONIZER_DATA_DIR` (see [2. Environment variables](#2-environment-variables)) 
+> `METAHARMONIZER_DATA_DIR` (see [Environment variables](#environment-variables)) 
 > to a local copy.
 
-### 2. Environment variables
+### Environment variables
 
 Copy `.env.example` → `.env` (or export in your shell) before running the
 mappers. `python-dotenv` auto-loads `.env` on import.
