@@ -3,13 +3,25 @@
 The pre-print is now available:
 [MetaHarmonizer: robust biomedical metadata harmonization and a contamination control for inflated LLM performance on public benchmarks](https://www.biorxiv.org/content/10.64898/2026.06.13.732088v1)
 
-MetaHarmonizer provides three entry points:
+MetaHarmonizer currently provides two key modules:
 
-| Engine | Purpose |
-|--------|---------|
-| `OntoMapEngine` | Map free-text values to ontology terms (exact → embedding → RAG). |
-| `SchemaMapEngine` | Map clinical-data columns to standardized field names (dict → fuzzy → value → LLM). |
-| `FieldSuggester` | Discover new fields via NER + embedding clustering. |
+| Module | Engine | Purpose |
+|--------|--------|---------|
+| SchemaMapper | `SchemaMapEngine` | Map clinical-data columns to standardized field names (dict → fuzzy → value → name). |
+| OntologyMapper | `OntoMapEngine` | Map free-text values to ontology terms (exact → semantic → synonym). |
+
+
+![](data/metaharmonizer_diagram.png)
+
+## Table of contents
+
+1. [Installation](#1-installation)
+2. [Environment variables](#2-environment-variables)
+3. [Quickstart](#3-quickstart)
+4. [Datasets](#4-datasets)
+5. [Ontology mapping reference](#5-ontology-mapping-reference)
+6. [Schema mapping reference](#6-schema-mapping-reference)
+7. [Example notebooks](#7-example-notebooks)
 
 ## 1. Installation
 
