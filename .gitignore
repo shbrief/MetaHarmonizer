@@ -1,52 +1,64 @@
-# User/project-specific patterns
+# ── User / private data (never commit) ──────────────────────────────
 *nih*
-*DS_Store*
-*thumbnails*
-*scratch*
-*log
-notes
-*DbConn*
 *authorized*
-*all_orig_metadata*
-*.processed_corpus_context
 *personal*
-*create_corpus_context*
-*schema_mapping.ipynb
-*.json*
-*app_*
-*app.py
-*docs*
+*all_orig_metadata*
+*DbConn*
+notes
+scratch/
+*scratch*
 
-# RStudio files (R package files live in HarmonizeR repo)
-.Rproj.user
+# ── OS / editor cruft ────────────────────────────────────────────────
+.DS_Store
+*.DS_Store
+*thumbnails*
+.vscode/
+
+# ── RStudio (R package lives in the HarmonizeR repo) ─────────────────
 .Rproj.user/
 .Rhistory
 .RData
 .Ruserdata
+*.Rproj
 
-# Python cache and build artifacts
+# ── Python cache / build artifacts ───────────────────────────────────
 __pycache__/
 *.py[cod]
 build/
 dist/
 *.egg-info/
 .eggs/
+.pytest_cache/
 
-# Local env file (use .env.example as template; never commit real values)
+# ── Logs ─────────────────────────────────────────────────────────────
+*.log
+
+# ── Secrets / local env (use .env.example as the template) ───────────
 .env
 
-# Model cache
+# ── Caches & generated model / corpus assets ─────────────────────────
 model_cache/
+.conda/
+.conda-py311/
+# Cached ontology corpora pulled from NCI / OLS APIs (regenerated on demand)
+data/corpus/*.json
+data/corpus/retrieved_ontologies/
+# Embedding cache and pipeline outputs
+data/outputs/
+# Generated schema-mapping eval CSVs (timestamped); reference inputs are tracked
+schema_mapping_eval/
+data/schema_mapping_eval/*_s3_*.csv
+
+# ── Rendered HTML docs (source markdown is tracked) ──────────────────
 *.html
 
-# Claude Agent SDK (local dev tooling)
-agents/
+# ── Claude Code local config (shared config can be committed) ────────
+.claude/settings.local.json
+.claude/agents/
 
-# Local conda environment
-.conda-py311/
-
-# Generated embedding cache
-data/outputs/embedding_cache/
-
-# Test bytecode
-tests/__pycache__/
+# ── Misc dev scratch the app frontend lives in a separate repo ───────
+*app.py
+*app_*
+*create_corpus_context*
+*.processed_corpus_context
+*schema_mapping.ipynb
