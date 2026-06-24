@@ -1,8 +1,8 @@
 import pandas as pd
 import asyncio
 import os
-from metaharmonizer.KnowledgeDb.db_clients.nci_db import NCIDb
-from metaharmonizer.CustomLogger.custom_logger import CustomLogger
+from metaharmonizer.knowledge_db.db_clients.nci_db import NCIDb
+from metaharmonizer.custom_logger.custom_logger import CustomLogger
 
 logger = CustomLogger().custlogger(loglevel='INFO')
 
@@ -15,14 +15,14 @@ def update_ncit_labels(
         output_path: str = "updated_with_official_label.csv") -> pd.DataFrame:
     """
     Append a new 'official_label' column using NCIT labels via UMLS API, without modifying original labels.
-    
+
     Args:
         input_path (str): Path to the input CSV file.
         ncit_code_column (str): Column with NCIT codes (with or without 'NCIT:' prefix).
         label_column (str): Column name of the current (curated) label (kept unchanged).
         save_csv (bool): Whether to save updated dataframe as CSV.
         output_path (str): Path to save output CSV if save_csv is True.
-        
+
     Returns:
         pd.DataFrame: DataFrame with an additional 'official_label' column.
     """

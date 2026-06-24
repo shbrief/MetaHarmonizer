@@ -31,7 +31,7 @@ from typing import Dict, List, Literal, Optional
 import numpy as np
 import pandas as pd
 
-from metaharmonizer.CustomLogger.custom_logger import CustomLogger
+from metaharmonizer.custom_logger.custom_logger import CustomLogger
 from metaharmonizer.utils.schema_mapper_utils import normalize
 
 # Default model — matches FieldSuggester and SchemaMapEngine

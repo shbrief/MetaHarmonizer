@@ -45,7 +45,7 @@ CorpusBuilder collects all descendants of a given ontology term from the [EBI OL
 ### Python API
 
 ```python
-from metaharmonizer.KnowledgeDb.corpus_builder import CorpusBuilder
+from metaharmonizer.knowledge_db.corpus_builder import CorpusBuilder
 
 builder = CorpusBuilder()
 

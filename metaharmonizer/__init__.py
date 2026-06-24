@@ -32,7 +32,7 @@ __all__ = [
 
 def __getattr__(name: str):
     if name == "OntoMapEngine":
-        from metaharmonizer.Engine.ontology_mapping_engine import OntoMapEngine
+        from metaharmonizer.engine.ontology_mapping_engine import OntoMapEngine
         return OntoMapEngine
     if name == "SchemaMapEngine":
         from metaharmonizer.models.schema_mapper import SchemaMapEngine

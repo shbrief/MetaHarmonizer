@@ -23,17 +23,17 @@ from __future__ import annotations
 import json
 import re
 from collections import deque
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
 from typing import Callable, Dict, List, Optional, Set, Tuple, TYPE_CHECKING
 
 import numpy as np
 from scipy.cluster.hierarchy import ClusterNode, linkage, to_tree
-from scipy.spatial.distance import pdist, squareform
+from scipy.spatial.distance import pdist
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
 
-from metaharmonizer.CustomLogger.custom_logger import CustomLogger
+from metaharmonizer.custom_logger.custom_logger import CustomLogger
 
 if TYPE_CHECKING:
     from metaharmonizer.utils.embedding_store import EmbeddingStore

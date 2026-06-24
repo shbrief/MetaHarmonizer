@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 from metaharmonizer.utils.model_loader import load_method_model_dict
 from metaharmonizer.utils.llm_client import call_gemini, resolve_api_key
-from metaharmonizer.CustomLogger.custom_logger import CustomLogger
+from metaharmonizer.custom_logger.custom_logger import CustomLogger
 
 _S4_LLM_MODEL = load_method_model_dict()["gemma-12b"]
 

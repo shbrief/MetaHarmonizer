@@ -18,8 +18,8 @@ from typing import Optional
 
 import httpx
 
-from metaharmonizer.CustomLogger.custom_logger import CustomLogger
-from metaharmonizer.KnowledgeDb.db_clients.ols_db import OLSDb
+from metaharmonizer.custom_logger.custom_logger import CustomLogger
+from metaharmonizer.knowledge_db.db_clients.ols_db import OLSDb
 from metaharmonizer._async_utils import run_async
 
 MAX_CONTEXT_NEIGHBORS = 10

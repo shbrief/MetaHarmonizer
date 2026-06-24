@@ -4,23 +4,23 @@ import json
 from typing import List, Tuple, Optional
 from .base import BaseMatcher
 from ..config import LLM_MODEL
-from metaharmonizer.CustomLogger.custom_logger import CustomLogger
+from metaharmonizer.custom_logger.custom_logger import CustomLogger
 
 logger = CustomLogger().custlogger(loglevel='WARNING')
 
 
 class LLMMatcher(BaseMatcher):
     """LLM-based fallback matching using Gemini/Gemma."""
-    
+
     def __init__(self, engine):
         """
         Initialize LLM matcher.
-        
+
         Args:
             engine: Reference to SchemaMapEngine
         """
         super().__init__(engine)
-        
+
         # Get API key from environment
         api_key = os.getenv("GEMINI_API_KEY")
         if not api_key:
@@ -37,33 +37,33 @@ class LLMMatcher(BaseMatcher):
                 "Install with: pip install metaharmonizer[llm-gemini]"
             ) from e
         genai.configure(api_key=api_key)
-        
+
         self.model = genai.GenerativeModel(LLM_MODEL)
         model_name = LLM_MODEL
         self.model_name = model_name
-        
+
         logger.info(f"[LLM] Initialized with {model_name}")
-    
+
     def _build_prompt(self, col: str, sample_values: Optional[List[str]] = None) -> str:
         """
         Build prompt for LLM to match column to standard fields.
-        
+
         Args:
             col: Column name to match
             sample_values: Optional sample values from the column
-            
+
         Returns:
             Formatted prompt string
         """
         # Get standard field list (limit to avoid token overflow)
         field_list = "\n".join([f"- {f}" for f in self.engine.standard_fields[:100]])
-        
+
         # Format sample values if provided
         values_part = ""
         if sample_values:
             values_str = ", ".join([f'"{v}"' for v in sample_values[:10]])
             values_part = f"\nSample Values: {values_str}"
-        
+
         prompt = f"""You are a clinical data schema mapper. Your task is to map a source column to standard clinical data fields.
 
 Source Column Name: "{col}"{values_part}
@@ -93,60 +93,60 @@ EXAMPLES:
 {{"field": "sex", "confidence": 0.80}}
 
 JSON Response:"""
-        
+
         return prompt
-    
+
     def match(self, col: str) -> List[Tuple[str, float, str]]:
         """
         Match column using LLM.
-        
+
         Args:
             col: Column name to match
-            
+
         Returns:
             List of (field_name, score, source) tuples
         """
         try:
             # Get sample values from the column
             sample_values = self.engine.unique_values(col, cap=10) if hasattr(self.engine, 'unique_values') else None
-            
+
             # Build prompt
             prompt = self._build_prompt(col, sample_values)
-            
+
             # Call LLM API
             logger.info(f"[LLM] Calling API for column '{col}'")
             response = self.model.generate_content(prompt)
-            
+
             # Parse response
             response_text = response.text.strip()
-            
+
             # Extract JSON from response (handle markdown code blocks)
             if "```json" in response_text:
                 response_text = response_text.split("```json")[1].split("```")[0].strip()
             elif "```" in response_text:
                 response_text = response_text.split("```")[1].split("```")[0].strip()
-            
+
             # Parse JSON
             matches_raw = json.loads(response_text)
-            
+
             if not isinstance(matches_raw, list):
                 logger.warning(f"[LLM] Invalid response format for '{col}': expected list")
                 return []
-            
+
             # Convert to tuple format: (field, score, source)
             matches = []
             for item in matches_raw:
                 if not isinstance(item, dict):
                     continue
-                
+
                 field = item.get("field", "")
                 confidence = item.get("confidence", 0.0)
-                
+
                 # Validate field exists in standard fields
                 if field not in self.engine.standard_fields:
                     logger.warning(f"[LLM] Suggested field '{field}' not in standard fields, skipping")
                     continue
-                
+
                 # Validate confidence
                 try:
                     score = float(confidence)
@@ -156,16 +156,16 @@ JSON Response:"""
                 except (ValueError, TypeError):
                     logger.warning(f"[LLM] Non-numeric confidence for field '{field}', skipping")
                     continue
-                
+
                 # source = "llm" to indicate LLM match
                 matches.append((field, score, "llm"))
-            
+
             # Sort by confidence
             matches.sort(key=lambda x: x[1], reverse=True)
-            
+
             logger.info(f"[LLM] Got {len(matches)} valid matches for '{col}'")
             return matches[:self.engine.top_k]
-            
+
         except json.JSONDecodeError as e:
             logger.error(f"[LLM] JSON parse error for '{col}': {e}")
             logger.error(f"[LLM] Response was: {response_text[:200]}")

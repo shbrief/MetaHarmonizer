@@ -32,12 +32,12 @@ def get_model(
         model_type: str = "embedding") -> SentenceTransformer | CrossEncoder:
     """
     Load a model from Hugging Face Hub (cached locally).
-    
+
     Parameters:
     - method: Method name as defined in YAML
     - yaml_path: Path to method-model mapping YAML
     - model_type: Either "embedding" or "reranker"
-    
+
     Returns:
     - SentenceTransformer for embedding models
     - CrossEncoder for reranker models

@@ -8,12 +8,12 @@ import re
 import pandas as pd
 import numpy as np
 from datetime import datetime
-from metaharmonizer.CustomLogger.custom_logger import CustomLogger
-from metaharmonizer._paths import DATA_DIR, corpus_path, resolve_data_file
+from metaharmonizer.custom_logger.custom_logger import CustomLogger
+from metaharmonizer._paths import corpus_path, resolve_data_file
 from metaharmonizer._async_utils import run_async
-from metaharmonizer.KnowledgeDb.concept_table_builder import ConceptTableBuilder
-from metaharmonizer.KnowledgeDb.corpus_builder import CorpusBuilder
-from metaharmonizer.KnowledgeDb.db_clients.ols_db import OLSDb, validate_identifier
+from metaharmonizer.knowledge_db.concept_table_builder import ConceptTableBuilder
+from metaharmonizer.knowledge_db.corpus_builder import CorpusBuilder
+from metaharmonizer.knowledge_db.db_clients.ols_db import OLSDb, validate_identifier
 
 logger = CustomLogger()
 # Resolved lazily (user data dir first, then bundled fallback).
@@ -311,7 +311,7 @@ class OntoMapEngine:
         self._ensure_concept_tables(corpus_df)
 
         self._logger.info("Initialized OntoMap Engine")
-        self._logger.info(f"Stage 1: Exact matching")
+        self._logger.info("Stage 1: Exact matching")
         self._logger.info(f"Stage 2: {self.s2_strategy.upper()}")
         self._logger.info(
             f"Stage 2.5: Synonym matching (confidence>={SYNONYM_MIN_CONFIDENCE})"
@@ -387,7 +387,7 @@ class OntoMapEngine:
         # TODO: Use ontology_version/version_iri to detect stale cached corpora
         # and implement incremental refresh/update behavior.
         if self._ontology_source == "ncit":
-            from metaharmonizer.KnowledgeDb.db_clients.nci_db import NCIDb
+            from metaharmonizer.knowledge_db.db_clients.nci_db import NCIDb
 
             nci = NCIDb(os.getenv("UMLS_API_KEY"))
             return run_async(nci.get_ontology_metadata("ncit"))
@@ -494,7 +494,7 @@ class OntoMapEngine:
         2. ``get_custom_concepts_by_codes`` → full concept data (single pass)
         3. Derive both CSV (label + obo_id) and rich JSON from the concept data
         """
-        from metaharmonizer.KnowledgeDb.db_clients.nci_db import NCIDb
+        from metaharmonizer.knowledge_db.db_clients.nci_db import NCIDb
 
         code = root_term.split(":")[-1]  # "NCIT:C32221" → "C32221"
         self._logger.info(
@@ -591,7 +591,7 @@ class OntoMapEngine:
         ``PREFIX_TO_ONTOLOGY`` (exact match first, then upper-cased
         fallback); raises ``ValueError`` for unrecognised prefixes.
         """
-        from metaharmonizer.KnowledgeDb.db_clients.ols_db import PREFIX_TO_ONTOLOGY
+        from metaharmonizer.knowledge_db.db_clients.ols_db import PREFIX_TO_ONTOLOGY
 
         groups: dict[str, list[str]] = {}
         unknown: list[str] = []
@@ -807,7 +807,7 @@ class OntoMapEngine:
                 self._logger.info(
                     f"Replaced: {q_strip} → {short_to_name[q_key]}")
         return replaced
-    
+
     def _normalize_query(self, q: str, corpus_set: set) -> str:
         """
         Apply lightweight text normalization to improve embedding recall.
@@ -835,29 +835,29 @@ class OntoMapEngine:
     def _finalize_results(self, df: pd.DataFrame) -> pd.DataFrame:
         """
         Finalize results for output by renaming columns and dropping internal columns.
-        
+
         Args:
             df (pd.DataFrame): The combined results DataFrame.
-            
+
         Returns:
             pd.DataFrame: Cleaned DataFrame with user-facing column names.
         """
         df = df.copy()
-        
+
         # Rename columns
         df = df.rename(columns={
             'original_value': 'query',
             'curated_ontology': 'ref_match'
         })
-        
+
         # Drop internal columns
         columns_to_drop = [
             'updated_value',
             'top1_accuracy',
-            'top3_accuracy', 
+            'top3_accuracy',
             'top5_accuracy'
         ]
-        
+
         # Only drop columns that exist (avoid KeyError)
         existing_cols_to_drop = [col for col in columns_to_drop if col in df.columns]
         if existing_cols_to_drop:

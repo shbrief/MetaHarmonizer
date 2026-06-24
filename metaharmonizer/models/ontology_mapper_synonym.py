@@ -1,7 +1,7 @@
 import pandas as pd
 from typing import List, Dict
-from metaharmonizer.KnowledgeDb.synonym_dict import SynonymDict
-from metaharmonizer.CustomLogger.custom_logger import CustomLogger
+from metaharmonizer.knowledge_db.synonym_dict import SynonymDict
+from metaharmonizer.custom_logger.custom_logger import CustomLogger
 
 
 class OntoMapSynonym:
@@ -61,13 +61,13 @@ class OntoMapSynonym:
                           min_score: float = 0.0) -> pd.DataFrame:
         """
         Get matching results for all queries.
-        
+
         Args:
             cura_map: Mapping of query terms to curated ontology values
             topk: Number of top matches (overrides self.topk if provided)
             test_or_prod: 'test' or 'prod' mode
             min_score: Minimum similarity score threshold
-            
+
         Returns:
             DataFrame with columns: original_value, curated_ontology, match_level,
                                    match1, match1_score, ..., matchN, matchN_score

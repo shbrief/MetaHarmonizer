@@ -1,7 +1,7 @@
 import asyncio
 import httpx
 from tenacity import retry, stop_after_attempt, wait_fixed, retry_if_exception_type
-from metaharmonizer.CustomLogger.custom_logger import CustomLogger
+from metaharmonizer.custom_logger.custom_logger import CustomLogger
 from aiolimiter import AsyncLimiter
 
 UMLS_CALLS = 18

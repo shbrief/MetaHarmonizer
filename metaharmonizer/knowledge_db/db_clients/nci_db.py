@@ -6,11 +6,10 @@ import asyncio
 import httpx
 import json
 from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
-import json
-from metaharmonizer.CustomLogger.custom_logger import CustomLogger
+from metaharmonizer.custom_logger.custom_logger import CustomLogger
 from aiolimiter import AsyncLimiter
 
-from metaharmonizer.KnowledgeDb.db_clients.umls_db import UMLSDb
+from metaharmonizer.knowledge_db.db_clients.umls_db import UMLSDb
 from metaharmonizer._paths import VECTOR_DB_PATH as _VECTOR_DB_PATH
 
 NCI_CALLS = 18
@@ -68,7 +67,7 @@ class NCIDb:
                 );
             """)
             conn.execute("""
-                CREATE INDEX IF NOT EXISTS idx_nci_cache_code 
+                CREATE INDEX IF NOT EXISTS idx_nci_cache_code
                 ON nci_concept_cache(code);
             """)
 

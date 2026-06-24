@@ -10,7 +10,7 @@ from metaharmonizer.utils.numeric_match_utils import (
     detect_numeric_semantic,
     family_boost
 )
-from metaharmonizer.CustomLogger.custom_logger import CustomLogger
+from metaharmonizer.custom_logger.custom_logger import CustomLogger
 
 logger = CustomLogger().custlogger(loglevel='WARNING')
 

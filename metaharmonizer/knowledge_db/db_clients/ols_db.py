@@ -6,7 +6,7 @@ import httpx
 from tenacity import (retry, stop_after_attempt, wait_exponential,
                       retry_if_exception_type)
 from aiolimiter import AsyncLimiter
-from metaharmonizer.CustomLogger.custom_logger import CustomLogger
+from metaharmonizer.custom_logger.custom_logger import CustomLogger
 
 OLS_CALLS = 10
 OLS_PERIOD = 1

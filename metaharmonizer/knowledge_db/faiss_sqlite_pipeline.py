@@ -3,20 +3,18 @@ import torch
 import sqlite3
 import faiss
 import os
-import asyncio
-import httpx
 import numpy as np
 import pandas as pd
 from typing import List
 from functools import lru_cache
 from metaharmonizer.utils.embeddings import EmbeddingAdapter
 from metaharmonizer.utils.model_loader import get_embedding_model_cached
-from metaharmonizer.CustomLogger.custom_logger import CustomLogger
-from metaharmonizer.KnowledgeDb import ensure_knowledge_db
+from metaharmonizer.custom_logger.custom_logger import CustomLogger
+from metaharmonizer.knowledge_db import ensure_knowledge_db
 from metaharmonizer._async_utils import run_async
-from metaharmonizer.KnowledgeDb.db_clients.nci_db import NCIDb
-from metaharmonizer.KnowledgeDb.concept_table_builder import ConceptTableBuilder
-from metaharmonizer.KnowledgeDb.db_clients.ols_db import validate_identifier, validate_table_suffix
+from metaharmonizer.knowledge_db.db_clients.nci_db import NCIDb
+from metaharmonizer.knowledge_db.concept_table_builder import ConceptTableBuilder
+from metaharmonizer.knowledge_db.db_clients.ols_db import validate_identifier, validate_table_suffix
 from metaharmonizer._paths import VECTOR_DB_PATH, FAISS_INDEX_DIR
 
 # Load API key from environment. Paths resolved via metaharmonizer._paths
@@ -202,7 +200,7 @@ class FAISSSQLiteSearch:
     def _populate_corpus_table(self, corpus: List[str]):
         """
         Fill corpus table (for ST/LM)
-        
+
         Only store terms, do not call NCI API
         """
         records = [(t, ) for t in corpus]
@@ -228,10 +226,10 @@ class FAISSSQLiteSearch:
         need_rebuild = False
 
         if not os.path.exists(self.index_path):
-            self.logger.info(f"FAISS index not found, will build")
+            self.logger.info("FAISS index not found, will build")
             need_rebuild = True
         elif self.index is None:
-            self.logger.info(f"FAISS index not loaded, will build")
+            self.logger.info("FAISS index not loaded, will build")
             need_rebuild = True
         elif self.index.ntotal != table_count:
             self.logger.info(
@@ -250,7 +248,7 @@ class FAISSSQLiteSearch:
     def _build_faiss_from_table(self):
         """
         Read data from table and build FAISS index
-        
+
         General method: supports all strategies
         """
         # Read different columns based on strategy

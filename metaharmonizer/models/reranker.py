@@ -10,7 +10,7 @@ import numpy as np
 from typing import List
 import os
 import re
-from metaharmonizer.CustomLogger.custom_logger import CustomLogger
+from metaharmonizer.custom_logger.custom_logger import CustomLogger
 
 RERANKER_TYPE_MAP = {
     # Cross-Encoders

@@ -4,9 +4,9 @@ import asyncio
 import httpx
 from typing import List, Set
 from pathlib import Path
-from metaharmonizer.KnowledgeDb.db_clients.nci_db import NCIDb
-from metaharmonizer.KnowledgeDb.db_clients.ols_db import OLSDb, validate_identifier, validate_table_suffix
-from metaharmonizer.CustomLogger.custom_logger import CustomLogger
+from metaharmonizer.knowledge_db.db_clients.nci_db import NCIDb
+from metaharmonizer.knowledge_db.db_clients.ols_db import OLSDb, validate_identifier, validate_table_suffix
+from metaharmonizer.custom_logger.custom_logger import CustomLogger
 from metaharmonizer._paths import VECTOR_DB_PATH
 
 BASE_DB = str(VECTOR_DB_PATH)
@@ -66,7 +66,7 @@ class ConceptTableBuilder:
                 );
             """)
             conn.execute(f"""
-                CREATE INDEX IF NOT EXISTS idx_{self.rag_table}_code 
+                CREATE INDEX IF NOT EXISTS idx_{self.rag_table}_code
                 ON {self.rag_table}(code);
             """)
 
@@ -103,7 +103,7 @@ class ConceptTableBuilder:
                                      force_rebuild: bool = False):
         """
         Fetch data from NCI API and directly build synonym and rag tables.
-        
+
         Args:
             codes: List of NCI codes
             force_rebuild: Whether to force rebuild (clear tables and refetch)
@@ -112,7 +112,7 @@ class ConceptTableBuilder:
 
         if force_rebuild:
             self.logger.info(
-                f"🔄 Force rebuild: clearing tables and fetching all codes")
+                "🔄 Force rebuild: clearing tables and fetching all codes")
             with sqlite3.connect(self.db_path) as conn:
                 conn.execute(f"DELETE FROM {self.syn_table}")
                 conn.execute(f"DELETE FROM {self.rag_table}")

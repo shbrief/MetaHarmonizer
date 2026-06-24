@@ -4,7 +4,7 @@ import math
 import torch
 from .base import BaseMatcher
 from ..config import VALUE_DICT_THRESH, VALUE_PERCENTAGE_THRESH, VALUE_UNIQUE_CAP
-from metaharmonizer.CustomLogger.custom_logger import CustomLogger
+from metaharmonizer.custom_logger.custom_logger import CustomLogger
 
 logger = CustomLogger().custlogger(loglevel='WARNING')
 

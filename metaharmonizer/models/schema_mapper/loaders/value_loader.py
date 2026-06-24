@@ -7,7 +7,7 @@ from typing import Optional, Union, Iterable
 from sentence_transformers import SentenceTransformer
 from .. import config as _config
 from ..config import NOISE_VALUES, FIELD_MODEL
-from metaharmonizer.CustomLogger.custom_logger import CustomLogger
+from metaharmonizer.custom_logger.custom_logger import CustomLogger
 
 logger = CustomLogger().custlogger(loglevel='WARNING')
 

@@ -11,7 +11,7 @@ def expand_terms_with_gemini(input_terms, api_key=None, batch_size=50):
     Expand terms using Gemini API.
     Fixed model: models/gemini-2.5-flash-preview-05-20
     Handles batching + simple JSON extraction.
-    
+
     Args:
         input_terms (list[str]): Terms to expand
         api_key (str, optional): Gemini API key (if not set via env)
@@ -146,11 +146,11 @@ def create_variant_mapping(expanded_data, output_json='variant_mapping.json'):
 def apply_variant_mapping(raw_queries, mapping_dict):
     """
     Match raw queries against variant mapping dictionary
-    
+
     Args:
         raw_queries: list of query terms or pandas Series
         mapping_dict: variant -> canonical mapping
-    
+
     Returns:
         DataFrame with columns: raw_query, matched_term, match_found
     """

@@ -6,7 +6,7 @@ from sentence_transformers import SentenceTransformer
 from metaharmonizer.utils.schema_mapper_utils import normalize
 from .. import config as _config
 from ..config import FIELD_MODEL
-from metaharmonizer.CustomLogger.custom_logger import CustomLogger
+from metaharmonizer.custom_logger.custom_logger import CustomLogger
 
 logger = CustomLogger().custlogger(loglevel='WARNING')
 
@@ -70,37 +70,37 @@ class DictLoader:
         except Exception as e:
             logger.warning(f"[DictLoader] Failed to load alias dictionary: {e}, skipping alias matching")
             return {}, [], {}, False
-        
+
         if df_dict.empty:
-            logger.warning(f"[DictLoader] Alias dictionary is empty, skipping alias matching")
+            logger.warning("[DictLoader] Alias dictionary is empty, skipping alias matching")
             return {}, [], {}, False
-        
+
         # Normalize alias to fields mapping
         sources_to_fields = (
             df_dict.groupby(df_dict['source'].map(normalize))['field_name']
             .apply(lambda s: sorted(set(s)))
             .to_dict()
         )
-        
+
         sources_keys = list(sources_to_fields.keys())
-        
+
         normed_source_to_source = {}
         for _, row in df_dict.dropna(subset=['source']).iterrows():
             norm_src = normalize(row['source'])
             if norm_src not in normed_source_to_source:
                 normed_source_to_source[norm_src] = row['source']
-        
+
         logger.info(f"[DictLoader] Loaded {len(sources_keys)} alias sources")
         return sources_to_fields, sources_keys, normed_source_to_source, True
-    
+
     @staticmethod
     def load_numeric_dict(df_dict: pd.DataFrame):
         """
         Load numeric field dictionary.
-        
+
         Args:
             df_dict: Full alias dictionary DataFrame
-            
+
         Returns:
             tuple: (df_num, numeric_sources)
             If df_dict is None or empty, returns (None, [])
@@ -108,29 +108,29 @@ class DictLoader:
         if df_dict is None or df_dict.empty:
             logger.warning("[DictLoader] No alias dictionary for numeric fields")
             return None, []
-        
+
         df_num = df_dict[df_dict['is_numeric_field'] == 'yes']
         numeric_sources = df_num['source'].dropna().unique().tolist()
-        
+
         logger.info(f"[DictLoader] Loaded {len(numeric_sources)} numeric sources")
         return df_num, numeric_sources
-    
+
     @staticmethod
     def encode_fields(fields: list, model_name: str = FIELD_MODEL):
         """
         Encode fields using SentenceTransformer.
-        
+
         Args:
             fields: List of field strings to encode
             model_name: Name of the sentence transformer model
-            
+
         Returns:
             torch.Tensor: Encoded embeddings, or None if fields is empty
         """
         if not fields:
             logger.warning("[DictLoader] No fields to encode")
             return None
-        
+
         model = SentenceTransformer(model_name)
         embeddings = model.encode(fields, convert_to_tensor=True)
         logger.info(f"[DictLoader] Encoded {len(fields)} fields using {model_name}")

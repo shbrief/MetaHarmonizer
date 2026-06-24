@@ -2,10 +2,10 @@ import torch
 import numpy as np
 from sentence_transformers import util
 import pandas as pd
-from metaharmonizer.KnowledgeDb.faiss_sqlite_pipeline import FAISSSQLiteSearch
+from metaharmonizer.knowledge_db.faiss_sqlite_pipeline import FAISSSQLiteSearch
 from metaharmonizer.utils.model_loader import load_method_model_dict, get_reranker_cached
 from metaharmonizer.models.reranker import RERANKER_TYPE_MAP
-from metaharmonizer.CustomLogger.custom_logger import CustomLogger
+from metaharmonizer.custom_logger.custom_logger import CustomLogger
 
 
 class OntoModelsBase:

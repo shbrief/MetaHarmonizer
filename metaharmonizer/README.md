@@ -13,9 +13,9 @@
 
 #### 1. **Main Engines** (Blue)
 - **OntoMapEngine**: Orchestrates ontology mapping with strategies (lm, st, rag)
-  - 📁 [`metaharmonizer/Engine/ontology_mapping_engine.py`](metaharmonizer/Engine/ontology_mapping_engine.py)
+  - 📁 [`metaharmonizer/engine/ontology_mapping_engine.py`](metaharmonizer/engine/ontology_mapping_engine.py)
 - **SchemaMapEngine**: Multi-stage schema mapping engine
-  - 📁 [`metaharmonizer/Engine/schema_mapping_engine.py`](metaharmonizer/Engine/schema_mapping_engine.py)
+  - 📁 [`metaharmonizer/engine/schema_mapping_engine.py`](metaharmonizer/engine/schema_mapping_engine.py)
 
 #### 2. **Ontology Mappers** (Purple)
 - **OntoMapLM**: Uses language models with CLS token embeddings
@@ -34,10 +34,10 @@
 
 #### 5. **Database/Storage** (Green)
 - **FAISSSQLiteSearch**: Vector similarity search with SQLite backend
-  - 📁 [`metaharmonizer/KnowledgeDb/faiss_sqlite_pipeline.py`](metaharmonizer/KnowledgeDb/faiss_sqlite_pipeline.py)
+  - 📁 [`metaharmonizer/knowledge_db/faiss_sqlite_pipeline.py`](metaharmonizer/knowledge_db/faiss_sqlite_pipeline.py)
 - **External Databases**: Integration with NCI, UMLS ontologies
-  - 📁 [`metaharmonizer/KnowledgeDb/db_clients/nci_db.py`](metaharmonizer/KnowledgeDb/db_clients/nci_db.py)
-  - 📁 [`metaharmonizer/KnowledgeDb/db_clients/umls_db.py`](metaharmonizer/KnowledgeDb/db_clients/umls_db.py)
+  - 📁 [`metaharmonizer/knowledge_db/db_clients/nci_db.py`](metaharmonizer/knowledge_db/db_clients/nci_db.py)
+  - 📁 [`metaharmonizer/knowledge_db/db_clients/umls_db.py`](metaharmonizer/knowledge_db/db_clients/umls_db.py)
 - **Model Cache/Loader**: Efficient model management and caching
   - 📁 [`metaharmonizer/utils/model_loader.py`](metaharmonizer/utils/model_loader.py)
   - 📁 [`metaharmonizer/utils/model_cache.py`](metaharmonizer/utils/model_cache.py)

@@ -1,11 +1,9 @@
 import pandas as pd
 import numpy as np
 import faiss
-from sentence_transformers import SentenceTransformer
 import torch
 from transformers import AutoTokenizer
 import metaharmonizer.models.ontology_models as otm
-from metaharmonizer.KnowledgeDb.faiss_sqlite_pipeline import FAISSSQLiteSearch
 
 
 class OntoMapST(otm.OntoModelsBase):
@@ -76,7 +74,7 @@ class OntoMapST(otm.OntoModelsBase):
     def model(self):
         if self._model is None:
             from metaharmonizer.utils.model_loader import get_embedding_model_cached
-            self._model = get_embedding_model_cached(self.method) 
+            self._model = get_embedding_model_cached(self.method)
         return self._model
 
     @property

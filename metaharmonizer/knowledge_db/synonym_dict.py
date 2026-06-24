@@ -1,7 +1,6 @@
 import os
 import sqlite3
 import faiss
-import asyncio
 import gc
 import torch
 import numpy as np
@@ -10,11 +9,11 @@ from pathlib import Path
 from collections import OrderedDict
 from metaharmonizer.utils.embeddings import EmbeddingAdapter
 from metaharmonizer.utils.model_loader import get_embedding_model_cached
-from metaharmonizer.KnowledgeDb import ensure_knowledge_db
-from metaharmonizer.KnowledgeDb.db_clients.nci_db import NCIDb  # kept for backward compat
-from metaharmonizer.KnowledgeDb.concept_table_builder import ConceptTableBuilder
-from metaharmonizer.KnowledgeDb.db_clients.ols_db import validate_identifier, validate_table_suffix
-from metaharmonizer.CustomLogger.custom_logger import CustomLogger
+from metaharmonizer.knowledge_db import ensure_knowledge_db
+from metaharmonizer.knowledge_db.db_clients.nci_db import NCIDb  # kept for backward compat
+from metaharmonizer.knowledge_db.concept_table_builder import ConceptTableBuilder
+from metaharmonizer.knowledge_db.db_clients.ols_db import validate_identifier, validate_table_suffix
+from metaharmonizer.custom_logger.custom_logger import CustomLogger
 from metaharmonizer._async_utils import run_async
 from metaharmonizer._paths import VECTOR_DB_PATH, FAISS_INDEX_DIR
 
@@ -197,7 +196,7 @@ class SynonymDict:
                                          synonyms: List[str]):
         """
         Build FAISS index from given synonyms and their DB IDs.
-        
+
         General method that can be called by build_index_from_codes_async and _build_index_from_existing_table.
         """
         self.logger.info(
@@ -305,7 +304,7 @@ class SynonymDict:
     def warm_run(self, codes: List[str], force_rebuild: bool = False):
         """
         Warm run: ensure synonym data and index are ready
-        
+
         Workflow:
         1. Use ConceptTableBuilder to ensure the table is created and populated
         2. Check if FAISS index needs to be built

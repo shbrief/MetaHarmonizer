@@ -11,18 +11,18 @@ class MatchStrategy:
 
 class BaseMatcher:
     """Base class for all matchers."""
-    
+
     def __init__(self, engine):
         """
         Args:
             engine: Reference to the main SchemaMapEngine instance
         """
         self.engine = engine
-    
+
     def match(self, col: str) -> List[Tuple[str, float, str]]:
         """
         Perform matching for a column.
-        
+
         Returns:
             List of (field_name, score, source) tuples
         """

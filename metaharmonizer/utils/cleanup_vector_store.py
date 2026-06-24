@@ -7,7 +7,7 @@ import metaharmonizer._paths  # noqa: F401
 def cleanup_vector_store(om_strategy, method, category) -> None:
     """
     Drops the specified table and index from the SQLite database.
-    
+
     Args:
         om_strategy (str): The ontology mapping strategy.
         method (str): The method name.
@@ -52,7 +52,7 @@ def drop_table(db_path: str, table_name: str) -> None:
 def delete_index(index_path: str) -> None:
     """
     Deletes the FAISS index file if it exists.
-    
+
     Args:
         index_path (str): The path to the FAISS index file.
     """

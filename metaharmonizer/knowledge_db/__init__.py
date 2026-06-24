@@ -6,7 +6,7 @@ the corpus + index on demand from upstream ontology APIs).
 """
 
 import threading
-from metaharmonizer.CustomLogger.custom_logger import CustomLogger
+from metaharmonizer.custom_logger.custom_logger import CustomLogger
 # `.env` auto-load happens in `metaharmonizer._paths`; this import also pulls
 # the resolved path constants we need below.
 from metaharmonizer._paths import (

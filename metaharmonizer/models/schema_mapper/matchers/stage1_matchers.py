@@ -7,7 +7,7 @@ from metaharmonizer.utils.schema_mapper_utils import normalize
 
 class StandardExactMatcher(BaseMatcher):
     """Standard field exact matching."""
-    
+
     def match(self, col: str) -> List[Tuple[str, float, str]]:
         norm = normalize(col)
         if norm in self.engine.normed_std_to_std:
@@ -17,17 +17,17 @@ class StandardExactMatcher(BaseMatcher):
 
 class AliasExactMatcher(BaseMatcher):
     """Alias exact matching after normalization."""
-    
+
     def match(self, col: str) -> List[Tuple[str, float, str]]:
         # Safety check
         if not self.engine.has_alias_dict:
             return []
-        
+
         norm = normalize(col)
         alias_fields = self.engine.sources_to_fields.get(norm, [])
         if not alias_fields:
             return []
-        
+
         matches = []
         for f in alias_fields:
             src = self.engine.normed_source_to_source.get(norm, f)
@@ -36,7 +36,7 @@ class AliasExactMatcher(BaseMatcher):
 
 class StandardFuzzyMatcher(BaseMatcher):
     """Standard field fuzzy matching."""
-    
+
     def match(self, col: str) -> List[Tuple[str, float, str]]:
         norm = normalize(col)
         candidates = process.extract(
@@ -45,7 +45,7 @@ class StandardFuzzyMatcher(BaseMatcher):
             scorer=fuzz.token_sort_ratio,
             limit=self.engine.top_k
         )
-        
+
         matches = []
         for cand_norm, score, _ in candidates:
             if score >= FUZZY_THRESH:
@@ -55,12 +55,12 @@ class StandardFuzzyMatcher(BaseMatcher):
 
 class AliasFuzzyMatcher(BaseMatcher):
     """Alias fuzzy matching using token_sort_ratio."""
-    
+
     def match(self, col: str) -> List[Tuple[str, float, str]]:
         # Safety check
         if not self.engine.has_alias_dict or not self.engine.sources_keys:
             return []
-        
+
         norm = normalize(col)
         candidates = process.extract(
             norm,
@@ -68,7 +68,7 @@ class AliasFuzzyMatcher(BaseMatcher):
             scorer=fuzz.token_sort_ratio,
             limit=self.engine.top_k
         )
-        
+
         best = {}
         for cand, score, _ in candidates:
             if score >= FUZZY_THRESH:
@@ -77,6 +77,6 @@ class AliasFuzzyMatcher(BaseMatcher):
                     s = score / 100.0
                     if (std_field not in best) or (best[std_field][0] < s):
                         best[std_field] = (s, src)
-        
+
         matches = [(f, sc, src) for f, (sc, src) in best.items()]
         return sorted(matches, key=lambda x: x[1], reverse=True)
