@@ -4,7 +4,6 @@ Bypasses __init__ (requires GEMINI_API_KEY) via __new__ + stub injection.
 Covers: _build_prompt content, match() JSON parsing and validation logic.
 """
 import json
-import pytest
 from types import SimpleNamespace
 from unittest.mock import MagicMock
 

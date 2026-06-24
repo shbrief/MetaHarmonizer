@@ -2,7 +2,6 @@
 NumericCombinedMatcher, SemanticCombinedMatcher, treatment_boost."""
 import numpy as np
 import pandas as pd
-import pytest
 import torch
 
 from metaharmonizer.utils.schema_mapper_utils import normalize

@@ -1,8 +1,4 @@
 """Tests for corpus_path — centralized corpus file path resolution."""
-import os
-import pytest
-from pathlib import Path
-from unittest.mock import patch
 
 from metaharmonizer._paths import corpus_path, DATA_DIR, RETRIEVED_ONTOLOGIES_DIR
 

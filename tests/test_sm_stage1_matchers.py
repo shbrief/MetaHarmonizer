@@ -1,5 +1,4 @@
 """Tests for stage1_matchers — StandardExactMatcher, AliasExactMatcher, StandardFuzzyMatcher, AliasFuzzyMatcher."""
-import pytest
 from unittest.mock import MagicMock
 
 from metaharmonizer.models.schema_mapper.matchers.stage1_matchers import (

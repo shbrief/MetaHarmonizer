@@ -3,8 +3,6 @@
 OntoMapSynonym does not extend OntoModelsBase and builds its result rows
 independently, so match_level logic and min_score filtering are tested here.
 """
-import pytest
-import pandas as pd
 
 from metaharmonizer.models.ontology_mapper_synonym import OntoMapSynonym
 

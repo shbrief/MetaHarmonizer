@@ -1,7 +1,7 @@
 """Tests for OntoMapEngine._partition_codes — code prefix routing logic."""
 import pytest
 
-from metaharmonizer.Engine.ontology_mapping_engine import OntoMapEngine
+from metaharmonizer.engine.ontology_mapping_engine import OntoMapEngine
 
 
 class TestPartitionCodes:

@@ -4,7 +4,6 @@ Covers get_match_results output contract and the key distinction from ST:
 LM does NOT L2-normalise query embeddings before FAISS search.
 """
 import numpy as np
-import pytest
 
 from metaharmonizer.models.ontology_mapper_lm import OntoMapLM
 

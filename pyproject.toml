@@ -102,3 +102,28 @@ include = ["metaharmonizer*"]
 ]
 
 [tool.pytest.ini_options]
+
+[tool.ruff]
+# Scientific code; 99 keeps the vast majority of lines compliant without
+# reflowing readable expressions to 79 cols.
+line-length = 99
+target-version = "py310"
+extend-exclude = ["model_cache", "data"]
+
+[tool.ruff.lint]
+# PEP 8 (pycodestyle E/W) + Pyflakes (F). Naming/typing/bugbear rule sets
+# (N/UP/B) are intentionally not enabled yet to keep the diff focused.
+select = ["E", "F", "W"]
+
+[tool.ruff.lint.per-file-ignores]
+# `D` (distances) and `I` (indices) are the canonical FAISS `index.search()`
+# return-value names; keeping them aids readability for FAISS users.
+"metaharmonizer/models/ontology_mapper_lm.py" = ["E741"]
+"metaharmonizer/models/ontology_mapper_llm.py" = ["E741"]
+"metaharmonizer/models/ontology_mapper_st.py" = ["E741"]
+"metaharmonizer/models/ontology_models.py" = ["E741"]
+"metaharmonizer/knowledge_db/synonym_dict.py" = ["E741"]
+# Test doubles for FAISS `index.search()` mirror the same `D, I` names.
+"tests/test_om_lm.py" = ["E741"]
+"tests/test_om_llm.py" = ["E741"]
+"tests/test_om_st.py" = ["E741"]

@@ -1,6 +1,4 @@
 """Tests for stage2_matchers — ValueDictMatcher, OntologyMatcher."""
-import math
-import pytest
 import torch
 from unittest.mock import MagicMock
 
@@ -8,7 +6,7 @@ from metaharmonizer.models.schema_mapper.matchers.stage2_matchers import (
     ValueDictMatcher,
     OntologyMatcher,
 )
-from metaharmonizer.models.schema_mapper.config import VALUE_UNIQUE_CAP, VALUE_PERCENTAGE_THRESH
+from metaharmonizer.models.schema_mapper.config import VALUE_UNIQUE_CAP
 
 
 # ── ValueDictMatcher helpers ───────────────────────────────────────────────────

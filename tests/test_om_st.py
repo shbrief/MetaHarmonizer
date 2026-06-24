@@ -8,7 +8,6 @@ which LM skips. That implementation difference is verified here alongside the
 shared output contract (columns, match_level, prod mode).
 """
 import numpy as np
-import pytest
 
 from metaharmonizer.models.ontology_mapper_st import OntoMapST
 
