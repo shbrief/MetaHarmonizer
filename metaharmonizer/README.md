@@ -35,7 +35,6 @@
 #### 5. **Database/Storage** (Green)
 - **FAISSSQLiteSearch**: Vector similarity search with SQLite backend
   - 📁 [`metaharmonizer/KnowledgeDb/faiss_sqlite_pipeline.py`](metaharmonizer/KnowledgeDb/faiss_sqlite_pipeline.py)
-  - 📁 [`metaharmonizer/utils/value_faiss.py`](metaharmonizer/utils/value_faiss.py)
 - **External Databases**: Integration with NCI, UMLS ontologies
   - 📁 [`metaharmonizer/KnowledgeDb/db_clients/nci_db.py`](metaharmonizer/KnowledgeDb/db_clients/nci_db.py)
   - 📁 [`metaharmonizer/KnowledgeDb/db_clients/umls_db.py`](metaharmonizer/KnowledgeDb/db_clients/umls_db.py)
@@ -86,19 +85,26 @@
 ```python
 # Ontology Mapping
 onto_engine = OntoMapEngine(
-    method='sap-bert',
     category='disease',
-    om_strategy='lm',  # or 'st', 'rag'
     query=query_list,
-    corpus=corpus_list,
-    topk=5
+    cura_map=cura_map,        # query term -> curated ontology (for test mode)
+    s2_method='sap-bert',     # transformer model key from method_model.yaml
+    s2_strategy='lm',         # 'lm' (CLS pooling) or 'st' (SentenceTransformer)
+    s3_strategy='rag',        # optional Stage-3 re-matching; None to disable
+    test_or_prod='test',
+    topk=5,
 )
+results = onto_engine.run()
 
-# Schema Mapping  
+# Schema Mapping
 schm_engine = SchemaMapEngine(
     clinical_data_path=file,
     mode='manual',  # or 'auto'
     top_k=5,
 )
+schm_engine.run_schema_mapping()
 ```
+
+> See the top-level [`readme.md`](../readme.md) for the full parameter reference
+> and runnable quickstart.
 

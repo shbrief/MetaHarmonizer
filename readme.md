@@ -1,22 +1,29 @@
 # MetaHarmonizer: a robust, fully local biomedical metadata harmonization system
-The pre-print is now available.
 
+The pre-print is now available:
 [MetaHarmonizer: robust biomedical metadata harmonization and a contamination control for inflated LLM performance on public benchmarks](https://www.biorxiv.org/content/10.64898/2026.06.13.732088v1)
 
+MetaHarmonizer provides three entry points:
 
-# 1. Installation
+| Engine | Purpose |
+|--------|---------|
+| `OntoMapEngine` | Map free-text values to ontology terms (exact → embedding → RAG). |
+| `SchemaMapEngine` | Map clinical-data columns to standardized field names (dict → fuzzy → value → LLM). |
+| `FieldSuggester` | Discover new fields via NER + embedding clustering. |
+
+## 1. Installation
 
 ```bash
-# 1. Clone
+# Clone
 git clone https://github.com/shbrief/MetaHarmonizer
 cd MetaHarmonizer
 
-# 2. Create a Python 3.10 environment
+# Create a Python 3.10 environment
 conda create -n mh python=3.10 -y
 conda activate mh
 pip install --upgrade pip
 
-# 3. Install the package. Pick one of:
+# Install the package. Pick one of:
 pip install -e .                       # core only (no LLM backends)
 pip install -e ".[llm-gemini]"         # + Gemini (Stage-4 LLM, OntoMapLLM, etc.)
 pip install -e ".[llm-openai]"         # + OpenAI (FieldSuggester semantic clustering)
@@ -25,32 +32,35 @@ pip install -e ".[notebook]"           # + nest-asyncio for Jupyter workflows
 pip install -e ".[dev]"                # + pytest & coverage
 pip install -e ".[eval]"               # + scipy for evaluation scripts
 pip install -e ".[all]"                # notebook + eval + all three LLM backends
+
+# Set up environment variables (see the table below)
+cp .env.example .env
 ```
 
 Install directly from GitHub (non-editable):
+
 ```bash
 pip install "git+https://github.com/shbrief/MetaHarmonizer#egg=metaharmonizer[llm-gemini]"
 ```
 
-> The `data/` corpus directory is **not bundled** in the wheel. Users
-> should either clone the repo alongside the install, or set
-> `METAHARMONIZER_DATA_DIR` (see [Environment variables](#environment-variables)) 
-> to a local copy.
+> The full ontology corpus is **not bundled** in the wheel. Set
+> `METAHARMONIZER_DATA_DIR` (see [Environment variables](#2-environment-variables))
+> to point at a local copy, or let the engine fetch/build it on first run (set
+> `UMLS_API_KEY` and/or pass `corpus_df=`). A small reference dataset
+> (`schema/curated_fields.csv`, `corpus/oncotree_code_to_name.csv`, etc.) ships
+> inside the wheel for `SchemaMapEngine` and OncoTree lookups. Small, runnable
+> sample inputs for the demo notebooks live under [`examples/data/`](examples/data/).
 
-### Environment variables
+## 2. Environment variables
 
 Copy `.env.example` → `.env` (or export in your shell) before running the
 mappers. `python-dotenv` auto-loads `.env` on import.
-
-```
-cp .env.example .env
-```
 
 | Variable | Required for | Default | Notes |
 |---|---|---|---|
 | `GEMINI_API_KEY` | Stage-4 LLM matcher, `OntoMapLLM`, bi-encoder column inference, `expand_terms_with_gemini` | — | Needed whenever the `llm-gemini` extra is exercised. |
 | `UMLS_API_KEY` | NCI Thesaurus lookups, concept-table builder, `update_term_via_code` | — | Required for `ontology_source="ncit"` pipeline stages that hit the live API. |
-| `METAHARMONIZER_DATA_DIR` | Locating corpus + schema reference files (`oncotree_code_to_name.csv`, `curated_fields.csv`, etc.) | `~/.metaharmonizer/data` | Dev tip: point at `<repo>/data` in your `.env` to reuse the repo's bundled examples. Small reference files ship inside the wheel as a fallback when this dir is empty. |
+| `METAHARMONIZER_DATA_DIR` | Locating corpus + schema reference files (`oncotree_code_to_name.csv`, `curated_fields.csv`, etc.) | `~/.metaharmonizer/data` | Small reference files ship inside the wheel as a fallback when this dir is empty; set this to a local corpus copy to override. |
 | `SM_OUTPUT_DIR` | `SchemaMapEngine` output path | `$METAHARMONIZER_DATA_DIR/schema_mapping_eval` | Overrides where CSV results are written. |
 | `FIELD_VALUE_JSON` | Schema-mapper value dictionary | `$METAHARMONIZER_DATA_DIR/schema/field_value_dict.json` | Point at an alternative value dict. |
 | `VECTOR_DB_PATH` | Knowledge-DB SQLite file | `$KNOWLEDGE_DB_DIR/vector_db.sqlite` | — |
@@ -62,27 +72,23 @@ cp .env.example .env
 | `NCIT_POOL_SIZE` | NCI async client connection pool | `8` | Raise for bulk corpus builds. |
 | `LOG_FILE` / `LOG_ENV` | Logger config | `out.log` / `development` | — |
 
-### 3. Quickstart
+## 3. Quickstart
 
-The snippets below assume you cloned the repo (so `data/` is on disk and the
-cached ontology corpus under `data/corpus/retrieved_ontologies/` is available).
-For wheel-only installs:
-- replace the input paths with your own files (or point
-  `METAHARMONIZER_DATA_DIR` at a local copy of `data/`),
-- and pass `corpus_df=` to `OntoMapEngine` or set `UMLS_API_KEY` so the engine
-  can fetch the ontology on first use. A small reference dataset
-  (`schema/curated_fields.csv`, `corpus/oncotree_code_to_name.csv`) is bundled
-  inside the wheel for `SchemaMapEngine` and OncoTree lookups, but **the full
-  ontology corpus is not**.
+The snippets below read the small sample inputs under [`examples/data/`](examples/data/)
+(run them from the repo root, or adjust the paths to your own files). Pass
+`corpus_df=` to `OntoMapEngine` or set `UMLS_API_KEY` so the engine can fetch the
+ontology corpus on first use.
 
-Minimal `OntoMapEngine` example (Stage 1–2; no API key needed when the cached
-NCIT corpus is present locally):
+> The initial `OntoMapEngine` run takes ~4 min while it builds the FAISS index;
+> subsequent runs reuse the cache and take ~7 sec.
+
+### Ontology mapping
 
 ```python
 import pandas as pd
 from metaharmonizer import OntoMapEngine
 
-df = pd.read_csv("data/corpus/cbio_disease/disease_query_updated.csv")
+df = pd.read_csv("examples/data/disease_query_updated.csv")
 engine = OntoMapEngine(
     category="disease",
     query=df["original_value"].tolist(),
@@ -90,70 +96,48 @@ engine = OntoMapEngine(
     s2_method="sap-bert",
     s2_strategy="st",
     test_or_prod="test",
+    output_dir="examples/data/outputs",
 )
 results = engine.run()
 print(results.head())
 ```
 
-Schema mapper in one call:
+### Schema mapping
 
 ```python
 from metaharmonizer import SchemaMapEngine
 
 engine = SchemaMapEngine(
-    clinical_data_path="data/schema/test.csv",
-    mode="manual",   # "auto" to auto-run Stage-4 LLM on low-confidence rows
+    clinical_data_path="examples/data/sm_test.csv",
+    mode="manual",   # "auto" or "manual"
     top_k=5,
 )
 engine.run_schema_mapping()
 ```
 
-Richer examples (custom corpus, MONDO/UBERON sources, Stage-4 LLM review) live
-in [5 Setting up the mappers](#5-setting-up-the-mappers) and the notebooks
-under `demo_nb/`.
+Richer examples (custom corpus, MONDO/UBERON sources, Stage-4 LLM review) are in
+the reference sections below and the notebooks under [`examples/`](examples/).
 
-### 4 Datasets
-- The datasets in this repository are encrypted to prevent contamination of the gold standard.  
+## 4. Datasets
+
 - For **ontology mapping**, you must provide:
-  - A list of query terms via the `query` parameter (or a `query_df` + `query_col` pair)
-  - A `corpus` list and/or `corpus_df` are **optional** constructor parameters — the engine auto-resolves them from cached CSV or API when not provided  
-- For **schema mapping**, provide a clinical metadata file.  
-  - The schema mapping dictionary is available in the `/data` folder.  
-- ⚠️ You will not be able to use the encrypted demo datasets without authorization, but you can supply your own query and corpus lists.
-  
-### 5 Setting up the mappers 
+  - A list of query terms via the `query` parameter (or a `query_df` + `query_col` pair).
+  - A `corpus` list and/or `corpus_df` are **optional** — the engine auto-resolves
+    them from cached CSV or the API when not provided.
+- For **schema mapping**, provide a clinical metadata file. The schema-mapping
+  reference dictionary ships bundled inside the wheel
+  (`metaharmonizer/_bundled_data/schema/`).
+- Small, runnable sample inputs for the demo notebooks live under
+  [`examples/data/`](examples/data/); they are illustrative, not the full
+  research corpora.
 
-1. Ontology Mapping
-
-**Minimal example (auto-resolved corpus):**
-
-```python
-%cd <user_path>/MetaHarmonizer/
-
-import pandas as pd
-from metaharmonizer.Engine import get_ontology_engine
-
-OntoMapEngine = get_ontology_engine()
-
-df = pd.read_csv("data/corpus/cbio_disease/disease_query_updated.csv")
-query_list = df["original_value"].tolist()
-cura_map = dict(zip(df["original_value"], df["curated_ontology"]))
-
-# corpus is auto-loaded from cached CSV or built from NCI/OLS API
-engine = OntoMapEngine(
-    category="disease",
-    query=query_list,
-    cura_map=cura_map,
-    s2_method="sap-bert",
-    s2_strategy="st",
-    test_or_prod="test",
-)
-results = engine.run()
-```
+## 5. Ontology mapping reference
 
 **Using a non-NCIt ontology (e.g. MONDO):**
 
 ```python
+from metaharmonizer import OntoMapEngine
+
 engine = OntoMapEngine(
     category="disease",
     query=query_list,
@@ -170,6 +154,9 @@ results = engine.run()
 **Custom corpus (advanced):**
 
 ```python
+import pandas as pd
+from metaharmonizer import OntoMapEngine
+
 # Provide your own corpus_df — ontology_source is inferred from code prefixes.
 # A content hash isolates user tables from the official ones, so different
 # corpora never cross-contaminate each other or the built-in tables.
@@ -181,56 +168,44 @@ engine = OntoMapEngine(
     s2_strategy="lm",
     test_or_prod="test",
     corpus_df=my_corpus,
-    output_dir="data/outputs/my_run",  # optional: auto-save results to this directory
+    output_dir="data/outputs/my_run",  # optional: auto-save results here
 )
 results = engine.run()
 ```
 
-For more examples, see `demo_nb/ontology_mapper_workflow.ipynb`.
+**Parameters:**
+- **category** (str): Ontology category — `disease`, `bodysite`, or `treatment`.
+- **query** (list): List of query terms to map.
+- **query_df** (DataFrame, optional): DataFrame query mode (alternative to `query`); requires `query_col`.
+- **query_col** (str, optional): Column in `query_df` holding the query terms.
+- **cura_map** (dict): Mapping of query terms to curated ontology values (for evaluation in `test` mode).
+- **corpus** (list, optional): Explicit list of corpus terms for **Stage 2 matching only** (Stage 3 always uses `corpus_df`). Auto-derived from `corpus_df` when omitted.
+- **corpus_df** (DataFrame, optional): DataFrame with `label` and `obo_id` columns. Auto-loaded from cached CSV or built from API when omitted.
+- **ontology_source** (str, default `"ncit"`): Ontology backend. Supported: `ncit` (NCI Thesaurus via EVSREST), `mondo`, `uberon` (via EBI OLS4 API). When `corpus_df` is provided, this is inferred from code prefixes.
+- **s2_strategy** (str): Stage 2 strategy — `lm` (CLS-token pooling) or `st` (SentenceTransformer mean pooling).
+- **s2_method** (str): Transformer model key from `method_model.yaml` (e.g. `sap-bert`, `pubmed-bert`).
+- **s3_strategy** (str, optional): Stage 3 strategy — `rag`, `rag_bie`, or `None` to disable.
+- **topk** (int, default 5): Number of top matches per query.
+- **test_or_prod** (str): `test` includes curated_ontology in output for evaluation; `prod` omits it.
+- **output_dir** (str, optional): Directory to auto-save result CSV. Filename pattern: `om_{ontology_source}_{category}_s2_{strategy}_{method}_{timestamp}.csv`.
+- **persist_corpus** (bool, default `False`): When `True` and `corpus_df` is caller-provided, persist it to the cache CSV.
 
-**Offline corpus building (OLS ontologies):**
+**Pipeline stages:**
+- **Stage 1:** Exact matching against corpus.
+- **Stage 2:** Embedding-based similarity (LM or ST strategy).
+- **Stage 2.5:** Synonym verification — boosts low-confidence Stage 2 matches using synonym data from concept tables.
+- **Stage 3** (optional): RAG-based re-matching with retrieved context from the knowledge database.
 
-```bash
-python scripts/build_ols_corpus.py \
-    --term UBERON:0001062 --category bodysite --ontology uberon \
-    --include-hierarchy
-```
+**Output:** DataFrame with top-k matches, scores, and match levels for each query term.
 
-This fetches the full ontology tree once and caches it locally so subsequent pipeline runs require no API calls.
+## 6. Schema mapping reference
 
-- **Parameters:**
-  - **category** (str): Ontology category — `disease`, `bodysite`, or `treatment`.
-  - **query** (list): List of query terms to map.
-  - **query_df** (DataFrame, optional): DataFrame query mode (alternative to `query`); requires `query_col`.
-  - **query_col** (str, optional): Column in `query_df` holding the query terms.
-  - **cura_map** (dict): Mapping of query terms to curated ontology values (for evaluation in `test` mode).
-  - **corpus** (list, optional): Explicit list of corpus terms for **Stage 2 matching only** (Stage 3 always uses `corpus_df`). Auto-derived from `corpus_df` when omitted.
-  - **corpus_df** (DataFrame, optional): DataFrame with `label` and `obo_id` columns. Auto-loaded from cached CSV or built from API when omitted.
-  - **ontology_source** (str, default `"ncit"`): Ontology backend. Supported: `ncit` (NCI Thesaurus via EVSREST), `mondo`, `uberon` (via EBI OLS4 API). When `corpus_df` is provided, this is inferred from code prefixes.
-  - **s2_strategy** (str): Stage 2 strategy — `lm` (CLS-token pooling) or `st` (SentenceTransformer mean pooling).
-  - **s2_method** (str): Transformer model key from `method_model.yaml` (e.g. `sap-bert`, `pubmed-bert`).
-  - **s3_strategy** (str, optional): Stage 3 strategy — `rag`, `rag_bie`, or `None` to disable.
-  - **topk** (int, default 5): Number of top matches per query.
-  - **test_or_prod** (str): `test` includes curated_ontology in output for evaluation; `prod` omits it.
-  - **output_dir** (str, optional): Directory to auto-save result CSV. Filename pattern: `om_{ontology_source}_{category}_s2_{strategy}_{method}_{timestamp}.csv`.
-  - **persist_corpus** (bool, default `False`): When `True` and `corpus_df` is caller-provided, persist it to the cache CSV.
-
-- **Pipeline stages:**
-  - **Stage 1:** Exact matching against corpus.
-  - **Stage 2:** Embedding-based similarity (LM or ST strategy).
-  - **Stage 2.5:** Synonym verification — boosts low-confidence Stage 2 matches using synonym data from concept tables.
-  - **Stage 3** (optional): RAG-based re-matching with retrieved context from knowledge database.
-
-- **Output:** DataFrame with top-k matches, scores, and match levels for each query term.
-
-2. Schema mapping
 ```python
-from metaharmonizer.models.schema_mapper import SchemaMapEngine
+from metaharmonizer import SchemaMapEngine
 
-# Initialize the engine
 engine = SchemaMapEngine(
     clinical_data_path=YOUR_QUERY_FILE,
-    mode="manual",   # Options: "auto" or "manual"
+    mode="manual",   # "auto" or "manual"
     top_k=5,
 )
 
@@ -239,32 +214,29 @@ engine.run_schema_mapping()
 
 # (Optional) Run Stage 4 after manual review
 engine.run_llm_on_file(
-  input_csv="path_to_stage3_results.csv",
-  output_csv="path_to_stage3_results_with_stage4.csv",
-  stage_filter=["stage3"],
-  merge_results=True,
+    input_csv="path_to_stage3_results.csv",
+    output_csv="path_to_stage3_results_with_stage4.csv",
+    stage_filter=["stage3"],
+    merge_results=True,
 )
-
 ```
 
-- Parameters that can be changed in the model:
-  - clinical_data_path (str): Path to clinical dataset (TSV or CSV).
-  - mode (str):
-    - "auto" → automatically proceed to Stage 4 if Stage 3 confidence is low
-    - "manual" → output Stage 3 results for review; Stage 4 must be triggered manually
-  - top_k (int): Number of top matches returned for each column.
+**Parameters:**
+- **clinical_data_path** (str): Path to clinical dataset (TSV or CSV).
+- **mode** (str):
+  - `"auto"` → automatically proceed to Stage 4 if Stage 3 confidence is low.
+  - `"manual"` → output Stage 3 results for review; Stage 4 must be triggered manually.
+- **top_k** (int): Number of top matches returned for each column.
 
-- Output  
-  - CSV File: Results saved to OUTPUT_DIR (configured in metaharmonizer/models/schema_mapper/config.py). Filename pattern from `run_schema_mapping()` is:  
-`<input_root>_s3_<field_model_short>_<mode>_<YYYYMMDD_HHMMSS>.csv` (manual mode)  
-`<input_root>_s3_<field_model_short>_s4_<llm_model_short>_<mode>_<YYYYMMDD_HHMMSS>.csv` (auto mode)  
-  - If Stage 4 is run manually via `run_llm_on_file(...)`, use `output_csv` to control the output filename and location.  
-  - Columns:  
-query  
-stage (stage1, stage2, stage3  )  
-method (dict, fuzzy, numeric, alias, bert, freq)  
-match{i}, match{i}_score, match{i}_source (for top-k matches)
+**Output:**
+- CSV file saved to `SM_OUTPUT_DIR` (see [Environment variables](#2-environment-variables)). Filename patterns:
+  - `<input_root>_s3_<field_model_short>_<mode>_<YYYYMMDD_HHMMSS>.csv` (manual mode)
+  - `<input_root>_s3_<field_model_short>_s4_<llm_model_short>_<mode>_<YYYYMMDD_HHMMSS>.csv` (auto mode)
+  - When Stage 4 is run manually via `run_llm_on_file(...)`, `output_csv` controls the filename and location.
+- Columns: `query`, `stage` (stage1/stage2/stage3), `method` (dict, fuzzy, numeric, alias, bert, freq), and `match{i}`, `match{i}_score`, `match{i}_source` for the top-k matches.
 
-### 6. Demo Notebooks For Schema and Ontology Mapping
+## 7. Example notebooks
 
-The demo notebooks are located across `/demo_nb` folder
+Demonstration notebooks for the ontology and schema mappers live under
+[`examples/`](examples/). See [examples/readme.md](examples/readme.md) for an
+overview of each notebook and its required inputs.
