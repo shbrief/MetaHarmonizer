@@ -7,10 +7,10 @@ TL;DR
 
 ---
 
-This document explains the rules, patterns, and heuristics implemented in `metaharmonizer/utils/numeric_match_utils.py` for identifying and classifying numeric-like fields (columns) in datasets. It describes the intent behind each regular expression and function, how they interact, and guidance for extending or tuning the behavior.
+This document explains the rules, patterns, and heuristics implemented in `src/metaharmonizer/utils/numeric_match_utils.py` for identifying and classifying numeric-like fields (columns) in datasets. It describes the intent behind each regular expression and function, how they interact, and guidance for extending or tuning the behavior.
 
 File referenced:
-- `metaharmonizer/utils/numeric_match_utils.py`
+- `src/metaharmonizer/utils/numeric_match_utils.py`
 
 ---
 
@@ -180,7 +180,7 @@ All compiled with `IGNORECASE`. `AGE_HINTS` and `TIME_HINTS` focus on header ter
 
 ## Where to Look in Code
 
-- Core code: `metaharmonizer/utils/numeric_match_utils.py`
+- Core code: `src/metaharmonizer/utils/numeric_match_utils.py`
   - `strip_units_and_tags`
   - `detect_numeric_semantic`
   - `family_boost`
