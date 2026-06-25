@@ -1,10 +1,31 @@
-"""Configuration constants for schema mapping."""
+"""Configuration constants for schema mapping.
+
+Thresholds, model keys, and the noise-value set below are resolved through the
+unified settings layer (:mod:`metaharmonizer.settings`), so a project-level
+``metaharmonizer.toml`` / ``[tool.metaharmonizer]`` table can override them
+without code changes (project file > built-in default). Paths remain
+environment-driven via :mod:`metaharmonizer._paths` and the path env vars.
+"""
 import os
 from pathlib import Path
 from metaharmonizer._paths import DATA_DIR, resolve_data_file
 from metaharmonizer.utils.model_loader import load_method_model_dict
+from metaharmonizer.settings import get_settings, load_project_config
 
 _method_model_dict = load_method_model_dict()
+_settings = get_settings()
+_project = load_project_config()
+
+
+def _resolve_model(key: str) -> str:
+    """Map a method key (e.g. ``"minilm-l6"``) to its model repo via the YAML."""
+    if key not in _method_model_dict:
+        raise KeyError(
+            f"Unknown model key {key!r} (set via field_model/llm_model in the "
+            f"project config). Known keys: {sorted(_method_model_dict)}"
+        )
+    return _method_model_dict[key]
+
 
 # === Paths ===
 OUTPUT_DIR = Path(os.getenv("SM_OUTPUT_DIR", DATA_DIR / "schema_mapping_eval"))
@@ -21,22 +42,27 @@ ALIAS_DICT_PATH = resolve_data_file("schema/curated_fields_source_latest_with_fl
 # through to a user-supplied schema — disjoint keys are skipped automatically.
 VALUE_DICT_PATH = os.getenv("FIELD_VALUE_JSON") or resolve_data_file("schema/field_value_dict.json")
 
-# === Models ===
-FIELD_MODEL = _method_model_dict["minilm-l6"]
-LLM_MODEL = _method_model_dict["gemma-27b"]
+# === Models === (project file may override the method key)
+FIELD_MODEL = _resolve_model(_settings.field_model)
+LLM_MODEL = _resolve_model(_settings.llm_model)
 
-# === Thresholds ===
-FUZZY_THRESH = 92
-NUMERIC_THRESH = 0.6
-FIELD_ALIAS_THRESH = 0.5
-VALUE_DICT_THRESH = 0.85
-VALUE_UNIQUE_CAP = 50
-VALUE_PERCENTAGE_THRESH = 0.2
-LLM_THRESHOLD = 0.5
+# === Thresholds === (project file > built-in default, via the resolver)
+FUZZY_THRESH = _settings.fuzzy_thresh
+NUMERIC_THRESH = _settings.numeric_thresh
+FIELD_ALIAS_THRESH = _settings.field_alias_thresh
+VALUE_DICT_THRESH = _settings.value_dict_thresh
+VALUE_UNIQUE_CAP = _settings.value_unique_cap
+VALUE_PERCENTAGE_THRESH = _settings.value_percentage_thresh
+LLM_THRESHOLD = _settings.llm_threshold
 
-# === Noise Values ===
-NOISE_VALUES = {
+# === Noise Values === (project file `noise_values` list replaces the default)
+_DEFAULT_NOISE_VALUES = {
     "yes", "no", "true", "false", "unknown", "not reported", "not available",
     "na", "n/a", "none", "other", "missing", "not evaluated", "uninformative",
     "pending", "undetermined", "positive", "negative", "not applicable"
 }
+_noise_override = _project.get("noise_values")
+NOISE_VALUES = (
+    {str(v).lower() for v in _noise_override}
+    if _noise_override else _DEFAULT_NOISE_VALUES
+)

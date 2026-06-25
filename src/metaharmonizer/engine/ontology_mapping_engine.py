@@ -86,6 +86,7 @@ class OntoMapEngine:
                  s4_model: str = 'gemma-12b',
                  output_dir: str = None,
                  filter_obsolete: bool = False,
+                 corpus_hash: str = None,
                  **other_params: dict) -> None:
         """
         Initializes the OntoMapEngine class.
@@ -117,6 +118,10 @@ class OntoMapEngine:
             s4_strategy (str, optional): The strategy to use for stage 4 LLM rewriting. Defaults to None. Options are 'llm' or None.
             s4_threshold (float, optional): The threshold for stage 4. Defaults to 0.6.
             s4_model (str, optional): The LLM model key for stage 4. Defaults to 'gemma-12b'.
+            corpus_hash (str, optional): Force the SQLite/FAISS table-name suffix
+                instead of deriving it from corpus content. Use to pin one cache
+                across runs over the same corpus; pass "" to reuse the standard
+                (unsuffixed) tables. Defaults to None (content-based hashing).
             **other_params (dict): Other parameters to pass to the engine.
         """
         self.s2_method = s2_method
@@ -237,7 +242,19 @@ class OntoMapEngine:
         # Content-hash suffix for user-uploaded corpus isolation.
         # If the user corpus matches the official corpus, skip the suffix
         # so pre-built tables are reused.
-        if corpus_df_provided:
+        if corpus_hash is not None:
+            # Caller-forced suffix: pins the SQLite table / FAISS index name so
+            # several runs over the same corpus reuse one cache (e.g. a
+            # benchmark sweep). Bypasses content hashing. Empty string -> reuse
+            # the standard (unsuffixed) tables. Replaces monkey-patching
+            # utils.corpus_hash.compute_corpus_hash.
+            self._corpus_hash = corpus_hash or None
+            self._table_suffix = f"_{corpus_hash}" if corpus_hash else ""
+            self._logger.info(
+                f"Using caller-provided corpus_hash: {corpus_hash!r} "
+                f"(table_suffix={self._table_suffix!r})"
+            )
+        elif corpus_df_provided:
             from metaharmonizer.utils.corpus_hash import compute_corpus_hash
             self._corpus_hash = compute_corpus_hash(corpus_df)
             official_hash = self._compute_official_corpus_hash()

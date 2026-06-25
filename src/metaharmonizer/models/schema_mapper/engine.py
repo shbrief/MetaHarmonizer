@@ -5,7 +5,10 @@ import yaml
 import pandas as pd
 from pathlib import Path
 from datetime import datetime
-from typing import Dict, Any, List, Optional, Union
+from typing import Dict, Any, List, Optional, Union, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from metaharmonizer.settings import Settings
 from functools import lru_cache
 from sentence_transformers import SentenceTransformer
 import torch
@@ -63,9 +66,12 @@ class SchemaMapEngine:
         self,
         clinical_data_path: str,
         mode: str = "auto",
-        top_k: int = 5,
+        top_k: Optional[int] = None,
         *,
         curated_dict_path: Optional[Union[str, Path]] = None,
+        value_dict_path: Optional[Union[str, Path]] = None,
+        alias_dict_path: Optional[Union[str, Path]] = None,
+        settings: Optional["Settings"] = None,
     ):
         """
         Initialize the schema mapping engine.
@@ -73,15 +79,29 @@ class SchemaMapEngine:
         Args:
             clinical_data_path: Path to clinical data CSV/TSV file.
             mode: Execution mode ('auto' or 'manual').
-            top_k: Number of top matches to return.
+            top_k: Number of top matches to return. ``None`` falls back to the
+                resolved settings default (``settings.topk``).
             curated_dict_path: Optional override for the curated schema CSV.
                 If None, uses the bundled default (config.CURATED_DICT_PATH) and
                 the bundled alias / value dicts are used as-is. If overridden:
                   * alias dict is disabled (it's keyed to the default schema;
-                    future: auto-generated from the user schema via LLM).
+                    future: auto-generated from the user schema via LLM)
+                    unless ``alias_dict_path`` is also given.
                   * value dict is still loaded but filtered to the user schema's
                     fields; if no overlap, value matching is skipped.
+            value_dict_path: Optional per-run override for the value dictionary
+                JSON. Pass ``""`` to explicitly disable value matching. ``None``
+                falls back to ``config.VALUE_DICT_PATH`` (env ``FIELD_VALUE_JSON``
+                or the bundled default). Replaces mutating ``config.VALUE_DICT_PATH``.
+            alias_dict_path: Optional per-run override for the alias dictionary
+                CSV. Pass ``""`` to disable alias matching. ``None`` uses the
+                default behavior (bundled alias dict, auto-disabled when a custom
+                ``curated_dict_path`` is supplied).
+            settings: Optional pre-resolved :class:`Settings`. Defaults to the
+                process-wide ``get_settings()`` (arg > env > project file > default).
         """
+        from metaharmonizer.settings import get_settings
+        self.settings = settings or get_settings()
         # Load data
         if clinical_data_path.endswith(".tsv"):
             self.df = pd.read_csv(clinical_data_path, sep="\t", dtype=str)
@@ -90,19 +110,26 @@ class SchemaMapEngine:
 
         logger.info(f"[Load] df_shape={self.df.shape} first_cols={list(self.df.columns[:5])}")
 
-        self.top_k = top_k
+        self.top_k = top_k if top_k is not None else self.settings.topk
         self.mode = mode
 
-        # Resolve dictionary paths.
+        # Resolve dictionary paths (explicit arg > default behavior).
         user_schema = curated_dict_path is not None
         self.curated_dict_path = (
             Path(curated_dict_path) if user_schema else _config.CURATED_DICT_PATH
         )
         # Alias is tied to the bundled curated schema; disable when the user
         # provides their own. "" is the loader's explicit-disable sentinel
-        # (None would mean "fall back to config default").
-        self.alias_dict_path = "" if user_schema else _config.ALIAS_DICT_PATH
-        self.value_dict_path = _config.VALUE_DICT_PATH
+        # (None would mean "fall back to config default"). An explicit
+        # alias_dict_path always wins.
+        if alias_dict_path is not None:
+            self.alias_dict_path = alias_dict_path
+        else:
+            self.alias_dict_path = "" if user_schema else _config.ALIAS_DICT_PATH
+        # Value dict: explicit arg ("" disables) > config default.
+        self.value_dict_path = (
+            value_dict_path if value_dict_path is not None else _config.VALUE_DICT_PATH
+        )
 
         # Setup output
         os.makedirs(OUTPUT_DIR, exist_ok=True)
