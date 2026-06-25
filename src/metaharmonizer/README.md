@@ -1,46 +1,37 @@
 ## MetaHarmonizer Mapping Engines Architecture
 
-<img src="https://github.com/shbrief/MetaHarmonizer/blob/main/Figures/MetaHarmonizer_All%20_%20Mermaid%20Chart-2025-07-03-210436.png" />
-
-### Legend:
-- 🔵 **Blue** - Main Engine Classes (Top-level orchestrators)
-- 🟣 **Purple** - Ontology Mapper Classes (Specific mapping strategies)
-- 🟠 **Orange** - Schema Mapper Classes
-- 🔴 **Red** - Base Classes (Common functionality/inheritance)
-- 🟢 **Green** - Database/Storage Components (Data persistence & retrieval)
-
 ### Key Components:
 
 #### 1. **Main Engines** (Blue)
 - **OntoMapEngine**: Orchestrates ontology mapping with strategies (lm, st, rag)
-  - 📁 [`metaharmonizer/engine/ontology_mapping_engine.py`](metaharmonizer/engine/ontology_mapping_engine.py)
+  - 📁 [`src/metaharmonizer/engine/ontology_mapping_engine.py`](src/metaharmonizer/engine/ontology_mapping_engine.py)
 - **SchemaMapEngine**: Multi-stage schema mapping engine
-  - 📁 [`metaharmonizer/engine/schema_mapping_engine.py`](metaharmonizer/engine/schema_mapping_engine.py)
+  - 📁 [`src/metaharmonizer/engine/schema_mapping_engine.py`](src/metaharmonizer/engine/schema_mapping_engine.py)
 
 #### 2. **Ontology Mappers** (Purple)
 - **OntoMapLM**: Uses language models with CLS token embeddings
-  - 📁 [`metaharmonizer/models/ontology_mapper_lm.py`](metaharmonizer/models/ontology_mapper_lm.py)
+  - 📁 [`src/metaharmonizer/models/ontology_mapper_lm.py`](src/metaharmonizer/models/ontology_mapper_lm.py)
 - **OntoMapST**: Uses sentence transformers for semantic similarity
-  - 📁 [`metaharmonizer/models/ontology_mapper_st.py`](metaharmonizer/models/ontology_mapper_st.py)
+  - 📁 [`src/metaharmonizer/models/ontology_mapper_st.py`](src/metaharmonizer/models/ontology_mapper_st.py)
 - **OntoMapRAG**: Retrieval-augmented generation with FAISS vector search
-  - 📁 [`metaharmonizer/models/ontology_mapper_rag.py`](metaharmonizer/models/ontology_mapper_rag.py)
+  - 📁 [`src/metaharmonizer/models/ontology_mapper_rag.py`](src/metaharmonizer/models/ontology_mapper_rag.py)
 
 #### 3. **Schema Mappers** (Orange)
 - Schema mapping is handled entirely by the multi-stage SchemaMapEngine (see Main Engines).
 
 #### 4. **Base Classes** (Red)
 - **OntoModelsBase**: Common functionality for ontology mappers
-  - 📁 [`metaharmonizer/models/ontology_models.py`](metaharmonizer/models/ontology_models.py)
+  - 📁 [`src/metaharmonizer/models/ontology_models.py`](src/metaharmonizer/models/ontology_models.py)
 
 #### 5. **Database/Storage** (Green)
 - **FAISSSQLiteSearch**: Vector similarity search with SQLite backend
-  - 📁 [`metaharmonizer/knowledge_db/faiss_sqlite_pipeline.py`](metaharmonizer/knowledge_db/faiss_sqlite_pipeline.py)
+  - 📁 [`src/metaharmonizer/knowledge_db/faiss_sqlite_pipeline.py`](src/metaharmonizer/knowledge_db/faiss_sqlite_pipeline.py)
 - **External Databases**: Integration with NCI, UMLS ontologies
-  - 📁 [`metaharmonizer/knowledge_db/db_clients/nci_db.py`](metaharmonizer/knowledge_db/db_clients/nci_db.py)
-  - 📁 [`metaharmonizer/knowledge_db/db_clients/umls_db.py`](metaharmonizer/knowledge_db/db_clients/umls_db.py)
+  - 📁 [`src/metaharmonizer/knowledge_db/db_clients/nci_db.py`](src/metaharmonizer/knowledge_db/db_clients/nci_db.py)
+  - 📁 [`src/metaharmonizer/knowledge_db/db_clients/umls_db.py`](src/metaharmonizer/knowledge_db/db_clients/umls_db.py)
 - **Model Cache/Loader**: Efficient model management and caching
-  - 📁 [`metaharmonizer/utils/model_loader.py`](metaharmonizer/utils/model_loader.py)
-  - 📁 [`metaharmonizer/utils/model_cache.py`](metaharmonizer/utils/model_cache.py)
+  - 📁 [`src/metaharmonizer/utils/model_loader.py`](src/metaharmonizer/utils/model_loader.py)
+  - 📁 [`src/metaharmonizer/utils/model_cache.py`](src/metaharmonizer/utils/model_cache.py)
 
 ### Features:
 - **Exact & Fuzzy Matching**: Multiple matching strategies

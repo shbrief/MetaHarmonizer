@@ -4,13 +4,14 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "metaharmonizer"
-version = "0.3.0"
-description = "Biomedical metadata harmonization: ontology mapping, schema mapping, and field suggestion"
+version = "0.4.0"
+description = "Biomedical metadata harmonization: ontology mapping and schema mapping"
 requires-python = ">=3.10"
 readme = "readme.md"
 license = { text = "MIT" }
 authors = [
-    { name = "Sehyun Oh" },
+    { name = "Sehyun Oh", email = "shbrief@gmail.com"},
+    { name = "Changchang Li", email = "chang-cc.li@outlook.com" },
     { name = "Abhilash Dhal", email = "adhalbiophysics@gmail.com" },
 ]
 classifiers = [
@@ -75,14 +76,14 @@ all = [
 ]
 
 [tool.setuptools]
-package-dir = { "" = "." }
+package-dir = { "" = "src" }
 
 [tool.setuptools.packages.find]
-where = ["."]
+where = ["src"]
 include = ["metaharmonizer*"]
 
 [tool.setuptools.package-data]
-# Bundle the method→model YAML that lives inside metaharmonizer/models/.
+# Bundle the method→model YAML that lives inside src/metaharmonizer/models/.
 "metaharmonizer.models" = ["method_model.yaml"]
 # Small reference files shipped for "zero-config" first use. Accessed via
 # metaharmonizer._paths.resolve_data_file() / bundled_file(). Large corpora
@@ -118,11 +119,11 @@ select = ["E", "F", "W"]
 [tool.ruff.lint.per-file-ignores]
 # `D` (distances) and `I` (indices) are the canonical FAISS `index.search()`
 # return-value names; keeping them aids readability for FAISS users.
-"metaharmonizer/models/ontology_mapper_lm.py" = ["E741"]
-"metaharmonizer/models/ontology_mapper_llm.py" = ["E741"]
-"metaharmonizer/models/ontology_mapper_st.py" = ["E741"]
-"metaharmonizer/models/ontology_models.py" = ["E741"]
-"metaharmonizer/knowledge_db/synonym_dict.py" = ["E741"]
+"src/metaharmonizer/models/ontology_mapper_lm.py" = ["E741"]
+"src/metaharmonizer/models/ontology_mapper_llm.py" = ["E741"]
+"src/metaharmonizer/models/ontology_mapper_st.py" = ["E741"]
+"src/metaharmonizer/models/ontology_models.py" = ["E741"]
+"src/metaharmonizer/knowledge_db/synonym_dict.py" = ["E741"]
 # Test doubles for FAISS `index.search()` mirror the same `D, I` names.
 "tests/test_om_lm.py" = ["E741"]
 "tests/test_om_llm.py" = ["E741"]
