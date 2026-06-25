@@ -11,7 +11,7 @@ MetaHarmonizer currently provides two key modules:
 | OntologyMapper | `OntoMapEngine` | Map free-text values to ontology terms (exact → semantic → synonym). |
 
 
-![](data/metaharmonizer_diagram.png)
+![](metaharmonizer_diagram.png)
 
 ## Table of contents
 
