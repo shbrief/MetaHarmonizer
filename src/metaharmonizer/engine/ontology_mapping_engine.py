@@ -1377,6 +1377,14 @@ class OntoMapEngine:
 
         self._logger.info(f"Stage 2 completed: {len(s2_res)} queries")
 
+        # Ensure top1_score_float exists regardless of whether Stage 2.5 runs.
+        # Stages 2.5, 3, and 4 all read this column; without it here, skipping
+        # Stage 2.5 (skip_stage25=True) leaves it undefined and the downstream
+        # low-confidence masks / column drops raise KeyError. _apply_synonym_boost
+        # recomputes it when it runs, so this is a no-op in the default path.
+        s2_res['top1_score_float'] = pd.to_numeric(
+            s2_res['match1_score'], errors='coerce').fillna(0)
+
         # ========== Stage 2.5: Synonym Verification ==========
         if self.other_params.get("skip_stage25", False):
             self._logger.info("Stage 2.5: Disabled (skip_stage25=True)")
