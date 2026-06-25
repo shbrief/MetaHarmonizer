@@ -4,34 +4,39 @@
 
 #### 1. **Main Engines** (Blue)
 - **OntoMapEngine**: Orchestrates ontology mapping with strategies (lm, st, rag)
-  - 📁 [`src/metaharmonizer/engine/ontology_mapping_engine.py`](src/metaharmonizer/engine/ontology_mapping_engine.py)
+  - 📁 [`engine/ontology_mapping_engine.py`](engine/ontology_mapping_engine.py)
 - **SchemaMapEngine**: Multi-stage schema mapping engine
-  - 📁 [`src/metaharmonizer/engine/schema_mapping_engine.py`](src/metaharmonizer/engine/schema_mapping_engine.py)
+  - 📁 [`models/schema_mapper/engine.py`](models/schema_mapper/engine.py)
 
 #### 2. **Ontology Mappers** (Purple)
 - **OntoMapLM**: Uses language models with CLS token embeddings
-  - 📁 [`src/metaharmonizer/models/ontology_mapper_lm.py`](src/metaharmonizer/models/ontology_mapper_lm.py)
+  - 📁 [`models/ontology_mapper_lm.py`](models/ontology_mapper_lm.py)
 - **OntoMapST**: Uses sentence transformers for semantic similarity
-  - 📁 [`src/metaharmonizer/models/ontology_mapper_st.py`](src/metaharmonizer/models/ontology_mapper_st.py)
+  - 📁 [`models/ontology_mapper_st.py`](models/ontology_mapper_st.py)
 - **OntoMapRAG**: Retrieval-augmented generation with FAISS vector search
-  - 📁 [`src/metaharmonizer/models/ontology_mapper_rag.py`](src/metaharmonizer/models/ontology_mapper_rag.py)
+  - 📁 [`models/ontology_mapper_rag.py`](models/ontology_mapper_rag.py)
 
 #### 3. **Schema Mappers** (Orange)
-- Schema mapping is handled entirely by the multi-stage SchemaMapEngine (see Main Engines).
+- Schema mapping is handled by the multi-stage **SchemaMapEngine** (see Main Engines),
+  built from per-stage matchers under [`models/schema_mapper/matchers/`](models/schema_mapper/matchers/):
+  - Stage 1 — dictionary / fuzzy column-name matching ([`stage1_matchers.py`](models/schema_mapper/matchers/stage1_matchers.py))
+  - Stage 2 — value-based matching ([`stage2_matchers.py`](models/schema_mapper/matchers/stage2_matchers.py))
+  - Stage 3 — type / numeric / semantic field matching ([`stage3_matchers.py`](models/schema_mapper/matchers/stage3_matchers.py))
 
 #### 4. **Base Classes** (Red)
 - **OntoModelsBase**: Common functionality for ontology mappers
-  - 📁 [`src/metaharmonizer/models/ontology_models.py`](src/metaharmonizer/models/ontology_models.py)
+  - 📁 [`models/ontology_models.py`](models/ontology_models.py)
 
 #### 5. **Database/Storage** (Green)
 - **FAISSSQLiteSearch**: Vector similarity search with SQLite backend
-  - 📁 [`src/metaharmonizer/knowledge_db/faiss_sqlite_pipeline.py`](src/metaharmonizer/knowledge_db/faiss_sqlite_pipeline.py)
-- **External Databases**: Integration with NCI, UMLS ontologies
-  - 📁 [`src/metaharmonizer/knowledge_db/db_clients/nci_db.py`](src/metaharmonizer/knowledge_db/db_clients/nci_db.py)
-  - 📁 [`src/metaharmonizer/knowledge_db/db_clients/umls_db.py`](src/metaharmonizer/knowledge_db/db_clients/umls_db.py)
+  - 📁 [`knowledge_db/faiss_sqlite_pipeline.py`](knowledge_db/faiss_sqlite_pipeline.py)
+- **External Databases**: Integration with NCI, UMLS, OLS ontologies
+  - 📁 [`knowledge_db/db_clients/nci_db.py`](knowledge_db/db_clients/nci_db.py)
+  - 📁 [`knowledge_db/db_clients/umls_db.py`](knowledge_db/db_clients/umls_db.py)
+  - 📁 [`knowledge_db/db_clients/ols_db.py`](knowledge_db/db_clients/ols_db.py)
 - **Model Cache/Loader**: Efficient model management and caching
-  - 📁 [`src/metaharmonizer/utils/model_loader.py`](src/metaharmonizer/utils/model_loader.py)
-  - 📁 [`src/metaharmonizer/utils/model_cache.py`](src/metaharmonizer/utils/model_cache.py)
+  - 📁 [`utils/model_loader.py`](utils/model_loader.py)
+  - 📁 [`utils/model_cache.py`](utils/model_cache.py)
 
 ### Features:
 - **Exact & Fuzzy Matching**: Multiple matching strategies
@@ -51,15 +56,15 @@
 
 - `SchemaMapEngine.run_schema_mapping()`
   - Executes the multi-stage schema mapping pipeline.
-  - Aligns clinical data columns to harmonized schema fields using a combination of exact/fuzzy matching, numeric checks, semantic similarity, and value-based matching.
+  - Aligns clinical data columns to harmonized schema fields using a combination of exact/fuzzy matching, value-based matching, type/numeric checks, and semantic similarity.
 
 **Ontology Mapper Models**
 
-- `get_matches()`
+- `get_match_results()`
   - Computes the most similar/correct ontology term(s) for a given query term using embedding models or scoring.
-  - Used for both language model and sentence transformer strategies.
+  - Implemented by each strategy (`OntoMapLM`, `OntoMapST`, `OntoMapRAG`).
 
-- `encode_terms()`
+- `create_embeddings()`
   - Converts terms into vector embeddings using the selected NLP model, to enable similarity comparisons.
 
 **KnowledgeDb**
@@ -74,6 +79,8 @@
 
 ### Usage Patterns:
 ```python
+from metaharmonizer import OntoMapEngine, SchemaMapEngine
+
 # Ontology Mapping
 onto_engine = OntoMapEngine(
     category='disease',
@@ -82,7 +89,6 @@ onto_engine = OntoMapEngine(
     s2_method='sap-bert',     # transformer model key from method_model.yaml
     s2_strategy='lm',         # 'lm' (CLS pooling) or 'st' (SentenceTransformer)
     s3_strategy='rag',        # optional Stage-3 re-matching; None to disable
-    test_or_prod='test',
     topk=5,
 )
 results = onto_engine.run()
@@ -90,12 +96,11 @@ results = onto_engine.run()
 # Schema Mapping
 schm_engine = SchemaMapEngine(
     clinical_data_path=file,
-    mode='manual',  # or 'auto'
+    mode='auto',              # or 'manual'
     top_k=5,
 )
 schm_engine.run_schema_mapping()
 ```
 
-> See the top-level [`readme.md`](../readme.md) for the full parameter reference
+> See the top-level [`README.md`](../../README.md) for the full parameter reference
 > and runnable quickstart.
-
