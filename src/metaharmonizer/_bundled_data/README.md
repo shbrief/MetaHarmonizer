@@ -1,0 +1,51 @@
+# `_bundled_data/`
+
+Small, read-only data files shipped **inside the wheel** so that
+`metaharmonizer` works out of the box without a separate data download.
+
+These are a **fallback**, not the primary data source. At runtime, files are
+resolved by [`metaharmonizer._paths.resolve_data_file`](../_paths.py): it first
+looks for the file in the user data dir (`METAHARMONIZER_DATA_DIR`, default
+`~/.metaharmonizer/data/`) and only falls back to the copy here when the user
+has not supplied their own. Most users override these by passing their own
+schema to `SchemaMapEngine(...)` or by populating the data dir.
+
+Keep contents **small**. Large corpora (full retrieved ontologies, FAISS
+indexes, the knowledge DB) belong in `METAHARMONIZER_DATA_DIR` /
+`~/.metaharmonizer/`, never in the package.
+
+## Contents
+
+| File | Used by | Description |
+|------|---------|-------------|
+| `corpus/ncit_descendants.json` | [`utils/ncit_match_utils.py`](../utils/ncit_match_utils.py) | Map of NCIt root concept code → list of descendant concept codes, for hierarchy-aware ontology matching. See [below](#ncit_descendantsjson) for the three root nodes. |
+| `corpus/oncotree_code_to_name.csv` | [`engine/ontology_mapping_engine.py`](../engine/ontology_mapping_engine.py) | OncoTree `code,name` lookup used to expand OncoTree abbreviations to full names. |
+| `schema/cbio_target_attrs.csv` | [`models/schema_mapper/config.py`](../models/schema_mapper/config.py) (`CURATED_DICT_PATH`) | Default curated target schema: `field_name,is_numeric_field`. |
+| `schema/cbio_target_attrs_alias_manual.csv` | [`models/schema_mapper/config.py`](../models/schema_mapper/config.py) (`ALIAS_DICT_PATH`) | Manually curated source-name aliases keyed to the bundled curated schema: `field_name,source,is_numeric_field`. Disabled automatically when a user supplies their own schema. |
+| `schema/field_value_dict.json` | [`models/schema_mapper/config.py`](../models/schema_mapper/config.py) (`VALUE_DICT_PATH`) | Allowed value lists per field (`field_name → [values]`); filtered against the active curated schema, so disjoint keys are skipped. Override via `FIELD_VALUE_JSON`. |
+
+#### `ncit_descendants.json`
+
+This file is **not** the descendants of a single node — it's a dict keyed by
+three different NCIt root codes, each mapping to its flat list of descendant
+codes:
+
+| Root code | NCIt concept | # descendants |
+|-----------|--------------|--------------:|
+| `C12219` | Anatomic Structure, System, or Substance | 7,614 |
+| `C1909`  | Pharmacologic Substance | 25,576 |
+| `C3262`  | Neoplasm | 14,969 |
+
+So the descendants come from those three NCI Thesaurus parent concepts —
+roughly the **anatomy**, **drug**, and **disease/neoplasm** branches
+respectively. The keys are the source nodes; each value is the flat list of
+descendant NCIt codes under that node.
+
+## Notes
+
+- Packaging: these files are bundled via `[tool.setuptools.package-data]` in
+  [`pyproject.toml`](../../../pyproject.toml).
+- The alias and value dicts are keyed to the bundled `cbio_target_attrs.csv`.
+  When you provide a custom curated schema, the alias dict is disabled and the
+  value dict is filtered to the active schema, so the bundled fallbacks stay
+  safe to leave in place.
