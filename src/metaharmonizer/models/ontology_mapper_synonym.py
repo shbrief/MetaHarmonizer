@@ -55,7 +55,7 @@ class OntoMapSynonym:
         self.syn_dict.warm_run(codes=codes, force_rebuild=False)
 
     def get_match_results(self,
-                          cura_map: Dict[str, str],
+                          ground_truth_map: Dict[str, str],
                           topk: int = None,
                           test_or_prod: str = 'test',
                           min_score: float = 0.0) -> pd.DataFrame:
@@ -63,7 +63,7 @@ class OntoMapSynonym:
         Get matching results for all queries.
 
         Args:
-            cura_map: Mapping of query terms to curated ontology values
+            ground_truth_map: Mapping of query terms to curated ontology values
             topk: Number of top matches (overrides self.topk if provided)
             test_or_prod: 'test' or 'prod' mode
             min_score: Minimum similarity score threshold
@@ -81,7 +81,7 @@ class OntoMapSynonym:
         results = []
         for q, matches in zip(self.query, batch_results):
             # Get curated ontology for this query
-            curated = (cura_map.get(q, "Not Found") if test_or_prod == 'test'
+            curated = (ground_truth_map.get(q, "Not Found") if test_or_prod == 'test'
                        else "Not Available for Prod Environment")
 
             # Collect top-k matched terms

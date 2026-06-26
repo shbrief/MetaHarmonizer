@@ -163,14 +163,14 @@ class OntoModelsBase:
         raise NotImplementedError(
             "create_embeddings will be implemented in the child class")
 
-    def _build_result_rows(self, I, D, cura_map, test_or_prod):
+    def _build_result_rows(self, I, D, ground_truth_map, test_or_prod):
         """
         Builds result rows from FAISS search output (I = index matrix, D = score matrix).
 
         Args:
             I (np.ndarray): Top-k corpus indices per query, shape (n_queries, topk).
             D (np.ndarray): Top-k scores per query, shape (n_queries, topk).
-            cura_map (dict[str, str] or None): Curated label map for test evaluation.
+            ground_truth_map (dict[str, str] or None): Curated label map for test evaluation.
             test_or_prod (str): 'test' to look up ground truth; any other value skips it.
 
         Returns:
@@ -193,7 +193,7 @@ class OntoModelsBase:
                 for i in top_ids
             ]
 
-            curated = (cura_map.get(q, "Not Found") if test_or_prod == 'test'
+            curated = (ground_truth_map.get(q, "Not Found") if test_or_prod == 'test'
                        else "Not Available for Prod Environment")
             lvl = next(
                 (i + 1 for i, t in enumerate(top_terms)

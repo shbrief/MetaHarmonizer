@@ -125,7 +125,7 @@ class OntoMapLM(otm.OntoModelsBase):
             return torch.tensor(arr)
         return arr.tolist()
 
-    def create_cura_map(self, query_list: list[str], corpus_list: list[str]):
+    def create_ground_truth_map(self, query_list: list[str], corpus_list: list[str]):
         """
         Creates embeddings for the sentence transformer model.
 
@@ -141,7 +141,7 @@ class OntoMapLM(otm.OntoModelsBase):
         return query_embeddings, corpus_embeddings
 
     def get_match_results(self,
-                          cura_map: dict[str, str] = None,
+                          ground_truth_map: dict[str, str] = None,
                           topk: int = 5,
                           test_or_prod: str = 'test') -> pd.DataFrame:
         idx = self.vector_store.index
@@ -151,4 +151,4 @@ class OntoMapLM(otm.OntoModelsBase):
 
         D, I = idx.search(q_mat, topk)
 
-        return self._build_result_rows(I, D, cura_map, test_or_prod)
+        return self._build_result_rows(I, D, ground_truth_map, test_or_prod)

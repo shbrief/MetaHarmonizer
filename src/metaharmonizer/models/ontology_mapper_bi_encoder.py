@@ -162,11 +162,11 @@ class OntoMapBIE(OntoModelsBase):
         return out
 
     def get_match_results(self,
-                          cura_map: dict[str, str] = None,
+                          ground_truth_map: dict[str, str] = None,
                           topk: int = None,
                           test_or_prod: str = 'test') -> pd.DataFrame:
-        if test_or_prod == 'test' and cura_map is None:
-            raise ValueError("cura_map should be provided for test mode")
+        if test_or_prod == 'test' and ground_truth_map is None:
+            raise ValueError("ground_truth_map should be provided for test mode")
 
         k = topk or self.topk
         retrieval_k = self.reranker_topk if self.use_reranker else k
@@ -192,7 +192,7 @@ class OntoMapBIE(OntoModelsBase):
             'original_value': orig_queries,
             'ctx_query': ctx_queries,
             'curated_ontology': [
-                cura_map.get(q, "Not Found")
+                ground_truth_map.get(q, "Not Found")
                 if test_or_prod == 'test' else "N/A" for q in orig_queries
             ]
         })

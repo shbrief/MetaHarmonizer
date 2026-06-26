@@ -69,7 +69,7 @@ class OntoMapEngine:
         method (str): The name of the method.
         query (list[str]): The list of queries.
         corpus (list[str]): The list of corpus.
-        cura_map (dict): The dictionary containing the mapping of queries to curated values.
+        ground_truth_map (dict): The dictionary containing the mapping of queries to curated values.
         topk (int): The number of top matches to return.
         yaml_path (str): The path to the YAML file.
         om_strategy (str): The strategy to use for OntoMap.
@@ -81,7 +81,7 @@ class OntoMapEngine:
     def __init__(self,
                  category: str,
                  query: list[str] = None,
-                 cura_map: dict = None,
+                 ground_truth_map: dict = None,
                  corpus: list[str] = None,
                  corpus_df: "pd.DataFrame" = None,
                  ontology_source: str = None,
@@ -123,7 +123,7 @@ class OntoMapEngine:
             query_col (str, optional): Column in ``query_df`` holding the query terms.
             persist_corpus (bool, optional): When ``True`` with a caller-provided
                 ``corpus_df``, persist it to the canonical cache CSV. Defaults to ``False``.
-            cura_map (dict): The dictionary containing the mapping of queries to curated values.
+            ground_truth_map (dict): The dictionary containing the mapping of queries to curated values.
             topk (int, optional): The number of top matches to return. Defaults to 5.
             s2_strategy (str, optional): The strategy to use for stage 2 OntoMap. Defaults to 'lm'. Options are 'st' or 'lm'.
             s3_strategy (str, optional): The strategy to use for stage 3 OntoMap. Defaults to None. Options are 'rag', 'rag_bie', or None.
@@ -199,13 +199,13 @@ class OntoMapEngine:
                 "No queries provided. Pass query (list) or "
                 "query_df + query_col via other_params.")
 
-        # cura_map: required in test mode, auto-generated in prod mode
-        if cura_map is not None:
-            self.cura_map = cura_map
+        # ground_truth_map: required in test mode, auto-generated in prod mode
+        if ground_truth_map is not None:
+            self.ground_truth_map = ground_truth_map
         elif self._test_or_prod == 'test':
-            raise ValueError("cura_map is required in test mode")
+            raise ValueError("ground_truth_map is required in test mode")
         else:
-            self.cura_map = {q: "Not Found" for q in self.query}
+            self.ground_truth_map = {q: "Not Found" for q in self.query}
         self._logger = logger.custlogger(loglevel='INFO')
 
         if self.s2_strategy not in ('lm', 'st'):
@@ -907,7 +907,7 @@ class OntoMapEngine:
         return df
 
     def _recompute_match_level(self, df: pd.DataFrame) -> pd.DataFrame:
-        """Recompute match_level from self.cura_map[original_value] and match columns.
+        """Recompute match_level from self.ground_truth_map[original_value] and match columns.
 
         Called after merging back to original_value so match_level is always
         consistent with the original curated label, not the normalized/expanded
@@ -919,7 +919,7 @@ class OntoMapEngine:
         match_cols = [f"match{i}" for i in range(1, self.topk + 1)]
 
         def _level(row):
-            curated = self.cura_map.get(row["original_value"])
+            curated = self.ground_truth_map.get(row["original_value"])
             if not curated:
                 return 99
             curated_key = curated.strip().lower()
@@ -1085,7 +1085,7 @@ class OntoMapEngine:
         # Add eval columns (same as other stages — engine's responsibility)
         s4_res['stage'] = 4.0
         s4_res['curated_ontology'] = s4_res['original_value'].map(
-            self.cura_map).fillna("Not Found")
+            self.ground_truth_map).fillna("Not Found")
         s4_res = self._recompute_match_level(s4_res)
 
         # Drop rows where LLM returned no results (keep prior for those)
@@ -1127,7 +1127,7 @@ class OntoMapEngine:
             syn_model = self._om_model_from_strategy(
                 'syn', low_conf_queries)
             syn_results = syn_model.get_match_results(
-                cura_map=self.cura_map,
+                ground_truth_map=self.ground_truth_map,
                 topk=self.topk,
                 test_or_prod=self._test_or_prod)
 
@@ -1345,7 +1345,7 @@ class OntoMapEngine:
         # Create DataFrame for Stage 1 matches
         exact_df = pd.DataFrame({'original_value': stage1_matches})
         exact_df['curated_ontology'] = exact_df['original_value'].map(
-            self.cura_map).fillna(exact_df['original_value'])
+            self.ground_truth_map).fillna(exact_df['original_value'])
         exact_df['match_level'] = 1
         exact_df['stage'] = 1.0
         exact_df['match1'] = exact_df['curated_ontology']
@@ -1371,13 +1371,13 @@ class OntoMapEngine:
         updated_queries = [mapping_dict[nq] for nq in norm_non_exact]
 
         replace_df = pd.DataFrame({
-            "original_value": non_exact_matches_ls,  # original query for cura_map lookup
+            "original_value": non_exact_matches_ls,  # original query for ground_truth_map lookup
             "updated_value": updated_queries           # normalized + shortname-expanded for embedding
         })
 
-        updated_cura_map = {
+        updated_ground_truth_map = {
             mapping_dict[norm_map[k]]: v
-            for k, v in self.cura_map.items()
+            for k, v in self.ground_truth_map.items()
             if k in norm_map and norm_map[k] in mapping_dict
         }
 
@@ -1385,7 +1385,7 @@ class OntoMapEngine:
         s2_model = self._om_model_from_strategy(self.s2_strategy,
                                                 updated_queries)
         self._s2_model = s2_model  # Retain for Stage 4 re-search
-        s2_res = s2_model.get_match_results(cura_map=updated_cura_map,
+        s2_res = s2_model.get_match_results(ground_truth_map=updated_ground_truth_map,
                                             topk=self.topk,
                                             test_or_prod=self._test_or_prod)
 
@@ -1394,7 +1394,7 @@ class OntoMapEngine:
                       inplace=True)
         s2_res = pd.merge(replace_df, s2_res, on="updated_value", how="left")
         s2_res["curated_ontology"] = s2_res["original_value"].map(
-            self.cura_map).fillna("Not Found")
+            self.ground_truth_map).fillna("Not Found")
         s2_res = self._recompute_match_level(s2_res)
         s2_res['stage'] = 2.0
 
@@ -1487,9 +1487,9 @@ class OntoMapEngine:
                 "updated_value": updated_queries_s3
             })
 
-            updated_cura_map_s3 = {
+            updated_ground_truth_map_s3 = {
                 mapping_dict_s3[norm_map[k]]: v
-                for k, v in self.cura_map.items()
+                for k, v in self.ground_truth_map.items()
                 if k in norm_map and norm_map[k] in mapping_dict_s3
             }
 
@@ -1497,7 +1497,7 @@ class OntoMapEngine:
             s3_model = self._om_model_from_strategy(self.s3_strategy,
                                                     updated_queries_s3)
             s3_res = s3_model.get_match_results(
-                cura_map=updated_cura_map_s3,
+                ground_truth_map=updated_ground_truth_map_s3,
                 topk=self.topk,
                 test_or_prod=self._test_or_prod)
 
@@ -1509,7 +1509,7 @@ class OntoMapEngine:
                               on="updated_value",
                               how="left")
             s3_res["curated_ontology"] = s3_res["original_value"].map(
-                self.cura_map).fillna("Not Found")
+                self.ground_truth_map).fillna("Not Found")
             s3_res = self._recompute_match_level(s3_res)
             s3_res['stage'] = 3.0
 

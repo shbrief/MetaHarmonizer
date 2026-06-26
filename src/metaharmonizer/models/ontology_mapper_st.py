@@ -122,7 +122,7 @@ class OntoMapST(otm.OntoModelsBase):
             device='cuda' if torch.cuda.is_available() else 'cpu')
 
     def get_match_results(self,
-                          cura_map: dict[str, str] = None,
+                          ground_truth_map: dict[str, str] = None,
                           topk: int = 5,
                           test_or_prod: str = 'test') -> pd.DataFrame:
         idx = self.vector_store.index
@@ -135,4 +135,4 @@ class OntoMapST(otm.OntoModelsBase):
 
         D, I = idx.search(q_norm, topk)
 
-        return self._build_result_rows(I, D, cura_map, test_or_prod)
+        return self._build_result_rows(I, D, ground_truth_map, test_or_prod)

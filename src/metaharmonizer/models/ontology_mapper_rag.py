@@ -39,11 +39,11 @@ class OntoMapRAG(OntoModelsBase):
         )
 
     def get_match_results(self,
-                          cura_map: dict[str, str] = None,
+                          ground_truth_map: dict[str, str] = None,
                           topk: int = 5,
                           test_or_prod: str = 'test') -> pd.DataFrame:
-        if test_or_prod == 'test' and cura_map is None:
-            raise ValueError("cura_map should be provided for test mode")
+        if test_or_prod == 'test' and ground_truth_map is None:
+            raise ValueError("ground_truth_map should be provided for test mode")
 
         self.logger.info("Generating results table")
 
@@ -68,7 +68,7 @@ class OntoMapRAG(OntoModelsBase):
             'original_value':
             self.query,
             'curated_ontology': [
-                cura_map.get(q, "Not Found") if test_or_prod == 'test' else
+                ground_truth_map.get(q, "Not Found") if test_or_prod == 'test' else
                 "Not Available for Prod Environment" for q in self.query
             ]
         })

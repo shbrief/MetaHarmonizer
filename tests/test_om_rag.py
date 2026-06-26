@@ -64,37 +64,37 @@ def _make_rag(query=None, use_reranker=False, topk=2, reranker_topk=3):
 class TestOntoMapRAGBasic:
     def test_similarity_search_called_with_topk(self):
         m = _make_rag(use_reranker=False, topk=2)
-        m.get_match_results(cura_map={"LUAD": "Lung Adenocarcinoma"}, topk=2)
+        m.get_match_results(ground_truth_map={"LUAD": "Lung Adenocarcinoma"}, topk=2)
         assert len(m._vs.calls) == 1
         _, k = m._vs.calls[0]
         assert k == 2
 
     def test_output_has_expected_columns(self):
         m = _make_rag(topk=2)
-        df = m.get_match_results(cura_map={"LUAD": "Lung Adenocarcinoma"}, topk=2)
+        df = m.get_match_results(ground_truth_map={"LUAD": "Lung Adenocarcinoma"}, topk=2)
         for col in ("original_value", "curated_ontology", "match_level",
                     "match1", "match1_score", "match2", "match2_score"):
             assert col in df.columns
 
     def test_match_level_hit(self):
         m = _make_rag(topk=2)
-        df = m.get_match_results(cura_map={"LUAD": "Lung Adenocarcinoma"}, topk=2)
+        df = m.get_match_results(ground_truth_map={"LUAD": "Lung Adenocarcinoma"}, topk=2)
         assert df.loc[0, "match_level"] == 1
 
     def test_match_level_miss(self):
         m = _make_rag(topk=2)
-        df = m.get_match_results(cura_map={"LUAD": "Not In Corpus"}, topk=2)
+        df = m.get_match_results(ground_truth_map={"LUAD": "Not In Corpus"}, topk=2)
         assert df.loc[0, "match_level"] == 99
 
     def test_prod_mode_curated_not_available(self):
         m = _make_rag(topk=2)
-        df = m.get_match_results(cura_map=None, topk=2, test_or_prod="prod")
+        df = m.get_match_results(ground_truth_map=None, topk=2, test_or_prod="prod")
         assert df.loc[0, "curated_ontology"] == "Not Available for Prod Environment"
 
-    def test_raises_in_test_mode_without_cura_map(self):
+    def test_raises_in_test_mode_without_ground_truth_map(self):
         m = _make_rag(topk=2)
-        with pytest.raises(ValueError, match="cura_map"):
-            m.get_match_results(cura_map=None, topk=2, test_or_prod="test")
+        with pytest.raises(ValueError, match="ground_truth_map"):
+            m.get_match_results(ground_truth_map=None, topk=2, test_or_prod="test")
 
 
 # ── get_match_results — reranker path ─────────────────────────────────────────
@@ -106,7 +106,7 @@ class TestOntoMapRAGReranker:
         m._reranker = SimpleNamespace(
             predict=lambda pairs: np.array([0.9, 0.5, 0.7])
         )
-        m.get_match_results(cura_map={"LUAD": "Lung Adenocarcinoma"}, topk=2)
+        m.get_match_results(ground_truth_map={"LUAD": "Lung Adenocarcinoma"}, topk=2)
         _, k = m._vs.calls[0]
         assert k == 3
 
@@ -115,7 +115,7 @@ class TestOntoMapRAGReranker:
         m._reranker = SimpleNamespace(
             predict=lambda pairs: np.array([0.9, 0.5, 0.7])
         )
-        df = m.get_match_results(cura_map={"LUAD": "Lung Adenocarcinoma"}, topk=2)
+        df = m.get_match_results(ground_truth_map={"LUAD": "Lung Adenocarcinoma"}, topk=2)
         assert "match1_reranker_score" in df.columns
         assert "match1_similarity_score" in df.columns
 
