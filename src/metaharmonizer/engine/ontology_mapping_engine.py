@@ -32,7 +32,18 @@ _CORPUS_REGISTRY: dict[tuple[str, str], str] = {
     # OLS-based
     ("disease",   "mondo"):  "MONDO:0000001",
     ("bodysite",  "uberon"): "UBERON:0001062",
+    # EFO merged corpus (12 ontologies flattened under the EFO namespace).
+    # Shipped as a static CSV, not API-buildable — a cache miss must be
+    # resolved by the bootstrap script, see _resolve_corpus_df below.
+    ("phenotype", "efo"):    "EFO:0000001",
 }
+
+# (category, ontology_source) pairs whose corpus ships as a static file and
+# cannot be rebuilt from an API on a cache miss. Resolution must point users at
+# the bootstrap step instead of attempting a build.
+_STATIC_CORPUS_SOURCES: frozenset[tuple[str, str]] = frozenset({
+    ("phenotype", "efo"),
+})
 
 _BRITISH_TO_AMERICAN = [
     (r"(?i)leukaemia",   "leukemia"),
@@ -379,6 +390,16 @@ class OntoMapEngine:
         if csv_path.exists():
             self._logger.info(f"Loading corpus CSV: {csv_path}")
             return pd.read_csv(csv_path)
+
+        # Static (non-API) corpora can't be rebuilt — point at the bootstrap step.
+        if (self.category, self._ontology_source) in _STATIC_CORPUS_SOURCES:
+            raise FileNotFoundError(
+                f"Corpus for (category='{self.category}', "
+                f"ontology_source='{self._ontology_source}') is a shipped static "
+                f"file but was not found at {csv_path}. It is not API-rebuildable. "
+                f"Run `python -m metaharmonizer.scripts.bootstrap_data` (or set "
+                f"METAHARMONIZER_DATA_DIR to the repo's data/ dir) to populate it."
+            )
 
         root_term = _CORPUS_REGISTRY[(self.category, self._ontology_source)]
 

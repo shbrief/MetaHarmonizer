@@ -68,6 +68,7 @@ class SchemaMapEngine:
         mode: str = "auto",
         top_k: Optional[int] = None,
         *,
+        schema: Optional[str] = None,
         curated_dict_path: Optional[Union[str, Path]] = None,
         value_dict_path: Optional[Union[str, Path]] = None,
         alias_dict_path: Optional[Union[str, Path]] = None,
@@ -81,6 +82,12 @@ class SchemaMapEngine:
             mode: Execution mode ('auto' or 'manual').
             top_k: Number of top matches to return. ``None`` falls back to the
                 resolved settings default (``settings.topk``).
+            schema: Optional bundled schema preset name (see
+                ``config.SCHEMA_PRESETS``, e.g. ``"cbio"`` or ``"gdc"``). Selects
+                a matched curated + alias + value dict set, so the alias dict is
+                used as-is rather than auto-disabled. Any explicit
+                ``*_dict_path`` arg overrides the corresponding preset entry.
+                ``None`` (default) keeps the legacy bundled cbio defaults.
             curated_dict_path: Optional override for the curated schema CSV.
                 If None, uses the bundled default (config.CURATED_DICT_PATH) and
                 the bundled alias / value dicts are used as-is. If overridden:
@@ -113,23 +120,42 @@ class SchemaMapEngine:
         self.top_k = top_k if top_k is not None else self.settings.topk
         self.mode = mode
 
-        # Resolve dictionary paths (explicit arg > default behavior).
-        user_schema = curated_dict_path is not None
-        self.curated_dict_path = (
-            Path(curated_dict_path) if user_schema else _config.CURATED_DICT_PATH
-        )
+        # A preset supplies a matched curated + alias + value set; explicit
+        # *_dict_path args below override individual entries. Resolving it up
+        # front lets the preset's alias dict survive (it's keyed to the preset's
+        # own schema, so the user-schema auto-disable below must not fire for it).
+        preset = _config.resolve_schema_preset(schema) if schema is not None else None
+
+        # Resolve dictionary paths (explicit arg > preset > default behavior).
+        if curated_dict_path is not None:
+            self.curated_dict_path = Path(curated_dict_path)
+            user_schema = True
+        elif preset is not None:
+            self.curated_dict_path = preset["curated_dict_path"]
+            # A preset is a coherent set, not a user-supplied bare schema, so its
+            # matched alias dict should be honored, not auto-disabled.
+            user_schema = False
+        else:
+            self.curated_dict_path = _config.CURATED_DICT_PATH
+            user_schema = False
         # Alias is tied to the bundled curated schema; disable when the user
-        # provides their own. "" is the loader's explicit-disable sentinel
-        # (None would mean "fall back to config default"). An explicit
-        # alias_dict_path always wins.
+        # provides their own bare schema. "" is the loader's explicit-disable
+        # sentinel (None would mean "fall back to default"). Precedence:
+        # explicit alias_dict_path > preset alias > config default (or "" when a
+        # bare user schema is supplied without an alias).
         if alias_dict_path is not None:
             self.alias_dict_path = alias_dict_path
+        elif preset is not None:
+            self.alias_dict_path = preset["alias_dict_path"]
         else:
             self.alias_dict_path = "" if user_schema else _config.ALIAS_DICT_PATH
-        # Value dict: explicit arg ("" disables) > config default.
-        self.value_dict_path = (
-            value_dict_path if value_dict_path is not None else _config.VALUE_DICT_PATH
-        )
+        # Value dict: explicit arg ("" disables) > preset > config default.
+        if value_dict_path is not None:
+            self.value_dict_path = value_dict_path
+        elif preset is not None:
+            self.value_dict_path = preset["value_dict_path"]
+        else:
+            self.value_dict_path = _config.VALUE_DICT_PATH
 
         # Setup output
         os.makedirs(OUTPUT_DIR, exist_ok=True)

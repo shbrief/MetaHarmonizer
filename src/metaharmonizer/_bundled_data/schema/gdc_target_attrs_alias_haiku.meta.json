@@ -1,0 +1,190 @@
+{
+  "script": "diversify_corpus.py",
+  "prompt_version": "cancer_genomics",
+  "model": "claude-haiku-4-5-20251001",
+  "max_tokens": 16000,
+  "batch_size": 80,
+  "timeout": 3600,
+  "started_at": "2026-04-18T20:18:22",
+  "finished_at": "2026-04-18T20:34:50",
+  "curated_dict": "/Users/sehyunoh/OmicsMLRepo/MetaHarmonizer_Benchmark_Data/benchmark_data/schema_mapper/gdc/gdc_schema.csv",
+  "dataset_label": "gdc_736_fields",
+  "n_curated_fields": 736,
+  "n_alias_rows": 9219,
+  "n_unique_sources": 9108,
+  "n_fields_covered": 744,
+  "missing_fields": [],
+  "n_rows_before_dedup": 11481,
+  "passes": [
+    {
+      "pass_name": "synonym",
+      "n_rows": 5096,
+      "n_unique_sources": 5045,
+      "started_at": "2026-04-18T20:18:22",
+      "finished_at": "2026-04-18T20:24:28",
+      "api_usage": {
+        "input_tokens": 10769,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 76933
+      },
+      "stop_reason": "end_turn",
+      "n_batches": 10,
+      "retries": 0,
+      "retries_recovered": 0,
+      "batches_failed": 0,
+      "batch_stop_reasons": [
+        "end_turn",
+        "end_turn",
+        "end_turn",
+        "end_turn",
+        "end_turn",
+        "end_turn",
+        "end_turn",
+        "end_turn",
+        "end_turn",
+        "end_turn"
+      ]
+    },
+    {
+      "pass_name": "abbreviation",
+      "n_rows": 1458,
+      "n_unique_sources": 1443,
+      "started_at": "2026-04-18T20:24:28",
+      "finished_at": "2026-04-18T20:27:07",
+      "api_usage": {
+        "input_tokens": 13269,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 23888
+      },
+      "stop_reason": "end_turn",
+      "n_batches": 10,
+      "retries": 1,
+      "retries_recovered": 1,
+      "batches_failed": 0,
+      "batch_stop_reasons": [
+        "end_turn",
+        "end_turn",
+        "end_turn",
+        "end_turn",
+        "end_turn",
+        "end_turn",
+        "end_turn",
+        "end_turn",
+        "end_turn",
+        "end_turn"
+      ]
+    },
+    {
+      "pass_name": "value_encoded",
+      "n_rows": 729,
+      "n_unique_sources": 684,
+      "started_at": "2026-04-18T20:27:07",
+      "finished_at": "2026-04-18T20:28:14",
+      "api_usage": {
+        "input_tokens": 14649,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 13203
+      },
+      "stop_reason": "end_turn",
+      "n_batches": 10,
+      "retries": 0,
+      "retries_recovered": 0,
+      "batches_failed": 0,
+      "batch_stop_reasons": [
+        "end_turn",
+        "end_turn",
+        "end_turn",
+        "end_turn",
+        "end_turn",
+        "end_turn",
+        "end_turn",
+        "end_turn",
+        "end_turn",
+        "end_turn"
+      ]
+    },
+    {
+      "pass_name": "composite",
+      "n_rows": 1666,
+      "n_unique_sources": 1643,
+      "started_at": "2026-04-18T20:28:14",
+      "finished_at": "2026-04-18T20:30:26",
+      "api_usage": {
+        "input_tokens": 12119,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 28731
+      },
+      "stop_reason": "end_turn",
+      "n_batches": 10,
+      "retries": 0,
+      "retries_recovered": 0,
+      "batches_failed": 0,
+      "batch_stop_reasons": [
+        "end_turn",
+        "end_turn",
+        "end_turn",
+        "end_turn",
+        "end_turn",
+        "end_turn",
+        "end_turn",
+        "end_turn",
+        "end_turn",
+        "end_turn"
+      ]
+    },
+    {
+      "pass_name": "institutional",
+      "n_rows": 2532,
+      "n_unique_sources": 2527,
+      "started_at": "2026-04-18T20:30:26",
+      "finished_at": "2026-04-18T20:34:50",
+      "api_usage": {
+        "input_tokens": 11969,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 51858
+      },
+      "stop_reason": "end_turn",
+      "n_batches": 10,
+      "retries": 0,
+      "retries_recovered": 0,
+      "batches_failed": 0,
+      "batch_stop_reasons": [
+        "end_turn",
+        "end_turn",
+        "end_turn",
+        "end_turn",
+        "end_turn",
+        "end_turn",
+        "end_turn",
+        "end_turn",
+        "end_turn",
+        "end_turn"
+      ]
+    }
+  ]
+}

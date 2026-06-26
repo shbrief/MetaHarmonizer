@@ -42,6 +42,40 @@ ALIAS_DICT_PATH = resolve_data_file("schema/cbio_target_attrs_alias_manual.csv")
 # through to a user-supplied schema — disjoint keys are skipped automatically.
 VALUE_DICT_PATH = os.getenv("FIELD_VALUE_JSON") or resolve_data_file("schema/field_value_dict.json")
 
+# === Bundled schema presets ===
+# A preset bundles a curated schema with its matched alias + value dicts as a
+# coherent set. Selecting one (``SchemaMapEngine(schema="gdc")``) supplies all
+# three together, so the alias dict is NOT auto-disabled the way it is when only
+# ``curated_dict_path`` is overridden (the alias is keyed to *that* schema, not
+# the default). Explicit ``*_dict_path`` args still win over a preset.
+#   - cbio: 33-field cBioPortal schema + manually curated aliases (the default)
+#   - gdc:  736-field GDC schema + Haiku-4.5-generated aliases (see the sibling
+#           ``gdc_target_attrs_alias_haiku.meta.json`` for provenance)
+SCHEMA_PRESETS: dict[str, dict[str, str]] = {
+    "cbio": {
+        "curated_dict_path": "schema/cbio_target_attrs.csv",
+        "alias_dict_path": "schema/cbio_target_attrs_alias_manual.csv",
+        "value_dict_path": "schema/field_value_dict.json",
+    },
+    "gdc": {
+        "curated_dict_path": "schema/gdc_schema.csv",
+        "alias_dict_path": "schema/gdc_target_attrs_alias_haiku.csv",
+        "value_dict_path": "schema/gdc_value_dict.json",
+    },
+}
+
+
+def resolve_schema_preset(name: str) -> dict[str, "Path"]:
+    """Resolve a :data:`SCHEMA_PRESETS` entry to absolute (bundled or user) paths.
+
+    Raises ``KeyError`` with the known preset names if ``name`` is unknown.
+    """
+    if name not in SCHEMA_PRESETS:
+        raise KeyError(
+            f"Unknown schema preset {name!r}. Known presets: {sorted(SCHEMA_PRESETS)}."
+        )
+    return {k: resolve_data_file(v) for k, v in SCHEMA_PRESETS[name].items()}
+
 # === Models === (project file may override the method key)
 FIELD_MODEL = _resolve_model(_settings.field_model)
 LLM_MODEL = _resolve_model(_settings.llm_model)

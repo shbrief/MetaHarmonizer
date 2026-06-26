@@ -94,12 +94,20 @@ include = ["metaharmonizer*"]
 # auto-disabled in engine.py when the user supplies their own schema; value
 # dict is filtered against the active curated schema by ValueLoader; ncit
 # descendants is a NCIt root→descendants table independent of user schema.
+#
+# Schema presets (config.SCHEMA_PRESETS): each is a matched curated + alias +
+# value trio. "cbio" is the 33-field default; "gdc" is the 736-field GDC schema
+# with a Haiku-4.5-generated alias dict (provenance in the sibling .meta.json).
 "metaharmonizer._bundled_data" = [
     "corpus/oncotree_code_to_name.csv",
-    "schema/curated_fields.csv",
-    "schema/curated_fields_source_latest_with_flags.csv",
+    "corpus/ncit_descendants.json",
+    "schema/cbio_target_attrs.csv",
+    "schema/cbio_target_attrs_alias_manual.csv",
     "schema/field_value_dict.json",
-    "schema/ncit_descendants.json",
+    "schema/gdc_schema.csv",
+    "schema/gdc_value_dict.json",
+    "schema/gdc_target_attrs_alias_haiku.csv",
+    "schema/gdc_target_attrs_alias_haiku.meta.json",
 ]
 
 [tool.pytest.ini_options]
