@@ -24,6 +24,8 @@ MAX_RETRIEVED_CONTEXT_ITEMS = 10
 # Known (category, ontology_source) → OBO root term ID.
 # NCIt entries use the NCI EVSREST API for corpus + concept tables.
 # Non-ncit entries use OLS4 API via CorpusBuilder.
+# This dict is the canonical per-attribute corpus map; the explanation in
+# docs/corpus_selection.md describes how it is resolved and validated.
 _CORPUS_REGISTRY: dict[tuple[str, str], str] = {
     # NCIt
     ("bodysite",  "ncit"):   "NCIT:C32221",

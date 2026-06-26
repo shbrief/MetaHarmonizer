@@ -42,6 +42,12 @@ retrieval-augmented generation.
 
 CorpusBuilder collects all descendants of a given ontology term from the [EBI OLS4 API](https://www.ebi.ac.uk/ols4) and saves them as JSON. It supports any ontology indexed by OLS (NCIT, MONDO, HP, EFO, etc.).
 
+> This is the build mechanism for an OntologyMapper corpus. For *which*
+> corpus a given attribute uses and how it's resolved, see
+> [`docs/corpus_selection.md`](../../../docs/corpus_selection.md); for
+> supplying a built corpus to `OntoMapEngine` via `corpus_df=`, see
+> [`docs/input_formats.md`](../../../docs/input_formats.md) §1.3.
+
 ### Python API
 
 ```python
