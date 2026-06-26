@@ -65,7 +65,11 @@ class SynonymDict:
         # Initialize FAISS index
         self.index: Optional[faiss.Index] = None
         self.dim: Optional[int] = None
-        self.is_gpu = faiss.get_num_gpus() > 0
+        # Require BOTH a FAISS GPU and a CUDA-enabled torch build: the GPU code
+        # path uses torch.cuda for memory management, so faiss.get_num_gpus()
+        # alone is insufficient (e.g. on macOS faiss exposes a Metal GPU while
+        # torch has no CUDA, which crashes index ops).
+        self.is_gpu = faiss.get_num_gpus() > 0 and torch.cuda.is_available()
         self._gpu_res = faiss.StandardGpuResources() if self.is_gpu else None
 
         if os.path.exists(self.index_path):

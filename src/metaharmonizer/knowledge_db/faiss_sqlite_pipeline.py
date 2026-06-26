@@ -51,7 +51,11 @@ class FAISSSQLiteSearch:
         table_suffix: str = "",
     ):
         ensure_knowledge_db()
-        self.is_gpu = faiss.get_num_gpus() > 0
+        # Require BOTH a FAISS GPU and a CUDA-enabled torch build: the GPU code
+        # path uses torch.cuda for memory management, so faiss.get_num_gpus()
+        # alone is insufficient (e.g. on macOS faiss may report a GPU while
+        # torch has no CUDA, which would crash the index build).
+        self.is_gpu = faiss.get_num_gpus() > 0 and torch.cuda.is_available()
         self._gpu_res = faiss.StandardGpuResources() if self.is_gpu else None
         self.db_path = BASE_DB
         self.db = NCIDb(UMLS_API_KEY)
