@@ -51,6 +51,18 @@ def _model_short_name(full_name: str) -> str:
         pass
     return full_name.replace('-', '_').replace('.', '_').split('/')[-1]
 
+
+def _sibling_path(schema_path: Union[str, Path], suffix: str) -> Path:
+    """Matched-sibling path by naming convention.
+
+    ``<stem>.csv`` co-locates its matched dicts as ``<stem><suffix>`` in the
+    same directory, e.g. ``myschema.csv`` -> ``myschema.alias.csv`` /
+    ``myschema.values.json``. Lets a user supply one schema and have its alias
+    and value dicts picked up automatically (see ``SchemaMapEngine.__init__``).
+    """
+    p = Path(schema_path)
+    return p.with_name(p.stem + suffix)
+
 class SchemaMapEngine:
     """
     Main schema mapping engine with multi-stage cascade matching.
@@ -91,9 +103,13 @@ class SchemaMapEngine:
             curated_dict_path: Optional override for the curated schema CSV.
                 If None, uses the bundled default (config.CURATED_DICT_PATH) and
                 the bundled alias / value dicts are used as-is. If overridden:
-                  * alias dict is disabled (it's keyed to the default schema;
-                    future: auto-generated from the user schema via LLM)
-                    unless ``alias_dict_path`` is also given.
+                  * matched sibling dicts are auto-discovered by naming
+                    convention next to the schema — ``<stem>.csv`` picks up
+                    ``<stem>.alias.csv`` and ``<stem>.values.json`` when present
+                    (the alias is validated against the schema fields and
+                    disabled if it shares none).
+                  * absent a sibling (and absent ``alias_dict_path``) the alias
+                    dict is disabled (it's keyed to the default schema).
                   * value dict is still loaded but filtered to the user schema's
                     fields; if no overlap, value matching is skipped.
             value_dict_path: Optional per-run override for the value dictionary
@@ -141,19 +157,37 @@ class SchemaMapEngine:
         # Alias is tied to the bundled curated schema; disable when the user
         # provides their own bare schema. "" is the loader's explicit-disable
         # sentinel (None would mean "fall back to default"). Precedence:
-        # explicit alias_dict_path > preset alias > config default (or "" when a
-        # bare user schema is supplied without an alias).
+        # explicit alias_dict_path > preset alias > convention sibling > config
+        # default (or "" when a bare user schema has no matched sibling).
+        # A convention-discovered alias is validated against the schema in
+        # _load_dictionaries (mismatched sibling -> warn + disable).
+        self._alias_from_convention = False
         if alias_dict_path is not None:
             self.alias_dict_path = alias_dict_path
         elif preset is not None:
             self.alias_dict_path = preset["alias_dict_path"]
+        elif user_schema:
+            sibling = _sibling_path(self.curated_dict_path, ".alias.csv")
+            if sibling.exists():
+                self.alias_dict_path = sibling
+                self._alias_from_convention = True
+                logger.info(f"[Engine] Found sibling alias dict by convention: {sibling.name}")
+            else:
+                self.alias_dict_path = ""
         else:
-            self.alias_dict_path = "" if user_schema else _config.ALIAS_DICT_PATH
-        # Value dict: explicit arg ("" disables) > preset > config default.
+            self.alias_dict_path = _config.ALIAS_DICT_PATH
+        # Value dict: explicit arg ("" disables) > preset > convention sibling >
+        # config default. ValueLoader filters to the active schema, so an
+        # unrelated default contributes nothing rather than corrupting results.
         if value_dict_path is not None:
             self.value_dict_path = value_dict_path
         elif preset is not None:
             self.value_dict_path = preset["value_dict_path"]
+        elif user_schema and _sibling_path(self.curated_dict_path, ".values.json").exists():
+            self.value_dict_path = _sibling_path(self.curated_dict_path, ".values.json")
+            logger.info(
+                f"[Engine] Found sibling value dict by convention: {self.value_dict_path.name}"
+            )
         else:
             self.value_dict_path = _config.VALUE_DICT_PATH
 
@@ -212,6 +246,25 @@ class SchemaMapEngine:
             self.numeric_sources = []
             self.alias_embs = None
             logger.warning("[Engine] Alias dictionary not available, alias-based matching will be skipped")
+
+        # Validate a convention-discovered alias dict against the schema. An
+        # explicit/preset alias is trusted as-is; a sibling found purely by name
+        # might be stale or mismatched, so require its field_name set to overlap
+        # the curated schema — otherwise disable it rather than feed bad aliases
+        # into matching.
+        if self._alias_from_convention and self.has_alias_dict:
+            alias_fields = set(self.df_dict["field_name"].astype(str))
+            if not (alias_fields & set(self.standard_fields)):
+                logger.warning(
+                    f"[Engine] Sibling alias dict {Path(self.alias_dict_path).name} shares no "
+                    f"field_name with the schema ({len(self.standard_fields)} fields); "
+                    f"disabling alias matching."
+                )
+                self.has_alias_dict = False
+                self.df_dict = None
+                self.df_num = None
+                self.numeric_sources = []
+                self.alias_embs = None
 
         # Load value dict (filtered to the effective curated schema fields)
         ValueLoader.load_value_dict(
