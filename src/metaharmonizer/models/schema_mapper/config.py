@@ -32,11 +32,11 @@ OUTPUT_DIR = Path(os.getenv("SM_OUTPUT_DIR", DATA_DIR / "schema_mapping_eval"))
 # Default curated schema: user data dir first, else the bundled copy that
 # ships inside the wheel (resolve_data_file falls back automatically). Users
 # typically override this via SchemaMapEngine(curated_dict_path=...).
-CURATED_DICT_PATH = resolve_data_file("schema/curated_fields.csv")
+CURATED_DICT_PATH = resolve_data_file("schema/cbio_target_attrs.csv")
 # Alias dict is keyed to the bundled curated schema. engine.py disables it
 # when the user supplies their own schema, so the bundled fallback is only
-# read alongside the bundled curated_fields.csv.
-ALIAS_DICT_PATH = resolve_data_file("schema/curated_fields_source_latest_with_flags.csv")
+# read alongside the bundled cbio_target_attrs.csv.
+ALIAS_DICT_PATH = resolve_data_file("schema/cbio_target_attrs_alias_manual.csv")
 # Value dict is filtered against the active curated schema by ValueLoader
 # (allowed_fields=standard_fields), so the bundled copy is safe to fall
 # through to a user-supplied schema — disjoint keys are skipped automatically.
