@@ -1,9 +1,0 @@
-Patient ID,Cancer Type,Cancer Type Detailed,Diagnosis Age,Sex,Ethnicity Category
-P-0000112,Esophagogastric Cancer,Esophageal Adenocarcinoma,,,
-P-0000113,Small Cell Lung Cancer,Small Cell Lung Cancer,,Female,Non-Spanish; Non-Hispanic
-P-0000133,Non-Small Cell Lung Cancer,Lung Adenocarcinoma,,Female,Non-Spanish; Non-Hispanic
-P-0000190,Small Cell Lung Cancer,Small Cell Lung Cancer,,Female,Non-Spanish; Non-Hispanic
-P-0000208,Non-Small Cell Lung Cancer,Lung Adenocarcinoma,,Female,Non-Spanish; Non-Hispanic
-P-0000219,Non-Small Cell Lung Cancer,Lung Adenocarcinoma,,Female,Non-Spanish; Non-Hispanic
-P-0000282,Esophagogastric Cancer,Stomach Adenocarcinoma,,Female,Non-Spanish; Non-Hispanic
-P-0000339,Small Cell Lung Cancer,Small Cell Lung Cancer,,Female,Non-Spanish; Non-Hispanic
