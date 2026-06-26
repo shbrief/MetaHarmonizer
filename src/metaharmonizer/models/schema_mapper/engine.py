@@ -77,8 +77,8 @@ class SchemaMapEngine:
     def __init__(
         self,
         clinical_data_path: str,
-        mode: str = "auto",
-        top_k: Optional[int] = None,
+        mode: str = "manual",
+        top_k: Optional[int] = 5,
         *,
         schema: Optional[str] = None,
         curated_dict_path: Optional[Union[str, Path]] = None,
@@ -91,9 +91,9 @@ class SchemaMapEngine:
 
         Args:
             clinical_data_path: Path to clinical data CSV/TSV file.
-            mode: Execution mode ('auto' or 'manual').
-            top_k: Number of top matches to return. ``None`` falls back to the
-                resolved settings default (``settings.topk``).
+            mode: Execution mode ('auto' or 'manual'). Defaults to ``"manual"``.
+            top_k: Number of top matches to return. Defaults to ``5``. ``None``
+                falls back to the resolved settings default (``settings.topk``).
             schema: Optional bundled schema preset name (see
                 ``config.SCHEMA_PRESETS``, e.g. ``"cbio"`` or ``"gdc"``). Selects
                 a matched curated + alias + value dict set, so the alias dict is
