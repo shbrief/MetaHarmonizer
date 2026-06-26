@@ -124,6 +124,8 @@ class OntoMapEngine:
             persist_corpus (bool, optional): When ``True`` with a caller-provided
                 ``corpus_df``, persist it to the canonical cache CSV. Defaults to ``False``.
             ground_truth_map (dict): The dictionary containing the mapping of queries to curated values.
+                Supplying it implies test/evaluation mode (``match_level`` is computed against it);
+                omitting it implies prod mode (curated labels default to "Not Found").
             topk (int, optional): The number of top matches to return. Defaults to 5.
             s2_strategy (str, optional): The strategy to use for stage 2 OntoMap. Defaults to 'lm'. Options are 'st' or 'lm'.
             s3_strategy (str, optional): The strategy to use for stage 3 OntoMap. Defaults to None. Options are 'rag', 'rag_bie', or None.
@@ -136,6 +138,9 @@ class OntoMapEngine:
                 across runs over the same corpus; pass "" to reuse the standard
                 (unsuffixed) tables. Defaults to None (content-based hashing).
             **other_params (dict): Other parameters to pass to the engine.
+                ``test_or_prod`` ('test' | 'prod') is optional here; when omitted it is
+                inferred from ``ground_truth_map`` ('test' if provided, else 'prod').
+                Pass it explicitly only to override that inference.
         """
         self.s2_method = s2_method
         self.s3_method = s3_method
@@ -161,12 +166,16 @@ class OntoMapEngine:
             if _val is not None:
                 other_params[_key] = _val
         self.other_params = other_params
-        if 'test_or_prod' not in self.other_params.keys():
-            raise ValueError(
-                "test_or_prod value must be defined in other_params dictionary"
-            )
-
-        self._test_or_prod = self.other_params['test_or_prod']
+        # test_or_prod is optional. When the caller doesn't pass it, infer the
+        # mode from whether a ground_truth_map was supplied: a ground truth to
+        # evaluate against means 'test', otherwise 'prod'. An explicit value in
+        # other_params always wins. The resolved value is written back so any
+        # downstream/debug code inspecting other_params sees a consistent mode.
+        if 'test_or_prod' in self.other_params:
+            self._test_or_prod = self.other_params['test_or_prod']
+        else:
+            self._test_or_prod = 'test' if ground_truth_map is not None else 'prod'
+            self.other_params['test_or_prod'] = self._test_or_prod
 
         # --- Parse query_df / query_col from other_params ---
         query_df = self.other_params.get('query_df', None)
