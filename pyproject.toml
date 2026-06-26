@@ -24,7 +24,10 @@ dependencies = [
     # Core data and ML
     "pandas",
     "numpy",
-    "torch",
+    # torch>=2.6 required: newer transformers refuses to load .bin-only model
+    # checkpoints (e.g. pubmed-bert / pritamdeka/S-PubMedBert-MS-MARCO, which
+    # ships no safetensors) on older torch (CVE-2025-32434).
+    "torch>=2.6",
     "transformers",
     "sentence-transformers",
     "scikit-learn",

@@ -140,10 +140,20 @@ def generate_alias_dict(
                     file=sys.stderr,
                 )
 
-    if rows_chunks:
-        result = pd.concat(rows_chunks, ignore_index=True)
-    else:
-        result = _empty_alias_df()
+    if not rows_chunks:
+        # Every LLM call failed (or returned no parseable CSV). Returning an
+        # empty frame here silently produces a header-only alias dict that
+        # blows up cryptically downstream, so fail loudly with a cause hint.
+        n_attempts = len(prompt_set) * len(batches)
+        raise RuntimeError(
+            f"generate_alias_dict produced no rows: all {n_attempts} LLM "
+            f"call(s) failed (see WARNING logs above). Common causes: the "
+            f"'{provider}' SDK is not installed "
+            f"(pip install 'metaharmonizer[llm-{provider}]'), the API key is "
+            f"invalid, or the model returned no parseable CSV."
+        )
+
+    result = pd.concat(rows_chunks, ignore_index=True)
 
     if dedupe:
         result = _dedupe_alias_rows(result)
@@ -151,6 +161,14 @@ def generate_alias_dict(
     result = result[result["field_name"].isin(valid_fields)].reset_index(
         drop=True
     )
+
+    if result.empty:
+        raise RuntimeError(
+            f"generate_alias_dict produced 0 alias rows matching the "
+            f"{len(valid_fields)} requested field(s). The LLM returned data "
+            f"but none mapped to the target field names; try a more capable "
+            f"model or check the prompt output."
+        )
 
     if verbose:
         n_covered = result["field_name"].nunique()
