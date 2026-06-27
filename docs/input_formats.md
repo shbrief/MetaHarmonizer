@@ -26,8 +26,8 @@ most first-time users:
     *only* the terms; the engine fills in the answers. No ground truth
     needed.
 -   **`test`** — you already know the correct answer for each term and
-    want to *measure accuracy*. You must pass a `cura_map` (term →
-    known-correct label).
+    want to *measure accuracy*. You must pass a `ground_truth_map` (term
+    → known-correct label).
 
 ------------------------------------------------------------------------
 
@@ -60,14 +60,14 @@ df = pd.read_csv("my_terms.csv")
 The query column is de-duplicated and stripped automatically; blank /
 `"nan"` / `"None"` strings are dropped.
 
-### 1.2 `cura_map` — **test mode only**
+### 1.2 `ground_truth_map` — **test mode only**
 
 A `dict` mapping each query term to its known-correct ontology label,
 used to score accuracy. **Required in `test` mode, ignored in `prod`
 mode** (where it is auto-filled with `"Not Found"`).
 
 ``` python
-cura_map = {
+ground_truth_map = {
     "SQUAMOUS CELL CARCINOMA, PHARYNX": "Pharyngeal Squamous Cell Carcinoma",
     "astrocytoma grade III-IV":         "High Grade Astrocytic Tumor",
 }
@@ -76,7 +76,7 @@ cura_map = {
 A convenient way to build it from a labelled CSV:
 
 ``` python
-cura_map = dict(zip(df["original_value"], df["curated_ontology"]))
+ground_truth_map = dict(zip(df["original_value"], df["curated_ontology"]))
 ```
 
 ### 1.3 The corpus (optional)
@@ -105,9 +105,9 @@ Supported built-in combinations:
 | `phenotype` | `efo`             | static CSV — see below |
 
 The `phenotype`/`efo` corpus is a **static, shipped** corpus (a merged
-EFO corpus, 12 ontologies flattened under the EFO namespace). It is *not*
-rebuildable from an API: it lives in the repo's `data/` tree and must be
-copied into your data cache once before first use —
+EFO corpus, 12 ontologies flattened under the EFO namespace). It is
+*not* rebuildable from an API: it lives in the repo's `data/` tree and
+must be copied into your data cache once before first use —
 
 ``` bash
 python -m metaharmonizer.scripts.bootstrap_data        # copy missing files
@@ -134,8 +134,8 @@ label,obo_id
 
 Three ways to produce that frame:
 
-1.  **Hand-authored CSV** — write the two columns yourself (as above) and
-    `pd.read_csv(...)` it. Best for a small, curated candidate set.
+1.  **Hand-authored CSV** — write the two columns yourself (as above)
+    and `pd.read_csv(...)` it. Best for a small, curated candidate set.
 2.  **Built from an ontology root** — use `CorpusBuilder` to collect all
     descendants of a root term from OLS4, then load the result. This is
     the same machinery the engine uses internally for OLS-backed
@@ -153,8 +153,8 @@ Notes:
     `NCIT:C156482 → C156482`, `UBERON:0001062 → UBERON_0001062`.
 -   A content hash isolates your corpus's cache tables from the official
     ones, so custom and built-in corpora never cross-contaminate.
--   Pass `persist_corpus=True` to save your corpus to the canonical cache
-    path for reuse.
+-   Pass `persist_corpus=True` to save your corpus to the canonical
+    cache path for reuse.
 
 A ready-to-use sample lives at
 [`examples/data/disease_corpus_updated.csv`](../examples/data/disease_corpus_updated.csv).
@@ -164,20 +164,19 @@ A ready-to-use sample lives at
 ``` python
 from metaharmonizer import OntoMapEngine
 
-# PROD: map your own terms, no ground truth
+# PROD: map your own terms, no ground truth (prod mode is inferred)
 engine = OntoMapEngine(
     category="disease",
     query=["TNBC", "astrocytoma grade III-IV"],
-    test_or_prod="prod",            # note: passed as a kwarg
 )
 results = engine.run()
 
 # TEST: measure accuracy against known labels
+# (passing ground_truth_map switches on test mode automatically)
 engine = OntoMapEngine(
     category="disease",
-    query=list(cura_map),
-    cura_map=cura_map,
-    test_or_prod="test",
+    query=list(ground_truth_map),
+    ground_truth_map=ground_truth_map,
 )
 results = engine.run()
 ```
@@ -193,7 +192,7 @@ results = engine.run()
 | `match1_score` … | Similarity score for each candidate |
 | `stage` | Which stage produced the row (1 exact, 2 embedding, 2.5 synonym, 3 RAG, 4 LLM) |
 | `match_level` | Rank at which the *correct* label appeared — **meaningful in `test` mode only** |
-| `ref_match` | The `cura_map` label — **`"Not Found"` in `prod` mode; ignore it there** |
+| `ref_match` | The `ground_truth_map` label — **`"Not Found"` in `prod` mode; ignore it there** |
 
 Set `output_dir=` to also write a timestamped CSV
 (`om_{ontology_source}_{category}_s2_{strategy}_{method}_{timestamp}.csv`).
