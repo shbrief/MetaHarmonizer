@@ -40,21 +40,27 @@ dist/
 model_cache/
 .conda/
 .conda-py311/
-# Cached ontology corpora pulled from NCI / OLS APIs (regenerated on demand)
-data/corpus/*.json
-data/corpus/retrieved_ontologies/
-# Embedding cache and pipeline outputs
-data/outputs/
-# Generated schema-mapping eval CSVs (timestamped); reference inputs are tracked
+# Local-only data: cached corpora, embeddings, pipeline outputs, eval CSVs.
+# Canonical small data ships in metaharmonizer/_bundled_data/; runtime data
+# lives in ~/.metaharmonizer/data/. The repo-root data/ is dev-local only.
 schema_mapping_eval/
-data/schema_mapping_eval/*_s3_*.csv
+# Engine run outputs written back under examples/data/ on first run
+examples/data/outputs/
+examples/data/missing_terms.csv
+examples/data/*_auto.csv
+examples/data/*_auto_eval.csv
+examples/data/*_after_harmonization.csv
+# Unreferenced sample dumps (only ucec_cptac_2020_before_harmonization is used)
+examples/data/brca_mbcproject_2022_*.csv
+examples/data/cesc_tcga_*.csv
+# Quarto-rendered notebook assets
+examples/**/*_files/
 
 # ── Rendered HTML docs (source markdown is tracked) ──────────────────
 *.html
 
-# ── Claude Code local config (shared config can be committed) ────────
-.claude/settings.local.json
-.claude/agents/
+# ── Claude Code local config ─────────────────────────────────────────
+.claude/
 
 # ── Misc dev scratch the app frontend lives in a separate repo ───────
 *app.py
