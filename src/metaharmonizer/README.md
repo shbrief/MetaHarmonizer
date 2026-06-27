@@ -153,7 +153,7 @@ results = onto_engine.run()
 
 # Schema Mapping
 schm_engine = SchemaMapEngine(
-    clinical_data_path=file,
+    input_path=file,
     mode='auto',              # 'auto' enables the Stage-4 LLM fallback; or 'manual'
     top_k=5,
 )

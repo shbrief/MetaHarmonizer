@@ -20,7 +20,7 @@ indexes, the knowledge DB) belong in `METAHARMONIZER_DATA_DIR` /
 |------|---------|-------------|
 | `corpus/ncit_descendants.json` | [`utils/ncit_match_utils.py`](../utils/ncit_match_utils.py) | Map of NCIt root concept code → list of descendant concept codes, for hierarchy-aware ontology matching. See [below](#ncit_descendantsjson) for the three root nodes. |
 | `corpus/oncotree_code_to_name.csv` | [`engine/ontology_mapping_engine.py`](../engine/ontology_mapping_engine.py) | OncoTree `code,name` lookup used to expand OncoTree abbreviations to full names. |
-| `schema/cbio_target_attrs.csv` | [`models/schema_mapper/config.py`](../models/schema_mapper/config.py) (`CURATED_DICT_PATH`) | Default curated target schema: `field_name,is_numeric_field`. |
+| `schema/cbio_target_attrs.csv` | [`models/schema_mapper/config.py`](../models/schema_mapper/config.py) (`TARGET_SCHEMA_PATH`) | Default curated target schema: `field_name,is_numeric_field`. |
 | `schema/cbio_target_attrs_alias_manual.csv` | [`models/schema_mapper/config.py`](../models/schema_mapper/config.py) (`ALIAS_DICT_PATH`) | Manually curated source-name aliases keyed to the bundled curated schema: `field_name,source,is_numeric_field`. Disabled automatically when a user supplies their own schema. |
 | `schema/field_value_dict.json` | [`models/schema_mapper/config.py`](../models/schema_mapper/config.py) (`VALUE_DICT_PATH`) | Allowed value lists per field (`field_name → [values]`); filtered against the active curated schema, so disjoint keys are skipped. Override via `FIELD_VALUE_JSON`. |
 | `schema/gdc_schema.csv` | `config.SCHEMA_PRESETS["gdc"]` (`SchemaMapEngine(schema="gdc")`) | GDC target schema, 736 fields: `field_name,is_numeric_field`. |

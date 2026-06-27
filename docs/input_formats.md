@@ -236,16 +236,16 @@ A ready-to-use sample lives at
 By default the engine maps to the **bundled** curated field list
 (`_bundled_data/schema/cbio_target_attrs.csv` — columns `field_name`,
 `is_numeric_field`). To map to *your own* field set, pass
-`curated_dict_path=`. When you do, the bundled alias dictionary is
+`target_schema_path=`. When you do, the bundled alias dictionary is
 disabled (it is keyed to the default schema) unless you also pass
 `alias_dict_path=`, and the value dictionary is filtered to your fields.
 
 ``` python
 engine = SchemaMapEngine(
-    clinical_data_path="my_clinical.csv",
+    input_path="my_clinical.csv",
     mode="manual",
     top_k=5,
-    curated_dict_path="my_fields.csv",   # optional: your own target schema
+    target_schema_path="my_fields.csv",   # optional: your own target schema
 )
 ```
 
@@ -267,7 +267,7 @@ Stage 1 matches incoming column names against an **alias dictionary** —
 a many-to-one mapping from real-world column names to standard fields —
 before any embedding work. It is the single biggest lever on
 SchemaMapper accuracy, so when you map to your own schema
-(`curated_dict_path=`) you will usually want to supply a matching alias
+(`target_schema_path=`) you will usually want to supply a matching alias
 dictionary too.
 
 A **CSV with exactly three columns**; these are the only columns the
@@ -291,7 +291,7 @@ The bundled default lives at
 to the bundled `cbio_target_attrs.csv`. Pass your own with
 `alias_dict_path=`, or disable alias matching entirely with
 `alias_dict_path=""`. Note the interaction in §2.3: a custom
-`curated_dict_path=` disables the bundled alias dictionary unless you
+`target_schema_path=` disables the bundled alias dictionary unless you
 also pass `alias_dict_path=`.
 
 **Generating one.** `generate_alias_dict()` expands a set of standard
@@ -307,8 +307,8 @@ alias_df = generate_alias_dict(fields, model="claude-sonnet-4-6")
 alias_df.to_csv("my_alias_dict.csv", index=False)
 
 engine = SchemaMapEngine(
-    clinical_data_path="my_clinical.csv",
-    curated_dict_path="my_fields.csv",
+    input_path="my_clinical.csv",
+    target_schema_path="my_fields.csv",
     alias_dict_path="my_alias_dict.csv",
 )
 ```

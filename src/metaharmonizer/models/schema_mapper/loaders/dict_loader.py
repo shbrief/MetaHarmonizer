@@ -20,25 +20,25 @@ class DictLoader:
         Load standard fields dictionary.
 
         Args:
-            path: Path to curated CSV. If None, falls back to config.CURATED_DICT_PATH.
+            path: Path to curated CSV. If None, falls back to config.TARGET_SCHEMA_PATH.
 
         Returns:
-            tuple: (standard_fields, standard_fields_normed, normed_std_to_std, curated_df)
+            tuple: (standard_fields, standard_fields_normed, normed_std_to_std, target_schema_df)
         """
-        resolved = Path(path) if path else Path(_config.CURATED_DICT_PATH)
+        resolved = Path(path) if path else Path(_config.TARGET_SCHEMA_PATH)
         if not resolved.exists():
             raise FileNotFoundError(
                 f"Curated schema CSV not found at {resolved}. "
-                "Pass curated_dict_path=... to SchemaMapEngine, "
+                "Pass target_schema_path=... to SchemaMapEngine, "
                 "or set METAHARMONIZER_DATA_DIR so the default path resolves."
             )
-        curated_df = pd.read_csv(resolved)
-        standard_fields = curated_df['field_name'].dropna().unique().tolist()
+        target_schema_df = pd.read_csv(resolved)
+        standard_fields = target_schema_df['field_name'].dropna().unique().tolist()
         standard_fields_normed = [normalize(f) for f in standard_fields]
         normed_std_to_std = {normalize(f): f for f in standard_fields}
 
         logger.info(f"[DictLoader] Loaded {len(standard_fields)} standard fields from {resolved}")
-        return standard_fields, standard_fields_normed, normed_std_to_std, curated_df
+        return standard_fields, standard_fields_normed, normed_std_to_std, target_schema_df
 
     @staticmethod
     def load_alias_dict(path: Optional[Union[str, Path]] = None):

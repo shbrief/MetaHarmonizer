@@ -49,7 +49,7 @@ import sys
 
 import pandas as pd
 
-from metaharmonizer.models.schema_mapper.config import CURATED_DICT_PATH
+from metaharmonizer.models.schema_mapper.config import TARGET_SCHEMA_PATH
 from metaharmonizer.models.schema_mapper.generate_alias_dict import (
     generate_alias_dict,
 )
@@ -69,7 +69,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     )
     p.add_argument(
         "--fields",
-        default=str(CURATED_DICT_PATH),
+        default=str(TARGET_SCHEMA_PATH),
         help="CSV of target fields. Needs a 'field_name' column; an optional "
         "'is_numeric_field' column is forwarded. Defaults to the bundled "
         "cbio_target_attrs.csv (the engine's default target schema).",
@@ -147,7 +147,7 @@ def demo_match(out_path: str) -> None:
     pd.DataFrame({sample_alias: ["x"]}).to_csv(demo_input, index=False)
 
     engine = SchemaMapEngine(
-        clinical_data_path=demo_input,
+        input_path=demo_input,
         mode="manual",
         top_k=3,
         alias_dict_path=out_path,
@@ -199,7 +199,7 @@ def main(argv: list[str] | None = None) -> int:
 
     print(
         "\nNext: point the engine at it ->\n"
-        f"    SchemaMapEngine(clinical_data_path=..., "
+        f"    SchemaMapEngine(input_path=..., "
         f"alias_dict_path={args.out!r})",
         file=sys.stderr,
     )

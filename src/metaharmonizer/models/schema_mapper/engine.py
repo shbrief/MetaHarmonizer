@@ -76,12 +76,12 @@ class SchemaMapEngine:
 
     def __init__(
         self,
-        clinical_data_path: str,
+        input_path: str,
         mode: str = "manual",
         top_k: Optional[int] = 5,
         *,
         schema: Optional[str] = None,
-        curated_dict_path: Optional[Union[str, Path]] = None,
+        target_schema_path: Optional[Union[str, Path]] = None,
         value_dict_path: Optional[Union[str, Path]] = None,
         alias_dict_path: Optional[Union[str, Path]] = None,
         settings: Optional["Settings"] = None,
@@ -90,7 +90,7 @@ class SchemaMapEngine:
         Initialize the schema mapping engine.
 
         Args:
-            clinical_data_path: Path to clinical data CSV/TSV file.
+            input_path: Path to clinical data CSV/TSV file.
             mode: Execution mode ('auto' or 'manual'). Defaults to ``"manual"``.
             top_k: Number of top matches to return. Defaults to ``5``. ``None``
                 falls back to the resolved settings default (``settings.topk``).
@@ -100,8 +100,8 @@ class SchemaMapEngine:
                 used as-is rather than auto-disabled. Any explicit
                 ``*_dict_path`` arg overrides the corresponding preset entry.
                 ``None`` (default) keeps the legacy bundled cbio defaults.
-            curated_dict_path: Optional override for the curated schema CSV.
-                If None, uses the bundled default (config.CURATED_DICT_PATH) and
+            target_schema_path: Optional override for the curated schema CSV.
+                If None, uses the bundled default (config.TARGET_SCHEMA_PATH) and
                 the bundled alias / value dicts are used as-is. If overridden:
                   * matched sibling dicts are auto-discovered by naming
                     convention next to the schema — ``<stem>.csv`` picks up
@@ -119,17 +119,17 @@ class SchemaMapEngine:
             alias_dict_path: Optional per-run override for the alias dictionary
                 CSV. Pass ``""`` to disable alias matching. ``None`` uses the
                 default behavior (bundled alias dict, auto-disabled when a custom
-                ``curated_dict_path`` is supplied).
+                ``target_schema_path`` is supplied).
             settings: Optional pre-resolved :class:`Settings`. Defaults to the
                 process-wide ``get_settings()`` (arg > env > project file > default).
         """
         from metaharmonizer.settings import get_settings
         self.settings = settings or get_settings()
         # Load data
-        if clinical_data_path.endswith(".tsv"):
-            self.df = pd.read_csv(clinical_data_path, sep="\t", dtype=str)
+        if input_path.endswith(".tsv"):
+            self.df = pd.read_csv(input_path, sep="\t", dtype=str)
         else:
-            self.df = pd.read_csv(clinical_data_path, sep=",", dtype=str)
+            self.df = pd.read_csv(input_path, sep=",", dtype=str)
 
         logger.info(f"[Load] df_shape={self.df.shape} first_cols={list(self.df.columns[:5])}")
 
@@ -143,16 +143,16 @@ class SchemaMapEngine:
         preset = _config.resolve_schema_preset(schema) if schema is not None else None
 
         # Resolve dictionary paths (explicit arg > preset > default behavior).
-        if curated_dict_path is not None:
-            self.curated_dict_path = Path(curated_dict_path)
+        if target_schema_path is not None:
+            self.target_schema_path = Path(target_schema_path)
             user_schema = True
         elif preset is not None:
-            self.curated_dict_path = preset["curated_dict_path"]
+            self.target_schema_path = preset["target_schema_path"]
             # A preset is a coherent set, not a user-supplied bare schema, so its
             # matched alias dict should be honored, not auto-disabled.
             user_schema = False
         else:
-            self.curated_dict_path = _config.CURATED_DICT_PATH
+            self.target_schema_path = _config.TARGET_SCHEMA_PATH
             user_schema = False
         # Alias is tied to the bundled curated schema; disable when the user
         # provides their own bare schema. "" is the loader's explicit-disable
@@ -167,7 +167,7 @@ class SchemaMapEngine:
         elif preset is not None:
             self.alias_dict_path = preset["alias_dict_path"]
         elif user_schema:
-            sibling = _sibling_path(self.curated_dict_path, ".alias.csv")
+            sibling = _sibling_path(self.target_schema_path, ".alias.csv")
             if sibling.exists():
                 self.alias_dict_path = sibling
                 self._alias_from_convention = True
@@ -183,8 +183,8 @@ class SchemaMapEngine:
             self.value_dict_path = value_dict_path
         elif preset is not None:
             self.value_dict_path = preset["value_dict_path"]
-        elif user_schema and _sibling_path(self.curated_dict_path, ".values.json").exists():
-            self.value_dict_path = _sibling_path(self.curated_dict_path, ".values.json")
+        elif user_schema and _sibling_path(self.target_schema_path, ".values.json").exists():
+            self.value_dict_path = _sibling_path(self.target_schema_path, ".values.json")
             logger.info(
                 f"[Engine] Found sibling value dict by convention: {self.value_dict_path.name}"
             )
@@ -193,7 +193,7 @@ class SchemaMapEngine:
 
         # Setup output
         os.makedirs(OUTPUT_DIR, exist_ok=True)
-        base = os.path.basename(clinical_data_path)
+        base = os.path.basename(input_path)
         root, _ = os.path.splitext(base)
         self.output_file = os.path.join(OUTPUT_DIR, f"{root}.csv")
 
@@ -225,7 +225,7 @@ class SchemaMapEngine:
         (self.standard_fields,
         self.standard_fields_normed,
         self.normed_std_to_std,
-        self.curated_df) = DictLoader.load_standard_dict(self.curated_dict_path)
+        self.target_schema_df) = DictLoader.load_standard_dict(self.target_schema_path)
 
         # Alias dict (may be disabled or missing)
         (self.sources_to_fields,
@@ -325,8 +325,8 @@ class SchemaMapEngine:
         """Lazy-build standard numeric field embedding index."""
         if self._std_numeric_embs is not None:
             return
-        std_numeric = self.curated_df[
-            self.curated_df['is_numeric_field'] == 'yes'
+        std_numeric = self.target_schema_df[
+            self.target_schema_df['is_numeric_field'] == 'yes'
         ]['field_name'].unique().tolist()
         if not std_numeric:
             self._std_numeric_fields = []

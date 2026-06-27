@@ -51,8 +51,8 @@ def _get_treatment_fields(engine) -> Set[str]:
     """Get treatment-related field names from curated dict (cached on engine)."""
     if not hasattr(engine, '_treatment_fields_cache'):
         treatment_fields = set()
-        if hasattr(engine, 'curated_df') and engine.curated_df is not None:
-            for f in engine.curated_df['field_name'].unique():
+        if hasattr(engine, 'target_schema_df') and engine.target_schema_df is not None:
+            for f in engine.target_schema_df['field_name'].unique():
                 if 'treatment' in f.lower():
                     treatment_fields.add(f)
         engine._treatment_fields_cache = treatment_fields

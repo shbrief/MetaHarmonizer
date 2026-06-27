@@ -55,7 +55,7 @@ class _MockEngine3:
         self._std_field_embs = _embedding_matrix(len(self.standard_fields), seed=1)
 
         # Curated DataFrame with treatment fields included
-        self.curated_df = pd.DataFrame({
+        self.target_schema_df = pd.DataFrame({
             "field_name": self.standard_fields + ["treatment_type"],
             "is_numeric_field": ["yes", "yes", "yes", "no", "no"],
         })
@@ -218,7 +218,7 @@ class TestSemanticCombinedMatcher:
 class TestTreatmentBoost:
     def test_tx_col_and_treatment_field_returns_boost(self):
         engine = _MockEngine3()
-        # "tx_response" triggers tx_ pattern; "treatment_dose" is in curated_df
+        # "tx_response" triggers tx_ pattern; "treatment_dose" is in target_schema_df
         assert treatment_boost("treatment_dose", "tx_response", engine) == 0.2
 
     def test_unrelated_col_returns_zero(self):
@@ -232,7 +232,7 @@ class TestTreatmentBoost:
 
     def test_treatment_type_field_with_therapy_col(self):
         engine = _MockEngine3()
-        # "treatment_type" is in curated_df fields; "hormone_therapy" is a treatment col
+        # "treatment_type" is in target_schema_df fields; "hormone_therapy" is a treatment col
         assert treatment_boost("treatment_type", "hormone_therapy", engine) == 0.2
 
     def test_caches_treatment_fields(self):
