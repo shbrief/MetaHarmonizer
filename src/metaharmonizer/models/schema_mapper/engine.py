@@ -77,7 +77,7 @@ class SchemaMapEngine:
     def __init__(
         self,
         input_path: str,
-        schema: Optional[str] = None,
+        schema: Optional[str] = "gdc",
         *,
         top_k: Optional[int] = 5,
         mode: str = "manual",
@@ -99,7 +99,12 @@ class SchemaMapEngine:
                 a matched curated + alias + value dict set, so the alias dict is
                 used as-is rather than auto-disabled. Any explicit
                 ``*_dict_path`` arg overrides the corresponding preset entry.
-                ``None`` (default) keeps the legacy bundled cbio defaults.
+                Defaults to ``"gdc"`` (the 736-field GDC schema); pass
+                ``schema="cbio"`` for the 33-field cBioPortal schema, or
+                ``None`` to use the bundled config defaults (also GDC) with no
+                preset. Ignored when ``target_schema_path`` is supplied (a
+                custom schema is not a preset, so the preset's bundled dicts
+                are not glued on).
             target_schema_path: Optional override for the curated schema CSV.
                 If None, uses the bundled default (config.TARGET_SCHEMA_PATH) and
                 the bundled alias / value dicts are used as-is. If overridden:
@@ -136,37 +141,36 @@ class SchemaMapEngine:
         self.top_k = top_k if top_k is not None else self.settings.top_k
         self.mode = mode
 
-        # A preset supplies a matched curated + alias + value set; explicit
-        # *_dict_path args below override individual entries. Resolving it up
-        # front lets the preset's alias dict survive (it's keyed to the preset's
-        # own schema, so the user-schema auto-disable below must not fire for it).
+        # A preset bundles a matched curated + alias + value set; explicit
+        # *_dict_path args below override individual entries. ``schema=None``
+        # selects no preset and falls back to the bundled config defaults (also
+        # GDC). An explicit ``target_schema_path`` overrides the preset entirely
+        # — a custom schema is not a preset, so the bundled alias/value dicts
+        # (keyed to the preset's own schema) must not be glued onto it.
         preset = _config.resolve_schema_preset(schema) if schema is not None else None
 
-        # Resolve dictionary paths (explicit arg > preset > default behavior).
+        # Resolve dictionary paths (explicit arg > preset > convention/config).
         if target_schema_path is not None:
             self.target_schema_path = Path(target_schema_path)
             user_schema = True
+            preset = None  # custom schema: don't inherit the preset's dicts
         elif preset is not None:
             self.target_schema_path = preset["target_schema_path"]
-            # A preset is a coherent set, not a user-supplied bare schema, so its
-            # matched alias dict should be honored, not auto-disabled.
             user_schema = False
-        else:
+        else:  # schema=None: bundled config defaults (GDC)
             self.target_schema_path = _config.TARGET_SCHEMA_PATH
             user_schema = False
-        # Alias is tied to the bundled curated schema; disable when the user
-        # provides their own bare schema. "" is the loader's explicit-disable
-        # sentinel (None would mean "fall back to default"). Precedence:
-        # explicit alias_dict_path > preset alias > convention sibling > config
-        # default (or "" when a bare user schema has no matched sibling).
-        # A convention-discovered alias is validated against the schema in
-        # _load_dictionaries (mismatched sibling -> warn + disable).
+        # Alias precedence: explicit alias_dict_path > preset alias > convention
+        # sibling (user schema) > config default (schema=None). "" is the
+        # loader's explicit-disable sentinel. A convention-discovered alias is
+        # validated against the schema in _load_dictionaries (mismatched sibling
+        # -> warn + disable).
         self._alias_from_convention = False
         if alias_dict_path is not None:
             self.alias_dict_path = alias_dict_path
         elif preset is not None:
             self.alias_dict_path = preset["alias_dict_path"]
-        elif user_schema:
+        elif user_schema:  # discover a sibling by convention, else disable
             sibling = _sibling_path(self.target_schema_path, ".alias.csv")
             if sibling.exists():
                 self.alias_dict_path = sibling
@@ -174,7 +178,7 @@ class SchemaMapEngine:
                 logger.info(f"[Engine] Found sibling alias dict by convention: {sibling.name}")
             else:
                 self.alias_dict_path = ""
-        else:
+        else:  # schema=None
             self.alias_dict_path = _config.ALIAS_DICT_PATH
         # Value dict: explicit arg ("" disables) > preset > convention sibling >
         # config default. ValueLoader filters to the active schema, so an

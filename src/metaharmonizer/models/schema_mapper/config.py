@@ -29,18 +29,19 @@ def _resolve_model(key: str) -> str:
 
 # === Paths ===
 OUTPUT_DIR = Path(os.getenv("SM_OUTPUT_DIR", DATA_DIR / "schema_mapping_eval"))
-# Default curated schema: user data dir first, else the bundled copy that
-# ships inside the wheel (resolve_data_file falls back automatically). Users
-# typically override this via SchemaMapEngine(target_schema_path=...).
-TARGET_SCHEMA_PATH = resolve_data_file("schema/cbio_target_attrs.csv")
-# Alias dict is keyed to the bundled curated schema. engine.py disables it
+# Default curated schema: the 736-field GDC schema. User data dir first, else
+# the bundled copy that ships inside the wheel (resolve_data_file falls back
+# automatically). Users typically override this via the ``schema`` preset arg
+# or SchemaMapEngine(target_schema_path=...).
+TARGET_SCHEMA_PATH = resolve_data_file("schema/gdc_schema.csv")
+# Alias dict is keyed to the default curated schema (GDC). engine.py disables it
 # when the user supplies their own schema, so the bundled fallback is only
-# read alongside the bundled cbio_target_attrs.csv.
-ALIAS_DICT_PATH = resolve_data_file("schema/cbio_target_attrs_alias_manual.csv")
+# read alongside the bundled gdc_schema.csv.
+ALIAS_DICT_PATH = resolve_data_file("schema/gdc_target_attrs_alias_haiku.csv")
 # Value dict is filtered against the active curated schema by ValueLoader
 # (allowed_fields=standard_fields), so the bundled copy is safe to fall
 # through to a user-supplied schema — disjoint keys are skipped automatically.
-VALUE_DICT_PATH = os.getenv("FIELD_VALUE_JSON") or resolve_data_file("schema/field_value_dict.json")
+VALUE_DICT_PATH = os.getenv("FIELD_VALUE_JSON") or resolve_data_file("schema/gdc_value_dict.json")
 
 # === Bundled schema presets ===
 # A preset bundles a curated schema with its matched alias + value dicts as a
@@ -48,9 +49,9 @@ VALUE_DICT_PATH = os.getenv("FIELD_VALUE_JSON") or resolve_data_file("schema/fie
 # three together, so the alias dict is NOT auto-disabled the way it is when only
 # ``target_schema_path`` is overridden (the alias is keyed to *that* schema, not
 # the default). Explicit ``*_dict_path`` args still win over a preset.
-#   - cbio: 33-field cBioPortal schema + manually curated aliases (the default)
-#   - gdc:  736-field GDC schema + Haiku-4.5-generated aliases (see the sibling
-#           ``gdc_target_attrs_alias_haiku.meta.json`` for provenance)
+#   - cbio: 33-field cBioPortal schema + manually curated aliases
+#   - gdc:  736-field GDC schema + Haiku-4.5-generated aliases (the default; see
+#           the sibling ``gdc_target_attrs_alias_haiku.meta.json`` for provenance)
 SCHEMA_PRESETS: dict[str, dict[str, str]] = {
     "cbio": {
         "target_schema_path": "schema/cbio_target_attrs.csv",
