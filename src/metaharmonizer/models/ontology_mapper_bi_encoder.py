@@ -23,18 +23,18 @@ class OntoMapBIE(OntoModelsBase):
         query_df: pd.DataFrame,
         corpus_df: pd.DataFrame,
         query_col: str = None,
-        topk: int = 5,
+        top_k: int = 5,
         om_strategy: str = 'rag_bie',
         use_reranker: bool = False,
         reranker_method: str = 'minilm',
-        reranker_topk: int = 50,
+        reranker_top_k: int = 50,
         ontology_source: str = 'ncit',
         table_suffix: str = "",
     ):
         super().__init__(method,
                          category,
                          om_strategy,
-                         topk,
+                         top_k,
                          query,
                          corpus,
                          query_df=query_df,
@@ -50,7 +50,7 @@ class OntoMapBIE(OntoModelsBase):
                 f"query_col '{query_col}' not found in query_df. "
                 f"Available: {list(query_df.columns)}")
         self._query_col = query_col
-        self._init_reranker(use_reranker, reranker_method, reranker_topk)
+        self._init_reranker(use_reranker, reranker_method, reranker_top_k)
         self.logger.info(
             f"Initialized Bi-Encoder (reranker="
             f"{'enabled:' + reranker_method if use_reranker else 'disabled'})"
@@ -163,13 +163,13 @@ class OntoMapBIE(OntoModelsBase):
 
     def get_match_results(self,
                           ground_truth_map: dict[str, str] = None,
-                          topk: int = None,
+                          top_k: int = None,
                           test_or_prod: str = 'test') -> pd.DataFrame:
         if test_or_prod == 'test' and ground_truth_map is None:
             raise ValueError("ground_truth_map should be provided for test mode")
 
-        k = topk or self.topk
-        retrieval_k = self.reranker_topk if self.use_reranker else k
+        k = top_k or self.top_k
+        retrieval_k = self.reranker_top_k if self.use_reranker else k
         all_results = []
 
         if 'enriched_query' not in self.query_df.columns:

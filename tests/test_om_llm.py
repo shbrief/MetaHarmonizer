@@ -81,7 +81,7 @@ def _make_llm(strategy='lm', query_df=None, query_col=None):
     """Create an OntoMapLLM instance bypassing __init__."""
     m = OntoMapLLM.__new__(OntoMapLLM)
     m.category = "disease"
-    m.topk = 5
+    m.top_k = 5
     m.max_retries = 3
     m.logger = _LoggerStub()
     m.query_df = query_df
@@ -169,31 +169,31 @@ class TestParseResponse:
 class TestReSearch:
     def test_lm_strategy_no_normalization(self):
         m = _make_llm(strategy='lm')
-        D, I = m._re_search(["test term"], topk=3)
+        D, I = m._re_search(["test term"], top_k=3)
         assert D.shape == (1, 3)
         assert I.shape == (1, 3)
 
     def test_st_strategy_with_normalization(self):
         m = _make_llm(strategy='st')
-        D, I = m._re_search(["test term"], topk=3)
+        D, I = m._re_search(["test term"], top_k=3)
         assert D.shape == (1, 3)
         assert I.shape == (1, 3)
 
     def test_empty_terms_returns_empty(self):
         m = _make_llm()
-        D, I = m._re_search([], topk=3)
+        D, I = m._re_search([], top_k=3)
         assert D.shape[0] == 0
 
     def test_multiple_terms(self):
         m = _make_llm()
-        D, I = m._re_search(["term1", "term2", "term3"], topk=2)
+        D, I = m._re_search(["term1", "term2", "term3"], top_k=2)
         assert D.shape == (3, 2)
 
     def test_unsupported_strategy_raises(self):
         m = _make_llm(strategy='lm')
         m.s2_model.om_strategy = 'rag'
         with pytest.raises(ValueError, match="Unsupported"):
-            m._re_search(["test"], topk=3)
+            m._re_search(["test"], top_k=3)
 
 
 # ── Index-to-term mapping ────────────────────────────────────────────────────
@@ -226,7 +226,7 @@ class TestGetMatchResults:
         m._call_provider.return_value = (
             '[{"term": "Thymus SCC", "reasoning": "abbrev"}]'
         )
-        df = m.get_match_results(queries=["TC:SCC"], topk=3)
+        df = m.get_match_results(queries=["TC:SCC"], top_k=3)
         for col in ("original_value",
                      "match1", "match1_score", "match2", "match2_score",
                      "match3", "match3_score"):
@@ -240,21 +240,21 @@ class TestGetMatchResults:
         m._call_provider.return_value = (
             '[{"term": "Thymus Squamous Cell Carcinoma"}]'
         )
-        df = m.get_match_results(queries=["TC:SCC"], topk=5)
+        df = m.get_match_results(queries=["TC:SCC"], top_k=5)
         # match1 from FAISS should be a real corpus term (not N/A)
         assert df.loc[0, "match1"] != "N/A"
 
     def test_llm_failure_produces_empty_row(self):
         m = _make_llm()
         m._call_provider.side_effect = Exception("API error")
-        df = m.get_match_results(queries=["FAIL"], topk=3)
+        df = m.get_match_results(queries=["FAIL"], top_k=3)
         assert len(df) == 1
         assert df.loc[0, "match1"] == "N/A"
 
     def test_multiple_queries(self):
         m = _make_llm()
         m._call_provider.return_value = '[{"term": "Test Term"}]'
-        df = m.get_match_results(queries=["Q1", "Q2", "Q3"], topk=3)
+        df = m.get_match_results(queries=["Q1", "Q2", "Q3"], top_k=3)
         assert len(df) == 3
 
 

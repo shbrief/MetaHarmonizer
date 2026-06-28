@@ -93,7 +93,7 @@ class SchemaMapEngine:
             input_path: Path to clinical data CSV/TSV file.
             mode: Execution mode ('auto' or 'manual'). Defaults to ``"manual"``.
             top_k: Number of top matches to return. Defaults to ``5``. ``None``
-                falls back to the resolved settings default (``settings.topk``).
+                falls back to the resolved settings default (``settings.top_k``).
             schema: Optional bundled schema preset name (see
                 ``config.SCHEMA_PRESETS``, e.g. ``"cbio"`` or ``"gdc"``). Selects
                 a matched curated + alias + value dict set, so the alias dict is
@@ -133,7 +133,7 @@ class SchemaMapEngine:
 
         logger.info(f"[Load] df_shape={self.df.shape} first_cols={list(self.df.columns[:5])}")
 
-        self.top_k = top_k if top_k is not None else self.settings.topk
+        self.top_k = top_k if top_k is not None else self.settings.top_k
         self.mode = mode
 
         # A preset supplies a matched curated + alias + value set; explicit

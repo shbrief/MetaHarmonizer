@@ -16,7 +16,7 @@ class OntoMapLM(otm.OntoModelsBase):
         method (str): The method to use for the model.
         query (list[str]): The list of query strings.
         corpus (list[str]): The list of corpus strings.
-        topk (int): The number of top results to consider.
+        top_k (int): The number of top results to consider.
         _query_embeddings (numpy.ndarray or None): Embeddings for the queries.
         _corpus_embeddings (numpy.ndarray or None): Embeddings for the corpus.
         _model (EmbeddingAdapter or None): CLS-pooling adapter around the raw AutoModel.
@@ -30,7 +30,7 @@ class OntoMapLM(otm.OntoModelsBase):
         query: list[str],
         corpus: list[str],
         om_strategy: str = 'lm',
-        topk: int = 5,
+        top_k: int = 5,
         ontology_source: str = 'ncit',
         table_suffix: str = "",
     ) -> None:
@@ -43,10 +43,10 @@ class OntoMapLM(otm.OntoModelsBase):
             query (list[str]): The list of query strings.
             corpus (list[str]): The list of corpus strings.
             om_strategy (str, optional): Mapping strategy. Defaults to 'lm'.
-            topk (int, optional): The number of top results to consider. Defaults to 5.
+            top_k (int, optional): The number of top results to consider. Defaults to 5.
             ontology_source (str, optional): Ontology source. Defaults to 'ncit'.
         """
-        super().__init__(method, category, om_strategy, topk, query, corpus,
+        super().__init__(method, category, om_strategy, top_k, query, corpus,
                          ontology_source=ontology_source,
                          table_suffix=table_suffix)
 
@@ -142,13 +142,13 @@ class OntoMapLM(otm.OntoModelsBase):
 
     def get_match_results(self,
                           ground_truth_map: dict[str, str] = None,
-                          topk: int = 5,
+                          top_k: int = 5,
                           test_or_prod: str = 'test') -> pd.DataFrame:
         idx = self.vector_store.index
 
         q_embs = self.create_embeddings(self.query, convert_to_tensor=False)
         q_mat = np.array(q_embs, dtype="float32")
 
-        D, I = idx.search(q_mat, topk)
+        D, I = idx.search(q_mat, top_k)
 
         return self._build_result_rows(I, D, ground_truth_map, test_or_prod)

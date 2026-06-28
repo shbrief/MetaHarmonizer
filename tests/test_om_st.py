@@ -46,14 +46,14 @@ class _MockCursor:
         return self._rows
 
 
-def _make_st(query=None, corpus=None, topk=3):
+def _make_st(query=None, corpus=None, top_k=3):
     query = query or ["LUAD"]
     corpus = corpus or _CORPUS
     m = OntoMapST.__new__(OntoMapST)
     m.logger = _LoggerStub()
     m.query = query
     m.corpus = corpus
-    m.topk = topk
+    m.top_k = top_k
     m._vs = type("VS", (), {
         "index": _CapturingIndex(len(corpus)),
         "cursor": _MockCursor(corpus),
@@ -75,28 +75,28 @@ class TestOntoMapSTGetMatchResults:
         m = _make_st(query=["LUAD"])
         raw = np.array([[3.0, 4.0, 0.0, 0.0]], dtype="float32")  # norm = 5
         m.create_embeddings = lambda lst, convert_to_tensor=False: raw.tolist()
-        m.get_match_results(ground_truth_map={}, topk=2, test_or_prod="prod")
+        m.get_match_results(ground_truth_map={}, top_k=2, test_or_prod="prod")
         norms = np.linalg.norm(m._vs.index.last_mat, axis=1)
         np.testing.assert_allclose(norms, np.ones(1), atol=1e-5)
 
     def test_output_has_expected_columns(self):
-        m = _make_st(topk=3)
-        df = m.get_match_results(ground_truth_map={"LUAD": "Lung Adenocarcinoma"}, topk=3)
+        m = _make_st(top_k=3)
+        df = m.get_match_results(ground_truth_map={"LUAD": "Lung Adenocarcinoma"}, top_k=3)
         for col in ("original_value", "curated_ontology", "match_level",
                     "match1", "match1_score", "match3", "match3_score"):
             assert col in df.columns
 
     def test_match_level_hit(self):
         m = _make_st(query=["LUAD"])
-        df = m.get_match_results(ground_truth_map={"LUAD": "Lung Adenocarcinoma"}, topk=3)
+        df = m.get_match_results(ground_truth_map={"LUAD": "Lung Adenocarcinoma"}, top_k=3)
         assert df.loc[0, "match_level"] == 1
 
     def test_match_level_miss(self):
         m = _make_st(query=["LUAD"])
-        df = m.get_match_results(ground_truth_map={"LUAD": "Not In Corpus"}, topk=3)
+        df = m.get_match_results(ground_truth_map={"LUAD": "Not In Corpus"}, top_k=3)
         assert df.loc[0, "match_level"] == 99
 
     def test_prod_mode_curated_not_available(self):
         m = _make_st()
-        df = m.get_match_results(ground_truth_map=None, topk=3, test_or_prod="prod")
+        df = m.get_match_results(ground_truth_map=None, top_k=3, test_or_prod="prod")
         assert df.loc[0, "curated_ontology"] == "Not Available for Prod Environment"

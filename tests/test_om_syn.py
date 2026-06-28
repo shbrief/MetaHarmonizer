@@ -24,7 +24,7 @@ class _FakeSynDict:
         return [self._hits[:top_k] for _ in queries]
 
 
-def _make_syn(query, corpus=None, topk=3, hits=None):
+def _make_syn(query, corpus=None, top_k=3, hits=None):
     corpus = corpus or ["Lung Adenocarcinoma", "Lung Cancer"]
     hits = hits if hits is not None else [
         {"official_label": "Lung Adenocarcinoma", "score": 0.95},
@@ -34,7 +34,7 @@ def _make_syn(query, corpus=None, topk=3, hits=None):
     m.logger = _LoggerStub()
     m.query = query
     m.corpus = corpus
-    m.topk = topk
+    m.top_k = top_k
     m.syn_dict = _FakeSynDict(hits)
     return m
 
@@ -45,17 +45,17 @@ class TestOntoMapSynGetMatchResults:
     def test_match_level_hit(self):
         m = _make_syn(["LUAD"])
         df = m.get_match_results(
-            ground_truth_map={"LUAD": "Lung Adenocarcinoma"}, topk=2)
+            ground_truth_map={"LUAD": "Lung Adenocarcinoma"}, top_k=2)
         assert df.loc[0, "match_level"] == 1
 
     def test_match_level_second_position(self):
         m = _make_syn(["LUAD"])
-        df = m.get_match_results(ground_truth_map={"LUAD": "Lung Cancer"}, topk=2)
+        df = m.get_match_results(ground_truth_map={"LUAD": "Lung Cancer"}, top_k=2)
         assert df.loc[0, "match_level"] == 2
 
     def test_match_level_miss(self):
         m = _make_syn(["LUAD"])
-        df = m.get_match_results(ground_truth_map={"LUAD": "Not In Results"}, topk=2)
+        df = m.get_match_results(ground_truth_map={"LUAD": "Not In Results"}, top_k=2)
         assert df.loc[0, "match_level"] == 99
 
     def test_min_score_filters_low_score_matches(self):
@@ -64,23 +64,23 @@ class TestOntoMapSynGetMatchResults:
         ]
         m = _make_syn(["LUAD"], hits=hits)
         df = m.get_match_results(
-            ground_truth_map={"LUAD": "Lung Adenocarcinoma"}, topk=1, min_score=0.5)
+            ground_truth_map={"LUAD": "Lung Adenocarcinoma"}, top_k=1, min_score=0.5)
         # Score below min_score → term set to None → curated cannot be found
         assert df.loc[0, "match_level"] == 99
 
     def test_prod_mode_curated_not_available(self):
         m = _make_syn(["LUAD"])
-        df = m.get_match_results(ground_truth_map=None, topk=2, test_or_prod="prod")
+        df = m.get_match_results(ground_truth_map=None, top_k=2, test_or_prod="prod")
         assert df.loc[0, "curated_ontology"] == "Not Available for Prod Environment"
 
-    def test_output_has_topk_match_columns(self):
-        m = _make_syn(["LUAD"], topk=2)
-        df = m.get_match_results(ground_truth_map={}, topk=2)
+    def test_output_has_top_k_match_columns(self):
+        m = _make_syn(["LUAD"], top_k=2)
+        df = m.get_match_results(ground_truth_map={}, top_k=2)
         for i in (1, 2):
             assert f"match{i}" in df.columns
             assert f"match{i}_score" in df.columns
 
     def test_one_row_per_query(self):
         m = _make_syn(["LUAD", "BRCA"])
-        df = m.get_match_results(ground_truth_map={}, topk=2)
+        df = m.get_match_results(ground_truth_map={}, top_k=2)
         assert len(df) == 2

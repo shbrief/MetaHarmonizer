@@ -14,7 +14,7 @@ class OntoMapST(otm.OntoModelsBase):
         method (str): The method to use for the model.
         query (list[str]): The list of query strings.
         corpus (list[str]): The list of corpus strings.
-        topk (int): The number of top results to consider.
+        top_k (int): The number of top results to consider.
         from_tokenizer (bool): Whether to use a tokenizer.
         _query_embeddings (torch.Tensor or None): Embeddings for the queries.
         _corpus_embeddings (torch.Tensor or None): Embeddings for the corpus.
@@ -29,7 +29,7 @@ class OntoMapST(otm.OntoModelsBase):
                  query: list[str],
                  corpus: list[str],
                  om_strategy: str = 'st',
-                 topk: int = 5,
+                 top_k: int = 5,
                  from_tokenizer: bool = False,
                  ontology_source: str = 'ncit',
                  table_suffix: str = "") -> None:
@@ -38,13 +38,13 @@ class OntoMapST(otm.OntoModelsBase):
 
         Args:
             method (str): The method to use for the model.
-            topk (int): The number of top results to consider.
+            top_k (int): The number of top results to consider.
             query (list[str]): The list of query strings.
             corpus (list[str]): The list of corpus strings.
             from_tokenizer (bool, optional): Whether to use a tokenizer. Defaults to False.
             ontology_source (str, optional): Ontology source. Defaults to 'ncit'.
         """
-        super().__init__(method, category, om_strategy, topk, query, corpus,
+        super().__init__(method, category, om_strategy, top_k, query, corpus,
                          ontology_source=ontology_source,
                          table_suffix=table_suffix)
 
@@ -123,7 +123,7 @@ class OntoMapST(otm.OntoModelsBase):
 
     def get_match_results(self,
                           ground_truth_map: dict[str, str] = None,
-                          topk: int = 5,
+                          top_k: int = 5,
                           test_or_prod: str = 'test') -> pd.DataFrame:
         idx = self.vector_store.index
 
@@ -133,6 +133,6 @@ class OntoMapST(otm.OntoModelsBase):
         norms = np.linalg.norm(q_mat, axis=1, keepdims=True)
         q_norm = q_mat / (norms + 1e-12)
 
-        D, I = idx.search(q_norm, topk)
+        D, I = idx.search(q_norm, top_k)
 
         return self._build_result_rows(I, D, ground_truth_map, test_or_prod)

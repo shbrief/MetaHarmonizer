@@ -70,7 +70,7 @@ class OntoMapEngine:
         query (list[str]): The list of queries.
         corpus (list[str]): The list of corpus.
         ground_truth_map (dict): The dictionary containing the mapping of queries to curated values.
-        topk (int): The number of top matches to return.
+        top_k (int): The number of top matches to return.
         yaml_path (str): The path to the YAML file.
         om_strategy (str): The strategy to use for OntoMap.
         other_params (dict): Other parameters to pass to the engine.
@@ -80,15 +80,21 @@ class OntoMapEngine:
 
     def __init__(self,
                  category: str,
+                 *,
+                 # --- Query inputs ---
                  query: list[str] = None,
+                 query_df: "pd.DataFrame" = None,
+                 query_col: str = None,
                  ground_truth_map: dict = None,
+                 # --- Corpus inputs ---
                  corpus: list[str] = None,
                  corpus_df: "pd.DataFrame" = None,
                  ontology_source: str = None,
-                 query_df: "pd.DataFrame" = None,
-                 query_col: str = None,
+                 corpus_hash: str = None,
                  persist_corpus: bool = None,
-                 topk: int = 5,
+                 filter_obsolete: bool = False,
+                 # --- Stage config ---
+                 top_k: int = 5,
                  s2_method: str = 'sap-bert',
                  s2_strategy: str = 'lm',
                  s3_method: str = 'pubmed-bert',
@@ -97,9 +103,8 @@ class OntoMapEngine:
                  s4_strategy: str = None,
                  s4_threshold: float = 0.6,
                  s4_model: str = 'gemma-12b',
+                 # --- Output / misc ---
                  output_dir: str = None,
-                 filter_obsolete: bool = False,
-                 corpus_hash: str = None,
                  **other_params: dict) -> None:
         """
         Initializes the OntoMapEngine class.
@@ -126,7 +131,7 @@ class OntoMapEngine:
             ground_truth_map (dict): The dictionary containing the mapping of queries to curated values.
                 Supplying it implies test/evaluation mode (``match_level`` is computed against it);
                 omitting it implies prod mode (curated labels default to "Not Found").
-            topk (int, optional): The number of top matches to return. Defaults to 5.
+            top_k (int, optional): The number of top matches to return. Defaults to 5.
             s2_strategy (str, optional): The strategy to use for stage 2 OntoMap. Defaults to 'lm'. Options are 'st' or 'lm'.
             s3_strategy (str, optional): The strategy to use for stage 3 OntoMap. Defaults to None. Options are 'rag', 'rag_bie', or None.
             s3_threshold (float, optional): The threshold for stage 3 OntoMap. Defaults to 0.9.
@@ -146,7 +151,7 @@ class OntoMapEngine:
         self.s3_method = s3_method
         self.category = validate_identifier(category, "category")
         self.output_dir = output_dir
-        self.topk = topk
+        self.top_k = top_k
         self.filter_obsolete = filter_obsolete
         self.s2_strategy = s2_strategy
         self.s3_strategy = s3_strategy
@@ -925,7 +930,7 @@ class OntoMapEngine:
         if self._test_or_prod != 'test':
             return df
 
-        match_cols = [f"match{i}" for i in range(1, self.topk + 1)]
+        match_cols = [f"match{i}" for i in range(1, self.top_k + 1)]
 
         def _level(row):
             curated = self.ground_truth_map.get(row["original_value"])
@@ -958,7 +963,7 @@ class OntoMapEngine:
         corpus_df = self.other_params.get('corpus_df', None)
         use_reranker = self.other_params.get('use_reranker', True)
         reranker_method = self.other_params.get('reranker_method', 'minilm')
-        reranker_topk = self.other_params.get('reranker_topk', 50)
+        reranker_top_k = self.other_params.get('reranker_top_k', 50)
 
         if strategy == 'lm':
             return oml.OntoMapLM(method=self.s2_method,
@@ -967,7 +972,7 @@ class OntoMapEngine:
                                  om_strategy='lm',
                                  query=non_exact_query_list,
                                  corpus=self.corpus,
-                                 topk=self.topk,
+                                 top_k=self.top_k,
                                  table_suffix=self._table_suffix)
 
         elif strategy == 'st':
@@ -977,7 +982,7 @@ class OntoMapEngine:
                                  om_strategy='st',
                                  query=non_exact_query_list,
                                  corpus=self.corpus,
-                                 topk=self.topk,
+                                 top_k=self.top_k,
                                  from_tokenizer=False,
                                  table_suffix=self._table_suffix)
         elif strategy == 'syn':
@@ -987,7 +992,7 @@ class OntoMapEngine:
                                         om_strategy='syn',
                                         query=non_exact_query_list,
                                         corpus=self.corpus,
-                                        topk=self.topk,
+                                        top_k=self.top_k,
                                         corpus_df=corpus_df,
                                         table_suffix=self._table_suffix)
         elif strategy == 'rag':
@@ -997,11 +1002,11 @@ class OntoMapEngine:
                                   om_strategy='rag',
                                   query=non_exact_query_list,
                                   corpus=self.corpus_s3,
-                                  topk=self.topk,
+                                  top_k=self.top_k,
                                   corpus_df=corpus_df,
                                   use_reranker=use_reranker,
                                   reranker_method=reranker_method,
-                                  reranker_topk=reranker_topk,
+                                  reranker_top_k=reranker_top_k,
                                   table_suffix=self._table_suffix)
         elif strategy == 'rag_bie':
             return ombe.OntoMapBIE(method=self.s3_method,
@@ -1010,7 +1015,7 @@ class OntoMapEngine:
                                    om_strategy='rag_bie',
                                    query=non_exact_query_list,
                                    corpus=self.corpus_s3,
-                                   topk=self.topk,
+                                   top_k=self.top_k,
                                    query_df=query_df,
                                    corpus_df=corpus_df,
                                    query_col=self.query_col,
@@ -1084,12 +1089,12 @@ class OntoMapEngine:
             s2_model=s2_model,
             query_df=self.query_df,
             query_col=self.query_col,
-            topk=self.topk,
+            top_k=self.top_k,
             model_key=self.s4_model,
         )
         s4_res = s4_model.get_match_results(
             queries=queries_for_s4,
-            topk=self.topk,
+            top_k=self.top_k,
         )
         # Add eval columns (same as other stages — engine's responsibility)
         s4_res['stage'] = 4.0
@@ -1137,7 +1142,7 @@ class OntoMapEngine:
                 'syn', low_conf_queries)
             syn_results = syn_model.get_match_results(
                 ground_truth_map=self.ground_truth_map,
-                topk=self.topk,
+                top_k=self.top_k,
                 test_or_prod=self._test_or_prod)
 
             syn_dict = {}
@@ -1150,7 +1155,7 @@ class OntoMapEngine:
                 curated = row['curated_ontology']
 
                 combined_candidates = {}
-                for i in range(1, self.topk + 1):
+                for i in range(1, self.top_k + 1):
                     match = row[f'match{i}']
                     score = float(row[f'match{i}_score'])
                     if pd.notna(match) and match:
@@ -1159,7 +1164,7 @@ class OntoMapEngine:
                 syn_row = syn_dict.get(orig_val)
 
                 if syn_row is not None:
-                    for i in range(1, self.topk + 1):
+                    for i in range(1, self.top_k + 1):
                         match = syn_row[f'match{i}']
                         score = float(syn_row[f'match{i}_score'])
                         if pd.notna(match) and match:
@@ -1180,7 +1185,7 @@ class OntoMapEngine:
 
                     sorted_candidates = sorted(combined_candidates.items(),
                                                key=lambda x: x[1],
-                                               reverse=True)[:self.topk]
+                                               reverse=True)[:self.top_k]
 
                     combined_matches = [
                         match for match, _ in sorted_candidates
@@ -1189,7 +1194,7 @@ class OntoMapEngine:
                         score for _, score in sorted_candidates
                     ]
 
-                    while len(combined_matches) < self.topk:
+                    while len(combined_matches) < self.top_k:
                         combined_matches.append(None)
                         combined_scores.append(0.0)
 
@@ -1212,7 +1217,7 @@ class OntoMapEngine:
                             f"match_level: {old_match_level} → {match_level}"
                         )
 
-                        for i in range(1, self.topk + 1):
+                        for i in range(1, self.top_k + 1):
                             s2_res.at[idx,
                                       f'match{i}'] = combined_matches[i -
                                                                       1]
@@ -1257,23 +1262,23 @@ class OntoMapEngine:
 
             if orig in s2_by_orig.index:
                 s2_row = s2_by_orig.loc[orig]
-                for i in range(1, self.topk + 1):
+                for i in range(1, self.top_k + 1):
                     lbl = s2_row.get(f'match{i}')
                     if pd.notna(lbl) and lbl:
                         rrf_scores[lbl] = rrf_scores.get(lbl, 0.0) + 1.0 / (rrf_k + i)
                         s2_score_of[lbl] = _get_score(s2_row.get(f'match{i}_score'))
 
-            for i in range(1, self.topk + 1):
+            for i in range(1, self.top_k + 1):
                 lbl = s3_row.get(f'match{i}')
                 if pd.notna(lbl) and lbl:
                     rrf_scores[lbl] = rrf_scores.get(lbl, 0.0) + 1.0 / (rrf_k + i)
                     s3_score_of[lbl] = _get_score(s3_row.get(f'match{i}_score'))
 
             sorted_lbls = sorted(rrf_scores.items(), key=lambda x: x[1],
-                                 reverse=True)[:self.topk]
+                                 reverse=True)[:self.top_k]
 
             new_row = s3_row.copy()
-            for i in range(1, self.topk + 1):
+            for i in range(1, self.top_k + 1):
                 if i - 1 < len(sorted_lbls):
                     lbl, _ = sorted_lbls[i - 1]
                     scr = s2_score_of.get(lbl, s3_score_of.get(lbl, 0.0))
@@ -1285,7 +1290,7 @@ class OntoMapEngine:
 
             curated = str(new_row.get('curated_ontology') or '').strip().lower()
             ml = 99
-            for i in range(1, self.topk + 1):
+            for i in range(1, self.top_k + 1):
                 lbl = new_row.get(f'match{i}')
                 if lbl and str(lbl).strip().lower() == curated:
                     ml = i
@@ -1395,7 +1400,7 @@ class OntoMapEngine:
                                                 updated_queries)
         self._s2_model = s2_model  # Retain for Stage 4 re-search
         s2_res = s2_model.get_match_results(ground_truth_map=updated_ground_truth_map,
-                                            topk=self.topk,
+                                            top_k=self.top_k,
                                             test_or_prod=self._test_or_prod)
 
         # Merge back to original_value
@@ -1507,7 +1512,7 @@ class OntoMapEngine:
                                                     updated_queries_s3)
             s3_res = s3_model.get_match_results(
                 ground_truth_map=updated_ground_truth_map_s3,
-                topk=self.topk,
+                top_k=self.top_k,
                 test_or_prod=self._test_or_prod)
 
             # Merge back to original_value

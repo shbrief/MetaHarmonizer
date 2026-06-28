@@ -15,7 +15,7 @@ class OntoModelsBase:
         method: str,
         category: str,
         om_strategy: str,
-        topk: int,
+        top_k: int,
         query: list,
         corpus: list,
         query_df: pd.DataFrame = None,
@@ -60,7 +60,7 @@ class OntoModelsBase:
             self.method_model_dict = {}
             self.list_of_methods = []
 
-        self.topk = topk
+        self.top_k = top_k
         self.logger = CustomLogger().custlogger(loglevel='INFO')
 
     @property
@@ -109,7 +109,7 @@ class OntoModelsBase:
         return cosine_sim_df
 
     # ---------------- Reranker (shared by RAG / BIE subclasses) ----------------
-    def _init_reranker(self, use_reranker: bool, reranker_method: str, reranker_topk: int):
+    def _init_reranker(self, use_reranker: bool, reranker_method: str, reranker_top_k: int):
         self.use_reranker = use_reranker
         if use_reranker:
             if reranker_method not in RERANKER_TYPE_MAP:
@@ -118,10 +118,10 @@ class OntoModelsBase:
                     f"Must be one of {list(RERANKER_TYPE_MAP.keys())}"
                 )
             self.reranker_method = reranker_method
-            self.reranker_topk = reranker_topk
+            self.reranker_top_k = reranker_top_k
         else:
             self.reranker_method = None
-            self.reranker_topk = None
+            self.reranker_top_k = None
         self._reranker = None
 
     @property
@@ -138,13 +138,13 @@ class OntoModelsBase:
             self._reranker = get_reranker_cached(self.reranker_method, use_8bit=use_8bit)
         return self._reranker
 
-    def _rerank_results(self, query: str, candidates: list, topk: int) -> list:
+    def _rerank_results(self, query: str, candidates: list, top_k: int) -> list:
         """Rerank FAISS candidates using cross-encoder; returns top-k."""
         if not candidates or not self.use_reranker:
-            return candidates[:topk]
+            return candidates[:top_k]
         pairs = [[query, doc.page_content] for doc in candidates]
         scores = self.reranker.predict(pairs)
-        ranked_indices = np.argsort(-scores)[:topk]
+        ranked_indices = np.argsort(-scores)[:top_k]
         reranked = []
         for idx in ranked_indices:
             doc = candidates[idx]
@@ -168,8 +168,8 @@ class OntoModelsBase:
         Builds result rows from FAISS search output (I = index matrix, D = score matrix).
 
         Args:
-            I (np.ndarray): Top-k corpus indices per query, shape (n_queries, topk).
-            D (np.ndarray): Top-k scores per query, shape (n_queries, topk).
+            I (np.ndarray): Top-k corpus indices per query, shape (n_queries, top_k).
+            D (np.ndarray): Top-k scores per query, shape (n_queries, top_k).
             ground_truth_map (dict[str, str] or None): Curated label map for test evaluation.
             test_or_prod (str): 'test' to look up ground truth; any other value skips it.
 

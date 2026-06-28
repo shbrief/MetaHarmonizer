@@ -29,7 +29,7 @@ class OntoMapLLM:
         s2_model,
         query_df: pd.DataFrame = None,
         query_col: str = None,
-        topk: int = 5,
+        top_k: int = 5,
         model_key: str = "gemma-12b",
         max_retries: int = 5,
     ):
@@ -37,7 +37,7 @@ class OntoMapLLM:
         self.s2_model = s2_model
         self.query_df = query_df
         self._query_col = query_col
-        self.topk = topk
+        self.top_k = top_k
         self.max_retries = max_retries
         self.logger = logger.custlogger(loglevel='INFO')
 
@@ -218,14 +218,14 @@ class OntoMapLLM:
 
     # ── FAISS re-search ──────────────────────────────────────────────────
 
-    def _re_search(self, terms: list[str], topk: int) -> tuple:
+    def _re_search(self, terms: list[str], top_k: int) -> tuple:
         """Embed LLM suggestions using S2's model, search S2's FAISS index.
 
         Returns:
-            (D, I) — FAISS distance and index matrices, shape (len(terms), topk)
+            (D, I) — FAISS distance and index matrices, shape (len(terms), top_k)
         """
         if not terms:
-            return np.array([]).reshape(0, topk), np.array([]).reshape(0, topk)
+            return np.array([]).reshape(0, top_k), np.array([]).reshape(0, top_k)
 
         strategy = self.s2_model.om_strategy
 
@@ -241,7 +241,7 @@ class OntoMapLLM:
             raise ValueError(f"Unsupported S2 strategy for re-search: {strategy}")
 
         idx = self.s2_model.vector_store.index
-        D, I = idx.search(mat, topk)
+        D, I = idx.search(mat, top_k)
         return D, I
 
     def _get_id_term_map(self) -> dict:
@@ -310,7 +310,7 @@ class OntoMapLLM:
     def get_match_results(
         self,
         queries: list[str],
-        topk: int = 5,
+        top_k: int = 5,
         max_workers: int = 5,
     ) -> pd.DataFrame:
         """For each query: rewrite via LLM → re-search FAISS → build result DataFrame.
@@ -324,7 +324,7 @@ class OntoMapLLM:
         """
         from concurrent.futures import ThreadPoolExecutor, as_completed
 
-        k = topk or self.topk
+        k = top_k or self.top_k
 
         # Phase 1: parallel LLM rewriting
         def _rewrite(query):

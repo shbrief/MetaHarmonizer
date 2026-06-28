@@ -18,8 +18,8 @@ class OntoMapRAG(OntoModelsBase):
         corpus_df: pd.DataFrame,
         use_reranker: bool,
         reranker_method: str,
-        reranker_topk: int,
-        topk: int = 5,
+        reranker_top_k: int,
+        top_k: int = 5,
         om_strategy: str = 'rag',
         ontology_source: str = 'ncit',
         table_suffix: str = "",
@@ -27,27 +27,27 @@ class OntoMapRAG(OntoModelsBase):
         super().__init__(method,
                          category,
                          om_strategy,
-                         topk,
+                         top_k,
                          query,
                          corpus,
                          corpus_df=corpus_df,
                          ontology_source=ontology_source,
                          table_suffix=table_suffix)
-        self._init_reranker(use_reranker, reranker_method, reranker_topk)
+        self._init_reranker(use_reranker, reranker_method, reranker_top_k)
         self.logger.info(
             f"Initialized OntoMapRAG (reranker={'enabled:'+reranker_method if use_reranker else 'disabled'})"
         )
 
     def get_match_results(self,
                           ground_truth_map: dict[str, str] = None,
-                          topk: int = 5,
+                          top_k: int = 5,
                           test_or_prod: str = 'test') -> pd.DataFrame:
         if test_or_prod == 'test' and ground_truth_map is None:
             raise ValueError("ground_truth_map should be provided for test mode")
 
         self.logger.info("Generating results table")
 
-        retrieval_k = self.reranker_topk if self.use_reranker else topk
+        retrieval_k = self.reranker_top_k if self.use_reranker else top_k
 
         results = []
         for q in tqdm(self.query, desc="Processing queries", leave=False):
@@ -57,9 +57,9 @@ class OntoMapRAG(OntoModelsBase):
 
             # Step 2: Reranking (top-50 → top-5)
             if self.use_reranker:
-                search_results = self._rerank_results(q, search_results, topk)
+                search_results = self._rerank_results(q, search_results, top_k)
             else:
-                search_results = search_results[:topk]
+                search_results = search_results[:top_k]
 
             results.append(search_results)
 
@@ -73,7 +73,7 @@ class OntoMapRAG(OntoModelsBase):
             ]
         })
 
-        for i in range(topk):
+        for i in range(top_k):
             df[f'match{i+1}'] = [
                 r[i].metadata['term'] if i < len(r) else "N/A" for r in results
             ]
@@ -93,7 +93,7 @@ class OntoMapRAG(OntoModelsBase):
                 ]
 
         df['match_level'] = df.apply(lambda row: next(
-            (i + 1 for i in range(topk)
+            (i + 1 for i in range(top_k)
              if str(row[f'match{i+1}']).strip().lower() == str(row['curated_ontology']).strip().lower()), 99),
                                      axis=1)
 

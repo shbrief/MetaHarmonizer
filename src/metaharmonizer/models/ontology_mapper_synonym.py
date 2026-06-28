@@ -15,7 +15,7 @@ class OntoMapSynonym:
                  query: List[str],
                  corpus: List[str],
                  om_strategy: str = 'syn',
-                 topk: int = 5,
+                 top_k: int = 5,
                  corpus_df: pd.DataFrame = None,
                  ontology_source: str = 'ncit',
                  table_suffix: str = ""):
@@ -23,7 +23,7 @@ class OntoMapSynonym:
         self.category = category
         self.query = query
         self.corpus = corpus
-        self.topk = topk
+        self.top_k = top_k
         self.corpus_df = corpus_df
 
         self.logger = CustomLogger().custlogger(loglevel='INFO')
@@ -56,7 +56,7 @@ class OntoMapSynonym:
 
     def get_match_results(self,
                           ground_truth_map: Dict[str, str],
-                          topk: int = None,
+                          top_k: int = None,
                           test_or_prod: str = 'test',
                           min_score: float = 0.0) -> pd.DataFrame:
         """
@@ -64,7 +64,7 @@ class OntoMapSynonym:
 
         Args:
             ground_truth_map: Mapping of query terms to curated ontology values
-            topk: Number of top matches (overrides self.topk if provided)
+            top_k: Number of top matches (overrides self.top_k if provided)
             test_or_prod: 'test' or 'prod' mode
             min_score: Minimum similarity score threshold
 
@@ -72,7 +72,7 @@ class OntoMapSynonym:
             DataFrame with columns: original_value, curated_ontology, match_level,
                                    match1, match1_score, ..., matchN, matchN_score
         """
-        k = topk or self.topk
+        k = top_k or self.top_k
         self.logger.info(f"Searching synonyms for {len(self.query)} queries")
 
         # Batch search

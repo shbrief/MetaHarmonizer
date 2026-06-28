@@ -146,7 +146,7 @@ onto_engine = OntoMapEngine(
     s3_threshold=0.9,         # route queries below this Stage-2 score to Stage 3
     s4_strategy='llm',        # Stage 4 LLM query rewrite: 'llm' or None
     s4_threshold=0.6,         # route queries below this score to Stage 4
-    topk=5,
+    top_k=5,
     test_or_prod='test',      # optional: inferred from ground_truth_map if omitted ('test' if provided, else 'prod')
 )
 results = onto_engine.run()

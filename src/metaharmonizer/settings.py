@@ -94,7 +94,7 @@ class Settings:
     # that env var to avoid key/name collisions.
     field_model: str = "minilm-l6"
     llm_model: str = "gemma-27b"
-    topk: int = 5
+    top_k: int = 5
     fuzzy_thresh: int = 92
     numeric_thresh: float = 0.6
     field_alias_thresh: float = 0.5
@@ -128,7 +128,7 @@ class Settings:
         return cls(
             field_model=_pick(o, f, "field_model", None, "minilm-l6"),
             llm_model=_pick(o, f, "llm_model", None, "gemma-27b"),
-            topk=_pick(o, f, "topk", None, 5, int),
+            top_k=_pick(o, f, "top_k", None, 5, int),
             fuzzy_thresh=_pick(o, f, "fuzzy_thresh", None, 92, int),
             numeric_thresh=_pick(o, f, "numeric_thresh", None, 0.6, float),
             field_alias_thresh=_pick(o, f, "field_alias_thresh", None, 0.5, float),
