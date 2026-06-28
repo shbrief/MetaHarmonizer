@@ -31,8 +31,11 @@ dependencies = [
     "transformers",
     "sentence-transformers",
     "scikit-learn",
-    # Vector search
-    "faiss-cpu>=1.12.0",
+    # Vector search: FAISS is intentionally NOT listed here. The PyPI
+    # `faiss-cpu` wheel bundles its own libomp, which collides with torch's
+    # bundled libomp on macOS and segfaults during search. Install it from
+    # conda-forge instead (`conda install -c conda-forge faiss-cpu`), which
+    # links the env's shared llvm-openmp. See the README installation step.
     # Fuzzy matching
     "rapidfuzz",
     "thefuzz",
