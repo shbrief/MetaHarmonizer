@@ -79,22 +79,19 @@ class OntoMapEngine:
     """
 
     def __init__(self,
-                 category: str,
+                 corpus_category: str,
+                 query_ls: list[str] = None,
                  *,
-                 # --- Query inputs ---
-                 query: list[str] = None,
+                 top_k: int = 5,
+                 corpus_ls: list[str] = None,
+                 corpus_df: "pd.DataFrame" = None,
+                 ontology_source: str = None,
                  query_df: "pd.DataFrame" = None,
                  query_col: str = None,
                  ground_truth_map: dict = None,
-                 # --- Corpus inputs ---
-                 corpus: list[str] = None,
-                 corpus_df: "pd.DataFrame" = None,
-                 ontology_source: str = None,
                  corpus_hash: str = None,
                  persist_corpus: bool = None,
                  filter_obsolete: bool = False,
-                 # --- Stage config ---
-                 top_k: int = 5,
                  s2_method: str = 'sap-bert',
                  s2_strategy: str = 'lm',
                  s3_method: str = 'pubmed-bert',
@@ -103,16 +100,19 @@ class OntoMapEngine:
                  s4_strategy: str = None,
                  s4_threshold: float = 0.6,
                  s4_model: str = 'gemma-12b',
-                 # --- Output / misc ---
                  output_dir: str = None,
                  **other_params: dict) -> None:
         """
         Initializes the OntoMapEngine class.
 
         Args:
-            method (str): The name of the method.
-            query (list[str]): The list of queries.
-            corpus (list[str], optional): Explicit term list overriding **Stage 2**
+            corpus_category (str): Semantic domain selecting the corpus/ontology
+                (e.g. 'disease', 'treatment'). Distinct from ``ontology_source``,
+                which picks the backend (e.g. 'ncit', 'mondo').
+            query_ls (list[str], optional): The list of query terms. Optional when
+                ``query_df`` + ``query_col`` are given (terms are then derived from
+                the column).
+            corpus_ls (list[str], optional): Explicit term list overriding **Stage 2**
                 matching only. Stage 3 always uses ``corpus_df``. Auto-derived from
                 ``corpus_df`` when omitted.
             corpus_df (pd.DataFrame, optional): Full custom corpus. Must contain a
@@ -149,7 +149,7 @@ class OntoMapEngine:
         """
         self.s2_method = s2_method
         self.s3_method = s3_method
-        self.category = validate_identifier(category, "category")
+        self.category = validate_identifier(corpus_category, "corpus_category")
         self.output_dir = output_dir
         self.top_k = top_k
         self.filter_obsolete = filter_obsolete
@@ -197,21 +197,21 @@ class OntoMapEngine:
             self.query_df = query_df
             self.query_col = query_col
             # DataFrame mode: extract query list from specified column
-            if query is None:
+            if query_ls is None:
                 raw = query_df[query_col].dropna().astype(str).str.strip()
                 self.query = (raw[~raw.isin(["", "nan", "NaN", "None"])]
                               .unique().tolist())
             else:
-                self.query = query
+                self.query = query_ls
         else:
             self.query_df = None
             self.query_col = None
-            self.query = query
+            self.query = query_ls
 
         if self.query is None or len(self.query) == 0:
             raise ValueError(
-                "No queries provided. Pass query (list) or "
-                "query_df + query_col via other_params.")
+                "No queries provided. Pass query_ls (list) or "
+                "query_df + query_col.")
 
         # ground_truth_map: required in test mode, auto-generated in prod mode
         if ground_truth_map is not None:
@@ -337,8 +337,8 @@ class OntoMapEngine:
             self._persist_corpus_csv(corpus_df)
 
         # Resolve corpus (stage 2 term list)
-        if corpus is not None:
-            self.corpus = list(dict.fromkeys(corpus))
+        if corpus_ls is not None:
+            self.corpus = list(dict.fromkeys(corpus_ls))
         else:
             self.corpus = list(dict.fromkeys(
                 corpus_df["official_label"].astype(str).tolist()

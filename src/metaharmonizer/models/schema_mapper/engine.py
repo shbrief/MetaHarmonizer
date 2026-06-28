@@ -77,10 +77,10 @@ class SchemaMapEngine:
     def __init__(
         self,
         input_path: str,
-        mode: str = "manual",
-        top_k: Optional[int] = 5,
-        *,
         schema: Optional[str] = None,
+        *,
+        top_k: Optional[int] = 5,
+        mode: str = "manual",
         target_schema_path: Optional[Union[str, Path]] = None,
         value_dict_path: Optional[Union[str, Path]] = None,
         alias_dict_path: Optional[Union[str, Path]] = None,

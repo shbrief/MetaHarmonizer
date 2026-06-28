@@ -136,8 +136,8 @@ from metaharmonizer import OntoMapEngine, SchemaMapEngine
 
 # Ontology Mapping
 onto_engine = OntoMapEngine(
-    category='disease',
-    query=query_list,
+    corpus_category='disease',   # semantic domain (vs ontology_source = backend)
+    query_ls=query_list,
     ground_truth_map=ground_truth_map,        # query term -> curated ontology (for test mode)
     ontology_source='ncit',   # 'ncit' (NCI EVSREST), 'mondo', 'uberon' (EBI OLS4)
     s2_method='sap-bert',     # transformer model key from method_model.yaml
