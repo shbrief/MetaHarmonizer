@@ -247,10 +247,13 @@ Pass `corpus_df=` to `OntoMapEngine` or set `UMLS_API_KEY` so the engine
 can fetch the ontology corpus on first use.
 
 > The initial `OntoMapEngine` run for the example below does one-time
-> expensive work — fetching the NCIt corpus from the API, building
-> concept tables, downloading the sap-bert encoder (\~440 MB), and
-> building the FAISS index (\~4 min for the full corpus). All of it is
-> cached, so subsequent runs take \~7 sec.
+> expensive work — fetching the NCIt corpus from the NCI API (\~14 min
+> for the full \~15k-term disease corpus; network-bound, not CPU-bound),
+> downloading the sap-bert encoder (\~440 MB), and building the corpus
+> and synonym FAISS indexes (\~3–4 min each); \~20 min total. All of it
+> is cached, so subsequent runs take seconds. Build times measured on
+> the full \~15k-term `disease` corpus, on an Apple M4 Pro (12-core, 64
+> GB).
 
 ``` python
 import pandas as pd
@@ -424,19 +427,20 @@ the short version.
 #### 🤔 What are the minimum inputs for SchemaMapper?
 
 Just one: a path to your clinical data file (CSV or TSV) whose **column
-names** are what get mapped. Everything else — the target schema and the
-alias dictionary — ships bundled inside the wheel, so `mode="manual"`
+names** are what get mapped. Everything else — the target schema and the 
+alias dictionary — ships bundled inside the wheel (currently, supporting
+gdc schema (default) and OmicsMLRepo-cBioPortal schema). So `mode="manual"`
 runs with no keys and no extra files.
 
 ``` python
-SchemaMapEngine(input_path="examples/data/ucec_cptac_2020_before_harmonization.csv").run_schema_mapping()
+SchemaMapEngine(input_path="examples/data/Gillette_source.csv").run_schema_mapping()
 ```
 
 #### 🤔 How to prepare my inputs for SchemaMapper?
 
 The column *names* are the input; values are sampled to help value-based
 and numeric matching, so a few real rows is plenty. To map to your own
-field set instead of the bundled one, pass `target_schema_path=` — and
+field/column set instead of the bundled one, pass `target_schema_path=` — and
 usually a matching `alias_dict_path=` too, since a custom schema
 disables the bundled alias dictionary. See [input_formats
 §2.1–2.3](docs/input_formats.md#21-the-clinical-data-file-required) and
@@ -452,17 +456,17 @@ OntoMapEngine(corpus_category="disease", query_ls=["TNBC"]).run()
 
 Pass a `ground_truth_map` (term → known-correct label) and the engine
 switches to `test` mode automatically, scoring accuracy via
-`match_level`. You can still force the mode with `test_or_prod=` if
-needed. The corpus is **optional** — the engine resolves it from cache
+`match_level`. You can still force the production mode with `test_or_prod="prod"` 
+if needed. The corpus is **optional** — the engine resolves it from cache
 or the source API. NCIt corpus/concept-table builds need `UMLS_API_KEY`;
 `mondo`/`uberon` (EBI OLS4) need no key.
 
 #### 🤔 How to prepare my inputs for OntologyMapper?
 
 Supply queries either as a plain list (`query=`) or as a DataFrame +
-column (`query_df=`, `query_col=` — required for the `rag_bie` Stage-3
-strategy). The query column is de-duplicated, stripped, and blank/`nan`
-values dropped automatically. To bring your own corpus, pass
+column (`query_df=` and `query_col=`: required for the `rag_bie` Stage-3 
+(alpha) strategy). The query column is de-duplicated, stripped, and 
+blank/`nan` values dropped automatically. To bring your own corpus, pass
 `corpus_df=` with a label column (`official_label` or `label`) and a
 code column (`clean_code` or `obo_id`); `ontology_source` is inferred
 from the code prefixes. See [input_formats
@@ -483,8 +487,8 @@ top-k mapped field names. See [§6](#6-schemamapper) and [input_formats
 #### 🤔 How to interpret my outputs from OntologyMapper?
 
 `run()` returns a DataFrame, one row per query term: `query`, the top-k
-`match{i}` / `match{i}_score` candidates (best first), `stage` (1 exact,
-2 embedding, 2.5 synonym, 3 RAG, 4 LLM), plus `match_level` and
+`match{i}` / `match{i}_score` candidates (best first), `stage` (e.g., 1 
+exact, 2 embedding, 2.5 synonym, etc.), plus `match_level` and
 `ref_match` — the latter two are **meaningful in `test` mode only**
 (`ref_match` is `"Not Found"` in `prod`; ignore it there). Set
 `output_dir=` to also write a timestamped CSV. See [input_formats
@@ -495,13 +499,14 @@ top-k mapped field names. See [§6](#6-schemamapper) and [input_formats
 No, for the default paths. Both engines run their core stages with **no
 LLM key**: SchemaMapper `mode="manual"` (Stages 1–3) and OntologyMapper
 with `s4_strategy=None` (the default). An LLM is only needed for the
-**Stage 4** refinement:
+**Stage 4** refinement, which are currently alpha features:
 
 -   **SchemaMapper `mode="auto"`** and **OntologyMapper
     `s4_strategy="llm"`** call the Stage-4 LLM (set `GEMINI_API_KEY`).
 -   **Generating an alias dictionary** for a custom schema via
     `generate_alias_dict()` needs `ANTHROPIC_API_KEY` or
-    `GEMINI_API_KEY`.
+    `GEMINI_API_KEY`. Highly recommended even for the default paths if 
+    you want to bring your own schema.
 
 Note that `UMLS_API_KEY` (for NCIt) is *not* an LLM key — it's a
 vocabulary API. See [input_formats
@@ -512,15 +517,15 @@ for which variable gates which stage.
 
 #### 🤔 Which engine do I use — OntologyMapper or SchemaMapper?
 
-Pick by *what* you are aligning. If you have free-text **values** (e.g.
-`"SQUAMOUS CELL CARCINOMA, PHARYNX"`) and want the matching ontology
-term and code, use **`OntoMapEngine`**. If you have a data file whose
+Pick by *what* you are aligning. If you have a data file whose
 **column names** are non-standard and want them mapped to your standard
-field names, use **`SchemaMapEngine`**. See the [engine-picker
+field names, use **`SchemaMapEngine`**. If you have free-text **values** 
+(e.g.`"SQUAMOUS CELL CARCINOMA, PHARYNX"`) and want the matching ontology
+term and code, use **`OntoMapEngine`**. See the [engine-picker
 table](docs/input_formats.md#preparing-inputs-for-metaharmonizer) in
 input_formats.
 
-#### 🤔 What is the difference between `test` and `prod` mode?
+#### 🤔 What is the difference between `test` and `prod` mode of OntologyMapper?
 
 `prod` is for mapping real, **unlabelled** data — you supply only the
 terms and the engine fills in the answers; no ground truth needed.
@@ -535,12 +540,17 @@ the analogous `manual`/`auto` mode split — see the LLM question above.)
 #### 🤔 Why is the first OntologyMapper run so slow, and later runs fast?
 
 The first run for a given NCIt corpus does the one-time expensive work:
-it builds concept tables from the NCI API (minutes for the full
-\~14k-term disease corpus, seconds for a small slice), downloads the
-sap-bert encoder (\~440 MB), then builds a FAISS index (\~4 min for the
-full corpus). All of it is cached, so subsequent runs reuse the index
-and take \~7 sec. `SchemaMapEngine` similarly downloads
-`all-MiniLM-L6-v2` once on first use.
+it builds concept tables from the NCI API (\~14 min for the full
+\~15k-term disease corpus — network-bound, not CPU-bound — seconds for a
+small slice), downloads the sap-bert encoder (\~440 MB), then builds the
+corpus and synonym FAISS indexes (\~3–4 min each); \~20 min total. All of
+it is cached, so subsequent runs reuse the indexes and take seconds
+(\~19 sec for the full 1,560-term example below, less for smaller query
+sets). `SchemaMapEngine` similarly downloads `all-MiniLM-L6-v2` once on
+first use. Build times measured on the full \~15k-term `disease` corpus;
+the \~19 sec warm figure is for the 1,560-term query example below
+(`examples/data/disease_query_updated.csv`). Apple M4 Pro (12-core, 64
+GB).
 
 #### 🤔 Where does MetaHarmonizer store its caches and models?
 
