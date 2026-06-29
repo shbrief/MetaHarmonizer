@@ -134,7 +134,7 @@ put them in a config file. Here are the environment variables set in
 | `NCIT_POOL_SIZE` | NCI async client connection pool | `8` | Raise for bulk corpus builds. |
 | `LOG_FILE` / `LOG_ENV` | Logger config | `out.log` / `development` | — |
 
-### Project config file {#project-config-file}
+### Project config file
 
 Project-level defaults (thresholds, model keys, the noise-value set) can
 be set without code changes in `metaharmonizer.toml` (the whole file) or
@@ -171,7 +171,7 @@ The snippets below read the small sample inputs under
 [`examples/data/`](examples/data/) (run them from the repo root, or
 adjust the paths to your own files).
 
-### Minimal setup {#minimal-setup}
+### Minimal setup
 
 ``` bash
 # Clone
@@ -193,7 +193,7 @@ pip install -e .                       # core only (no LLM backends)
 cp .env.example .env
 ```
 
-### Schema mapping {#schema-mapping}
+### Schema mapping
 
 ``` python
 from metaharmonizer import SchemaMapEngine
@@ -206,7 +206,7 @@ results = engine.run_schema_mapping()
 print(results.head())
 ```
 
-### Ontology mapping {#ontology-mapping}
+### Ontology mapping
 
 Pass `corpus_df=` to `OntoMapEngine` or set `UMLS_API_KEY` so the engine
 can fetch the ontology corpus on first use.
@@ -378,13 +378,13 @@ for an overview of each notebook and its required inputs.
 
 ## 8. Frequently asked questions
 
-### Prepare inputs {#prepare-inputs}
+### Prepare inputs
 
 A deeper, example-driven walk-through of every input and output lives in
 [docs/input_formats.md](docs/input_formats.md); the answers below are
 the short version.
 
-#### 🤔 What are the minimum inputs for SchemaMapper? {#what-are-the-minimum-inputs-for-schemamapper}
+#### 🤔 What are the minimum inputs for SchemaMapper?
 
 Just one: a path to your clinical data file (CSV or TSV) whose **column
 names** are what get mapped. Everything else — the target schema and the
@@ -395,7 +395,7 @@ runs with no keys and no extra files.
 SchemaMapEngine(input_path="examples/data/ucec_cptac_2020_before_harmonization.csv").run_schema_mapping()
 ```
 
-#### 🤔 How to prepare my inputs for SchemaMapper? {#how-to-prepare-my-inputs-for-schemamapper}
+#### 🤔 How to prepare my inputs for SchemaMapper?
 
 The column *names* are the input; values are sampled to help value-based
 and numeric matching, so a few real rows is plenty. To map to your own
@@ -405,7 +405,7 @@ disables the bundled alias dictionary. See [input_formats
 §2.1–2.3](docs/input_formats.md#21-the-clinical-data-file-required) and
 [§2.5](docs/input_formats.md#25-the-alias-dictionary-bundled-llm-generated).
 
-#### 🤔 What are the minimum inputs for OntologyMapper? {#what-are-the-minimum-inputs-for-ontologymapper}
+#### 🤔 What are the minimum inputs for OntologyMapper?
 
 Just a list of query terms. That alone runs:
 
@@ -420,7 +420,7 @@ needed. The corpus is **optional** — the engine resolves it from cache
 or the source API. NCIt corpus/concept-table builds need `UMLS_API_KEY`;
 `mondo`/`uberon` (EBI OLS4) need no key.
 
-#### 🤔 How to prepare my inputs for OntologyMapper? {#how-to-prepare-my-inputs-for-ontologymapper}
+#### 🤔 How to prepare my inputs for OntologyMapper?
 
 Supply queries either as a plain list (`query=`) or as a DataFrame +
 column (`query_df=`, `query_col=` — required for the `rag_bie` Stage-3
@@ -431,9 +431,9 @@ code column (`clean_code` or `obo_id`); `ontology_source` is inferred
 from the code prefixes. See [input_formats
 §1.1–1.3](docs/input_formats.md#11-the-query-required).
 
-### Interpret outputs {#interpret-outputs}
+### Interpret outputs
 
-#### 🤔 How to interpret my outputs from SchemaMapper? {#how-to-interpret-my-outputs-from-schemamapper}
+#### 🤔 How to interpret my outputs from SchemaMapper?
 
 `run_schema_mapping()` returns a DataFrame with one row per **input
 column** (and writes a CSV under `SM_OUTPUT_DIR`). Key columns: `query`
@@ -443,7 +443,7 @@ matched — `std_exact`, `std_fuzzy`, `value`, `numeric`, `semantic`,
 top-k mapped field names. See [§5](#5-schemamapper) and [input_formats
 §2.4](docs/input_formats.md#24-output).
 
-#### 🤔 How to interpret my outputs from OntologyMapper? {#how-to-interpret-my-outputs-from-ontologymapper}
+#### 🤔 How to interpret my outputs from OntologyMapper?
 
 `run()` returns a DataFrame, one row per query term: `query`, the top-k
 `match{i}` / `match{i}_score` candidates (best first), `stage` (1 exact,
@@ -453,7 +453,7 @@ top-k mapped field names. See [§5](#5-schemamapper) and [input_formats
 `output_dir=` to also write a timestamped CSV. See [input_formats
 §1.5](docs/input_formats.md#15-output).
 
-#### 🤔 Do I need LLM? If so, where and how? {#do-i-need-llm-if-so-where-and-how}
+#### 🤔 Do I need LLM? If so, where and how?
 
 No, for the default paths. Both engines run their core stages with **no
 LLM key**: SchemaMapper `mode="manual"` (Stages 1–3) and OntologyMapper
@@ -471,7 +471,7 @@ vocabulary API. See [input_formats
 §3](docs/input_formats.md#3-which-environment-variable-gates-which-stage)
 for which variable gates which stage.
 
-### Choosing an engine and mode {#choosing-an-engine-and-mode}
+### Choosing an engine and mode
 
 #### 🤔 Which engine do I use — OntologyMapper or SchemaMapper?
 
@@ -483,7 +483,7 @@ field names, use **`SchemaMapEngine`**. See the [engine-picker
 table](docs/input_formats.md#preparing-inputs-for-metaharmonizer) in
 input_formats.
 
-#### 🤔 What is the difference between `test` and `prod` mode? {#what-is-the-difference-between-test-and-prod-mode}
+#### 🤔 What is the difference between `test` and `prod` mode?
 
 `prod` is for mapping real, **unlabelled** data — you supply only the
 terms and the engine fills in the answers; no ground truth needed.
@@ -493,9 +493,9 @@ known-correct label), and the output adds `match_level` / `ref_match` so
 you can score how often the right label was recovered. (SchemaMapper has
 the analogous `manual`/`auto` mode split — see the LLM question above.)
 
-### Performance and caching {#performance-and-caching}
+### Performance and caching
 
-#### 🤔 Why is the first OntologyMapper run so slow, and later runs fast? {#why-is-the-first-ontologymapper-run-so-slow-and-later-runs-fast}
+#### 🤔 Why is the first OntologyMapper run so slow, and later runs fast?
 
 The first run for a given NCIt corpus does the one-time expensive work:
 it builds concept tables from the NCI API (minutes for the full
@@ -505,7 +505,7 @@ full corpus). All of it is cached, so subsequent runs reuse the index
 and take \~7 sec. `SchemaMapEngine` similarly downloads
 `all-MiniLM-L6-v2` once on first use.
 
-#### 🤔 Where does MetaHarmonizer store its caches and models? {#where-does-metaharmonizer-store-its-caches-and-models}
+#### 🤔 Where does MetaHarmonizer store its caches and models?
 
 Under `~/.metaharmonizer/` by default: Hugging Face encoders in
 `model_cache/`, FAISS indexes and the vector DB in `KnowledgeDb/`, and
