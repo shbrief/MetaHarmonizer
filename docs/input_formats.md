@@ -15,14 +15,14 @@ here when you need to wire in your own data.
 MetaHarmonizer has two engines. Pick by what you are aligning:
 
 | You have… | You want… | Engine |
-|----|----|----|
+|------------------------|------------------------|------------------------|
 | Free-text *values* (e.g. `"SQUAMOUS CELL CARCINOMA, PHARYNX"`) | The matching ontology term + code | `OntoMapEngine` |
 | A data file whose *column names* are non-standard | Those columns mapped to your standard field names | `SchemaMapEngine` |
 
 Throughout, **`test` vs `prod` mode** is the distinction that trips up
 most first-time users:
 
--   **`prod`** — you are mapping real, unlabelled data. You provide
+-   **`prod`** — you are mapping real, unlabeled data. You provide
     *only* the terms; the engine fills in the answers. No ground truth
     needed.
 -   **`test`** — you already know the correct answer for each term and
@@ -186,7 +186,7 @@ results = engine.run()
 `run()` returns a `DataFrame`, one row per query term:
 
 | Column | Meaning |
-|----|----|
+|----------------|--------------------------------------------------------|
 | `query` | The original input term |
 | `match1` … `match{k}` | Top-k candidate ontology labels, best first |
 | `match1_score` … | Similarity score for each candidate |
@@ -255,7 +255,7 @@ engine = SchemaMapEngine(
 column**, and also writes a CSV under `SM_OUTPUT_DIR`:
 
 | Column | Meaning |
-|----|----|
+|-----------------------|------------------------------------------------|
 | `query` | The original column name |
 | `stage` | `stage1`–`stage4` that produced the match |
 | `method` | `std_exact`, `std_fuzzy`, `value`, `ontology`, `numeric`, `semantic`, `llm`, … |
@@ -274,7 +274,7 @@ A **CSV with exactly three columns**; these are the only columns the
 loader reads:
 
 | Column | Meaning |
-|----|----|
+|---------------|------------------------------------------------------|
 | `field_name` | the standard field this alias maps to (must exist in the curated schema) |
 | `source` | the alias — a raw column name that should map to `field_name` |
 | `is_numeric_field` | `"yes"` for numeric-valued fields, empty otherwise |
@@ -329,7 +329,7 @@ Everything works with **no** keys set *except* the stages noted below.
 Copy `.env.example` → `.env` and fill in what you need.
 
 | Variable | Needed for | Without it |
-|----|----|----|
+|--------------------|------------------------|----------------------------|
 | `UMLS_API_KEY` | **Any** `ontology_source="ncit"` run: the corpus build *and* the per-term concept-table build that runs at `OntoMapEngine(...)` construction (also Stage 2.5 synonyms) | NCIt mapping cannot complete on a cold cache. Passing `corpus_df=` avoids only the *corpus* fetch, not the concept-table build. Workarounds: reuse a warm cache from a prior keyed run, or use a non-NCIt `ontology_source` (`mondo`/`uberon`, via OLS — no key). |
 | `GEMINI_API_KEY` | OM Stage 4 (`s4_strategy="llm"`) and SM `mode="auto"` Stage 4 | Use SM `mode="manual"`; leave OM `s4_strategy=None` (the default) |
 | `METAHARMONIZER_DATA_DIR` | Pointing at a local corpus/schema copy | Falls back to bundled reference files and `~/.metaharmonizer/data` |

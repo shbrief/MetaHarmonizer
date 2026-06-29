@@ -1,15 +1,13 @@
----
-editor_options: 
-  markdown: 
-    wrap: 72
----
-
 # MetaHarmonizer: a robust, fully local biomedical metadata harmonization system
 
-The pre-print is now available: [MetaHarmonizer: robust biomedical
-metadata harmonization and a contamination control for inflated LLM
-performance on public
-benchmarks](https://www.biorxiv.org/content/10.64898/2026.06.13.732088v1)
+The pre-print is now available:
+
+> ***MetaHarmonizer: robust biomedical metadata harmonization and a
+> contamination control for inflated LLM performance on public
+> benchmarks***\
+> Changchang Li, Abhilash Dhal, Kai Gravel-Pucillo, Kaelyn Long, Michele
+> Waters, Ino de Bruijn, Sean Davis, Sehyun Oh\
+> doi: <https://doi.org/10.64898/2026.06.13.732088>
 
 MetaHarmonizer currently provides two key modules:
 
@@ -24,12 +22,20 @@ MetaHarmonizer currently provides two key modules:
 
 1.  [Installation](#1-installation)
 2.  [Environment variables](#2-environment-variables)
+    -   [Project config file](#project-config-file)
 3.  [Quickstart](#3-quickstart)
+    -   [Minimal setup](#minimal-setup)
+    -   [Schema mapping](#schema-mapping)
+    -   [Ontology mapping](#ontology-mapping)
 4.  [Datasets](#4-datasets)
 5.  [SchemaMapper](#5-schemamapper)
 6.  [OntologyMapper](#6-ontologymapper)
 7.  [Example notebooks](#7-example-notebooks)
 8.  [Frequently asked questions](#8-frequently-asked-questions)
+    -   [Prepare inputs](#prepare-inputs)
+    -   [Interpret outputs](#interpret-outputs)
+    -   [Choosing an engine and mode](#choosing-an-engine-and-mode)
+    -   [Performance and caching](#performance-and-caching)
 
 ## 1. Installation
 
@@ -42,6 +48,15 @@ cd MetaHarmonizer
 conda create -n mh python=3.10 -y
 conda activate mh
 
+# Install FAISS (intentionally NOT a pip dependency of this package).
+#   - macOS: use conda-forge. The PyPI `faiss-cpu` wheel bundles its own libomp,
+#     which collides with torch's and segfaults during search; the conda-forge
+#     build links the env's shared llvm-openmp instead.
+#   - Linux / Windows / any conda-free env (incl. CI): `pip install faiss-cpu`
+#     works — the libomp clash is macOS-specific.
+conda install -c conda-forge faiss-cpu -y   # macOS
+# pip install faiss-cpu                      # Linux / Windows / CI
+
 # Install the package. Pick one of:
 pip install -e .                       # core only (no LLM backends)
 pip install -e ".[llm-gemini]"         # + Gemini (Stage-4 LLM, OntoMapLLM, etc.)
@@ -53,9 +68,13 @@ pip install -e ".[eval]"               # + scipy for evaluation scripts
 pip install -e ".[all]"                # notebook + eval + all three LLM backends
 ```
 
-Install directly from GitHub (non-editable):
+Install directly from GitHub (non-editable). FAISS is not a pip
+dependency, so install it first — conda-forge on macOS, pip elsewhere
+(see the note above):
 
 ``` bash
+conda install -c conda-forge faiss-cpu -y   # macOS
+# pip install faiss-cpu                      # Linux / Windows / CI
 pip install "git+https://github.com/shbrief/MetaHarmonizer#egg=metaharmonizer[llm-gemini]"
 ```
 
@@ -79,7 +98,7 @@ engine/CLI argument  >  environment variable  >  project config file  >  built-i
 ```
 
 -   **Arguments** — what changes per run, passed to `OntoMapEngine` /
-    `SchemaMapEngine` (e.g. `s2_method`, `top_k`, `curated_dict_path`,
+    `SchemaMapEngine` (e.g. `s2_method`, `top_k`, `target_schema_path`,
     `value_dict_path`, `alias_dict_path`, `corpus_hash`).
 -   **Environment variables** — secrets and deployment/ops (table
     below).
@@ -101,7 +120,7 @@ put them in a config file. Here are the environment variables set in
 `.env`.
 
 | Variable | Required for | Default | Notes |
-|------------------|------------------|------------------|------------------|
+|------------------|------------------|------------------|--------------------|
 | `UMLS_API_KEY` | OM Stage 2.5 NCI Thesaurus lookups, concept-table builder, `update_term_via_code` | — | Required for `ontology_source="ncit"` pipeline stages that hit the live API. |
 | `METAHARMONIZER_DATA_DIR` | Locating corpus + schema reference files (`oncotree_code_to_name.csv`, `cbio_target_attrs.csv`, etc.) | `~/.metaharmonizer/data` | Small reference files ship inside the wheel as a fallback when this dir is empty; set this to a local corpus copy to override. |
 | `SM_OUTPUT_DIR` | `SM` output path | `$METAHARMONIZER_DATA_DIR/schema_mapping_eval` | Overrides where CSV results are written. |
@@ -127,7 +146,7 @@ arguments in the precedence chain, so a per-run argument always wins.
 # metaharmonizer.toml  (or [tool.metaharmonizer] in pyproject.toml)
 field_model = "minilm-l6"      # method key from method_model.yaml
 llm_model   = "gemma-27b"
-topk        = 5
+top_k        = 5
 
 # schema-mapper thresholds
 fuzzy_thresh            = 92
@@ -152,7 +171,7 @@ The snippets below read the small sample inputs under
 [`examples/data/`](examples/data/) (run them from the repo root, or
 adjust the paths to your own files).
 
-### Minimal setup
+### Minimal setup {#minimal-setup}
 
 ``` bash
 # Clone
@@ -163,6 +182,10 @@ cd MetaHarmonizer
 conda create -n mh python=3.10 -y
 conda activate mh
 
+# Install FAISS from conda-forge (NOT pip) — see note in §1 Installation
+conda install -c conda-forge faiss-cpu -y   # macOS
+# pip install faiss-cpu                      # Linux / Windows / CI
+
 # Install the package. Pick one of:
 pip install -e .                       # core only (no LLM backends)
 
@@ -170,25 +193,29 @@ pip install -e .                       # core only (no LLM backends)
 cp .env.example .env
 ```
 
-### Schema mapping
+### Schema mapping {#schema-mapping}
 
 ``` python
 from metaharmonizer import SchemaMapEngine
 
 engine = SchemaMapEngine(
-    clinical_data_path="examples/data/ucec_cptac_2020_before_harmonization.csv"
+    input_path="examples/data/Gillette_source.csv",
+    schema="gdc",
 )
 results = engine.run_schema_mapping()
 print(results.head())
 ```
 
-### Ontology mapping
+### Ontology mapping {#ontology-mapping}
 
 Pass `corpus_df=` to `OntoMapEngine` or set `UMLS_API_KEY` so the engine
 can fetch the ontology corpus on first use.
 
-> The initial `OntoMapEngine` run takes \~4 min while it builds the
-> FAISS index; subsequent runs reuse the cache and take \~7 sec.
+> The initial `OntoMapEngine` run for the example below does one-time
+> expensive work — fetching the NCIt corpus from the API, building
+> concept tables, downloading the sap-bert encoder (\~440 MB), and
+> building the FAISS index (\~4 min for the full corpus). All of it is
+> cached, so subsequent runs take \~7 sec.
 
 ``` python
 import pandas as pd
@@ -196,8 +223,8 @@ from metaharmonizer import OntoMapEngine
 
 df = pd.read_csv("examples/data/disease_query_updated.csv")
 engine = OntoMapEngine(
-    category="disease",
-    query=df["original_value"].tolist(),
+    corpus_category="disease",
+    query_ls=df["original_value"].tolist(),
     ground_truth_map=dict(zip(df["original_value"], df["curated_ontology"])),
     output_dir="examples/data/outputs",
 )
@@ -211,14 +238,17 @@ review) are in the reference sections below and the notebooks under
 
 ## 4. Datasets
 
--   For **schema mapping**, provide a clinical metadata file. The
-    schema-mapping reference dictionary ships bundled inside the wheel
+-   For **schema mapping**, provide a biomedical metadata file.
+    Currently, it is verified for cancer-related metadata, but other
+    domains should work with an alias dictionary. The schema-mapping
+    reference dictionary ships bundled inside the wheel for key schemas.
     (`src/metaharmonizer/_bundled_data/schema/`).
 -   For **ontology mapping**, you must provide:
     -   A list of query terms via the `query` parameter (or a
         `query_df` + `query_col` pair).
     -   A `corpus` list and/or `corpus_df` are **optional** — the engine
-        auto-resolves them from cached CSV or the API when not provided.
+        auto-resolves them from cached CSV or the API when not provided;
+        currently, it supports corpus for several key attributes.
 -   Small, runnable sample inputs for the demo notebooks live under
     [`examples/data/`](examples/data/); they are illustrative, not the
     full research corpora.
@@ -232,7 +262,7 @@ review) are in the reference sections below and the notebooks under
 > fuzzy/value/semantic fallbacks. The bundled schema for GDC ships with
 > an LLM-generated (Haiku 4.5) alias dictionary, so the default path is
 > already covered. If you map to your own field set via
-> `curated_dict_path=`, the bundled aliases are disabled — generate a
+> `target_schema_path=`, the bundled aliases are disabled — generate a
 > matching one with `generate_alias_dict()` (needs `ANTHROPIC_API_KEY`
 > or `GEMINI_API_KEY`) and pass it as `alias_dict_path=`. Skipping this
 > for a custom schema measurably degrades accuracy. See [input_formats
@@ -242,7 +272,7 @@ review) are in the reference sections below and the notebooks under
 from metaharmonizer import SchemaMapEngine
 
 engine = SchemaMapEngine(
-    clinical_data_path=YOUR_QUERY_FILE,
+    input_path=YOUR_QUERY_FILE,
 )
 
 # Run Stage 1, 2 & 3 (and 4 if mode="auto")
@@ -260,15 +290,15 @@ engine.run_llm_on_file(
 **Parameters:**
 
 | Parameter | Type | Description |
-|------------------------|------------------------|------------------------|
-| `clinical_data_path` | str | Path to clinical dataset (TSV or CSV). |
-| `mode` | str | `"auto"` → automatically proceed to Stage 4 if Stage 3 confidence is low. `"manual"` → output Stage 3 results for review; Stage 4 must be triggered manually. |
+|-------------|-------------|----------------------------------------------|
+| `input_path` | str | Path to clinical dataset (TSV or CSV). |
+| `mode` | str | `"auto"` → automatically proceed to Stage 4 if Stage 3 confidence is low. `"manual"` (Default) → output Stage 3 results for review; Stage 4 must be triggered manually. |
 | `top_k` | int | Number of top matches returned for each column. |
 
 **Output:**
 
 | Aspect | Detail |
-|------------------------------------|------------------------------------|
+|---------------------|---------------------------------------------------|
 | Location | CSV file saved to `SM_OUTPUT_DIR` (see [Environment variables](#2-environment-variables)). |
 | Filename (manual mode) | `<input_root>_s3_<field_model_short>_<mode>_<YYYYMMDD_HHMMSS>.csv` |
 | Filename (auto mode) | `<input_root>_s3_<field_model_short>_s4_<llm_model_short>_<mode>_<YYYYMMDD_HHMMSS>.csv` |
@@ -283,9 +313,8 @@ engine.run_llm_on_file(
 from metaharmonizer import OntoMapEngine
 
 engine = OntoMapEngine(
-    category="disease",
-    query=query_list,
-    ground_truth_map=ground_truth_map,   # testing
+    corpus_category="disease",
+    query_ls=query_list,
     ontology_source="mondo",  # uses EBI OLS4 API
 )
 results = engine.run()
@@ -302,9 +331,8 @@ from metaharmonizer import OntoMapEngine
 # corpora never cross-contaminate each other or the built-in tables.
 my_corpus = pd.read_csv("my_custom_corpus.csv")  # must have 'label' and 'obo_id' columns
 engine = OntoMapEngine(
-    category="disease",
-    query=query_list,
-    ground_truth_map=ground_truth_map,
+    corpus_category="disease",
+    query_ls=query_list,
     corpus_df=my_corpus,
     output_dir="data/outputs/my_run",  # optional: auto-save results here
 )
@@ -314,7 +342,7 @@ results = engine.run()
 **Parameters:**
 
 | Parameter | Type (default) | Description |
-|------------------------|------------------------|------------------------|
+|-----------------|-----------------|---------------------------------------|
 | `category` | str | Ontology category — `disease`, `bodysite`, `treatment`, or `phenotype`. |
 | `query` | list | List of query terms to map. |
 | `query_df` | DataFrame (optional) | DataFrame query mode (alternative to `query`); requires `query_col`. |
@@ -326,14 +354,14 @@ results = engine.run()
 | `s2_strategy` | str | Stage 2 strategy — `lm` (CLS-token pooling) or `st` (SentenceTransformer mean pooling). |
 | `s2_method` | str | Transformer model key from `method_model.yaml` (e.g. `sap-bert`, `pubmed-bert`). |
 | `s3_strategy` | str (optional) | Stage 3 strategy — `rag`, `rag_bie`, or `None` to disable. |
-| `topk` | int (5) | Number of top matches per query. |
+| `top_k` | int (5) | Number of top matches per query. |
 | `output_dir` | str (optional) | Directory to auto-save result CSV. Filename pattern: `om_{ontology_source}_{category}_s2_{strategy}_{method}_{timestamp}.csv`. |
 | `persist_corpus` | bool (`False`) | When `True` and `corpus_df` is caller-provided, persist it to the cache CSV. |
 
 **Pipeline stages:**
 
 | Stage | Description |
-|------------------------------------|------------------------------------|
+|-----------------|-------------------------------------------------------|
 | Stage 1 | Exact matching against corpus. |
 | Stage 2 | Embedding-based similarity (LM or ST strategy). |
 | Stage 2.5 | Synonym verification — boosts low-confidence Stage 2 matches using synonym data from concept tables. |
@@ -350,13 +378,13 @@ for an overview of each notebook and its required inputs.
 
 ## 8. Frequently asked questions
 
-### Prepare inputs
+### Prepare inputs {#prepare-inputs}
 
-A deeper, example-driven walkthrough of every input and output lives in
+A deeper, example-driven walk-through of every input and output lives in
 [docs/input_formats.md](docs/input_formats.md); the answers below are
 the short version.
 
-#### What are the minimum inputs for SchemaMapper?
+#### 🤔 What are the minimum inputs for SchemaMapper? {#what-are-the-minimum-inputs-for-schemamapper}
 
 Just one: a path to your clinical data file (CSV or TSV) whose **column
 names** are what get mapped. Everything else — the target schema and the
@@ -364,26 +392,25 @@ alias dictionary — ships bundled inside the wheel, so `mode="manual"`
 runs with no keys and no extra files.
 
 ``` python
-SchemaMapEngine(clinical_data_path="examples/data/ucec_cptac_2020_before_harmonization.csv").run_schema_mapping()
+SchemaMapEngine(input_path="examples/data/ucec_cptac_2020_before_harmonization.csv").run_schema_mapping()
 ```
 
-#### How to prepare my inputs for SchemaMapper?
+#### 🤔 How to prepare my inputs for SchemaMapper? {#how-to-prepare-my-inputs-for-schemamapper}
 
 The column *names* are the input; values are sampled to help value-based
-and numeric matching, so a few real rows is plenty. `.tsv` is read
-tab-separated, anything else comma-separated. To map to your own field
-set instead of the bundled one, pass `curated_dict_path=` — and usually
-a matching `alias_dict_path=` too, since a custom schema disables the
-bundled alias dictionary. See [input_formats
+and numeric matching, so a few real rows is plenty. To map to your own
+field set instead of the bundled one, pass `target_schema_path=` — and
+usually a matching `alias_dict_path=` too, since a custom schema
+disables the bundled alias dictionary. See [input_formats
 §2.1–2.3](docs/input_formats.md#21-the-clinical-data-file-required) and
 [§2.5](docs/input_formats.md#25-the-alias-dictionary-bundled-llm-generated).
 
-#### What are the minimum inputs for OntologyMapper?
+#### 🤔 What are the minimum inputs for OntologyMapper? {#what-are-the-minimum-inputs-for-ontologymapper}
 
 Just a list of query terms. That alone runs:
 
 ``` python
-OntoMapEngine(category="disease", query=["TNBC"]).run()
+OntoMapEngine(corpus_category="disease", query_ls=["TNBC"]).run()
 ```
 
 Pass a `ground_truth_map` (term → known-correct label) and the engine
@@ -393,7 +420,7 @@ needed. The corpus is **optional** — the engine resolves it from cache
 or the source API. NCIt corpus/concept-table builds need `UMLS_API_KEY`;
 `mondo`/`uberon` (EBI OLS4) need no key.
 
-#### How to prepare my inputs for OntologyMapper?
+#### 🤔 How to prepare my inputs for OntologyMapper? {#how-to-prepare-my-inputs-for-ontologymapper}
 
 Supply queries either as a plain list (`query=`) or as a DataFrame +
 column (`query_df=`, `query_col=` — required for the `rag_bie` Stage-3
@@ -404,9 +431,9 @@ code column (`clean_code` or `obo_id`); `ontology_source` is inferred
 from the code prefixes. See [input_formats
 §1.1–1.3](docs/input_formats.md#11-the-query-required).
 
-### Interpret outputs
+### Interpret outputs {#interpret-outputs}
 
-#### How to interpret my outputs from SchemaMapper?
+#### 🤔 How to interpret my outputs from SchemaMapper? {#how-to-interpret-my-outputs-from-schemamapper}
 
 `run_schema_mapping()` returns a DataFrame with one row per **input
 column** (and writes a CSV under `SM_OUTPUT_DIR`). Key columns: `query`
@@ -416,7 +443,7 @@ matched — `std_exact`, `std_fuzzy`, `value`, `numeric`, `semantic`,
 top-k mapped field names. See [§5](#5-schemamapper) and [input_formats
 §2.4](docs/input_formats.md#24-output).
 
-#### How to interpret my outputs from OntologyMapper?
+#### 🤔 How to interpret my outputs from OntologyMapper? {#how-to-interpret-my-outputs-from-ontologymapper}
 
 `run()` returns a DataFrame, one row per query term: `query`, the top-k
 `match{i}` / `match{i}_score` candidates (best first), `stage` (1 exact,
@@ -426,7 +453,7 @@ top-k mapped field names. See [§5](#5-schemamapper) and [input_formats
 `output_dir=` to also write a timestamped CSV. See [input_formats
 §1.5](docs/input_formats.md#15-output).
 
-#### Do I need LLM? If so, where and how?
+#### 🤔 Do I need LLM? If so, where and how? {#do-i-need-llm-if-so-where-and-how}
 
 No, for the default paths. Both engines run their core stages with **no
 LLM key**: SchemaMapper `mode="manual"` (Stages 1–3) and OntologyMapper
@@ -444,9 +471,9 @@ vocabulary API. See [input_formats
 §3](docs/input_formats.md#3-which-environment-variable-gates-which-stage)
 for which variable gates which stage.
 
-### Choosing an engine and mode
+### Choosing an engine and mode {#choosing-an-engine-and-mode}
 
-#### Which engine do I use — OntologyMapper or SchemaMapper?
+#### 🤔 Which engine do I use — OntologyMapper or SchemaMapper?
 
 Pick by *what* you are aligning. If you have free-text **values** (e.g.
 `"SQUAMOUS CELL CARCINOMA, PHARYNX"`) and want the matching ontology
@@ -456,7 +483,7 @@ field names, use **`SchemaMapEngine`**. See the [engine-picker
 table](docs/input_formats.md#preparing-inputs-for-metaharmonizer) in
 input_formats.
 
-#### What is the difference between `test` and `prod` mode?
+#### 🤔 What is the difference between `test` and `prod` mode? {#what-is-the-difference-between-test-and-prod-mode}
 
 `prod` is for mapping real, **unlabelled** data — you supply only the
 terms and the engine fills in the answers; no ground truth needed.
@@ -466,9 +493,9 @@ known-correct label), and the output adds `match_level` / `ref_match` so
 you can score how often the right label was recovered. (SchemaMapper has
 the analogous `manual`/`auto` mode split — see the LLM question above.)
 
-### Performance and caching
+### Performance and caching {#performance-and-caching}
 
-#### Why is the first OntologyMapper run so slow, and later runs fast?
+#### 🤔 Why is the first OntologyMapper run so slow, and later runs fast? {#why-is-the-first-ontologymapper-run-so-slow-and-later-runs-fast}
 
 The first run for a given NCIt corpus does the one-time expensive work:
 it builds concept tables from the NCI API (minutes for the full
@@ -478,7 +505,7 @@ full corpus). All of it is cached, so subsequent runs reuse the index
 and take \~7 sec. `SchemaMapEngine` similarly downloads
 `all-MiniLM-L6-v2` once on first use.
 
-#### Where does MetaHarmonizer store its caches and models?
+#### 🤔 Where does MetaHarmonizer store its caches and models? {#where-does-metaharmonizer-store-its-caches-and-models}
 
 Under `~/.metaharmonizer/` by default: Hugging Face encoders in
 `model_cache/`, FAISS indexes and the vector DB in `KnowledgeDb/`, and
@@ -487,7 +514,7 @@ via an environment variable (`MODEL_CACHE_ROOT`, `KNOWLEDGE_DB_DIR`,
 `FAISS_INDEX_DIR`, `METAHARMONIZER_DATA_DIR`); see
 [§2](#2-environment-variables).
 
-#### Where are my output CSVs written?
+#### 🤔 Where are my output CSVs written?
 
 SchemaMapper writes to `SM_OUTPUT_DIR` (default
 `$METAHARMONIZER_DATA_DIR/schema_mapping_eval`). OntologyMapper only
