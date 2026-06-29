@@ -329,6 +329,8 @@ engine.run_llm_on_file(
 | `input_path` | str | Path to clinical dataset (TSV or CSV). |
 | `mode` | str | `"auto"` → automatically proceed to Stage 4 if Stage 3 confidence is low. `"manual"` (Default) → output Stage 3 results for review; Stage 4 must be triggered manually. |
 | `top_k` | int | Number of top matches returned for each column. |
+| `stage_filter` | list[str] \| None | (`run_llm_on_file`) Only send rows from these stages to the LLM, selected by the `stage` column (e.g. `["stage3"]`). Combined with the confidence filter (`match1_score < llm_threshold`) via AND. `None` (Default) applies no stage restriction. |
+| `merge_results` | bool | (`run_llm_on_file`) If `True`, replace re-matched rows in the input file with their Stage-4 results and write the merged table to `output_csv`; rows not re-matched pass through untouched. If `False` (Default), write only the LLM results. |
 
 **Output:**
 
