@@ -112,6 +112,7 @@ class OntoMapEngine:
             query_ls (list[str], optional): The list of query terms. Optional when
                 ``query_df`` + ``query_col`` are given (terms are then derived from
                 the column).
+            top_k (int, optional): The number of top matches to return. Defaults to 5.
             corpus_ls (list[str], optional): Explicit term list overriding **Stage 2**
                 matching only. Stage 3 always uses ``corpus_df``. Auto-derived from
                 ``corpus_df`` when omitted.
@@ -126,22 +127,32 @@ class OntoMapEngine:
             query_df (pd.DataFrame, optional): DataFrame query mode (alternative to the
                 ``query`` list); requires ``query_col``.
             query_col (str, optional): Column in ``query_df`` holding the query terms.
-            persist_corpus (bool, optional): When ``True`` with a caller-provided
-                ``corpus_df``, persist it to the canonical cache CSV. Defaults to ``False``.
             ground_truth_map (dict): The dictionary containing the mapping of queries to curated values.
                 Supplying it implies test/evaluation mode (``match_level`` is computed against it);
                 omitting it implies prod mode (curated labels default to "Not Found").
-            top_k (int, optional): The number of top matches to return. Defaults to 5.
+            corpus_hash (str, optional): Force the SQLite/FAISS table-name suffix
+                instead of deriving it from corpus content. Use to pin one cache
+                across runs over the same corpus; pass "" to reuse the standard
+                (unsuffixed) tables. Defaults to None (content-based hashing).
+            persist_corpus (bool, optional): When ``True`` with a caller-provided
+                ``corpus_df``, persist it to the canonical cache CSV. Defaults to ``False``.
+            filter_obsolete (bool, optional): When ``True``, drop ``obsolete_*``
+                labels from the corpus. Leave ``False`` for version-pinned
+                benchmarks whose ground truth still references obsolete terms.
+                Defaults to ``False``.
+            s2_method (str, optional): The embedding model key for stage 2 matching.
+                Defaults to 'sap-bert'.
             s2_strategy (str, optional): The strategy to use for stage 2 OntoMap. Defaults to 'lm'. Options are 'st' or 'lm'.
+            s3_method (str, optional): The embedding model key for stage 3 matching.
+                Defaults to 'pubmed-bert'.
             s3_strategy (str, optional): The strategy to use for stage 3 OntoMap. Defaults to None. Options are 'rag', 'rag_bie', or None.
             s3_threshold (float, optional): The threshold for stage 3 OntoMap. Defaults to 0.9.
             s4_strategy (str, optional): The strategy to use for stage 4 LLM rewriting. Defaults to None. Options are 'llm' or None.
             s4_threshold (float, optional): The threshold for stage 4. Defaults to 0.6.
             s4_model (str, optional): The LLM model key for stage 4. Defaults to 'gemma-12b'.
-            corpus_hash (str, optional): Force the SQLite/FAISS table-name suffix
-                instead of deriving it from corpus content. Use to pin one cache
-                across runs over the same corpus; pass "" to reuse the standard
-                (unsuffixed) tables. Defaults to None (content-based hashing).
+            output_dir (str, optional): Directory to save the result DataFrame to,
+                as a timestamped CSV. When ``None``, results are not written to disk.
+                Defaults to ``None``.
             **other_params (dict): Other parameters to pass to the engine.
                 ``test_or_prod`` ('test' | 'prod') is optional here; when omitted it is
                 inferred from ``ground_truth_map`` ('test' if provided, else 'prod').

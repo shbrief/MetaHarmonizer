@@ -87,9 +87,6 @@ class SchemaMapEngine:
 
         Args:
             input_path: Path to clinical data CSV/TSV file.
-            mode: Execution mode ('auto' or 'manual'). Defaults to ``"manual"``.
-            top_k: Number of top matches to return. Defaults to ``5``. ``None``
-                falls back to the resolved settings default (``settings.top_k``).
             schema: Optional bundled schema preset name (see
                 ``config.SCHEMA_PRESETS``, e.g. ``"cbio"`` or ``"gdc"``). Selects
                 a matched curated + alias + value dict set, so the alias dict is
@@ -101,6 +98,9 @@ class SchemaMapEngine:
                 preset. Ignored when ``target_schema_path`` is supplied (a
                 custom schema is not a preset, so the preset's bundled dicts
                 are not glued on).
+            top_k: Number of top matches to return. Defaults to ``5``. ``None``
+                falls back to the resolved settings default (``settings.top_k``).
+            mode: Execution mode ('auto' or 'manual'). Defaults to ``"manual"``.
             target_schema_path: Optional override for the curated schema CSV.
                 If None, uses the bundled default (config.TARGET_SCHEMA_PATH) and
                 the bundled alias / value dicts are used as-is. If overridden:
