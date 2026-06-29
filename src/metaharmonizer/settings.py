@@ -122,7 +122,21 @@ class Settings:
 
     @classmethod
     def resolve(cls, **overrides) -> "Settings":
-        """Resolve a :class:`Settings` via arg > env > project-file > default."""
+        """Resolve a :class:`Settings` via arg > env > project-file > default.
+
+        Pass keyword ``overrides`` to pin specific fields (highest precedence);
+        every other field still falls back through env var, then the project
+        file, then the built-in default. This is the recommended way to build a
+        per-run snapshot to hand to an engine, e.g.::
+
+            s = Settings.resolve(fuzzy_thresh=88, value_dict_thresh=0.9)
+            SchemaMapEngine("data.csv", settings=s)
+
+        Prefer this over the bare ``Settings(...)`` constructor: the latter takes
+        only literal field values and skips the env/project-file layers, so any
+        field you don't pass reverts to the hard-coded default instead of your
+        configured value.
+        """
         f = load_project_config()
         o = overrides
         return cls(

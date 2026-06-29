@@ -3,7 +3,6 @@ from typing import List, Tuple, Dict
 import math
 import torch
 from .base import BaseMatcher
-from ..config import VALUE_DICT_THRESH, VALUE_PERCENTAGE_THRESH, VALUE_UNIQUE_CAP
 from metaharmonizer.custom_logger.custom_logger import CustomLogger
 
 logger = CustomLogger().custlogger(loglevel='WARNING')
@@ -22,7 +21,7 @@ class ValueDictMatcher(BaseMatcher):
             return []
 
         # Notes/ID columns: too many unique values → skip
-        if len(unique_values) > VALUE_UNIQUE_CAP:
+        if len(unique_values) > self.engine.settings.value_unique_cap:
             return []
 
         total_unique = len(unique_values)
@@ -51,7 +50,7 @@ class ValueDictMatcher(BaseMatcher):
             top_scores, top_idx = torch.topk(row, k=k)
 
             filtered = [(float(s), int(j)) for s, j in zip(top_scores, top_idx)
-                        if float(s) >= VALUE_DICT_THRESH]
+                        if float(s) >= self.engine.settings.value_dict_thresh]
             if not filtered:
                 continue
 
@@ -79,7 +78,7 @@ class ValueDictMatcher(BaseMatcher):
         for f, cnt in field_count.items():
             # proportion: log-freq weighted (field_log_sum / total_log_sum)
             proportion = field_log_sum[f] / total_log_sum
-            if proportion < VALUE_PERCENTAGE_THRESH:
+            if proportion < self.engine.settings.value_percentage_thresh:
                 continue
             # avg_score: log-freq weighted similarity (tie-break only)
             avg_score = field_score_sum[f] / max(field_log_sum[f], 1e-9)
@@ -102,7 +101,7 @@ class OntologyMatcher(BaseMatcher):
         ONTOLOGY_COL_NAME_BONUS = 0.3
 
         # Notes/ID columns: too many unique values → skip
-        if len(unique_values_list) > VALUE_UNIQUE_CAP:
+        if len(unique_values_list) > self.engine.settings.value_unique_cap:
             return []
 
         unique_values = set(unique_values_list)
@@ -134,7 +133,7 @@ class OntologyMatcher(BaseMatcher):
                 proportion = min(proportion + ONTOLOGY_COL_NAME_BONUS, 1.0)
             candidates.append((field, proportion, col))
 
-        matches = [m for m in candidates if m[1] > VALUE_PERCENTAGE_THRESH]
+        matches = [m for m in candidates if m[1] > self.engine.settings.value_percentage_thresh]
         matches.sort(key=lambda x: x[1], reverse=True)
         matches = matches[:self.engine.top_k]
 

@@ -14,11 +14,7 @@ from sentence_transformers import SentenceTransformer
 import torch
 
 from . import config as _config
-from .config import (
-    FUZZY_THRESH, NOISE_VALUES, OUTPUT_DIR, FIELD_MODEL, LLM_MODEL,
-    NUMERIC_THRESH, FIELD_ALIAS_THRESH, VALUE_PERCENTAGE_THRESH,
-    LLM_THRESHOLD
-)
+from .config import NOISE_VALUES, OUTPUT_DIR, FIELD_MODEL, LLM_MODEL
 from .loaders.dict_loader import DictLoader
 from .loaders.value_loader import ValueLoader
 from .matchers.base import MatchStrategy
@@ -125,8 +121,28 @@ class SchemaMapEngine:
                 CSV. Pass ``""`` to disable alias matching. ``None`` uses the
                 default behavior (bundled alias dict, auto-disabled when a custom
                 ``target_schema_path`` is supplied).
-            settings: Optional pre-resolved :class:`Settings`. Defaults to the
-                process-wide ``get_settings()`` (arg > env > project file > default).
+            settings: Optional pre-resolved :class:`metaharmonizer.settings.Settings`
+                snapshot. Defaults to the process-wide ``get_settings()``
+                (resolves arg > env > project file > built-in default). Pass an
+                explicit snapshot to override the matching thresholds for *this
+                run only*, without touching a ``metaharmonizer.toml`` /
+                ``pyproject.toml`` file or restarting the process — useful for
+                threshold sweeps and per-dataset tuning::
+
+                    from metaharmonizer.settings import Settings
+
+                    # Start from env/file/defaults, then override two thresholds:
+                    s = Settings.resolve(fuzzy_thresh=88, value_dict_thresh=0.9)
+                    SchemaMapEngine("data.csv", settings=s)
+
+                All SchemaMapper thresholds are read live from this object at
+                match time — ``fuzzy_thresh``, ``numeric_thresh``,
+                ``field_alias_thresh``, ``value_dict_thresh``,
+                ``value_unique_cap``, ``value_percentage_thresh`` and
+                ``llm_threshold`` (see :class:`Settings` for defaults). Use
+                ``Settings.resolve(**overrides)`` rather than ``Settings(...)``
+                so the un-overridden fields still pick up env vars and the
+                project file.
         """
         from metaharmonizer.settings import get_settings
         self.settings = settings or get_settings()
@@ -507,12 +523,12 @@ class SchemaMapEngine:
             )
 
         strategies.append(
-            MatchStrategy("std_fuzzy", self.std_fuzzy.match, threshold=FUZZY_THRESH / 100)
+            MatchStrategy("std_fuzzy", self.std_fuzzy.match, threshold=self.settings.fuzzy_thresh / 100)
         )
 
         if self.has_alias_dict and self.alias_fuzzy:
             strategies.append(
-                MatchStrategy("alias_fuzzy", self.alias_fuzzy.match, threshold=FUZZY_THRESH / 100)
+                MatchStrategy("alias_fuzzy", self.alias_fuzzy.match, threshold=self.settings.fuzzy_thresh / 100)
             )
 
         return self._run_cascade(col, "stage1", strategies)
@@ -523,16 +539,16 @@ class SchemaMapEngine:
             return {}
 
         strategies = [
-            MatchStrategy("value", self.value_dict.match, threshold=VALUE_PERCENTAGE_THRESH),
-            MatchStrategy("ontology", self.ontology.match, threshold=VALUE_PERCENTAGE_THRESH),
+            MatchStrategy("value", self.value_dict.match, threshold=self.settings.value_percentage_thresh),
+            MatchStrategy("ontology", self.ontology.match, threshold=self.settings.value_percentage_thresh),
         ]
         return self._run_cascade(col, "stage2", strategies)
 
     def stage3_match(self, col: str) -> Dict[str, Any]:
         """Stage 3: Field matching with combined results."""
         strategies = [
-            MatchStrategy("numeric", self.numeric_combined.match, threshold=NUMERIC_THRESH),
-            MatchStrategy("semantic", self.semantic_combined.match, threshold=FIELD_ALIAS_THRESH),
+            MatchStrategy("numeric", self.numeric_combined.match, threshold=self.settings.numeric_thresh),
+            MatchStrategy("semantic", self.semantic_combined.match, threshold=self.settings.field_alias_thresh),
         ]
 
         return self._run_cascade(col, "stage3", strategies)
@@ -595,10 +611,10 @@ class SchemaMapEngine:
             row = self.stage3_match(col)
             if row:
                 # Auto mode: check if LLM fallback should be triggered
-                if self.mode == "auto" and self.llm and row.get('match1_score', 0) < LLM_THRESHOLD:
+                if self.mode == "auto" and self.llm and row.get('match1_score', 0) < self.settings.llm_threshold:
                     logger.info(
                         f"[Stage3] '{col}' low confidence "
-                        f"({row.get('match1_score', 0):.3f} < {LLM_THRESHOLD}), "
+                        f"({row.get('match1_score', 0):.3f} < {self.settings.llm_threshold}), "
                         f"trying LLM fallback"
                     )
 
@@ -692,7 +708,7 @@ class SchemaMapEngine:
         if 'match1_score' in df_input.columns:
             needs_rematching &= (
                 df_input['match1_score'].isna() |
-                (df_input['match1_score'] < LLM_THRESHOLD)
+                (df_input['match1_score'] < self.settings.llm_threshold)
             )
 
         # Filter by stage
@@ -702,7 +718,7 @@ class SchemaMapEngine:
         queries_to_rematch = df_input[needs_rematching]['query'].tolist()
 
         logger.info(f"[Engine] Found {len(queries_to_rematch)} queries for LLM")
-        logger.info(f"[Engine] Criteria: match1_score < {LLM_THRESHOLD}")
+        logger.info(f"[Engine] Criteria: match1_score < {self.settings.llm_threshold}")
         if stage_filter:
             logger.info(f"[Engine] Stage filter: {stage_filter}")
 

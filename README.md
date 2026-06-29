@@ -4,6 +4,7 @@
 2.  [Installation](#2-installation)
 3.  [Environment variables](#3-environment-variables)
     -   [Project config file](#project-config-file)
+    -   [Per-run overrides](#per-run-overrides-settings)
 4.  [Quickstart](#4-quickstart)
     -   [Minimal setup](#minimal-setup)
     -   [Schema mapping](#schema-mapping)
@@ -100,7 +101,9 @@ engine/CLI argument  >  environment variable  >  project config file  >  built-i
 
 -   **Arguments** — what changes per run, passed to `OntoMapEngine` /
     `SchemaMapEngine` (e.g. `s2_method`, `top_k`, `target_schema_path`,
-    `value_dict_path`, `alias_dict_path`, `corpus_hash`).
+    `value_dict_path`, `alias_dict_path`, `corpus_hash`, or a `settings=`
+    snapshot for the SchemaMapper thresholds — see [Per-run
+    overrides](#per-run-overrides-settings)).
 -   **Environment variables** — secrets and deployment/ops (table
     below).
 -   **Project config file** — project-level defaults; see [Project
@@ -141,7 +144,9 @@ Project-level defaults (thresholds, model keys, the noise-value set) can
 be set without code changes in `metaharmonizer.toml` (the whole file) or
 a `[tool.metaharmonizer]` table in `pyproject.toml`, discovered from the
 current working directory. These sit *below* environment variables and
-arguments in the precedence chain, so a per-run argument always wins.
+per-run overrides in the precedence chain (`arg > env > project file >
+default`), so a per-run `Settings` passed to the engine — see
+[Per-run overrides](#per-run-overrides-settings) below — always wins.
 
 ``` toml
 # metaharmonizer.toml  (or [tool.metaharmonizer] in pyproject.toml)
@@ -149,7 +154,7 @@ field_model = "minilm-l6"      # method key from method_model.yaml
 llm_model   = "gemma-27b"
 top_k        = 5
 
-# schema-mapper thresholds
+# SchemaMapper thresholds
 fuzzy_thresh            = 92
 numeric_thresh          = 0.6
 field_alias_thresh      = 0.5
@@ -158,13 +163,42 @@ value_unique_cap        = 50
 value_percentage_thresh = 0.2
 llm_threshold           = 0.5
 
-# replaces the built-in noise-value set when present
+# replaces the built-in noise-value set (for SchemaMapper) when present
 noise_values = ["yes", "no", "unknown", "not reported", "n/a"]
 ```
 
 > Parsing uses the stdlib `tomllib` (Python ≥ 3.11) or the optional
 > `tomli` backport on 3.10. If neither is available the file layer is
 > silently skipped and built-in defaults apply.
+
+### Per-run overrides (`settings=`)
+
+The project file sets process-wide defaults. To vary settings **per run**
+in the same process — e.g. a threshold sweep, per-dataset tuning, or a
+service handling different inputs — build a `Settings` snapshot and pass it
+to the engine. This is the top of the precedence chain, so it wins over the
+env vars and the project file:
+
+``` python
+from metaharmonizer.settings import Settings
+from metaharmonizer.models.schema_mapper.engine import SchemaMapEngine
+
+# Settings.resolve() starts from env/file/defaults, then applies the
+# overrides — fields you don't name keep their configured values.
+settings = Settings.resolve(fuzzy_thresh=88, value_dict_thresh=0.9)
+
+engine = SchemaMapEngine("data.csv", settings=settings)
+```
+
+All SchemaMapper thresholds are read live from this object at match time
+(`fuzzy_thresh`, `numeric_thresh`, `field_alias_thresh`, `value_dict_thresh`,
+`value_unique_cap`, `value_percentage_thresh`, `llm_threshold`), so different
+engine instances in one process can use different thresholds.
+
+> Use `Settings.resolve(**overrides)`, not the bare `Settings(...)`
+> constructor: `resolve()` keeps the env-var and project-file layers for any
+> field you don't override, whereas `Settings(...)` takes only literal values
+> and falls back to the hard-coded defaults.
 
 ## 4. Quickstart
 

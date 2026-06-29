@@ -6,7 +6,10 @@ from metaharmonizer.models.schema_mapper.matchers.stage2_matchers import (
     ValueDictMatcher,
     OntologyMatcher,
 )
-from metaharmonizer.models.schema_mapper.config import VALUE_UNIQUE_CAP
+from metaharmonizer.settings import Settings
+
+# Default unique-value cap, the single source of truth (was config.VALUE_UNIQUE_CAP).
+VALUE_UNIQUE_CAP = Settings().value_unique_cap
 
 
 # ── ValueDictMatcher helpers ───────────────────────────────────────────────────
@@ -36,6 +39,7 @@ def _make_vd_engine(
                    defaults to the same vectors as corpus_embs[:M]
     """
     engine = MagicMock()
+    engine.settings = Settings()  # default thresholds (value_unique_cap=50, ...)
     engine.top_k = top_k
     engine.value_texts = ["dummy"]          # non-None / non-empty guard
     engine.value_embs = corpus_embs
@@ -74,7 +78,7 @@ class TestValueDictMatcher:
         assert ValueDictMatcher(engine).match("sex") == []
 
     def test_high_similarity_returns_field(self):
-        # query vector == corpus vector → cosine sim = 1.0 > VALUE_DICT_THRESH
+        # query vector == corpus vector → cosine sim = 1.0 > settings.value_dict_thresh
         vec = torch.nn.functional.normalize(torch.tensor([[1.0, 0.0, 0.0, 0.0]]), p=2, dim=1)
         engine = _make_vd_engine(
             unique_values=["Male"],
@@ -86,7 +90,7 @@ class TestValueDictMatcher:
         assert any(r[0] == "sex" for r in result)
 
     def test_orthogonal_vectors_return_empty(self):
-        # cosine sim = 0 < VALUE_DICT_THRESH → no matches
+        # cosine sim = 0 < settings.value_dict_thresh → no matches
         q = torch.nn.functional.normalize(torch.tensor([[0.0, 1.0, 0.0, 0.0]]), p=2, dim=1)
         c = torch.nn.functional.normalize(torch.tensor([[1.0, 0.0, 0.0, 0.0]]), p=2, dim=1)
         engine = _make_vd_engine(
@@ -121,6 +125,7 @@ class TestValueDictMatcher:
 
 def _make_onto_engine(unique_values, hits, frequencies=None, top_k=5):
     engine = MagicMock()
+    engine.settings = Settings()  # default thresholds (value_unique_cap=50, ...)
     engine.top_k = top_k
     engine.unique_values.return_value = unique_values
     n = max(len(unique_values), 1)
@@ -144,7 +149,7 @@ class TestOntologyMatcher:
         assert OntologyMatcher(engine).match("sex") == []
 
     def test_field_above_threshold_included(self):
-        # Both values matched → proportion = 1.0 > VALUE_PERCENTAGE_THRESH
+        # Both values matched → proportion = 1.0 > settings.value_percentage_thresh
         engine = _make_onto_engine(
             ["Male", "Female"],
             hits={"sex": ["Male", "Female"]},
@@ -153,7 +158,7 @@ class TestOntologyMatcher:
         assert any(r[0] == "sex" for r in result)
 
     def test_field_below_threshold_filtered(self):
-        # 10 unique values; only 1 matched → proportion ≈ 0.1 < VALUE_PERCENTAGE_THRESH
+        # 10 unique values; only 1 matched → proportion ≈ 0.1 < settings.value_percentage_thresh
         many = [str(i) for i in range(10)]
         engine = _make_onto_engine(many, hits={"sex": [many[0]]})
         result = OntologyMatcher(engine).match("col")

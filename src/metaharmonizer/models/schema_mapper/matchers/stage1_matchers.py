@@ -2,7 +2,6 @@
 from typing import List, Tuple
 from rapidfuzz import process, fuzz
 from .base import BaseMatcher
-from ..config import FUZZY_THRESH
 from metaharmonizer.utils.schema_mapper_utils import normalize
 
 class StandardExactMatcher(BaseMatcher):
@@ -48,7 +47,7 @@ class StandardFuzzyMatcher(BaseMatcher):
 
         matches = []
         for cand_norm, score, _ in candidates:
-            if score >= FUZZY_THRESH:
+            if score >= self.engine.settings.fuzzy_thresh:
                 std_field = self.engine.normed_std_to_std[cand_norm]
                 matches.append((std_field, score / 100.0, ""))
         return sorted(matches, key=lambda x: x[1], reverse=True)
@@ -71,7 +70,7 @@ class AliasFuzzyMatcher(BaseMatcher):
 
         best = {}
         for cand, score, _ in candidates:
-            if score >= FUZZY_THRESH:
+            if score >= self.engine.settings.fuzzy_thresh:
                 for std_field in self.engine.sources_to_fields[cand]:
                     src = self.engine.normed_source_to_source.get(cand, std_field)
                     s = score / 100.0

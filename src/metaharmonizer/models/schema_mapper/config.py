@@ -81,14 +81,14 @@ def resolve_schema_preset(name: str) -> dict[str, "Path"]:
 FIELD_MODEL = _resolve_model(_settings.field_model)
 LLM_MODEL = _resolve_model(_settings.llm_model)
 
-# === Thresholds === (project file > built-in default, via the resolver)
-FUZZY_THRESH = _settings.fuzzy_thresh
-NUMERIC_THRESH = _settings.numeric_thresh
-FIELD_ALIAS_THRESH = _settings.field_alias_thresh
-VALUE_DICT_THRESH = _settings.value_dict_thresh
-VALUE_UNIQUE_CAP = _settings.value_unique_cap
-VALUE_PERCENTAGE_THRESH = _settings.value_percentage_thresh
-LLM_THRESHOLD = _settings.llm_threshold
+# === Thresholds ===
+# Resolved tunables (fuzzy_thresh, numeric_thresh, field_alias_thresh,
+# value_dict_thresh, value_unique_cap, value_percentage_thresh, llm_threshold)
+# live on the :class:`metaharmonizer.settings.Settings` snapshot, read live by
+# the engine and matchers via ``self.settings.*``. This lets a per-run
+# ``SchemaMapEngine(settings=...)`` override them; module-level constants here
+# would freeze a single process-wide value at import. Build a snapshot with
+# ``Settings.resolve(**overrides)`` (arg > env > project file > default).
 
 # === Noise Values === (project file `noise_values` list replaces the default)
 _DEFAULT_NOISE_VALUES = {
