@@ -1,5 +1,25 @@
 # MetaHarmonizer: a robust, fully local biomedical metadata harmonization system
 
+1.  [Introduction](#1-introduction)
+2.  [Installation](#2-installation)
+3.  [Environment variables](#3-environment-variables)
+    -   [Project config file](#project-config-file)
+4.  [Quickstart](#4-quickstart)
+    -   [Minimal setup](#minimal-setup)
+    -   [Schema mapping](#schema-mapping)
+    -   [Ontology mapping](#ontology-mapping)
+5.  [Datasets](#5-datasets)
+6.  [SchemaMapper](#6-schemamapper)
+7.  [OntologyMapper](#7-ontologymapper)
+8.  [Example notebooks](#8-example-notebooks)
+9.  [Frequently asked questions](#9-frequently-asked-questions)
+    -   [Prepare inputs](#prepare-inputs)
+    -   [Interpret outputs](#interpret-outputs)
+    -   [Choosing an engine and mode](#choosing-an-engine-and-mode)
+    -   [Performance and caching](#performance-and-caching)
+    
+
+## 1. Introduction
 The pre-print is now available:
 
 > ***MetaHarmonizer: robust biomedical metadata harmonization and a
@@ -18,26 +38,7 @@ MetaHarmonizer currently provides two key modules:
 
 ![](metaharmonizer_diagram.png)
 
-## Table of contents
-
-1.  [Installation](#1-installation)
-2.  [Environment variables](#2-environment-variables)
-    -   [Project config file](#project-config-file)
-3.  [Quickstart](#3-quickstart)
-    -   [Minimal setup](#minimal-setup)
-    -   [Schema mapping](#schema-mapping)
-    -   [Ontology mapping](#ontology-mapping)
-4.  [Datasets](#4-datasets)
-5.  [SchemaMapper](#5-schemamapper)
-6.  [OntologyMapper](#6-ontologymapper)
-7.  [Example notebooks](#7-example-notebooks)
-8.  [Frequently asked questions](#8-frequently-asked-questions)
-    -   [Prepare inputs](#prepare-inputs)
-    -   [Interpret outputs](#interpret-outputs)
-    -   [Choosing an engine and mode](#choosing-an-engine-and-mode)
-    -   [Performance and caching](#performance-and-caching)
-
-## 1. Installation
+## 2. Installation
 
 ``` bash
 # Clone
@@ -80,7 +81,7 @@ pip install "git+https://github.com/shbrief/MetaHarmonizer#egg=metaharmonizer[ll
 
 > The full ontology corpus is **not bundled** in the wheel. Set
 > `METAHARMONIZER_DATA_DIR` (see [Environment
-> variables](#2-environment-variables)) to point at a local copy, or let
+> variables](#3-environment-variables)) to point at a local copy, or let
 > the engine fetch/build it on first run (set `UMLS_API_KEY` and/or pass
 > `corpus_df=`). A small reference dataset
 > (`schema/cbio_target_attrs.csv`, `corpus/oncotree_code_to_name.csv`,
@@ -88,7 +89,7 @@ pip install "git+https://github.com/shbrief/MetaHarmonizer#egg=metaharmonizer[ll
 > lookups. Small, runnable sample inputs for the demo notebooks live
 > under [`examples/data/`](examples/data/).
 
-## 2. Environment variables
+## 3. Environment variables
 
 Configuration is resolved through a single precedence chain (highest
 wins):
@@ -165,7 +166,7 @@ noise_values = ["yes", "no", "unknown", "not reported", "n/a"]
 > `tomli` backport on 3.10. If neither is available the file layer is
 > silently skipped and built-in defaults apply.
 
-## 3. Quickstart
+## 4. Quickstart
 
 The snippets below read the small sample inputs under
 [`examples/data/`](examples/data/) (run them from the repo root, or
@@ -182,7 +183,7 @@ cd MetaHarmonizer
 conda create -n mh python=3.10 -y
 conda activate mh
 
-# Install FAISS from conda-forge (NOT pip) — see note in §1 Installation
+# Install FAISS from conda-forge (NOT pip) — see note in §2 Installation
 conda install -c conda-forge faiss-cpu -y   # macOS
 # pip install faiss-cpu                      # Linux / Windows / CI
 
@@ -236,7 +237,7 @@ Richer examples (custom corpus, MONDO/UBERON sources, Stage-4 LLM
 review) are in the reference sections below and the notebooks under
 [`examples/`](examples/).
 
-## 4. Datasets
+## 5. Datasets
 
 -   For **schema mapping**, provide a biomedical metadata file.
     Currently, it is verified for cancer-related metadata, but other
@@ -253,7 +254,7 @@ review) are in the reference sections below and the notebooks under
     [`examples/data/`](examples/data/); they are illustrative, not the
     full research corpora.
 
-## 5. SchemaMapper
+## 6. SchemaMapper
 
 > **The alias dictionary is highly recommended.** The Stage-1 `dict`
 > step matches your column names against curated aliases (known
@@ -299,13 +300,13 @@ engine.run_llm_on_file(
 
 | Aspect | Detail |
 |---------------------|---------------------------------------------------|
-| Location | CSV file saved to `SM_OUTPUT_DIR` (see [Environment variables](#2-environment-variables)). |
+| Location | CSV file saved to `SM_OUTPUT_DIR` (see [Environment variables](#3-environment-variables)). |
 | Filename (manual mode) | `<input_root>_s3_<field_model_short>_<mode>_<YYYYMMDD_HHMMSS>.csv` |
 | Filename (auto mode) | `<input_root>_s3_<field_model_short>_s4_<llm_model_short>_<mode>_<YYYYMMDD_HHMMSS>.csv` |
 | Filename (manual Stage 4) | When Stage 4 is run manually via `run_llm_on_file(...)`, `output_csv` controls the filename and location. |
 | Columns | `query`, `stage` (stage1/stage2/stage3), `method` (dict, fuzzy, numeric, alias, bert, freq), and `match{i}`, `match{i}_score`, `match{i}_source` for the top-k matches. |
 
-## 6. OntologyMapper
+## 7. OntologyMapper
 
 **Using a non-NCIt ontology (e.g. MONDO):**
 
@@ -370,13 +371,13 @@ results = engine.run()
 **Output:** DataFrame with top-k matches, scores, and match levels for
 each query term.
 
-## 7. Example notebooks
+## 8. Example notebooks
 
 Demonstration notebooks for the ontology and schema mappers live under
 [`examples/`](examples/). See [examples/README.md](examples/README.md)
 for an overview of each notebook and its required inputs.
 
-## 8. Frequently asked questions
+## 9. Frequently asked questions
 
 ### Prepare inputs
 
@@ -440,7 +441,7 @@ column** (and writes a CSV under `SM_OUTPUT_DIR`). Key columns: `query`
 (original column name), `stage` (`stage1`–`stage4`), `method` (how it
 matched — `std_exact`, `std_fuzzy`, `value`, `numeric`, `semantic`,
 `llm`, …), and `match{i}` / `match{i}_score` / `match{i}_source` for the
-top-k mapped field names. See [§5](#5-schemamapper) and [input_formats
+top-k mapped field names. See [§6](#6-schemamapper) and [input_formats
 §2.4](docs/input_formats.md#24-output).
 
 #### 🤔 How to interpret my outputs from OntologyMapper?
@@ -512,12 +513,12 @@ Under `~/.metaharmonizer/` by default: Hugging Face encoders in
 corpus/schema reference files in `data/`. Each location is overridable
 via an environment variable (`MODEL_CACHE_ROOT`, `KNOWLEDGE_DB_DIR`,
 `FAISS_INDEX_DIR`, `METAHARMONIZER_DATA_DIR`); see
-[§2](#2-environment-variables).
+[§3](#3-environment-variables).
 
 #### 🤔 Where are my output CSVs written?
 
 SchemaMapper writes to `SM_OUTPUT_DIR` (default
 `$METAHARMONIZER_DATA_DIR/schema_mapping_eval`). OntologyMapper only
 writes a CSV when you pass `output_dir=`. Both use timestamped filename
-patterns documented in [§5](#5-schemamapper) and
-[§6](#6-ontologymapper).
+patterns documented in [§6](#6-schemamapper) and
+[§7](#7-ontologymapper).
