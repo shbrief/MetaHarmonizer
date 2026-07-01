@@ -128,7 +128,7 @@ put them in a config file. Here are the environment variables set in
 | `UMLS_API_KEY` | OM Stage 2.5 NCI Thesaurus lookups, concept-table builder, `update_term_via_code` | — | Required for `ontology_source="ncit"` pipeline stages that hit the live API. |
 | `METAHARMONIZER_DATA_DIR` | Locating corpus + schema reference files (`oncotree_code_to_name.csv`, `cbio_target_attrs.csv`, etc.) | `~/.metaharmonizer/data` | Small reference files ship inside the wheel as a fallback when this dir is empty; set this to a local corpus copy to override. |
 | `SM_OUTPUT_DIR` | `SM` output path | `$METAHARMONIZER_DATA_DIR/schema_mapping_eval` | Overrides where CSV results are written. |
-| `FIELD_VALUE_JSON` | SM value dictionary | `$METAHARMONIZER_DATA_DIR/schema/field_value_dict.json` | Point at an alternative value dict. |
+| `TARGET_ATTRS_ALLOWED_VALUES_JSON` | SM value dictionary | `$METAHARMONIZER_DATA_DIR/schema/gdc_target_attrs_allowed_values.json` | Point at an alternative value dict. |
 | `VECTOR_DB_PATH` | OM Knowledge-DB SQLite file | `$KNOWLEDGE_DB_DIR/vector_db.sqlite` | — |
 | `FAISS_INDEX_DIR` | OM STage 2/3 FAISS index cache | `$KNOWLEDGE_DB_DIR/faiss_indexes` | — |
 | `KNOWLEDGE_DB_DIR` | Root dir for KnowledgeDb assets | `~/.metaharmonizer/KnowledgeDb` | — |

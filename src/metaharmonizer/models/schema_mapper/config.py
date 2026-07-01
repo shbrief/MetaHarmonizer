@@ -33,15 +33,15 @@ OUTPUT_DIR = Path(os.getenv("SM_OUTPUT_DIR", DATA_DIR / "schema_mapping_eval"))
 # the bundled copy that ships inside the wheel (resolve_data_file falls back
 # automatically). Users typically override this via the ``schema`` preset arg
 # or SchemaMapEngine(target_schema_path=...).
-TARGET_SCHEMA_PATH = resolve_data_file("schema/gdc_schema.csv")
+TARGET_SCHEMA_PATH = resolve_data_file("schema/gdc_target_attrs.csv")
 # Alias dict is keyed to the default curated schema (GDC). engine.py disables it
 # when the user supplies their own schema, so the bundled fallback is only
-# read alongside the bundled gdc_schema.csv.
+# read alongside the bundled gdc_target_attrs.csv.
 ALIAS_DICT_PATH = resolve_data_file("schema/gdc_target_attrs_alias_haiku.csv")
 # Value dict is filtered against the active curated schema by ValueLoader
 # (allowed_fields=standard_fields), so the bundled copy is safe to fall
 # through to a user-supplied schema — disjoint keys are skipped automatically.
-VALUE_DICT_PATH = os.getenv("FIELD_VALUE_JSON") or resolve_data_file("schema/gdc_value_dict.json")
+VALUE_DICT_PATH = os.getenv("TARGET_ATTRS_ALLOWED_VALUES_JSON") or resolve_data_file("schema/gdc_target_attrs_allowed_values.json")
 
 # === Bundled schema presets ===
 # A preset bundles a curated schema with its matched alias + value dicts as a
@@ -56,12 +56,12 @@ SCHEMA_PRESETS: dict[str, dict[str, str]] = {
     "cbio": {
         "target_schema_path": "schema/cbio_target_attrs.csv",
         "alias_dict_path": "schema/cbio_target_attrs_alias_manual.csv",
-        "value_dict_path": "schema/field_value_dict.json",
+        "value_dict_path": "schema/cbio_target_attrs_allowed_values.json",
     },
     "gdc": {
-        "target_schema_path": "schema/gdc_schema.csv",
+        "target_schema_path": "schema/gdc_target_attrs.csv",
         "alias_dict_path": "schema/gdc_target_attrs_alias_haiku.csv",
-        "value_dict_path": "schema/gdc_value_dict.json",
+        "value_dict_path": "schema/gdc_target_attrs_allowed_values.json",
     },
 }
 

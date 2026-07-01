@@ -109,9 +109,9 @@ include = ["metaharmonizer*"]
     "corpus/ncit_descendants.json",
     "schema/cbio_target_attrs.csv",
     "schema/cbio_target_attrs_alias_manual.csv",
-    "schema/field_value_dict.json",
-    "schema/gdc_schema.csv",
-    "schema/gdc_value_dict.json",
+    "schema/cbio_target_attrs_allowed_values.json",
+    "schema/gdc_target_attrs.csv",
+    "schema/gdc_target_attrs_allowed_values.json",
     "schema/gdc_target_attrs_alias_haiku.csv",
     "schema/gdc_target_attrs_alias_haiku.meta.json",
 ]

@@ -115,7 +115,7 @@ class SchemaMapEngine:
                     fields; if no overlap, value matching is skipped.
             value_dict_path: Optional per-run override for the value dictionary
                 JSON. Pass ``""`` to explicitly disable value matching. ``None``
-                falls back to ``config.VALUE_DICT_PATH`` (env ``FIELD_VALUE_JSON``
+                falls back to ``config.VALUE_DICT_PATH`` (env ``TARGET_ATTRS_ALLOWED_VALUES_JSON``
                 or the bundled default). Replaces mutating ``config.VALUE_DICT_PATH``.
             alias_dict_path: Optional per-run override for the alias dictionary
                 CSV. Pass ``""`` to disable alias matching. ``None`` uses the
