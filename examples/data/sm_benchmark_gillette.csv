@@ -1,0 +1,16 @@
+query,ref_match,source_study
+Age,age_at_diagnosis|age_at_index|days_to_birth,Gillette
+BMI,bmi,Gillette
+Cigarettes.per.Day,cigarettes_per_day,Gillette
+Country.of.Origin,country_of_birth,Gillette
+Ethnicity,ethnicity|race,Gillette
+Gender,gender,Gillette
+Height.cm,height,Gillette
+Pack.Years.Smoked,pack_years_smoked,Gillette
+Region.of.Origin,race,Gillette
+Secondhand.Smoke,environmental_tobacco_smoke_exposure,Gillette
+Smoking.History,tobacco_smoking_status,Gillette
+Smoking.Status,tobacco_smoking_status,Gillette
+Stage,ajcc_clinical_stage|ajcc_pathologic_stage|figo_stage|uicc_clinical_stage|uicc_pathologic_stage,Gillette
+Type,tissue_type,Gillette
+Weight.kg,weight,Gillette

@@ -1,5 +1,4 @@
 """Tests for numeric_match_utils — strip_units_and_tags, detect_numeric_semantic, family_boost."""
-import pytest
 
 from metaharmonizer.utils.numeric_match_utils import (
     strip_units_and_tags,

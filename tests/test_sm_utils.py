@@ -1,6 +1,5 @@
 """Tests for schema_mapper_utils — normalize, extract_valid_value, is_numeric_column."""
 import pandas as pd
-import pytest
 
 from metaharmonizer.utils.schema_mapper_utils import normalize, extract_valid_value, is_numeric_column
 
