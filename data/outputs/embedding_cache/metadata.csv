@@ -1,0 +1,7 @@
+text,normalized_text,model_name,source
+breast cancer,breast cancer,all-MiniLM-L6-v2,column_name
+breast carcinoma,breast carcinoma,all-MiniLM-L6-v2,column_name
+breast neoplasm,breast neoplasm,all-MiniLM-L6-v2,column_name
+lung cancer,lung cancer,all-MiniLM-L6-v2,column_name
+lung adenocarcinoma,lung adenocarcinoma,all-MiniLM-L6-v2,column_name
+NSCLC,nsclc,all-MiniLM-L6-v2,column_name

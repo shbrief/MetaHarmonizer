@@ -1,13 +1,10 @@
 """Tests for EmbeddingStore — caching, deduplication, and disk persistence."""
 
-import shutil
-from pathlib import Path
-from unittest.mock import MagicMock, patch
 
 import numpy as np
 import pytest
 
-from metaharmonizer.utils.embedding_store import EmbeddingRecord, EmbeddingStore
+from metaharmonizer.utils.embedding_store import EmbeddingStore
 
 
 # ── Helpers ──────────────────────────────────────────────────────────

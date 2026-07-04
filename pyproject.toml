@@ -4,13 +4,14 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "metaharmonizer"
-version = "0.3.0"
-description = "Biomedical metadata harmonization: ontology mapping, schema mapping, and field suggestion"
+version = "0.4.0"
+description = "Biomedical metadata harmonization: ontology mapping and schema mapping"
 requires-python = ">=3.10"
 readme = "readme.md"
 license = { text = "MIT" }
 authors = [
-    { name = "Sehyun Oh" },
+    { name = "Sehyun Oh", email = "shbrief@gmail.com"},
+    { name = "Changchang Li", email = "chang-cc.li@outlook.com" },
     { name = "Abhilash Dhal", email = "adhalbiophysics@gmail.com" },
 ]
 classifiers = [
@@ -23,12 +24,18 @@ dependencies = [
     # Core data and ML
     "pandas",
     "numpy",
-    "torch",
+    # torch>=2.6 required: newer transformers refuses to load .bin-only model
+    # checkpoints (e.g. pubmed-bert / pritamdeka/S-PubMedBert-MS-MARCO, which
+    # ships no safetensors) on older torch (CVE-2025-32434).
+    "torch>=2.6",
     "transformers",
     "sentence-transformers",
     "scikit-learn",
-    # Vector search
-    "faiss-cpu==1.11.0",
+    # Vector search: FAISS is intentionally NOT listed here. The PyPI
+    # `faiss-cpu` wheel bundles its own libomp, which collides with torch's
+    # bundled libomp on macOS and segfaults during search. Install it from
+    # conda-forge instead (`conda install -c conda-forge faiss-cpu`), which
+    # links the env's shared llvm-openmp. See the README installation step.
     # Fuzzy matching
     "rapidfuzz",
     "thefuzz",
@@ -75,14 +82,14 @@ all = [
 ]
 
 [tool.setuptools]
-package-dir = { "" = "." }
+package-dir = { "" = "src" }
 
 [tool.setuptools.packages.find]
-where = ["."]
+where = ["src"]
 include = ["metaharmonizer*"]
 
 [tool.setuptools.package-data]
-# Bundle the method→model YAML that lives inside metaharmonizer/models/.
+# Bundle the method→model YAML that lives inside src/metaharmonizer/models/.
 "metaharmonizer.models" = ["method_model.yaml"]
 # Small reference files shipped for "zero-config" first use. Accessed via
 # metaharmonizer._paths.resolve_data_file() / bundled_file(). Large corpora
@@ -93,12 +100,45 @@ include = ["metaharmonizer*"]
 # auto-disabled in engine.py when the user supplies their own schema; value
 # dict is filtered against the active curated schema by ValueLoader; ncit
 # descendants is a NCIt root→descendants table independent of user schema.
+#
+# Schema presets (config.SCHEMA_PRESETS): each is a matched curated + alias +
+# value trio. "cbio" is the 33-field default; "gdc" is the 736-field GDC schema
+# with a Haiku-4.5-generated alias dict (provenance in the sibling .meta.json).
 "metaharmonizer._bundled_data" = [
     "corpus/oncotree_code_to_name.csv",
-    "schema/curated_fields.csv",
-    "schema/curated_fields_source_latest_with_flags.csv",
-    "schema/field_value_dict.json",
-    "schema/ncit_descendants.json",
+    "corpus/ncit_descendants.json",
+    "schema/cbio_target_attrs.csv",
+    "schema/cbio_target_attrs_alias_manual.csv",
+    "schema/cbio_target_attrs_allowed_values.json",
+    "schema/gdc_target_attrs.csv",
+    "schema/gdc_target_attrs_allowed_values.json",
+    "schema/gdc_target_attrs_alias_haiku.csv",
+    "schema/gdc_target_attrs_alias_haiku.meta.json",
 ]
 
 [tool.pytest.ini_options]
+
+[tool.ruff]
+# Scientific code; 99 keeps the vast majority of lines compliant without
+# reflowing readable expressions to 79 cols.
+line-length = 99
+target-version = "py310"
+extend-exclude = ["model_cache", "data"]
+
+[tool.ruff.lint]
+# PEP 8 (pycodestyle E/W) + Pyflakes (F). Naming/typing/bugbear rule sets
+# (N/UP/B) are intentionally not enabled yet to keep the diff focused.
+select = ["E", "F", "W"]
+
+[tool.ruff.lint.per-file-ignores]
+# `D` (distances) and `I` (indices) are the canonical FAISS `index.search()`
+# return-value names; keeping them aids readability for FAISS users.
+"src/metaharmonizer/models/ontology_mapper_lm.py" = ["E741"]
+"src/metaharmonizer/models/ontology_mapper_llm.py" = ["E741"]
+"src/metaharmonizer/models/ontology_mapper_st.py" = ["E741"]
+"src/metaharmonizer/models/ontology_models.py" = ["E741"]
+"src/metaharmonizer/knowledge_db/synonym_dict.py" = ["E741"]
+# Test doubles for FAISS `index.search()` mirror the same `D, I` names.
+"tests/test_om_lm.py" = ["E741"]
+"tests/test_om_llm.py" = ["E741"]
+"tests/test_om_st.py" = ["E741"]

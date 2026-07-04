@@ -1,5 +1,4 @@
 """Tests for stage1_matchers — StandardExactMatcher, AliasExactMatcher, StandardFuzzyMatcher, AliasFuzzyMatcher."""
-import pytest
 from unittest.mock import MagicMock
 
 from metaharmonizer.models.schema_mapper.matchers.stage1_matchers import (
@@ -8,6 +7,7 @@ from metaharmonizer.models.schema_mapper.matchers.stage1_matchers import (
     StandardFuzzyMatcher,
     AliasFuzzyMatcher,
 )
+from metaharmonizer.settings import Settings
 from metaharmonizer.utils.schema_mapper_utils import normalize
 
 
@@ -18,6 +18,7 @@ def _make_engine(has_alias: bool = False, top_k: int = 3):
     normed_to_std = dict(zip(std_normed, std_fields))
 
     engine = MagicMock()
+    engine.settings = Settings()  # default thresholds (fuzzy_thresh=92, ...)
     engine.standard_fields = std_fields
     engine.standard_fields_normed = std_normed
     engine.normed_std_to_std = normed_to_std
@@ -131,7 +132,7 @@ class TestStandardFuzzyMatcher:
 
     def test_very_different_query_returns_empty(self):
         engine = _make_engine(top_k=3)
-        # FUZZY_THRESH = 92; completely unrelated string should score below it
+        # settings.fuzzy_thresh = 92; completely unrelated string should score below it
         result = StandardFuzzyMatcher(engine).match("zzz_xyz_qrst_uvw")
         assert result == []
 

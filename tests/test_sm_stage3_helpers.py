@@ -1,5 +1,4 @@
 """Tests for stage3_matchers pure-Python helpers — _merge_top_k, _is_treatment_column."""
-import pytest
 
 from metaharmonizer.models.schema_mapper.matchers.stage3_matchers import (
     _merge_top_k,

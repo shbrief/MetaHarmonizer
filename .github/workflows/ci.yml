@@ -25,6 +25,12 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install -e ".[dev]"
+          # FAISS is deliberately not a wheel dependency: the PyPI faiss-cpu
+          # wheel bundles its own libomp, which collides with torch's libomp
+          # and segfaults on macOS (see pyproject.toml). That conflict is
+          # macOS-only, so installing the pip wheel on the Linux CI runner is
+          # safe and lets the ontology-mapper tests import faiss.
+          pip install faiss-cpu
 
       - name: Run fast tests
         run: pytest tests/ -v
