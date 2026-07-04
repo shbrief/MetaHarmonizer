@@ -7,10 +7,10 @@ name = "metaharmonizer"
 version = "0.4.0"
 description = "Biomedical metadata harmonization: ontology mapping and schema mapping"
 requires-python = ">=3.10"
-readme = "readme.md"
+readme = "README.md"
 license = { text = "MIT" }
 authors = [
-    { name = "Sehyun Oh", email = "shbrief@gmail.com"},
+    { name = "Sehyun Oh", email = "shbrief@gmail.com" },
     { name = "Changchang Li", email = "chang-cc.li@outlook.com" },
     { name = "Abhilash Dhal", email = "adhalbiophysics@gmail.com" },
 ]

@@ -144,6 +144,9 @@ class OntoMapLM(otm.OntoModelsBase):
                           ground_truth_map: dict[str, str] = None,
                           top_k: int = 5,
                           test_or_prod: str = 'test') -> pd.DataFrame:
+        if test_or_prod == 'test' and ground_truth_map is None:
+            raise ValueError("ground_truth_map should be provided for test mode")
+
         idx = self.vector_store.index
 
         q_embs = self.create_embeddings(self.query, convert_to_tensor=False)
