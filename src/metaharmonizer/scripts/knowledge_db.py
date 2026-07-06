@@ -59,15 +59,19 @@ _FAISS_SUBDIR = "faiss_indexes"
 def _kb_dir() -> Path:
     from metaharmonizer import _paths
 
-    return Path(os.environ.get("KNOWLEDGE_DB_DIR", _paths.KNOWLEDGE_DB_DIR))
+    return Path(os.environ.get("KNOWLEDGE_DB_DIR", str(_paths.DEFAULT_KNOWLEDGE_DB_DIR)))
 
 
 def _sqlite_path(kb: Path) -> Path:
-    return kb / _SQLITE_NAME
+    # Mirror the engine's own resolution (metaharmonizer._paths): the SQLite
+    # store and FAISS index dir can be relocated independently of
+    # KNOWLEDGE_DB_DIR via VECTOR_DB_PATH / FAISS_INDEX_DIR, so we cannot assume
+    # they live under the KB dir.
+    return Path(os.environ.get("VECTOR_DB_PATH", str(kb / _SQLITE_NAME)))
 
 
 def _faiss_dir(kb: Path) -> Path:
-    return kb / _FAISS_SUBDIR
+    return Path(os.environ.get("FAISS_INDEX_DIR", str(kb / _FAISS_SUBDIR)))
 
 
 def _package_version() -> str:
@@ -88,18 +92,25 @@ def _sha256(path: Path) -> str:
 
 
 def _parse_index_name(stem: str) -> dict[str, str]:
-    """Parse ``{strategy}_{method}_{ontology_source}_{category}`` from a FAISS
-    index filename stem. Best-effort: unrecognised shapes still round-trip, they
-    just carry a coarser ``raw`` label (custom-corpus hash suffixes fall here)."""
+    """Best-effort parse of a FAISS index filename stem.
+
+    The engine builds names as
+    ``{strategy}_{method}_{ontology_source}_{category}{table_suffix}`` where the
+    embedding *method* itself may contain underscores: a method such as
+    ``sap-bert`` is written to disk as ``sap_bert`` (``method.replace('-', '_')``
+    in ``faiss_sqlite_pipeline.py``). ``ontology_source`` and ``category`` are
+    validated single-token identifiers, so we anchor from the right — category is
+    the last token, source the second-last, strategy the first — and treat
+    everything in between as the variable-length method. A naive left-to-right
+    split would mis-read ``rag_sap_bert_ncit_disease`` as category ``ncit_disease``.
+    Unrecognised shapes still round-trip, carrying a coarser ``raw`` label."""
     parts = stem.split("_")
     if len(parts) >= 4:
-        strategy, method, source = parts[0], parts[1], parts[2]
-        category = "_".join(parts[3:])
         return {
-            "strategy": strategy,
-            "method": method,
-            "ontology_source": source,
-            "category": category,
+            "strategy": parts[0],
+            "method": "_".join(parts[1:-2]),
+            "ontology_source": parts[-2],
+            "category": parts[-1],
         }
     return {"raw": stem}
 
@@ -191,6 +202,16 @@ def cmd_export(args: argparse.Namespace) -> int:
 # --------------------------------------------------------------------------- #
 # Import                                                                        #
 # --------------------------------------------------------------------------- #
+def _atomic_install(src: Path, dst: Path) -> None:
+    """Copy ``src`` to a sibling temp file then ``os.replace`` it into ``dst`` so
+    a concurrent reader never observes a partially-written file (``os.replace``
+    is atomic on the same filesystem)."""
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    tmp = dst.parent / (dst.name + ".partial")
+    shutil.copy2(src, tmp)
+    os.replace(tmp, dst)
+
+
 def _safe_extract(tar: tarfile.TarFile, dest: Path) -> None:
     """Extract with a path-traversal guard: reject absolute paths, ``..`` escapes,
     and non-regular members."""
@@ -262,38 +283,31 @@ def cmd_import(args: argparse.Namespace) -> int:
 
         # Refuse to clobber an existing KB unless --force.
         target_sqlite = _sqlite_path(kb)
+        target_faiss = _faiss_dir(kb)
         if target_sqlite.exists() and not args.force:
             print(
-                f"error: a knowledge DB already exists at {kb}; pass --force to replace it.",
+                f"error: a knowledge DB already exists at {target_sqlite}; "
+                "pass --force to replace it.",
                 file=sys.stderr,
             )
             return 4
 
-        # Atomic-ish install: build the new KB tree in a sibling temp dir, then
-        # swap directories so a crash mid-copy can't leave a half KB.
-        kb.parent.mkdir(parents=True, exist_ok=True)
-        staged_kb = Path(tempfile.mkdtemp(prefix=".kb_new_", dir=str(kb.parent)))
-        try:
-            shutil.copy2(stage / _SQLITE_NAME, staged_kb / _SQLITE_NAME)
-            src_faiss = stage / _FAISS_SUBDIR
-            if src_faiss.is_dir():
-                shutil.copytree(src_faiss, staged_kb / _FAISS_SUBDIR)
-            shutil.copy2(manifest_path, staged_kb / _MANIFEST_NAME)
+        # Install into the engine's real target locations. Checksums are already
+        # verified above, so we replace each file in place with os.replace
+        # (atomic on the same filesystem). We install per-file rather than
+        # swapping a single directory because VECTOR_DB_PATH / FAISS_INDEX_DIR
+        # may be relocated independently of KNOWLEDGE_DB_DIR.
+        target_sqlite.parent.mkdir(parents=True, exist_ok=True)
+        target_faiss.mkdir(parents=True, exist_ok=True)
+        _atomic_install(stage / _SQLITE_NAME, target_sqlite)
+        src_faiss = stage / _FAISS_SUBDIR
+        if src_faiss.is_dir():
+            for f in sorted(src_faiss.iterdir()):
+                if f.is_file():
+                    _atomic_install(f, target_faiss / f.name)
+        _atomic_install(manifest_path, target_sqlite.parent / _MANIFEST_NAME)
 
-            backup = None
-            if kb.exists():
-                backup = kb.parent / (kb.name + ".old")
-                if backup.exists():
-                    shutil.rmtree(backup)
-                os.replace(kb, backup)
-            os.replace(staged_kb, kb)
-            if backup and backup.exists():
-                shutil.rmtree(backup, ignore_errors=True)
-        except Exception:
-            shutil.rmtree(staged_kb, ignore_errors=True)
-            raise
-
-    print(f"imported knowledge DB -> {kb}")
+    print(f"imported knowledge DB -> {target_sqlite.parent}")
     return 0
 
 
