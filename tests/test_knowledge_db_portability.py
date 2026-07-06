@@ -27,8 +27,11 @@ def _make_kb(root: Path) -> Path:
     conn.execute("INSERT INTO concept VALUES (1, 'lung')")
     conn.commit()
     conn.close()
-    # Fake FAISS index pair for one (strategy, method, source, category).
-    idx = kbdir / "faiss_indexes" / "rag_sap-bert_ncit_disease.index"
+    # Fake FAISS index pair. The name matches what the engine actually writes:
+    # faiss_sqlite_pipeline builds `{strategy}_{method}_{source}_{category}` and
+    # cleans the method with `.replace('-', '_')`, so `sap-bert` lands on disk as
+    # `sap_bert` (an underscore *inside* the method token).
+    idx = kbdir / "faiss_indexes" / "rag_sap_bert_ncit_disease.index"
     idx.write_bytes(b"FAKE-FAISS-INDEX-BYTES")
     idx.with_suffix(".index.ids.npy").write_bytes(b"FAKE-IDS")
     return kbdir
@@ -52,8 +55,8 @@ def test_export_then_import_roundtrip(tmp_path, kb_env, monkeypatch):
     assert kb.main(["import", str(archive)]) == 0
 
     assert (dest / "vector_db.sqlite").exists()
-    assert (dest / "faiss_indexes" / "rag_sap-bert_ncit_disease.index").exists()
-    assert (dest / "faiss_indexes" / "rag_sap-bert_ncit_disease.index.ids.npy").exists()
+    assert (dest / "faiss_indexes" / "rag_sap_bert_ncit_disease.index").exists()
+    assert (dest / "faiss_indexes" / "rag_sap_bert_ncit_disease.index.ids.npy").exists()
     # The restored SQLite is queryable.
     conn = sqlite3.connect(str(dest / "vector_db.sqlite"))
     assert conn.execute("SELECT term FROM concept WHERE id=1").fetchone()[0] == "lung"
@@ -70,11 +73,12 @@ def test_manifest_records_index_metadata(tmp_path, kb_env):
     assert idx["ontology_source"] == "ncit"
     assert idx["category"] == "disease"
     assert idx["strategy"] == "rag"
+    assert idx["method"] == "sap_bert"
 
 
 def test_category_filter_excludes_other_indexes(tmp_path, kb_env):
     # Add a second-category index.
-    (kb_env / "faiss_indexes" / "rag_sap-bert_uberon_bodysite.index").write_bytes(b"X")
+    (kb_env / "faiss_indexes" / "rag_sap_bert_uberon_bodysite.index").write_bytes(b"X")
     archive = tmp_path / "kb.mhkb.tar.gz"
     kb.main(["export", "-o", str(archive), "--category", "disease"])
     with tarfile.open(archive) as tar:
