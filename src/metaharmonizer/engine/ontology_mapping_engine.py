@@ -672,11 +672,13 @@ class OntoMapEngine:
                 ont = "ncit"
             groups.setdefault(ont, []).append(code)
         if unknown:
-            raise ValueError(
-                f"Unknown ontology prefix in codes: {unknown[:5]}"
-                f"{'...' if len(unknown) > 5 else ''}. "
-                f"Supported prefixes: {sorted(PREFIX_TO_ONTOLOGY.keys())} "
-                f"and bare NCI codes (e.g. C12345)."
+            logger.custlogger(loglevel="INFO").warning(
+                "Skipping %d code(s) with unsupported ontology prefix "
+                "(cross-ontology xrefs such as COB_/NCBITaxon_ that are not the "
+                "mapping target): %s%s",
+                len(unknown),
+                unknown[:5],
+                "..." if len(unknown) > 5 else "",
             )
         return groups
 

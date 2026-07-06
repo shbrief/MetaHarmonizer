@@ -1,6 +1,4 @@
 """Tests for OntoMapEngine._partition_codes — code prefix routing logic."""
-import pytest
-
 from metaharmonizer.engine.ontology_mapping_engine import OntoMapEngine
 
 
@@ -41,6 +39,14 @@ class TestPartitionCodes:
         assert "cl" in result
         assert "chebi" in result
 
-    def test_unknown_prefix_raises(self):
-        with pytest.raises(ValueError, match="Unknown ontology prefix"):
-            OntoMapEngine._partition_codes(["XYZ_12345"])
+    def test_unknown_prefix_is_skipped(self):
+        """Cross-ontology xref codes that UBERON legitimately imports (e.g. COB_,
+        NCBITaxon_) are skipped, not fatal — a real corpus build must not crash
+        on them."""
+        result = OntoMapEngine._partition_codes(
+            ["C12345", "UBERON_0001062", "COB_0000021", "NCBITaxon_10045", "XYZ_1"]
+        )
+        assert result == {"ncit": ["C12345"], "uberon": ["UBERON_0001062"]}
+
+    def test_all_unknown_prefixes_returns_empty(self):
+        assert OntoMapEngine._partition_codes(["COB_0000021", "NCBITaxon_10045"]) == {}
