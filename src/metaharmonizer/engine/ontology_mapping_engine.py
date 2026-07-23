@@ -1371,9 +1371,9 @@ class OntoMapEngine:
 
         # Create DataFrame for Stage 1 matches
         exact_df = pd.DataFrame({'original_value': stage1_matches})
-              if self._test_or_prod == 'test':
+        if self._test_or_prod == 'test':
             exact_df['curated_ontology'] = exact_df['original_value'].map(
-                self.ground_truth_map).fillna(exact_df['original_value'])
+            self.ground_truth_map).fillna(exact_df['original_value'])
         else:
             # Prod has no real ground truth: ground_truth_map is a
             # {query: "Not Found"} placeholder, so an exact corpus hit IS the
