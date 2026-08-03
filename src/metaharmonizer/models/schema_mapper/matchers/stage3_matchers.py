@@ -4,7 +4,7 @@ from typing import List, Tuple, Dict, Set
 import torch
 from sentence_transformers import util
 from .base import BaseMatcher
-from metaharmonizer.utils.schema_mapper_utils import normalize
+from metaharmonizer.utils.schema_mapper_utils import header_variants
 from metaharmonizer.utils.numeric_match_utils import (
     strip_units_and_tags,
     detect_numeric_semantic,
@@ -86,9 +86,9 @@ class _StandardEmbMatcher(BaseMatcher):
     def _guard(self, col: str) -> bool:
         return True
 
-    def _prepare_key(self, col: str):
-        key_raw = normalize(col)
-        return key_raw, key_raw, None
+    def _prepare_key(self, key: str):
+        # `key` is an already-normalized header variant (see header_variants).
+        return key, key, None
 
     def _extra_bonus(self, field: str, key_raw: str, family) -> float:
         return 0.0
@@ -102,17 +102,23 @@ class _StandardEmbMatcher(BaseMatcher):
         fields, embs = self._get_fields_and_embs()
         if not fields:
             return []
-        key_raw, query_key, family = self._prepare_key(col)
-        emb = self.engine._enc(query_key)
-        with torch.no_grad():
-            sims = util.pytorch_cos_sim(emb, embs)[0]
-        top = torch.topk(sims, k=min(self.engine.top_k * 3, len(sims)))
-        results = []
-        for score, idx in zip(top[0], top[1]):
-            field = fields[int(idx)]
-            bonus = self._extra_bonus(field, key_raw, family)
-            bonus += treatment_boost(field, key_raw, self.engine)
-            results.append((field, float(score) + bonus, ""))
+        # Double-match: raw + abbrev-expanded variants, best score per field
+        # (strict '>' keeps the raw variant on ties). See Issue #87.
+        field_best: Dict[str, float] = {}
+        for variant in header_variants(col):
+            key_raw, query_key, family = self._prepare_key(variant)
+            emb = self.engine._enc(query_key)
+            with torch.no_grad():
+                sims = util.pytorch_cos_sim(emb, embs)[0]
+            top = torch.topk(sims, k=min(self.engine.top_k * 3, len(sims)))
+            for score, idx in zip(top[0], top[1]):
+                field = fields[int(idx)]
+                bonus = self._extra_bonus(field, key_raw, family)
+                bonus += treatment_boost(field, key_raw, self.engine)
+                total = float(score) + bonus
+                if field not in field_best or total > field_best[field]:
+                    field_best[field] = total
+        results = [(f, s, "") for f, s in field_best.items()]
         results.sort(key=lambda x: x[1], reverse=True)
         return results[:self.engine.top_k]
 
@@ -131,9 +137,9 @@ class _AliasEmbMatcher(BaseMatcher):
     def _guard(self, col: str) -> bool:
         return True
 
-    def _prepare_key(self, col: str):
-        key_raw = normalize(col)
-        return key_raw, key_raw, None
+    def _prepare_key(self, key: str):
+        # `key` is an already-normalized header variant (see header_variants).
+        return key, key, None
 
     def _extra_bonus(self, field: str, key_raw: str, family) -> float:
         return 0.0
@@ -150,21 +156,24 @@ class _AliasEmbMatcher(BaseMatcher):
         sources, embs = self._get_sources_and_embs()
         if embs is None or not sources:
             return []
-        key_raw, query_key, family = self._prepare_key(col)
-        emb = self.engine._enc(query_key)
-        with torch.no_grad():
-            sims = util.pytorch_cos_sim(emb, embs)[0]
-        top = torch.topk(sims, k=min(self.engine.top_k * 3, len(sims)))
+        # Double-match: raw + abbrev-expanded variants, best score per field
+        # (strict '>' keeps the raw variant on ties). See Issue #87.
         field_best: Dict[str, Tuple[float, str]] = {}
-        for score, idx in zip(top[0], top[1]):
-            src_name = sources[int(idx)]
-            base = float(score)
-            for f in self._fields_for_source(src_name):
-                bonus = self._extra_bonus(f, key_raw, family)
-                bonus += treatment_boost(f, key_raw, self.engine)
-                final = base + bonus
-                if f not in field_best or final > field_best[f][0]:
-                    field_best[f] = (final, src_name)
+        for variant in header_variants(col):
+            key_raw, query_key, family = self._prepare_key(variant)
+            emb = self.engine._enc(query_key)
+            with torch.no_grad():
+                sims = util.pytorch_cos_sim(emb, embs)[0]
+            top = torch.topk(sims, k=min(self.engine.top_k * 3, len(sims)))
+            for score, idx in zip(top[0], top[1]):
+                src_name = sources[int(idx)]
+                base = float(score)
+                for f in self._fields_for_source(src_name):
+                    bonus = self._extra_bonus(f, key_raw, family)
+                    bonus += treatment_boost(f, key_raw, self.engine)
+                    final = base + bonus
+                    if f not in field_best or final > field_best[f][0]:
+                        field_best[f] = (final, src_name)
         results = [(f, s, src) for f, (s, src) in field_best.items()]
         results.sort(key=lambda x: x[1], reverse=True)
         return results[:self.engine.top_k]
@@ -204,11 +213,11 @@ class NumericStandardMatcher(_StandardEmbMatcher):
     def _guard(self, col):
         return self.engine.is_col_numeric(col)
 
-    def _prepare_key(self, col):
-        key_raw = normalize(col)
-        key_clean, unit_tags = strip_units_and_tags(key_raw)
+    def _prepare_key(self, key):
+        # `key` is an already-normalized header variant (see header_variants).
+        key_clean, unit_tags = strip_units_and_tags(key)
         family = detect_numeric_semantic(key_clean, unit_tags)
-        return key_raw, key_clean or key_raw, family
+        return key, key_clean or key, family
 
     def _extra_bonus(self, field, key_raw, family):
         return family_boost(field, family)
@@ -232,11 +241,11 @@ class NumericAliasMatcher(_AliasEmbMatcher):
     def _guard(self, col):
         return self.engine.is_col_numeric(col)
 
-    def _prepare_key(self, col):
-        key_raw = normalize(col)
-        key_clean, unit_tags = strip_units_and_tags(key_raw)
+    def _prepare_key(self, key):
+        # `key` is an already-normalized header variant (see header_variants).
+        key_clean, unit_tags = strip_units_and_tags(key)
         family = detect_numeric_semantic(key_clean, unit_tags)
-        return key_raw, key_clean or key_raw, family
+        return key, key_clean or key, family
 
     def _extra_bonus(self, field, key_raw, family):
         return family_boost(field, family)

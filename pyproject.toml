@@ -114,6 +114,7 @@ include = ["metaharmonizer*"]
     "schema/gdc_target_attrs_allowed_values.json",
     "schema/gdc_target_attrs_alias_haiku.csv",
     "schema/gdc_target_attrs_alias_haiku.meta.json",
+    "schema/clinical_abbreviations_gpt-5-codex.csv",
 ]
 
 [tool.pytest.ini_options]

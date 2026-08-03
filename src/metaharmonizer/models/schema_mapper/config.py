@@ -42,6 +42,16 @@ ALIAS_DICT_PATH = resolve_data_file("schema/gdc_target_attrs_alias_haiku.csv")
 # (allowed_fields=standard_fields), so the bundled copy is safe to fall
 # through to a user-supplied schema — disjoint keys are skipped automatically.
 VALUE_DICT_PATH = os.getenv("TARGET_ATTRS_ALLOWED_VALUES_JSON") or resolve_data_file("schema/gdc_target_attrs_allowed_values.json")
+# Closed clinical abbreviation dictionary (abbrev,expansion), loaded lazily by
+# schema_mapper_utils._load_abbrev_map and applied via header_variants() to expand
+# source-header abbreviations before name-based matching (Issue #87).
+# This is an OPTIONAL feature: unlike the dicts above, a missing file must NOT
+# fail engine init, so we resolve it here in a try/except and fall back to None —
+# _load_abbrev_map() then skips expansion (with a WARNING). Set to None to disable.
+try:
+    CLINICAL_ABBREV_PATH = resolve_data_file("schema/clinical_abbreviations_gpt-5-codex.csv")
+except FileNotFoundError:
+    CLINICAL_ABBREV_PATH = None
 
 # === Bundled schema presets ===
 # A preset bundles a curated schema with its matched alias + value dicts as a
