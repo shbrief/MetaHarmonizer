@@ -39,6 +39,12 @@ def _load_abbrev_map() -> Dict[str, str]:
             f"Check the bundled file / packaging (pyproject package-data)."
         )
         return {}
+    except (OSError, UnicodeDecodeError) as e:
+        logger.warning(
+            f"[clinical_abbrev] Could not open clinical abbreviation dict "
+            f"{CLINICAL_ABBREV_PATH}: {e!r}; expansion DISABLED."
+        )
+        return {}
     except (ValueError, pd.errors.ParserError, pd.errors.EmptyDataError) as e:
         logger.warning(
             f"[clinical_abbrev] Could not read clinical abbreviation dict "
