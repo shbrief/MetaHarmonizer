@@ -250,6 +250,8 @@ class OntoMapEngine:
         corpus_df = self.other_params.get("corpus_df", None)
         corpus_df_provided = corpus_df is not None
         self._corpus_df_provided = corpus_df_provided
+        # Set when the corpus's codes belong to no known ontology (see below).
+        self._local_corpus = False
 
         if corpus_df is None:
             # Auto-resolve: registry must have the (category, ontology_source)
@@ -319,13 +321,26 @@ class OntoMapEngine:
                 )
             groups = self._partition_codes(codes)
             detected = sorted(groups.keys())
-            if len(detected) != 1:
+            if not detected:
+                # Every code carries a prefix no ontology client can resolve, so this
+                # is a purely local corpus (a project-controlled vocabulary such as a
+                # schema's custom enumeration). There is no source to infer and no
+                # remote concept table to build: stages 1.0 and 2.0 need only the
+                # labels, and stage 2.5 has nothing to look up. Leave
+                # ``ontology_source`` as the caller set it and carry on.
+                self._local_corpus = True
+                self._logger.info(
+                    "Corpus codes resolve to no known ontology source (%s...); "
+                    "treating as a local corpus and skipping concept-table building.",
+                    codes[:3],
+                )
+            elif len(detected) != 1:
                 raise ValueError(
                     f"User-provided corpus_df contains codes from multiple "
                     f"ontology sources: {detected}. All codes must share "
                     f"the same prefix. Separate your corpus by ontology source."
                 )
-            inferred = detected[0]
+            inferred = detected[0] if detected else self._ontology_source
             if inferred != self._ontology_source:
                 import warnings
                 warnings.warn(
@@ -696,6 +711,8 @@ class OntoMapEngine:
         import sqlite3
         from metaharmonizer._paths import VECTOR_DB_PATH
 
+        if self._local_corpus:
+            return
         all_codes = corpus_df["clean_code"].dropna().unique().tolist()
         if not all_codes:
             return
