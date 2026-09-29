@@ -154,6 +154,12 @@ class OntoModelsBase:
             reranked.append(doc)
         return reranked
 
+    def _retrieval_top_k(self, requested_top_k: int) -> int:
+        """Return a retrieval width that never narrows the requested output."""
+        if not self.use_reranker:
+            return requested_top_k
+        return max(self.reranker_top_k, requested_top_k)
+
     ##### To be implemented in the child class #####
     def create_embeddings(self):
         """

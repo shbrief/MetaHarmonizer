@@ -11,6 +11,7 @@ from datetime import datetime
 from metaharmonizer.custom_logger.custom_logger import CustomLogger
 from metaharmonizer._paths import corpus_path, resolve_data_file
 from metaharmonizer._async_utils import run_async
+from metaharmonizer.utils.negation import detect_negation, polarity_compatible
 from metaharmonizer.knowledge_db.concept_table_builder import ConceptTableBuilder
 from metaharmonizer.knowledge_db.corpus_builder import CorpusBuilder
 from metaharmonizer.knowledge_db.db_clients.ols_db import OLSDb, validate_identifier
@@ -20,6 +21,8 @@ logger = CustomLogger()
 ABBR_DICT_REL = "corpus/oncotree_code_to_name.csv"
 SYNONYM_MIN_CONFIDENCE = 0.9
 MAX_RETRIEVED_CONTEXT_ITEMS = 10
+_NEGATION_CANDIDATE_MULTIPLIER = 2
+_MATCH_COLUMN_RE = re.compile(r"^match(?P<rank>\d+)(?P<suffix>.*)$")
 
 # Known (category, ontology_source) → OBO root term ID.
 # NCIt entries use the NCI EVSREST API for corpus + concept tables.
@@ -92,6 +95,7 @@ class OntoMapEngine:
                  corpus_hash: str = None,
                  persist_corpus: bool = None,
                  filter_obsolete: bool = False,
+                 negation_guard: bool = True,
                  s2_method: str = 'sap-bert',
                  s2_strategy: str = 'lm',
                  s3_method: str = 'pubmed-bert',
@@ -140,6 +144,10 @@ class OntoMapEngine:
                 labels from the corpus. Leave ``False`` for version-pinned
                 benchmarks whose ground truth still references obsolete terms.
                 Defaults to ``False``.
+            negation_guard (bool, optional): When ``True``, semantic candidates
+                whose negation polarity differs from the query are removed and
+                the remaining candidates are compacted. Exact ontology labels
+                still match in Stage 1. Defaults to ``True``.
             s2_method (str, optional): The embedding model key for stage 2 matching.
                 Defaults to 'sap-bert'.
             s2_strategy (str, optional): The strategy to use for stage 2 OntoMap. Defaults to 'lm'. Options are 'st' or 'lm'.
@@ -164,6 +172,7 @@ class OntoMapEngine:
         self.output_dir = output_dir
         self.top_k = top_k
         self.filter_obsolete = filter_obsolete
+        self.negation_guard = negation_guard
         self.s2_strategy = s2_strategy
         self.s3_strategy = s3_strategy
         self.s3_threshold = s3_threshold
@@ -849,6 +858,99 @@ class OntoMapEngine:
             q for q in self.query if q.strip().lower() in corpus_normalized
         ]
 
+    def _apply_negation_guard(self, results: pd.DataFrame) -> pd.DataFrame:
+        """Filter polarity-incompatible candidates and compact their ranks.
+
+        Semantic stages compare the query with every candidate, so a negated
+        query may still match a negated ontology label. Stage 1 does not call
+        this method because exact ontology labels always take precedence.
+        """
+        results = results.copy()
+        if not self.negation_guard:
+            return self._recompute_match_level(results)
+
+        removed_count = 0
+        ranked_columns: dict[int, dict[str, str]] = {}
+        for column in results.columns:
+            match = _MATCH_COLUMN_RE.match(column)
+            if match:
+                rank = int(match.group("rank"))
+                suffix = match.group("suffix")
+                ranked_columns.setdefault(rank, {})[suffix] = column
+
+        candidate_ranks = sorted(ranked_columns)
+        suffixes = sorted(
+            {
+                suffix
+                for columns in ranked_columns.values()
+                for suffix in columns
+            },
+            key=lambda suffix: (suffix != "", suffix),
+        )
+
+        for idx, row in results.iterrows():
+            query = str(row["original_value"])
+
+            compatible = []
+            for rank in candidate_ranks:
+                columns = ranked_columns[rank]
+                match_column = columns.get("")
+                if match_column is None:
+                    continue
+                candidate = row.get(match_column)
+                if pd.isna(candidate) or not candidate or candidate == "N/A":
+                    continue
+                if polarity_compatible(
+                        query, str(candidate), category=self.category):
+                    compatible.append({
+                        suffix: row.get(column)
+                        for suffix, column in columns.items()
+                    })
+                else:
+                    removed_count += 1
+
+            for rank in range(1, self.top_k + 1):
+                candidate_data = (
+                    compatible[rank - 1]
+                    if rank <= len(compatible)
+                    else {}
+                )
+                for suffix in suffixes:
+                    default = None if suffix == "" else 0.0
+                    results.at[idx, f"match{rank}{suffix}"] = (
+                        candidate_data.get(suffix, default)
+                    )
+
+        extra_columns = [
+            column
+            for rank, columns in ranked_columns.items()
+            if rank > self.top_k
+            for column in columns.values()
+        ]
+        if extra_columns:
+            results = results.drop(columns=extra_columns)
+
+        if removed_count:
+            self._logger.info(
+                f"Negation guard removed {removed_count} "
+                "polarity-incompatible candidates")
+
+        return self._recompute_match_level(results)
+
+    def _candidate_top_k(self, available_count: int | None = None) -> int:
+        """Return retrieval width before candidate-level negation filtering."""
+        if not self.negation_guard:
+            return self.top_k
+        candidate_k = self.top_k * _NEGATION_CANDIDATE_MULTIPLIER
+        if available_count is None:
+            corpus = getattr(self, "corpus", None)
+            available_count = len(corpus) if corpus is not None else None
+        return (
+            min(candidate_k, available_count)
+            if available_count is not None
+            else candidate_k
+        )
+
     def _map_shortname_to_fullname(self, non_exact_list: list[str]) -> dict:
         """
         Return a dict: original_value -> updated_value
@@ -916,6 +1018,17 @@ class OntoMapEngine:
             'original_value': 'query',
             'curated_ontology': 'ref_match'
         })
+
+        # Polarity is output metadata, independent of whether candidate
+        # filtering is enabled and of which stage produced the row.
+        triggers = df["query"].map(
+            lambda query: detect_negation(
+                str(query), category=self.category)
+        )
+        df["polarity"] = triggers.map(
+            lambda trigger: "NEGATED" if trigger is not None else "AFFIRMED"
+        )
+        df["negation_trigger"] = triggers
 
         # Drop internal columns
         columns_to_drop = [
@@ -1107,16 +1220,19 @@ class OntoMapEngine:
         )
         s4_res = s4_model.get_match_results(
             queries=queries_for_s4,
-            top_k=self.top_k,
+            top_k=self._candidate_top_k(),
         )
         # Add eval columns (same as other stages — engine's responsibility)
         s4_res['stage'] = 4.0
         s4_res['curated_ontology'] = s4_res['original_value'].map(
             self.ground_truth_map).fillna("Not Found")
-        s4_res = self._recompute_match_level(s4_res)
+        s4_res = self._apply_negation_guard(s4_res)
 
         # Drop rows where LLM returned no results (keep prior for those)
-        s4_valid = s4_res[s4_res['match1'] != 'N/A'].copy()
+        s4_valid = s4_res[
+            s4_res['match1'].notna()
+            & ~s4_res['match1'].isin(["", "N/A"])
+        ].copy()
 
         self._logger.info(
             f"Stage 4 completed: {len(queries_for_s4)} queries processed, "
@@ -1155,8 +1271,9 @@ class OntoMapEngine:
                 'syn', low_conf_queries)
             syn_results = syn_model.get_match_results(
                 ground_truth_map=self.ground_truth_map,
-                top_k=self.top_k,
+                top_k=self._candidate_top_k(),
                 test_or_prod=self._test_or_prod)
+            syn_results = self._apply_negation_guard(syn_results)
 
             syn_dict = {}
             for _, syn_row in syn_results.iterrows():
@@ -1384,7 +1501,7 @@ class OntoMapEngine:
         exact_df['match1'] = exact_df['curated_ontology']
         exact_df['match1_score'] = 1.00
 
-        # Remaining queries for Stage 2
+        # Remaining queries proceed to semantic matching.
         non_exact_matches_ls = list(np.setdiff1d(self.query, stage1_matches))
         self._logger.info(
             f"Remaining for Stage 2: {len(non_exact_matches_ls)}")
@@ -1419,7 +1536,7 @@ class OntoMapEngine:
                                                 updated_queries)
         self._s2_model = s2_model  # Retain for Stage 4 re-search
         s2_res = s2_model.get_match_results(ground_truth_map=updated_ground_truth_map,
-                                            top_k=self.top_k,
+                                            top_k=self._candidate_top_k(),
                                             test_or_prod=self._test_or_prod)
 
         # Merge back to original_value
@@ -1428,8 +1545,8 @@ class OntoMapEngine:
         s2_res = pd.merge(replace_df, s2_res, on="updated_value", how="left")
         s2_res["curated_ontology"] = s2_res["original_value"].map(
             self.ground_truth_map).fillna("Not Found")
-        s2_res = self._recompute_match_level(s2_res)
         s2_res['stage'] = 2.0
+        s2_res = self._apply_negation_guard(s2_res)
 
         self._logger.info(f"Stage 2 completed: {len(s2_res)} queries")
 
@@ -1531,7 +1648,7 @@ class OntoMapEngine:
                                                     updated_queries_s3)
             s3_res = s3_model.get_match_results(
                 ground_truth_map=updated_ground_truth_map_s3,
-                top_k=self.top_k,
+                top_k=self._candidate_top_k(len(self.corpus_s3)),
                 test_or_prod=self._test_or_prod)
 
             # Merge back to original_value
@@ -1543,8 +1660,8 @@ class OntoMapEngine:
                               how="left")
             s3_res["curated_ontology"] = s3_res["original_value"].map(
                 self.ground_truth_map).fillna("Not Found")
-            s3_res = self._recompute_match_level(s3_res)
             s3_res['stage'] = 3.0
+            s3_res = self._apply_negation_guard(s3_res)
 
             self._logger.info(f"Stage 3 completed: {len(s3_res)} queries")
 
