@@ -849,6 +849,46 @@ class OntoMapEngine:
             q for q in self.query if q.strip().lower() in corpus_normalized
         ]
 
+    def _build_exact_df(self, stage1_matches: list) -> pd.DataFrame:
+        """Build the Stage 1 result frame for exactly-matched queries.
+
+        ``match1`` is the corpus label the query matched, never the curated
+        value. Taking the curated value broke both modes from a single line:
+        in prod ``ground_truth_map`` is the placeholder ``{q: "Not Found"}``,
+        so every exact match surfaced as ``"Not Found"`` at score 1.00; in
+        test it substituted the ground truth, making Stage 1 correct by
+        construction and unfalsifiable by the benchmark.
+
+        Args:
+            stage1_matches: Queries that matched the corpus exactly.
+
+        Returns:
+            pd.DataFrame: One row per exact match, with ``match1`` set to the
+            matched corpus label and ``match_level`` scored against the
+            ground truth (test mode) rather than hardcoded.
+        """
+        exact_df = pd.DataFrame({'original_value': stage1_matches})
+        if exact_df.empty:
+            return exact_df
+
+        corpus_by_norm = {}
+        for c in self.corpus:
+            corpus_by_norm.setdefault(str(c).strip().lower(), str(c).strip())
+        exact_df['match1'] = [
+            corpus_by_norm.get(str(q).strip().lower(), q)
+            for q in exact_df['original_value']
+        ]
+        # Curated label is for evaluation only; "Not Found" in prod, matching
+        # how Stage 2 fills it.
+        exact_df['curated_ontology'] = exact_df['original_value'].map(
+            self.ground_truth_map).fillna("Not Found")
+        exact_df['match_level'] = 1
+        exact_df['stage'] = 1.0
+        exact_df['match1_score'] = 1.00
+        # Score match_level against the actual prediction rather than
+        # hardcoding a hit. No-op in prod, where there is nothing to score.
+        return self._recompute_match_level(exact_df)
+
     def _map_shortname_to_fullname(self, non_exact_list: list[str]) -> dict:
         """
         Return a dict: original_value -> updated_value
@@ -1370,13 +1410,7 @@ class OntoMapEngine:
         stage1_matches = exact_matches
 
         # Create DataFrame for Stage 1 matches
-        exact_df = pd.DataFrame({'original_value': stage1_matches})
-        exact_df['curated_ontology'] = exact_df['original_value'].map(
-            self.ground_truth_map).fillna(exact_df['original_value'])
-        exact_df['match_level'] = 1
-        exact_df['stage'] = 1.0
-        exact_df['match1'] = exact_df['curated_ontology']
-        exact_df['match1_score'] = 1.00
+        exact_df = self._build_exact_df(stage1_matches)
 
         # Remaining queries for Stage 2
         non_exact_matches_ls = list(np.setdiff1d(self.query, stage1_matches))
