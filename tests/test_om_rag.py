@@ -110,6 +110,19 @@ class TestOntoMapRAGReranker:
         _, k = m._vs.calls[0]
         assert k == 3
 
+    def test_requested_top_k_can_exceed_reranker_top_k(self):
+        """Oversampling requests must not be narrowed by reranker_top_k."""
+        m = _make_rag(use_reranker=True, top_k=2, reranker_top_k=3)
+        m._reranker = SimpleNamespace(
+            predict=lambda pairs: np.linspace(1.0, 0.1, len(pairs))
+        )
+        m.get_match_results(
+            ground_truth_map={"LUAD": "Lung Adenocarcinoma"},
+            top_k=4,
+        )
+        _, k = m._vs.calls[0]
+        assert k == 4
+
     def test_reranker_adds_extra_score_columns(self):
         m = _make_rag(use_reranker=True, top_k=2, reranker_top_k=3)
         m._reranker = SimpleNamespace(

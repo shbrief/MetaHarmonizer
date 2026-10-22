@@ -169,7 +169,7 @@ class OntoMapBIE(OntoModelsBase):
             raise ValueError("ground_truth_map should be provided for test mode")
 
         k = top_k or self.top_k
-        retrieval_k = self.reranker_top_k if self.use_reranker else k
+        retrieval_k = self._retrieval_top_k(k)
         all_results = []
 
         if 'enriched_query' not in self.query_df.columns:

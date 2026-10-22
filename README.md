@@ -391,6 +391,7 @@ results = engine.run()
 | `corpus` | list (optional) | Explicit list of corpus terms for **Stage 2 matching only** (Stage 3 always uses `corpus_df`). Auto-derived from `corpus_df` when omitted. |
 | `corpus_df` | DataFrame (optional) | DataFrame with `label` and `obo_id` columns. Auto-loaded from cached CSV or built from API when omitted. |
 | `ontology_source` | str (`"ncit"`) | Ontology backend. Supported `(category, ontology_source)` pairs: `disease`/`bodysite`/`treatment` → `ncit` (NCI Thesaurus via EVSREST); `disease` → `mondo`, `bodysite` → `uberon` (via EBI OLS4 API); `phenotype` → `efo` (pre-built static corpus, no API key needed). When `corpus_df` is provided, this is inferred from code prefixes. |
+| `negation_guard` | bool (`True`) | Compare the polarity of each semantic candidate with its query, remove incompatible candidates, and compact the remaining ranks. Semantic stages retrieve up to `top_k * 2` candidates before filtering, then return at most `top_k`. For example, `no metformin` rejects `Metformin` but may retain a negated ontology label. Stage 1 exact matches are unchanged. Set to `False` to annotate polarity without filtering candidates. |
 | `s2_strategy` | str | Stage 2 strategy — `lm` (CLS-token pooling) or `st` (SentenceTransformer mean pooling). |
 | `s2_method` | str | Transformer model key from `method_model.yaml` (e.g. `sap-bert`, `pubmed-bert`). |
 | `s3_strategy` | str (optional) | Stage 3 strategy — `rag`, `rag_bie`, or `None` to disable. |
@@ -407,8 +408,8 @@ results = engine.run()
 | Stage 2.5 | Synonym verification — boosts low-confidence Stage 2 matches using synonym data from concept tables. |
 | Stage 3 (optional) | RAG-based re-matching with retrieved context from the knowledge database. |
 
-**Output:** DataFrame with top-k matches, scores, and match levels for
-each query term.
+**Output:** DataFrame with top-k matches, scores, match levels, `polarity`, and
+the detected `negation_trigger` (when applicable) for each query term.
 
 ## 8. Example notebooks
 
