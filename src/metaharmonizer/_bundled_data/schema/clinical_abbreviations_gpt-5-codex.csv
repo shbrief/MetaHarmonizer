@@ -1,0 +1,172 @@
+abbrev,expansion
+dx,diagnosis
+bx,biopsy
+tx,treatment
+hx,history
+pmh,past medical history
+fhx,family history
+mrn,medical record number
+emr,electronic medical record
+ehr,electronic health record
+phi,protected health information
+dob,date of birth
+dod,date of death
+yr,year
+yrs,years
+mo,month
+mos,months
+wk,week
+wks,weeks
+adj,adjuvant
+neoadj,neoadjuvant
+nact,neoadjuvant chemotherapy
+chemo,chemotherapy
+xrt,external beam radiation therapy
+ebrt,external beam radiation therapy
+sbrt,stereotactic body radiation therapy
+srs,stereotactic radiosurgery
+brachy,brachytherapy
+iort,intraoperative radiation therapy
+imrt,intensity modulated radiation therapy
+ici,immune checkpoint inhibitor
+adt,androgen deprivation therapy
+tki,tyrosine kinase inhibitor
+parpi,poly adp ribose polymerase inhibitor
+surg,surgery
+resect,resection
+lnd,lymph node dissection
+fna,fine needle aspiration
+bmbx,bone marrow biopsy
+ffpe,formalin fixed paraffin embedded
+ihc,immunohistochemistry
+fish,fluorescence in situ hybridization
+ngs,next generation sequencing
+wgs,whole genome sequencing
+wes,whole exome sequencing
+rnaseq,rna sequencing
+pcr,polymerase chain reaction
+qpcr,quantitative polymerase chain reaction
+ctdna,circulating tumor dna
+ctc,circulating tumor cell
+cfdna,cell free dna
+snv,single nucleotide variant
+cnv,copy number variation
+indel,insertion deletion
+vaf,variant allele frequency
+mut,mutation
+fus,fusion
+tmb,tumor mutational burden
+msi,microsatellite instability
+msih,microsatellite instability high
+mss,microsatellite stable
+mmr,mismatch repair
+dmmr,deficient mismatch repair
+pmmr,proficient mismatch repair
+hrd,homologous recombination deficiency
+loh,loss of heterozygosity
+her2,human epidermal growth factor receptor 2
+egfr,epidermal growth factor receptor
+alk,anaplastic lymphoma kinase
+ros1,ros proto oncogene 1
+braf,braf proto oncogene
+kras,kras proto oncogene
+nras,nras proto oncogene
+pik3ca,phosphatidylinositol 4 5 bisphosphate 3 kinase catalytic subunit alpha
+pten,phosphatase and tensin homolog
+tp53,tumor protein p53
+brca1,brca1 dna repair associated
+brca2,brca2 dna repair associated
+pd1,programmed cell death protein 1
+pdl1,programmed death ligand 1
+ctla4,cytotoxic t lymphocyte associated protein 4
+tnm,tumor node metastasis
+ajcc,american joint committee on cancer
+figo,international federation of gynecology and obstetrics
+ecog,eastern cooperative oncology group
+kps,karnofsky performance status
+riss,revised international staging system
+ipi,international prognostic index
+bmi,body mass index
+bsa,body surface area
+wbc,white blood cell count
+rbc,red blood cell count
+hgb,hemoglobin
+hct,hematocrit
+plt,platelet count
+anc,absolute neutrophil count
+alc,absolute lymphocyte count
+alt,alanine aminotransferase
+ast,aspartate aminotransferase
+alp,alkaline phosphatase
+ldh,lactate dehydrogenase
+bili,bilirubin
+tbil,total bilirubin
+crcl,creatinine clearance
+psa,prostate specific antigen
+cea,carcinoembryonic antigen
+ca125,cancer antigen 125
+ca199,cancer antigen 19 9
+afp,alpha fetoprotein
+bhcg,beta human chorionic gonadotropin
+ldct,low dose computed tomography
+mri,magnetic resonance imaging
+fdg,fluorodeoxyglucose
+cxr,chest x ray
+mammo,mammography
+ln,lymph node
+lvi,lymphovascular invasion
+pni,perineural invasion
+epe,extraprostatic extension
+ene,extranodal extension
+svi,seminal vesicle invasion
+dcis,ductal carcinoma in situ
+lcis,lobular carcinoma in situ
+idc,invasive ductal carcinoma
+ilc,invasive lobular carcinoma
+scc,squamous cell carcinoma
+bcc,basal cell carcinoma
+nsclc,non small cell lung cancer
+sclc,small cell lung cancer
+crc,colorectal cancer
+hcc,hepatocellular carcinoma
+rcc,renal cell carcinoma
+gbm,glioblastoma
+dlbcl,diffuse large b cell lymphoma
+aml,acute myeloid leukemia
+cll,chronic lymphocytic leukemia
+cml,chronic myeloid leukemia
+tnbc,triple negative breast cancer
+mcrpc,metastatic castration resistant prostate cancer
+nmibc,non muscle invasive bladder cancer
+mibc,muscle invasive bladder cancer
+recist,response evaluation criteria in solid tumors
+irrecist,immune related response evaluation criteria in solid tumors
+bor,best overall response
+orr,objective response rate
+dcr,disease control rate
+dor,duration of response
+os,overall survival
+pfs,progression free survival
+dfs,disease free survival
+rfs,recurrence free survival
+efs,event free survival
+dss,disease specific survival
+css,cancer specific survival
+dmfs,distant metastasis free survival
+mfs,metastasis free survival
+lrfs,locoregional recurrence free survival
+lrrfs,locoregional recurrence free survival
+ttf,time to treatment failure
+ttp,time to progression
+ttnt,time to next treatment
+ttm,time to metastasis
+tte,time to event
+ttd,time to discontinuation
+fup,follow up
+ae,adverse event
+sae,serious adverse event
+irae,immune related adverse event
+ctcae,common terminology criteria for adverse events
+tox,toxicity
+meddra,medical dictionary for regulatory activities
+nos,not otherwise specified
