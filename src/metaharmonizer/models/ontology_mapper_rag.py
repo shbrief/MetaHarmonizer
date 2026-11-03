@@ -47,7 +47,7 @@ class OntoMapRAG(OntoModelsBase):
 
         self.logger.info("Generating results table")
 
-        retrieval_k = self.reranker_top_k if self.use_reranker else top_k
+        retrieval_k = self._retrieval_top_k(top_k)
 
         results = []
         for q in tqdm(self.query, desc="Processing queries", leave=False):
