@@ -47,6 +47,11 @@ _STATIC_CORPUS_SOURCES: frozenset[tuple[str, str]] = frozenset({
     ("phenotype", "efo"),
 })
 
+# Codes Stage 1 can match on when a query carries one: ICD-O-3 topography
+# (``C`` + two digits, optionally one decimal, e.g. C24.0) and morphology
+# (four digits / behaviour, e.g. 8155/3). Override with ``code_pattern``; pass ``None`` to disable.
+DEFAULT_CODE_PATTERN = r"C\d{2}(?:\.\d)?|\d{4}/\d"
+
 _BRITISH_TO_AMERICAN = [
     (r"(?i)leukaemia",   "leukemia"),
     (r"(?i)tumour",      "tumor"),
@@ -92,6 +97,7 @@ class OntoMapEngine:
                  corpus_hash: str = None,
                  persist_corpus: bool = None,
                  filter_obsolete: bool = False,
+                 code_pattern: str = DEFAULT_CODE_PATTERN,
                  s2_method: str = 'sap-bert',
                  s2_strategy: str = 'lm',
                  s3_method: str = 'pubmed-bert',
@@ -130,6 +136,14 @@ class OntoMapEngine:
             ground_truth_map (dict): The dictionary containing the mapping of queries to curated values.
                 Supplying it implies test/evaluation mode (``match_level`` is computed against it);
                 omitting it implies prod mode (curated labels default to "Not Found").
+            code_pattern (str, optional): Regex for codes that Stage 1 matches
+                on. A query that is a bare code (``8155/3``) or starts with one
+                followed by ``:`` (``C24.0 : Common bile duct``) is matched to
+                the single corpus term carrying that code, either as a label
+                prefix (``C24.0 : Extrahepatic bile duct``) or as a bare-code
+                synonym. Codes carried by more than one term are left to the
+                later stages. Defaults to ICD-O-3 topography/morphology codes;
+                ``None`` disables code matching.
             corpus_hash (str, optional): Force the SQLite/FAISS table-name suffix
                 instead of deriving it from corpus content. Use to pin one cache
                 across runs over the same corpus; pass "" to reuse the standard
@@ -164,6 +178,7 @@ class OntoMapEngine:
         self.output_dir = output_dir
         self.top_k = top_k
         self.filter_obsolete = filter_obsolete
+        self.code_pattern = code_pattern
         self.s2_strategy = s2_strategy
         self.s3_strategy = s3_strategy
         self.s3_threshold = s3_threshold
@@ -866,7 +881,61 @@ class OntoMapEngine:
             q for q in self.query if q.strip().lower() in corpus_normalized
         ]
 
-    def _build_exact_df(self, stage1_matches: list) -> pd.DataFrame:
+    def _code_index(self) -> dict:
+        """Map each code to the corpus terms that carry it.
+
+        Sources: a code at the start of a label followed by ``:`` or the end
+        of the label, and synonyms (from the concept tables) that are a bare
+        code. Returns ``{CODE: {label, ...}}``; empty if code matching is off.
+        """
+        import sqlite3
+        from metaharmonizer._paths import VECTOR_DB_PATH
+
+        if not self.code_pattern:
+            return {}
+        bare = re.compile(rf"(?:{self.code_pattern})")
+        lead = re.compile(rf"^\s*({self.code_pattern})\s*(?::|$)", re.I)
+        corpus = {str(c).strip() for c in self.corpus}
+        index = {}
+        for label in corpus:
+            m = lead.match(label)
+            if m:
+                index.setdefault(m.group(1).upper(), set()).add(label)
+
+        # One ontology source per corpus (enforced at init), so its synonym
+        # table is the only one to read. Missing table -> label prefixes only.
+        table = f"{self._ontology_source}_synonym_{self.category}{self._table_suffix}"
+        try:
+            with sqlite3.connect(str(VECTOR_DB_PATH)) as conn:
+                rows = conn.execute(
+                    f"SELECT synonym, official_label FROM {table}").fetchall()
+        except sqlite3.Error:
+            rows = []
+        for syn, label in rows:
+            syn = str(syn).strip()
+            if label in corpus and bare.fullmatch(syn):
+                index.setdefault(syn.upper(), set()).add(label)
+        return index
+
+    def _code_matching(self, queries: list) -> dict:
+        """Stage 1 code match: ``{query: corpus label}`` for queries that are a
+        bare code or start with ``<code> :`` and whose code belongs to exactly
+        one corpus term."""
+        if not self.code_pattern or not queries:
+            return {}
+        lead = re.compile(rf"^\s*({self.code_pattern})\s*(?::|$)", re.I)
+        index = self._code_index()
+        out = {}
+        for q in queries:
+            m = lead.match(str(q))
+            if m:
+                labels = index.get(m.group(1).upper(), set())
+                if len(labels) == 1:
+                    out[q] = next(iter(labels))
+        return out
+
+    def _build_exact_df(self, stage1_matches: list,
+                        code_matches: dict = None) -> pd.DataFrame:
         """Build the Stage 1 result frame for exactly-matched queries.
 
         ``match1`` is the corpus label the query matched, never the curated
@@ -878,13 +947,16 @@ class OntoMapEngine:
 
         Args:
             stage1_matches: Queries that matched the corpus exactly.
+            code_matches: ``{query: corpus label}`` from ``_code_matching``.
 
         Returns:
             pd.DataFrame: One row per exact match, with ``match1`` set to the
             matched corpus label and ``match_level`` scored against the
             ground truth (test mode) rather than hardcoded.
         """
-        exact_df = pd.DataFrame({'original_value': stage1_matches})
+        code_matches = code_matches or {}
+        exact_df = pd.DataFrame(
+            {'original_value': list(stage1_matches) + list(code_matches)})
         if exact_df.empty:
             return exact_df
 
@@ -892,7 +964,7 @@ class OntoMapEngine:
         for c in self.corpus:
             corpus_by_norm.setdefault(str(c).strip().lower(), str(c).strip())
         exact_df['match1'] = [
-            corpus_by_norm.get(str(q).strip().lower(), q)
+            code_matches.get(q) or corpus_by_norm.get(str(q).strip().lower(), q)
             for q in exact_df['original_value']
         ]
         # Curated label is for evaluation only; "Not Found" in prod, matching
@@ -1424,10 +1496,16 @@ class OntoMapEngine:
         exact_matches = self._exact_matching()
         self._logger.info(f"Exact matches: {len(exact_matches)}")
 
-        stage1_matches = exact_matches
+        exact_set = set(exact_matches)
+        code_matches = self._code_matching(
+            [q for q in self.query if q not in exact_set])
+        if code_matches:
+            self._logger.info(f"Code matches: {len(code_matches)}")
+
+        stage1_matches = exact_matches + list(code_matches)
 
         # Create DataFrame for Stage 1 matches
-        exact_df = self._build_exact_df(stage1_matches)
+        exact_df = self._build_exact_df(exact_matches, code_matches)
 
         # Remaining queries for Stage 2
         non_exact_matches_ls = list(np.setdiff1d(self.query, stage1_matches))
