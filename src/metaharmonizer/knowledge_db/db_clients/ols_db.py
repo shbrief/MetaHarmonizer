@@ -46,21 +46,28 @@ PREFIX_TO_ONTOLOGY = {
     "GO": "go",
     "BFO": "bfo",
     "OBI": "obi",
+    "SNOMED": "snomed",
 }
 
-# Maps code prefix to the IRI base used to construct the full IRI
+# Maps code prefix to the IRI base used to construct the full IRI.
+# Orphanet and SNOMED bases already end at the local id. Every other prefix
+# in PREFIX_TO_ONTOLOGY uses ``{base}{prefix}_{local_id}`` (OLS4 baseUris:
+# EFO is ``http://www.ebi.ac.uk/efo/EFO_``; the rest are OBO purl IRIs).
 IRI_BASES = {
     "EFO": "http://www.ebi.ac.uk/efo/",
     "Orphanet": "http://www.orpha.net/ORDO/Orphanet_",
+    "SNOMED": "http://snomed.info/id/",
 }
 # Most OBO ontologies use this base
 _OBO_BASE = "http://purl.obolibrary.org/obo/"
+# Prefixes whose IRI is ``{base}{local_id}`` (no ``PREFIX_`` infix).
+_IRI_LOCAL_ID_ONLY = frozenset({"Orphanet", "SNOMED"})
 
 
 def _curie_to_iri(prefix: str, local_id: str) -> str:
     """Convert a prefix + local_id to a full IRI for OLS lookup."""
     base = IRI_BASES.get(prefix, _OBO_BASE)
-    if prefix == "Orphanet":
+    if prefix in _IRI_LOCAL_ID_ONLY:
         return f"{base}{local_id}"
     return f"{base}{prefix}_{local_id}"
 

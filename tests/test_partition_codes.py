@@ -39,6 +39,10 @@ class TestPartitionCodes:
         assert "cl" in result
         assert "chebi" in result
 
+    def test_snomed_prefix(self):
+        result = OntoMapEngine._partition_codes(["SNOMED_443172007"])
+        assert result == {"snomed": ["SNOMED_443172007"]}
+
     def test_unknown_prefix_is_skipped(self):
         """Cross-ontology xref codes that UBERON legitimately imports (e.g. COB_,
         NCBITaxon_) are skipped, not fatal — a real corpus build must not crash
